@@ -1,0 +1,2 @@
+{{ Form::select('category', $categories) }}
+
