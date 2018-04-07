@@ -55,7 +55,7 @@
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
 						<!-- img width="45px" src="/img/logo-top.png" /-->
-                        <{{ config('app.name', 'Travel') }}>
+                        {{ config('app.name', 'Travel') }}
                     </a>
                 </div>
 

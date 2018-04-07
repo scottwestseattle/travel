@@ -17,7 +17,7 @@
 Auth::routes();
 
 // root
-Route::get('/', 'EntryController@home')->middleware('auth');
+Route::get('/', 'HomeController@index');
 
 // timer
 Route::get('/timer', 'EntryController@timer');
