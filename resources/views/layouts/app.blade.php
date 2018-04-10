@@ -20,6 +20,7 @@
 	
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+   <link href="{{ asset('css/default.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -39,7 +40,7 @@
 	
 </head>
 <body>
-    <div id="app">
+    <div id="app" style="xbackground-color:red">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
