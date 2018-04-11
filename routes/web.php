@@ -16,8 +16,9 @@
 
 Auth::routes();
 
-// root
+// public pages
 Route::get('/', 'HomeController@index');
+Route::get('/about', 'HomeController@about');
 
 // timer
 Route::get('/timer', 'EntryController@timer');

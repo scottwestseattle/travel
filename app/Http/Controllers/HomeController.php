@@ -17,12 +17,18 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
+     * Home page
      */
     public function index()
     {
         return view('home');
+    }
+	
+    /**
+     * About page
+     */
+    public function about()
+    {
+        return view('about');
     }
 }

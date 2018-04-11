@@ -7,9 +7,10 @@
 <!--------------------------------------------------------------------------------------->
 
 <div style="display: none; height: 0;" class="">
+	<img src="/img/theme1/slider1.jpg" />
 	<img src="/img/theme1/slider2.jpg" />
-	<img src="/img/theme1/slider2.jpg" />
-	<img src="/img/theme1/slider2.jpg" />
+	<img src="/img/theme1/slider3.jpg" />
+	<img src="/img/theme1/slider4.jpg" />
 </div>
 
 <div id="sliderWrapper" class="">
@@ -18,8 +19,18 @@
 		<!-- slider photo are attached here -->	
 			
 		<div class="sliderText">
-			<div class="xsliderTextPanel">
-				<h2 class="font-open-sans-400" style="margin-bottom: 30px; xbackground-color:black; font-size: 4em; font-weight:bold;"><span>Welcome to Epic Travel Guide</span></h2>
+			<div class="xsliderTextPanel" style="margin:40px;">
+				<!--
+				<h2 class="font-open-sans-400" style="margin:  0px; padding:0px; xbackground-color:black; font-size: 4em; font-weight:bold;"><span style="padding:0;margin:0;">Epic Travel Guide</span></h2>
+
+				<video autoplay muted loop id="myVideo">
+				  <source src="img/theme1/waves.mp4" type="video/mp4">
+				</video>				
+
+				-->
+
+				<img id="logo-big" src="/img/theme1/logo-big.png" />
+				
 						
 <!--
 				<div style="max-width: 700px; margin: auto;">
@@ -53,7 +64,7 @@
 				</form>
 			</div>				
 			
-			<h1 class="xfont-open-sans-300">
+			<h1 class="font-open-sans-300">
 				Lorem ipsum dolor sit amet
 			</h1>
 			

@@ -3,6 +3,11 @@
 /*****************************************************************/
 
 @media (max-width: 992px) {
+	
+	#logo-big {
+		/* width: 200px; */
+	}
+	
     .navbar-header {
         float: none;
     }
@@ -71,7 +76,7 @@
 }
 		
 #slider {
-	background-image: url("/img/theme1/slider4.jpg");
+	background-image: url("/img/theme1/slider2.jpg");
 	background-size: cover;
 	background-position: center;		
 	width: 100%;
@@ -366,6 +371,10 @@ Media specific overrides go below here
 /****************** overrides for size SM ********************************/
 @media (min-width: 768px) and (max-width: 991px) 
 {
+	#logo-big {
+		width: 200px;
+	}
+	
 /* not yet: fixed top still has problems
 	.navbar-fixed-top {
 		border-radius: 0;
@@ -382,6 +391,10 @@ Media specific overrides go below here
 /****************** overrides for size XS *******************************/	
 @media (max-width: 767px) 
 {
+	#logo-big {
+		width: 200px;
+	}
+	
 /* not yet: fixed top still has problems
 	.navbar-fixed-top {
 		border-radius: 0;

@@ -27,13 +27,6 @@
 
 	<!-- App styles -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-
-	<style>
-	h1 {
-		font-size:24px;
-		color: #337AB7; 		
-	}
-	</style>
 	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
@@ -41,7 +34,7 @@
 </head>
 <body>
     <div id="app" style="xbackground-color:red">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color:#2ABFBA; border-width: 0 0 0px;"> 
             <div class="container">
                 <div class="navbar-header">
 
