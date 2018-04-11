@@ -33,17 +33,17 @@
 	
 </head>
 <body>
-    <div id="app" style="xbackground-color:red">
-        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color:#2ABFBA; border-width: 0 0 0px;"> 
+    <div id="app" style="">
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #2ABFBA /* greenish */; border-width: 0 0 0px;"> 
             <div class="container">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
                         <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="icon-bar" style="background-color: white;"></span>
+                        <span class="icon-bar" style="background-color: white;"></span>
+                        <span class="icon-bar" style="background-color: white;"></span>
                     </button>
 
                     <!-- Branding Image -->

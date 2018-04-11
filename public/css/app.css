@@ -5219,25 +5219,25 @@ tbody.collapse.in {
 .navbar-default .navbar-nav>.disabled>a:focus,
 .navbar-default .navbar-nav>.disabled>a:hover {
     color: #ccc;
-    background-color: transparent
+    background-color: transparent;
 }
 
 .navbar-default .navbar-toggle {
-    border-color: #ddd
+    border-color: #ddd;
 }
 
 .navbar-default .navbar-toggle:focus,
 .navbar-default .navbar-toggle:hover {
-    background-color: #ddd
+    background-color: #ddd;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
-    background-color: #888
+    background-color: #888;
 }
 
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
-    border-color: #d3e0e9
+    border-color: #d3e0e9;
 }
 
 .navbar-default .navbar-nav>.open>a,
@@ -5296,7 +5296,7 @@ fieldset[disabled] .navbar-default .btn-link:hover {
 
 .navbar-inverse {
     background-color: #222;
-    border-color: #090909
+    border-color: #090909;
 }
 
 .navbar-inverse .navbar-brand {
