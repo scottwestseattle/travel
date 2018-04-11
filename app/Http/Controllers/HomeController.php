@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+define("LONGNAME", "Hike, Bike, Boat");
+
 class HomeController extends Controller
 {
     /**
