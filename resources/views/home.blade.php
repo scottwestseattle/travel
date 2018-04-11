@@ -69,7 +69,7 @@
 			</h1>
 			
 			<h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
-				Consectetur adipiscing elit:
+				Self-guided tours, Travel Blogs, Worldwide travel information
 			</h2>
 			
 			<div class="clearfix">
