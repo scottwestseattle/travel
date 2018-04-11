@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.frontpage')
 
 @section('content')
 
@@ -65,7 +65,7 @@
 			</div>				
 			
 			<h1 class="font-open-sans-300">
-				Lorem ipsum dolor sit amet
+				Welcome to Epic Travel Guide
 			</h1>
 			
 			<h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
@@ -78,21 +78,21 @@
 				
 					<div class="col-md-4 col-sm-6">
 						<div class="steps step1">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Self-Guided Tours</h3>
+							Latest Self-guided tours
 						</div>
 					</div>
 
 					<div class="col-md-4 col-sm-6">
 						<div class="steps step2">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Articles</h3>
+							The latest travel articles.
 						</div>
 					</div>
 
 					<div class="col-md-4 col-sm-6">
 						<div class="steps step3">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Travel Blogs</h3>
 							This is the text that is shown in the responsive floating box with three columns
 						</div>
 					</div>

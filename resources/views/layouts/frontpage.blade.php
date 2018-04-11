@@ -34,7 +34,7 @@
 </head>
 <body>
     <div id="app" style="">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #FF6900 /* orange */; border-width: 0 0 0px;"> 
             <div class="container">
                 <div class="navbar-header">
 
