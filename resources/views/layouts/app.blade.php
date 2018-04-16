@@ -48,9 +48,13 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-						<!-- img width="45px" src="/img/logo-top.png" /-->
+						<span class="glyphCustom glyphicon glyphicon-home"></span>
+						<!--
+						<img width="45px" src="/img/logo-top.png" />
                         {{ config('app.name', 'Travel') }}
+						-->
                     </a>
+					
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">

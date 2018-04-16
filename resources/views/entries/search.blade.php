@@ -32,7 +32,7 @@ a:hover {
 	
 	@foreach($entries as $entry)
 		<div style="padding: 3px 0px;" class="">
-			<a style="" href="/entries/gendex/{{$entry->id}}">{{$entry->title}}</a>
+			<a style="" href="/entries/gen/{{$entry->id}}">{{$entry->title}}</a>
 		</div>
 	@endforeach
 	

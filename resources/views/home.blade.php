@@ -1,3 +1,43 @@
+<style>
+.frontpage-box a
+{
+	color: white;
+	text-decoration: none;
+	font-size: 10pt;
+}
+
+.frontpage-box p
+{
+	margin: 0;
+	padding: 0;
+}
+
+.frontpage-box-link
+{
+	display: block; 	
+	height: 220px; 
+	width: 320px; 
+}
+
+.frontpage-box-text
+{
+	margin: 3px 4px;
+	font-weight: bold;
+}
+
+.frontpage-box
+{
+	background-color: #a0a0a0;
+
+	display: block; 
+	float: left; 
+
+	margin: 0;
+	margin-top: 5px;
+	margin-left: 5px;	
+}
+</style>
+
 @extends('layouts.frontpage')
 
 @section('content')
@@ -14,7 +54,7 @@
 </div>
 
 <div id="sliderWrapper" class="">
-	<div style="" id="slider" class="container text-center">
+	<div style="" id="slider" title="Slider Image" class="container text-center">
 		
 		<!-- slider photo are attached here -->	
 			
@@ -28,10 +68,24 @@
 				</video>				
 
 				-->
-
-				<img id="logo-big" src="/img/theme1/logo-big.png" />
 				
-						
+				<?php
+					$logo = '';
+					if (URL::to('/') === 'http://hikebikeboat.com')
+					{
+						$logo = '-hbb';
+					}
+					else if (URL::to('/') === 'http://epictravelguide.com')
+					{
+						$logo = '-epic';
+					}
+					else
+					{
+						$logo = '';
+					}
+				?>
+				
+				<img id="logo-big" src="/img/theme1/logo-big{{ $logo }}.png" alt="{{ URL::to('/') }}" title="{{ URL::to('/') }}" />
 <!--
 				<div style="max-width: 700px; margin: auto;">
 					<h2 id="" class="font-open-sans-400" ><span class="">Slider Header 2 Message Loger Text Content Goes Here</span></h2>
@@ -65,7 +119,7 @@
 			</div>				
 			
 			<h1 class="font-open-sans-300">
-				Welcome to Epic Travel Guide
+				Welcome to {{ config('app.name', 'Travel') }}
 			</h1>
 			
 			<h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
@@ -76,47 +130,37 @@
 				
 				<div class="row">
 				
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step1">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Self-Guided Tours</h3>
-							Latest Self-guided tours
-						</div>
-					</div>
+					<?php $count = 0; ?>
+					@foreach($entries as $entry)
+						
+						<div class='frontpage-box' >
 
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step2">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Articles</h3>
-							The latest travel articles.
-						</div>
-					</div>
+							<!-- BACKGROUND PHOTO LINK -->
+							
+							<?php
+								$count++;
+								$h = 200;
+								$w = 300;
+								$photo = 
+								$photo = '/img/theme1/test' . $count . '.jpg';
+							?>
+							
+							<a href="/view/{{$entry->id}}" class="frontpage-box-link" style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" ></a>
 
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step3">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Travel Blogs</h3>
-							This is the text that is shown in the responsive floating box with three columns
+							<!-- HEADER NAME/TITLE LINK ------------------------------------------ -->
+							
+							<div class='frontpage-box-text'>
+							
+								<!-- CAPTION/TITLE ------------------------------------------ -->
+								<p>		
+									<a href="/view/{{$entry->id}}">{{ $entry->title }}</a>
+								</p>	
+								
+							</div>
+								
 						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step4">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step5">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step6">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
+						
+					@endforeach
 					
 				</div><!-- row -->			
 
@@ -136,7 +180,7 @@
 	<div class="sectionHeader text-center">	
 
 		<div class="sectionImage"><span class="glyphicon glyphicon-user"></span></div>
-		<h1>Section 2 Title</h1>
+		<h1>Latest Articles</h1>
 		
 	</div>
 
@@ -254,11 +298,6 @@
 	
 	</div>
 </section>
-
-
-
-
-
 
 
 @endsection

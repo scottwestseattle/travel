@@ -30,7 +30,7 @@
 	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
-	
+		
 </head>
 <body>
     <div id="app" style="">
@@ -48,9 +48,13 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-						<!-- img width="45px" src="/img/logo-top.png" /-->
+						<span class="glyphCustom glyphicon glyphicon-home"></span>
+						<!--
+						<img width="45px" src="/img/logo-top.png" />
                         {{ config('app.name', 'Travel') }}
+						-->
                     </a>
+					
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -101,5 +105,16 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+	
+	<script>	
+		var rnd = Math.floor(Math.random() * 19) + 1;
+		var img = "slider" + rnd + ".jpg";
+		document.getElementById("slider").style.backgroundImage = "url('/img/theme1/slider" + rnd + ".jpg')";
+		document.getElementById("slider").title = img;
+		//alert(document.getElementById("slider").title);
+		//alert("url('/img/theme1/slider'" + rnd + "'.jpg')");
+	</script>
+	
+	
 </body>
 </html>

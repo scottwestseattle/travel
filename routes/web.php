@@ -19,6 +19,7 @@ Auth::routes();
 // public pages
 Route::get('/', 'HomeController@index');
 Route::get('/about', 'HomeController@about');
+Route::get('/view/{entry}', 'HomeController@view');
 
 // timer
 Route::get('/timer', 'EntryController@timer');
@@ -26,6 +27,35 @@ Route::get('/timer', 'EntryController@timer');
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
+
+Route::group(['prefix' => 'entries'], function () {
+	
+	Route::get('/index', 'EntryController@index')->middleware('auth');
+	Route::get('/templates', 'EntryController@templates')->middleware('auth');
+
+	// add/create
+	Route::get('/add','EntryController@add')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
+	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');
+	
+	// other gets
+	Route::get('/viewcount/{entry}','EntryController@viewcount')->middleware('auth');
+	Route::get('/view/{entry}','EntryController@view')->middleware('auth');
+	Route::get('/gen/{entry}','EntryController@gen')->middleware('auth');
+	Route::get('/search/{entry}','EntryController@search')->middleware('auth');
+	Route::get('/gendex/{id?}','EntryController@gendex')->middleware('auth');
+	Route::get('/settemplate/{id}','EntryController@settemplate')->middleware('auth');
+	Route::get('/timer', 'EntryController@timer')->middleware('auth');
+	
+	// other posts
+});
 
 Route::group(['prefix' => 'faqs'], function () {
 	Route::get('/', 'FaqsController@index')->middleware('auth');
@@ -81,32 +111,4 @@ Route::group(['prefix' => 'tasks'], function () {
 	Route::post('/delete/{task}','TasksController@delete')->middleware('auth');
 });
 
-Route::group(['prefix' => 'entries'], function () {
-	
-	Route::get('/index', 'EntryController@index')->middleware('auth');
-	Route::get('/templates', 'EntryController@templates')->middleware('auth');
-
-	// add/create
-	Route::get('/add','EntryController@add')->middleware('auth');
-	Route::post('/create','EntryController@create')->middleware('auth');
-
-	// edit/update
-	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
-	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
-
-	// delete / confirm delete
-	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');
-	
-	// other gets
-	Route::get('/viewcount/{entry}','EntryController@viewcount')->middleware('auth');
-	Route::get('/view/{entry}','EntryController@view')->middleware('auth');
-	Route::get('/gen/{entry}','EntryController@gen')->middleware('auth');
-	Route::get('/search/{entry}','EntryController@search')->middleware('auth');
-	Route::get('/gendex/{id?}','EntryController@gendex')->middleware('auth');
-	Route::get('/settemplate/{id}','EntryController@settemplate')->middleware('auth');
-	Route::get('/timer', 'EntryController@timer')->middleware('auth');
-	
-	// other posts
-});
 

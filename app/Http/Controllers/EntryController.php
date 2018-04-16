@@ -23,7 +23,7 @@ class EntryController extends Controller
 			->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
-			->orderByRaw('is_template_flag, entries.title')
+			->orderByRaw('entries.id')
 			->get();
 			
 		//dd($entries);
@@ -75,10 +75,7 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			if ($entry->is_template_flag)
-				return redirect('/entries/templates'); 
-			else
-				return redirect('/entries/gendex/' . $entry->id);
+			return redirect('/entries/gen/' . $entry->id);
         }           
         else 
 		{
@@ -88,14 +85,8 @@ class EntryController extends Controller
 
     public function view(Entry $entry)
     {
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
-        {            
-			return view('entries.view', compact('entry'));
-        }           
-        else 
-		{
-             return redirect('/');
-        }            	
+		//dd('here');
+		return view('entries.view', compact('entry'));
     }
 
     public function gen(Entry $entry)
@@ -132,8 +123,7 @@ class EntryController extends Controller
 
     public function home()
     {
-		//return redirect('/entries/gendex');
-		return $this->gendex();
+		return $this->index();
 	}
 	
     public function gendex($id = INTNOTSET)
@@ -186,12 +176,12 @@ class EntryController extends Controller
 				}
 
 				if ($entry === null)
-				{
+				{	
 					// new user won't have any data					
 					$entry = new Entry();
 					$entry->title = "Standard Layout";
-					$entry->description = "Dear Friend,\r\n\r\nWelcome to TPL!\r\n\r\nThis is the Standard Layout.  Your template content will replace the \"body\" line below.\r\n\r\n" . BODY_PLACEHODER . "\r\n\r\nThank you for using TPL!\r\n\r\nSincerely,\r\n\r\nTeam TPL";
-					$entry->description_language1 = "Estimado Amigo,\r\n\r\n¡Bienvenidos a TPL!\r\n\r\nEste es el Standard Layout.  Su plantilla reemplace la linea \"body\" abajo.\r\n\r\n" . BODY_PLACEHODER . "\r\n\r\n¡Gracias por usar TPL!\r\n\r\nAtentamente,\r\n\r\nEquipo de TPL";
+					$entry->description = BODY_PLACEHODER;
+					$entry->description_language1 = BODY_PLACEHODER;
 					$entry->is_template_flag = 1;
 					$entry->user_id = Auth::id();
 								
@@ -270,10 +260,7 @@ class EntryController extends Controller
 			$entry->is_template_flag 		= isset($request->is_template_flag) ? 1 : 0;
 			$entry->save();
 			
-			if ($entry->is_template_flag)
-				return redirect('/entries/templates'); 
-			else
-				return redirect('/entries/gendex/' . $entry->id); 
+			return redirect('/entries/gen/' . $entry->id); 
 		}
 		else
 		{
@@ -304,14 +291,11 @@ class EntryController extends Controller
 			
 			$entry->delete();
 			
-			if ($entry->is_template_flag)
-				return redirect('/entries/templates'); 
-			else
-				return redirect('/entries/gendex/');
+			return redirect('/entries/index/');
 			
 		}
 		
-		return redirect('/entries/gendex');
+		return redirect('/entries/index');
     }
 		
     public function search($search)

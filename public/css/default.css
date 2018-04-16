@@ -76,7 +76,7 @@
 }
 		
 #slider {
-	background-image: url("/img/theme1/slider2.jpg");
+	/* background-image: url("/img/theme1/slider1.jpg"); */
 	background-size: cover;
 	background-position: center;		
 	width: 100%;
@@ -177,7 +177,17 @@
 		text-decoration: none;
 	}
 	
-	.steps {
+	.steps /* fixed size */{
+		float: left;
+		width: 250px;
+		padding: 10px;
+		font-size: 20px;
+		margin: 5px;
+		min-height: 220px;
+		border: white 3px solid;
+		xborder-radius: 10px;
+	}
+	.stepsFlexSize {
 		padding: 10px;
 		font-size: 20px;
 		margin: 5px;
@@ -185,6 +195,7 @@
 		border: white 3px solid;
 		border-radius: 10px;
 	}
+
 	.step1 {
 		background-color: MediumTurquoise;
 	}

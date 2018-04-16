@@ -19,7 +19,7 @@
 						<a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
 					</td>
 					<td>
-						<a href="/entries/gendex/{{$entry->id}}">{{$entry->title}}</a>
+						<a href="/entries/gen/{{$entry->id}}">{{$entry->title}}</a>
 						
 						<?php if (intval($entry->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $entry->view_count }}</span></span>
