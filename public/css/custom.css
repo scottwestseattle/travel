@@ -67,7 +67,8 @@ Controls
 	font-size: 1.3em;
 	background-color: white;
 	float: left;
-	width: 48%;
+	width: 95%;
+	max-width: 600px;
 }
 
 .entry a:hover {

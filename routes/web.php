@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/about', 'HomeController@about');
 Route::get('/view/{entry}', 'HomeController@view');
+Route::get('/tours', 'HomeController@tours');
+Route::get('/posts', 'HomeController@posts');
 
 // timer
 Route::get('/timer', 'EntryController@timer');
@@ -30,8 +32,9 @@ Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
 Route::group(['prefix' => 'entries'], function () {
 	
+	Route::get('/tours', 'EntryController@tours')->middleware('auth');
+	Route::get('/posts', 'EntryController@posts')->middleware('auth');
 	Route::get('/index', 'EntryController@index')->middleware('auth');
-	Route::get('/templates', 'EntryController@templates')->middleware('auth');
 
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');

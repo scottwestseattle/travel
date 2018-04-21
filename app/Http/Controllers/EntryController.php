@@ -21,7 +21,7 @@ class EntryController extends Controller
 		
 		$entries = Entry::select()
 			->where('user_id', '=', Auth::id())
-			->where('is_template_flag', '<>', 1)
+			//->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
 			->orderByRaw('entries.id')
 			->get();
@@ -31,12 +31,28 @@ class EntryController extends Controller
     	return view('entries.index', compact('entries'));
     }
 
-    public function templates()
+    public function posts()
+    {
+    	//$user = Auth::user(); // original gets current user with all entries
+		
+		$entries = Entry::select()
+			->where('user_id', '=', Auth::id())
+			->where('is_template_flag', '<>', 1)
+			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->orderByRaw('entries.id DESC')
+			->get();
+			
+		//dd($entries);
+		
+    	return view('entries.index', compact('entries'));
+    }
+	
+    public function tours()
     {
 		$entries = Entry::select()
 			->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '=', 1)
-			->orderByRaw('id')
+			->orderByRaw('entries.id DESC')
 			->get();
 		
 		return view('entries.index', ['entries' => $entries, 'data' => $this->getViewData()]);									

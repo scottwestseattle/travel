@@ -28,6 +28,9 @@
 	<!-- App styles -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu" rel="stylesheet">
+	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 		
@@ -66,12 +69,14 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
-                        <li><a href="/entries/index">Tours</a></li>
-                        <li><a href="/entries/index">Articles</a></li>
+						<li><a href="/posts">Posts</a></li>
+						<li><a href="/tours">Tours</a></li>
                         @guest
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+							<li><a href="/entries/posts">Edit Posts</a></li>
+							<li><a href="/entries/tours">Edit Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							
                             <li class="dropdown">
@@ -106,11 +111,35 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 	
-	<script>	
-		var rnd = Math.floor(Math.random() * 19) + 1;
+	<script>
+
+	var items = [
+  [1, 2],
+  [3, 4],
+  [5, 6]
+];
+		var sliders = [
+			 ["Jerusalem, Israel", "white"],
+			 ["Vienna, Austria", "black"],
+			 ["Budapest, Hungary", "white"],
+			 ["Notre Dame, Paris", "#3F98FD"],
+			 ["Bandar Seri Begawan, Brunei", "white"],
+			 ["Vietnam", "white"],
+			 ["Kuala Selangor, Malaysia", "white"],
+			 ["Mekong River, Cambodia", "white"],
+			 ["Ankgor Wat, Cambodia", "white"],
+			 ["Mongolia", "white"],
+			 ["Costa Brava, Spain", "white"],
+		];
+
+	
+		var rnd = Math.floor(Math.random() * 11) + 1;
 		var img = "slider" + rnd + ".jpg";
 		document.getElementById("slider").style.backgroundImage = "url('/img/theme1/slider" + rnd + ".jpg')";
+		document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
 		document.getElementById("slider").title = img;
+		document.getElementById("slider-text").innerText = sliders[rnd-1][0];
+		document.getElementById("slider-text").style.color = 'white'; //sliders[rnd-1][1];
 		//alert(document.getElementById("slider").title);
 		//alert("url('/img/theme1/slider'" + rnd + "'.jpg')");
 	</script>

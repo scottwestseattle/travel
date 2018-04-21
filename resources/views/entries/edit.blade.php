@@ -36,7 +36,7 @@
 			</div>
 
 			<input type="checkbox" name="is_template_flag" id="is_template_flag" class="" value="{{$entry->is_template_flag }}" {{ ($entry->is_template) ? 'checked' : '' }} />
-			<label for="is_template_flag" class="checkbox-big-label">Is Template</label>
+			<label for="is_template_flag" class="checkbox-big-label">Is Tour</label>
 			
 			<div class="">
 				<button type="submit" name="update" class="btn btn-primary">Save</button>

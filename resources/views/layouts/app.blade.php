@@ -28,6 +28,13 @@
 	<!-- App styles -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu" rel="stylesheet">
+	
+	<!-- google fonts
+	font-family: 'Raleway', sans-serif;
+	-->
+	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 	
@@ -65,12 +72,14 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/entries/index">Tours</a></li>
-                        <li><a href="/entries/index">Articles</a></li>
+						<li><a href="/posts">Posts</a></li>
+						<li><a href="/tours">Tours</a></li>
                         @guest
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+							<li><a href="/entries/posts">Edit Posts</a></li>
+							<li><a href="/entries/tours">Edit Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">

@@ -9,7 +9,7 @@
 @endcomponent
 
 <div class="container">
-	<h1 style="font-size:1.3em;">Templates ({{ count($entries) }})</h1>
+	<h1 style="font-size:1.3em;">Entries ({{ count($entries) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
@@ -17,6 +17,9 @@
 				<tr>
 					<td style="width:20px;">
 						<a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
+					</td>
+					<td style="width:50px;">
+					{{ ($entry->is_template_flag ? 'TOUR' : 'POST') }}
 					</td>
 					<td>
 						<a href="/entries/gen/{{$entry->id}}">{{$entry->title}}</a>

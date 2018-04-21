@@ -27,22 +27,53 @@ class HomeController extends Controller
     {
     	//$user = Auth::user(); // original gets current user with all entries
 		
-		$entries = Entry::select()
+		$posts = Entry::select()
 			//->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
-			->orderByRaw('entries.id')
+			->orderByRaw('entries.id DESC')
+			->get();
+
+		$tours = Entry::select()
+			//->where('user_id', '=', Auth::id())
+			->where('is_template_flag', '=', 1)
+			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->orderByRaw('entries.id DESC')
 			->get();
 			
 		//dd($entries);
 		
-    	return view('home', compact('entries'));		
+    	return view('home', compact('posts'), compact('tours'));		
     }
 	
     public function view(Entry $entry)
     {
 		//dd('here');
 		return view('entries.view', compact('entry'));
+    }
+
+    public function posts(Entry $entry)
+    {
+		$entries = Entry::select()
+			//->where('user_id', '=', Auth::id())
+			->where('is_template_flag', '<>', 1)
+			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->orderByRaw('entries.id DESC')
+			->get();
+			
+		return view('home.posts', compact('entries'));
+    }
+
+    public function tours(Entry $entry)
+    {
+		$entries = Entry::select()
+			//->where('user_id', '=', Auth::id())
+			->where('is_template_flag', '=', 1)
+			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->orderByRaw('entries.id DESC')
+			->get();
+			
+		return view('home.tours', compact('entries'));
     }
 	
     /**
