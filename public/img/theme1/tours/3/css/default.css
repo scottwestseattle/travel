@@ -1,0 +1,503 @@
+/*****************************************************************/
+/* navbar and slider */
+/*****************************************************************/
+
+#logo-big-text {
+	font-size: 3em;
+	font-weight: bold;
+}	
+
+#slider-text {
+	xmargin-top: 750px;
+}	
+
+#ttd-map {
+	max-height:750px;
+}	
+
+@media (max-width: 992px) {
+	
+	#logo-big {
+		/* width: 200px; */
+	}
+	
+	#logo-big-text {
+		font-size: 3em;
+		font-weight: bold;
+	}	
+
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+	
+	#ttd-map {
+		max-height:750px;
+	}	
+	
+    .navbar-header {
+        float: none;
+    }
+    .navbar-left,.navbar-right {
+        float: none !important;
+    }
+    .navbar-toggle {
+        display: block;
+    }
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+    .navbar-nav>li {
+        float: none;
+    }
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .collapse.in{
+        display:block !important;
+    }
+
+}	
+
+/* navbar overrides */
+
+.navbar {
+	margin-bottom: 0;
+}
+
+.navbar-brand {
+	margin: 0;
+	padding: 0;
+}
+
+.navbar-logo {
+	padding-left: 20px;
+}
+.navbar-logo-xs {
+	padding-left: 20px;
+	width: 70%;		/* makes logo contract for xs devices */
+}
+.navbar-logo-xs img {
+	height: 50px;	/* makes logo contract for xs devices */
+}
+
+.headerHeight {
+	height: 100%;
+}
+	
+.navbar-default {
+	background-color: white;
+}
+		
+#slider {
+	/* background-image: url("/img/theme1/slider1.jpg"); */
+	background-size: cover;
+	background-position: center;		
+	width: 100%;
+	height: 100%;
+	min-height: 600px;
+}
+		
+#sliderWrapper { /* Need this so slider will stay the same size */
+	background-color: #2CAEA4;
+	background-color: white;
+	min-height: 600px;
+/*
+	background-image: url("/img/theme1/slider1.jpg");
+	background-size: cover;
+	background-position: center;		
+	width: 100%;
+	height: 100%;
+*/
+}
+
+/*****************************************************************/
+/* generic tools */
+/*****************************************************************/
+
+.center {
+	text-align: center;
+}
+	
+.clearfix {
+	clear: both;
+}
+	
+/*****************************************************************/
+/* front page sections */
+/*****************************************************************/
+	
+	section.explain {
+		padding: 50px 0 40px 0;
+	}
+	
+	p.explain, ul.explain, .explain li {
+		text-align: left; 
+		font-size: 20px;
+		font-weight: bold; 
+	}
+	
+	.explain li {
+		margin-bottom: 20px;
+	}
+	
+	.sectionYellow, .sectionBlue, .sectionWhite {
+		padding: 50px 0 40px 0;
+	}
+	
+	.sectionYellow {
+		background-color: #FF6900;
+		color: white;
+	}
+	.sectionBlue {
+		background-color: #3F98FD;		
+		color: white;
+	}
+	.sectionWhitePattern {
+		background-image: url("/img/bg-white.jpg");
+		background-size: cover;
+		background-position: center;		
+	}
+	
+	.sectionImage {
+		display: inline-block; 
+		padding-top: 15px; 
+		font-size: 6em;
+		width: 100px; 
+		height: 100px; 
+		xborder: 3px solid white; 
+
+		border-radius: 50%;
+		-moz-border-radius: 50%;
+		-webkit-border-radius: 50%;
+	}
+		
+	.sectionImageBlue {
+		border-color: #3F98FD; 
+		color: #3F98FD;
+	}
+	a.sectionImageBlue:hover {
+		text-decoration: none;
+	}
+	
+	.textWhite {
+		color: white;
+	}
+	
+	.sectionImageWhite {
+		color: white;
+	}
+	a.sectionImageWhite:hover {
+		text-decoration: none;
+	}
+	
+	.steps /* fixed size */{
+		float: left;
+		width: 250px;
+		padding: 10px;
+		font-size: 20px;
+		margin: 5px;
+		min-height: 220px;
+		border: white 3px solid;
+		xborder-radius: 10px;
+	}
+	.stepsFlexSize {
+		padding: 10px;
+		font-size: 20px;
+		margin: 5px;
+		min-height: 220px;
+		border: white 3px solid;
+		border-radius: 10px;
+	}
+
+	.step1 {
+		background-color: MediumTurquoise;
+	}
+	.step2 {
+		background-color: yellow;
+	}
+	.step3 {
+		background-color: Orchid;
+	}
+	.step4 {
+		background-color: lightGreen;
+	}
+	.step5 {
+		background-color: cyan;
+	}
+	.step6 {
+		background-color: lightSalmon;
+	}
+	
+	.glyphspace {
+		padding-right: 20px;
+	}
+	.glyphspace5 {
+		padding-right: 5px;
+	}
+	.glyphspace10 {
+		padding-right: 10px;
+	}	
+		
+	.sliderTextPanel {
+		margin-bottom: 20px;
+		display: inline-block;
+		background: rgba(0, 0, 0, 0.5);
+		border: gray 1px solid;
+		border-radius: 15px;
+		text-shadow:
+			-1px -1px 0 black,  
+			 1px -1px 0 black,
+			-1px  1px 0 black,
+			 1px  1px 0 black;	
+		
+	}	
+	.sliderText h1, .sliderText h2{
+		line-height: 1.2em;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	
+	.sliderText h2 {
+		padding-top: 0px;
+		padding-bottom: 20px;
+	}
+		
+	.logos img {
+		float: left;
+		max-width: 100px;
+	}
+	
+	.marginTop10 { margin-top: 10px; }
+	.marginTop20 { margin-top: 20px; }
+	.marginTop30 { margin-top: 30px; }
+	.marginTop40 { margin-top: 40px; }
+	.marginTop50 { margin-top: 50px; }
+	.marginTop100 { margin-top: 100px; }
+		
+	.btn-lg {
+		font-size: 2em;
+	}
+	
+	.btn-md {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	
+	  .form-control-big input[type="text"]
+	, .form-control-big input[type="email"]
+	, .form-control-big input[type="password"] 
+	{
+		font-size: 1.5em;
+		padding: 5px 5px 5px 10px;
+		margin-top: 10px;
+		height: 45px;
+		border-radius: 7px;
+	}
+
+	.form-control-big textarea
+	{
+		font-size: 1.5em;
+		padding: 5px 5px 5px 10px;
+		margin-top: 10px;
+		border-radius: 7px;
+	}
+	
+	form.form-horizontal {
+		padding: 0 20px;
+	}
+	
+	.formControlSpace {
+		margin-bottom: 10px;
+	}
+	.formControlSpace20 {
+		margin-bottom: 20px;
+	}
+		
+	.sectionHeader h1 {
+		margin-bottom: 30px;
+	}
+	
+	.sectionHeader h1, .sectionHeader h3, .sectionHeader h2 {
+		font-family: Raleway; 		
+	}
+
+	
+	.bgWhite {
+		background-color: white;
+	}
+	.bgRed {
+		background-color: red;
+	}
+	.bgGreen {
+		background-color: #70DC70;
+	}
+	.bgBlue {
+		background-color: #286090;
+	}
+	
+	.marginBottom20 {
+		margin-bottom: 20px;
+	}
+	.marginBottom30 {
+		margin-bottom: 30px;
+	}
+	.marginBottom40 {
+		margin-bottom: 40px;
+	}
+	.marginBottom50 {
+		margin-bottom: 50px;
+	}
+
+.headerHeightOffset {
+	xheight: 72px;		/* this gets changed by js */
+	xmax-height: 72px;	/* used by js to reset after height gets changed by js */
+}
+
+.sliderText {
+	color: white;
+	padding-top: 00px;	
+}	
+
+.scrollUp {
+    z-index: 9999999999999;
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+}
+
+.font-open-sans-400 {
+	font-weight: 400; font-family: 'Open Sans', sans-serif;
+}
+.font-open-sans-300 {
+	font-weight: 300; font-family: 'Open Sans', sans-serif;
+}
+
+.message {
+	padding: 10px;
+	font-size: 1.2em;
+}
+
+/*******************************************************************************
+
+Flash Messages
+
+********************************************************************************/
+.error {
+	background-color: #FF5656;
+	color: white;
+}
+
+.success {
+	background-color: LightGreen;
+}
+	
+/**************************************************************************************************
+
+Media specific overrides go below here
+
+***************************************************************************************************/
+	
+/****************** overrides for size SM ********************************/
+@media (min-width: 768px) and (max-width: 991px) 
+{
+	#logo-big {
+		width: 300px;
+	}
+	
+	#logo-big-text {
+		font-size: 2em;
+	}
+
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+
+	#ttd-map {
+		max-height:150px;
+	}	
+	
+/* not yet: fixed top still has problems
+	.navbar-fixed-top {
+		border-radius: 0;
+		position: static;
+	}
+  
+	.headerHeightOffset {
+		height: 0px;		/ * this gets changed by js * /
+		max-height: 72px;	/ * used by js to reset after height gets changed by js * /
+	}
+*/
+}
+
+/****************** overrides for size XS *******************************/	
+@media (max-width: 767px) 
+{
+	#logo-big {
+		width: 220px;
+	}
+	
+	#logo-big-text {
+		font-size: 2em;
+	}	
+	
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+
+	#ttd-map {
+		max-height:75px;
+	}	
+	
+/* not yet: fixed top still has problems
+	.navbar-fixed-top {
+		border-radius: 0;
+		position: static;
+	}
+  
+	.headerHeightOffset {
+		height: 0px;		/ * this gets changed by js * /
+		max-height: 72px;	/ * used by js to reset after height gets changed by js * /
+	}
+*/
+	
+	.sliderText {
+		padding-top: 0px;	
+	}	
+	
+	.sliderText h1, .sliderText h2{
+		line-height: 1.2em;
+		padding-left: 10px;
+		padding-right: 10px;
+	}	
+	
+	#slider {
+		min-height: 500px;
+	}
+	
+	#sliderWrapper {
+		min-height: 500px;
+	}
+	
+	section h1 {
+		font-size: 1.7em;
+	}
+	section h2 {
+		font-size: 1.4em;
+	}
+	section h3 {
+		font-size: 1.2em;
+	}
+}

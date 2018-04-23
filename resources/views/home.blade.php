@@ -166,11 +166,27 @@
 			@foreach($tours as $entry)
 				<?php 
 					$link = '/view/' . $entry->id;
-					$photo = 'img/theme1/' . str_replace(":", "", $entry->title) . '.jpg';
-					//dd(getcwd());
+					$base_folder = 'img/theme1/tours/';
+					$photo_folder = $base_folder . $entry->id . '/';
+					$photo = $photo_folder . 'main.jpg';
 					
+					// file_exists must be relative path with no leading '/'
 					if (file_exists($photo) === FALSE)
-						$photo = '/img/theme1/placeholder.jpg';
+					{
+						if (!is_dir($photo_folder)) // if folder doesn't exist
+						{							
+							// make the folder with read/execute for everbody
+							mkdir($photo_folder, 0755);
+						}
+						
+						// show the place holder
+						$photo = '/' . $base_folder . 'placeholder.jpg';
+					}
+					else
+					{
+						// to show the photo we need the leading '/'
+						$photo = '/' . $photo_folder . 'main.jpg';
+					}
 				?>
 				<tr>
 					<td style="width:100px;">
@@ -190,6 +206,15 @@
 							}
 						?>
 						<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+						
+                        @guest
+						@else
+							<a href='/entries/edit/{{$entry->id}}'>
+								<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
+							</a>
+							
+							<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
+						@endguest
 					</td>
 				</tr>
 			@endforeach
