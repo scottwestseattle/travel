@@ -53,7 +53,8 @@
 	<img src="/img/theme1/slider4.jpg" />
 </div>
 
-<div id="sliderWrapper" class="">
+
+<div id="sliderWrapper" class="container" style="max-width:1600px; margin: 0 auto 0 auto;">
 	<div style="" id="slider" title="Slider Image" class="container text-center">
 		
 		<!-- slider photo are attached here -->	

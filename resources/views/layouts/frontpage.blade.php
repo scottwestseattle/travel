@@ -133,8 +133,11 @@
 		];
 
 	
-		var rnd = Math.floor(Math.random() * 11) + 1;
+		var total = 6;
+		var rnd = Math.floor(Math.random() * total) + 1;
 		var img = "slider" + rnd + ".jpg";
+		//rnd = 1;
+		
 		document.getElementById("slider").style.backgroundImage = "url('/img/theme1/slider" + rnd + ".jpg')";
 		document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
 		document.getElementById("slider").title = img;
