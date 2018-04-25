@@ -1,0 +1,313 @@
+/*****************************************************************/
+/* navbar and slider */
+/*****************************************************************/
+
+#logo-big-text {
+	font-size: 3em;
+	font-weight: bold;
+}	
+
+#slider-text {
+	xmargin-top: 750px;
+}	
+
+#ttd-map {
+	max-height:750px;
+}	
+
+/* navbar overrides */
+
+#slider-test {
+  width: 100%;
+  min-height:800px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+		
+#sliderWrapper { /* Need this so slider will stay the same size */
+	background-color: #2CAEA4;
+	background-color: white;
+	min-height: 700px;
+}
+
+/*****************************************************************/
+/* front page sections */
+/*****************************************************************/
+	
+	section.explain {
+		padding: 50px 0 40px 0;
+	}
+	
+	p.explain, ul.explain, .explain li {
+		text-align: left; 
+		font-size: 20px;
+		font-weight: bold; 
+	}
+	
+	.explain li {
+		margin-bottom: 20px;
+	}
+	
+	.sectionYellow, .sectionBlue, .sectionWhite {
+		padding: 50px 0 40px 0;
+	}
+	
+	.sectionYellow {
+		background-color: #FF6900;
+		color: white;
+	}
+	.sectionBlue {
+		background-color: #3F98FD;		
+		color: white;
+	}
+	.sectionWhitePattern {
+		background-image: url("/img/bg-white.jpg");
+		background-size: cover;
+		background-position: center;		
+	}
+	
+	.sectionImage {
+		display: inline-block; 
+		padding-top: 15px; 
+		font-size: 6em;
+		width: 100px; 
+		height: 100px; 
+		xborder: 3px solid white; 
+
+		border-radius: 50%;
+		-moz-border-radius: 50%;
+		-webkit-border-radius: 50%;
+	}
+		
+	.sectionImageBlue {
+		border-color: #3F98FD; 
+		color: #3F98FD;
+	}
+	a.sectionImageBlue:hover {
+		text-decoration: none;
+	}
+	
+	.textWhite {
+		color: white;
+	}
+	
+	.sectionImageWhite {
+		color: white;
+	}
+	a.sectionImageWhite:hover {
+		text-decoration: none;
+	}
+		
+	.btn-lg {
+		font-size: 2em;
+	}
+	
+	.btn-md {
+		font-size: 1.5em;
+		font-weight: bold;
+	}
+	
+	  .form-control-big input[type="text"]
+	, .form-control-big input[type="email"]
+	, .form-control-big input[type="password"] 
+	{
+		font-size: 1.5em;
+		padding: 5px 5px 5px 10px;
+		margin-top: 10px;
+		height: 45px;
+		border-radius: 7px;
+	}
+
+	.form-control-big textarea
+	{
+		font-size: 1.5em;
+		padding: 5px 5px 5px 10px;
+		margin-top: 10px;
+		border-radius: 7px;
+	}
+	
+	form.form-horizontal {
+		padding: 0 20px;
+	}
+	
+	.formControlSpace {
+		margin-bottom: 10px;
+	}
+	.formControlSpace20 {
+		margin-bottom: 20px;
+	}
+		
+	.sectionHeader h1 {
+		margin-bottom: 30px;
+	}
+	
+	.sectionHeader h1, .sectionHeader h3, .sectionHeader h2 {
+		font-family: Raleway; 		
+	}
+
+.font-open-sans-400 {
+	font-weight: 400; font-family: 'Open Sans', sans-serif;
+}
+.font-open-sans-300 {
+	font-weight: 300; font-family: 'Open Sans', sans-serif;
+}
+
+.message {
+	padding: 10px;
+	font-size: 1.2em;
+}
+
+/*******************************************************************************
+
+Flash Messages
+
+********************************************************************************/
+.error {
+	background-color: #FF5656;
+	color: white;
+}
+
+.success {
+	background-color: LightGreen;
+}
+
+#xslider {
+	background-position: center;		
+	background-repeat: no-repeat;
+	background-size: 95%;
+	min-height: 700px;
+}
+
+#slider-TEST {
+	background-size: contain;
+	min-height: 700px;
+}
+
+.frontpage-container {
+	max-width: 1550px; 
+	margin-right: auto; margin-left: auto;
+    text-align: center;	
+}
+	
+/**************************************************************************************************
+
+Media specific overrides go below here
+
+***************************************************************************************************/
+
+/****************** overrides for size LG ********************************/	
+
+@media (min-width: 1201px) 
+{	
+	#text-lg {	display: initial;	}
+	#text-md {	display: none;	}
+	#text-sm {	display: none;	}
+	#text-xs {	display: none;	}
+	
+	#tours-lg { display:initial; }
+	#tours-md { display:none; }
+	
+	#tag-line { 
+		display:block; 
+		font-size:2em;
+	}
+}
+	
+/****************** overrides for size MD ********************************/	
+@media (min-width: 992px) and (max-width: 1200px) 
+{	
+	#text-lg {	display: none;	}
+	#text-md {	display: initial;	}
+	#text-sm {	display: none;	}
+	#text-xs {	display: none;	}
+		
+	#tours-lg { display:none; }
+	#tours-md { display:initial; }
+	
+	#tag-line { 
+		display:block; 
+		font-size:1.8em;
+	}
+
+	#logo-big {
+		/* width: 200px; */
+	}
+	
+	#logo-big-text {
+		font-size: 3em;
+		font-weight: bold;
+	}	
+
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+	
+	#ttd-map {
+		max-height:750px;
+	}	
+}	
+	
+/****************** overrides for size SM ********************************/
+@media (min-width: 768px) and (max-width: 991px) 
+{
+	#text-lg {	display: none;	}
+	#text-md {	display: none;	}
+	#text-sm {	display: initial;	}
+	#text-xs {	display: none;	}
+	
+	#tours-lg { display:none; }
+	#tours-md { display:initial; }
+	
+	#tag-line { 
+		display:block; 
+		font-size:1.5em;
+	}
+	
+	#logo-big {
+		width: 300px;
+	}
+	
+	#logo-big-text {
+		font-size: 2em;
+	}
+
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+
+	#ttd-map {
+		max-height:150px;
+	}	
+}
+
+/****************** overrides for size XS *******************************/	
+@media (max-width: 767px) 
+{
+	#text-lg {	display: none;	}
+	#text-md {	display: none;	}
+	#text-sm {	display: none;	}
+	#text-xs {	display: initial;	}
+		
+	#tours-lg { display:none; }
+	#tours-md { display:initial; }
+		
+	#tag-line { display:none; }
+		
+	#logo-big {
+		width: 220px;
+	}
+	
+	#logo-big-text {
+		font-size: 2em;
+	}	
+	
+	#slider-text {
+		xmargin-top: 750px;
+	}	
+
+	#ttd-map {
+		max-height:75px;
+	}	
+}
+

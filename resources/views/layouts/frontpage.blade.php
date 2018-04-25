@@ -20,7 +20,7 @@
 	
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-   <link href="{{ asset('css/default.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/frontpage.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -132,21 +132,25 @@
 			 ["Costa Brava, Spain", "white"],
 		];
 
-	
-		var total = 6;
+		var total = 14;
 		var rnd = Math.floor(Math.random() * total) + 1;
 		var img = "slider" + rnd + ".jpg";
 		//rnd = 1;
-		
+		//alert(img);
+
+/* using background image
 		document.getElementById("slider").style.backgroundImage = "url('/img/theme1/slider" + rnd + ".jpg')";
 		document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
 		document.getElementById("slider").title = img;
 		document.getElementById("slider-text").innerText = sliders[rnd-1][0];
 		document.getElementById("slider-text").style.color = 'white'; //sliders[rnd-1][1];
+*/
+	
+		// using foreground image
+		document.getElementById("slider").src = "/img/theme1/slider" + rnd + ".jpg";
 		//alert(document.getElementById("slider").title);
 		//alert("url('/img/theme1/slider'" + rnd + "'.jpg')");
 	</script>
-	
-	
+
 </body>
 </html>

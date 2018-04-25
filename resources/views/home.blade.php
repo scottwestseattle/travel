@@ -42,8 +42,21 @@
 
 @section('content')
 
+<div style="background-color: LightGray; background-size:cover; background-image:url('/img/theme1/bg-pattern.jpg'); " >
+
 <!--------------------------------------------------------------------------------------->
-<!-- Jumbotron slider -->
+<!-- Title Logo Bar -->
+<!--------------------------------------------------------------------------------------->
+
+<section style="">
+	<div class="frontpage-container" style="padding: 5px; text-align: center;" >
+		<img id="" style="margin-right:10px; " src="/img/theme1/epic-logo-pyramids-sm-arch.png" height="100px" />
+		<h1 id="tag-line" style="margin:0;padding:0; font-family: Raleway; color:#1F5E91;">Self-guided tours, Travel Blogs, and Worldwide travel information</h1>
+	</div>
+</section>
+
+<!--------------------------------------------------------------------------------------->
+<!-- Big random photo header section -->
 <!--------------------------------------------------------------------------------------->
 
 <div style="display: none; height: 0;" class="">
@@ -53,77 +66,26 @@
 	<img src="/img/theme1/slider4.jpg" />
 </div>
 
+<section style="">
+	<div class="frontpage-container" style="" >
+		<img id="slider" src="" width="100%" />
+	</div>
+</section>
 
-<div id="sliderWrapper" class="container" style="max-width:1600px; margin: 0 auto 0 auto;">
-	<div style="" id="slider" title="Slider Image" class="container text-center">
-		
-		<!-- slider photo are attached here -->	
-			
-		<div class="sliderText">
-			<div class="xsliderTextPanel" style="margin:20px;">
-				<!--
-				<h2 class="font-open-sans-400" style="margin:  0px; padding:0px; xbackground-color:black; font-size: 4em; font-weight:bold;"><span style="padding:0;margin:0;">Epic Travel Guide</span></h2>
-
-				<video autoplay muted loop id="myVideo">
-				  <source src="img/theme1/waves.mp4" type="video/mp4">
-				</video>				
-
-				-->
-				
-				<?php
-					$logo = '';
-					if (URL::to('/') === 'http://hikebikeboat.com')
-					{
-						$logo = '-hbb';
-					}
-					else if (URL::to('/') === 'http://epictravelguide.com')
-					{
-						$logo = '-epic';
-					}
-					else
-					{
-						$logo = '';
-					}
-				?>
-				
-				<!-- img id="logo-big" src="/img/theme1/logo-big{{ $logo }}.png" alt="{{ URL::to('/') }}" title="{{ URL::to('/') }}" / -->
-				<h1 id="logo-big-text" style="font-family: Raleway; font-weight: default;" >{{ config('app.name', 'Travel') }}</h1>
-<!--
-				<div style="max-width: 700px; margin: auto;">
-					<h2 id="" class="font-open-sans-400" ><span class="">Slider Header 2 Message Loger Text Content Goes Here</span></h2>
-				</div>
-
-				<div class="hidden-xs" style="max-width: 700px; margin: auto;">
-					<h2 id="" class="font-open-sans-400" ><span class=""></span>Ready to do the call to action?</h2>
-					<form action="/users/register">
-						<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgBlue"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;Call To Action</button>
-					</form>
-				</div>		
--->				
-				
-			</div>
-		</div>			
-	</div>		
-	<div class="text-center" style="position: relative; top: -26px; background-color: black; height: 26px; opacity: 0.55; filter: alpha(opacity=55);">
-		<span id="slider-text" style="margin:0;padding:0;font-family: Raleway; font-size: 14px; font-weight: bold;" >Slider Text Here</span>
-	</div>			
 </div>
-
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->
 
-<section id="" class="sectionBlue sectionWhitePattern" style="position: relative; top: -30px; ">
-<div class="container">	
+<section id="" class="sectionBlue sectionWhitePattern" style="position: relative; xtop: -30px; ">
+<div class="container" style="max-width:1400px;">	
 
 	<div class="sectionHeader text-center">	
 		
-		<h1 class="xfont-open-sans-300">
-			Welcome to {{ config('app.name', 'Travel') }}
-		</h1>
+		<h1>Welcome to {{ config('app.name', 'Travel') }}</h1>
 			
 		<!-- h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
-			Self-guided tours, Travel Blogs, Worldwide travel information
+			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
 		<h3>{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
@@ -147,7 +109,7 @@
 <!--------------------------------------------------------------------------------------->
 
 <section class="sectionWhite">
-<div class="container">	
+<div class="container" style="" >
 
 	<div class="sectionHeader text-center">	
 	
@@ -157,11 +119,79 @@
 		
 	</div>	
 	
-	
 </div>
 
-	<div style="padding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>
+<!---------------------- Large version----------------------->
+<div id="tours-lg" >
+<div class="container" style="max-width:1400px;">	
+	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">LARGE USA >> Seattle >> Downtown</div>
 
+	<table class="table" style="padding:0; margin:0">
+		<tbody>
+			@foreach($tours as $entry)
+				<?php 
+					$link = '/view/' . $entry->id;
+					$base_folder = 'img/theme1/tours/';
+					$photo_folder = $base_folder . $entry->id . '/';
+					$photo = $photo_folder . 'main.jpg';
+					
+					// file_exists must be relative path with no leading '/'
+					if (file_exists($photo) === FALSE)
+					{
+						if (!is_dir($photo_folder)) // if folder doesn't exist
+						{							
+							// make the folder with read/execute for everbody
+							mkdir($photo_folder, 0755);
+						}
+						
+						// show the place holder
+						$photo = '/' . $base_folder . 'placeholder.jpg';
+					}
+					else
+					{
+						// to show the photo we need the leading '/'
+						$photo = '/' . $photo_folder . 'main.jpg';
+					}
+				?>
+				<tr>
+					<td style="width:100px;">
+						<a href="{{ $link }}"><img src="{{ $photo }}" width="100" /></a>
+					</td>
+					<td>
+						<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
+						<?php
+							$tags = "Hike";
+							if (strpos($entry->title, "Water Taxi") === FALSE)
+							{
+								$tags = "Hike, Bike";
+							}
+							else
+							{
+								$tags = "Boat";
+							}
+						?>
+						<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+						
+                        @guest
+						@else
+							<a href='/entries/edit/{{$entry->id}}'>
+								<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
+							</a>
+							
+							<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
+						@endguest
+					</td>
+				</tr>
+			@endforeach
+		</tbody>
+	</table>
+</div>
+</div>
+	
+<!---------------------- Md, Sm, Xs version----------------------->
+<div id="tours-md">
+<div class="" style="">	
+	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">MEDIUM USA >> Seattle >> Downtown</div>
 		<table class="table" style="padding:0; margin:0">
 			<tbody>
 			@foreach($tours as $entry)
@@ -221,7 +251,8 @@
 			@endforeach
 			</tbody>
 		</table>
-
+	</div>	
+</div>
 </section>
 
 <!--------------------------------------------------------------------------------------->
@@ -229,7 +260,7 @@
 <!--------------------------------------------------------------------------------------->
 
 <section class="sectionBlue">
-	<div class="container">	
+	<div class="container" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
 			
 			<!-- div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
@@ -260,7 +291,7 @@
 								$h = 200;
 								$w = 300;
 								$photo = 
-								$photo = '/img/theme1/test' . $count . '.jpg';
+								$photo = '/img/theme1/image' . $count . '.jpg';
 							?>
 							
 							<a href="/view/{{$entry->id}}" class="frontpage-box-link" style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" ></a>
@@ -293,7 +324,7 @@
 <!--------------------------------------------------------------------------------------->
 			
 <section id="contact" class="sectionWhite">
-	<div class="container">
+	<div class="container" style="max-width:1400px;">
 
 		<div class="sectionHeader text-center">	
 			<div class="sectionImage sectionImageBlue"><span class="sectionImageBlue glyphicon glyphicon-envelope"></span></div>
@@ -329,6 +360,5 @@
 	
 </div>
 </section>
-
 
 @endsection
