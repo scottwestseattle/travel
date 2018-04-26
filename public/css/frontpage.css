@@ -31,8 +31,12 @@
 	min-height: 700px;
 }
 
+.main-font {
+	font-family: Raleway;
+}
+
 /*****************************************************************/
-/* front page sections */
+/* front page sections (from theme1) */
 /*****************************************************************/
 	
 	section.explain {
@@ -50,7 +54,7 @@
 	}
 	
 	.sectionYellow, .sectionBlue, .sectionWhite {
-		padding: 50px 0 30px 0;
+		padding: 50px 0 40px 0;
 	}
 	
 	.sectionYellow {
@@ -70,10 +74,10 @@
 	.sectionImage {
 		display: inline-block; 
 		padding-top: 15px; 
-		font-size: 6em;
+		font-size: 55px; 
 		width: 100px; 
 		height: 100px; 
-		xborder: 3px solid white; 
+		border: 3px solid white; 
 
 		border-radius: 50%;
 		-moz-border-radius: 50%;
@@ -98,6 +102,79 @@
 	a.sectionImageWhite:hover {
 		text-decoration: none;
 	}
+	
+	.steps {
+		padding: 10px;
+		font-size: 20px;
+		margin: 5px;
+		min-height: 220px;
+		border: white 3px solid;
+		border-radius: 10px;
+	}
+	.step1 {
+		background-color: MediumTurquoise;
+	}
+	.step2 {
+		background-color: yellow;
+	}
+	.step3 {
+		background-color: Orchid;
+	}
+	.step4 {
+		background-color: lightGreen;
+	}
+	.step5 {
+		background-color: cyan;
+	}
+	.step6 {
+		background-color: lightSalmon;
+	}
+	
+	.glyphspace {
+		padding-right: 20px;
+	}
+	.glyphspace5 {
+		padding-right: 5px;
+	}
+	.glyphspace10 {
+		padding-right: 10px;
+	}	
+		
+	.sliderTextPanel {
+		margin-bottom: 20px;
+		display: inline-block;
+		background: rgba(0, 0, 0, 0.5);
+		border: gray 1px solid;
+		border-radius: 15px;
+		text-shadow:
+			-1px -1px 0 black,  
+			 1px -1px 0 black,
+			-1px  1px 0 black,
+			 1px  1px 0 black;	
+		
+	}	
+	.sliderText h1, .sliderText h2{
+		line-height: 1.2em;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	
+	.sliderText h2 {
+		padding-top: 20px;
+		padding-bottom: 20px;
+	}
+		
+	.logos img {
+		float: left;
+		max-width: 100px;
+	}
+	
+	.marginTop10 { margin-top: 10px; }
+	.marginTop20 { margin-top: 20px; }
+	.marginTop30 { margin-top: 30px; }
+	.marginTop40 { margin-top: 40px; }
+	.marginTop50 { margin-top: 50px; }
+	.marginTop100 { margin-top: 100px; }
 		
 	.btn-lg {
 		font-size: 2em;
@@ -141,10 +218,49 @@
 	.sectionHeader h1 {
 		margin-bottom: 30px;
 	}
-	
-	.sectionHeader h1, .sectionHeader h3, .sectionHeader h2 {
-		font-family: Raleway; 		
+
+	.bgWhite {
+		background-color: white;
 	}
+	.bgRed {
+		background-color: red;
+	}
+	.bgGreen {
+		background-color: #70DC70;
+	}
+	.bgBlue {
+		background-color: #286090;
+	}
+	
+	.marginBottom20 {
+		margin-bottom: 20px;
+	}
+	.marginBottom30 {
+		margin-bottom: 30px;
+	}
+	.marginBottom40 {
+		margin-bottom: 40px;
+	}
+	.marginBottom50 {
+		margin-bottom: 50px;
+	}
+
+.headerHeightOffset {
+	xheight: 72px;		/* this gets changed by js */
+	xmax-height: 72px;	/* used by js to reset after height gets changed by js */
+}
+
+.sliderText {
+	color: white;
+	padding-top: 100px;	
+}	
+
+.scrollUp {
+    z-index: 9999999999999;
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+}
 
 .font-open-sans-400 {
 	font-weight: 400; font-family: 'Open Sans', sans-serif;
@@ -157,6 +273,7 @@
 	padding: 10px;
 	font-size: 1.2em;
 }
+
 
 /*******************************************************************************
 

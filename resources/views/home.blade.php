@@ -79,7 +79,7 @@
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->
 
-<section id="" class="sectionBlue" style="xposition: relative; xtop: -30px; ">
+<section id="" class="sectionBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
@@ -89,8 +89,9 @@
 			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
+		<img height="100px" src="/img/theme1/epic-logo-pyramids-sm-arch.png" />
 		<h3 class="welcome-text">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
-		<h3 class="welcome-text">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
+		<h3 style="font-size:1.2em;" class="welcome-text">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
 	
 	</div>	
 	
@@ -107,72 +108,78 @@
 </section>
 
 <!--------------------------------------------------------------------------------------->
-<!-- SECTION: Floating boxes sample code -->
+<!-- SECTION: Tours - float box format -->
 <!--------------------------------------------------------------------------------------->
+
+<?php
+	$h = 200;
+	$w = 300;
+	$base_folder = 'img/theme1/tours/';
+?>
 
 <section id="" class="sectionWhite sectionWhitePattern">
 	<div class="container">	
 		<div class="text-center">			
 			
-			<div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
+			<!-------------------- Section header image --------->
+			<div class="sectionHeader">	
+				<div><img src="/img/theme1/bootprint.jpg" /></div>				
+				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
+				
+			</div>			
+			
+			<!-- div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
 				<form action="/users/register">
 					<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgBlue"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;Join Us Now</button>
 				</form>
-			</div>				
-			
-			<h1 class="xfont-open-sans-300">
-				Lorem ipsum dolor sit amet
-			</h1>
-			
-			<h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
-				Consectetur adipiscing elit:
-			</h2>
-			
+			</div -->				
+						
 			<div class="clearfix">
-				
+			
+			<!-- div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div -->
+			
 				<div class="row">
+
+					@foreach($tours as $entry)
 				
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step1">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
+						<?php 
+							$link = '/view/' . $entry->id;
+							$photo_folder = $base_folder . $entry->id . '/';
+							$photo = $photo_folder . 'main.jpg';
+									
+							// file_exists must be relative path with no leading '/'
+							if (file_exists($photo) === FALSE)
+							{
+								if (!is_dir($photo_folder)) // if folder doesn't exist
+								{							
+									// make the folder with read/execute for everbody
+									mkdir($photo_folder, 0755);
+								}
+										
+								// show the place holder
+								$photo = '/' . $base_folder . 'placeholder.jpg';
+							}
+							else
+							{
+								// to show the photo we need the leading '/'
+								$photo = '/' . $photo_folder . 'main.jpg';
+							}
+						?>				
+									
+						<div class="col-md-4 col-sm-6">
+						
+							<!-- tour image -->
+							<a href="/view/{{$entry->id}}" >
+								<div style="min-height:220px; background-color: lightSalmon; background-size: cover; background-position: center; background-image: url('<?php echo $photo; ?>'); "></div>
+							</a>
+							
+							<!-- tour title -->
+							<a style="font-family: Raleway; font-size:1em;" href="/view/{{$entry->id}}">
+								<div style="margin-bottom:20px; background-color: LightGray;">{{ $entry->title }}</div>
+							</a>
 						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step2">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step3">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step4">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step5">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
-
-					<div class="col-md-4 col-sm-6">
-						<div class="steps step6">
-							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
-							This is the text that is shown in the responsive floating box with three columns
-						</div>
-					</div>
+					
+					@endforeach
 					
 				</div><!-- row -->			
 
@@ -180,24 +187,22 @@
 						
 		</div><!-- text-center -->
 	</div><!-- container -->
-</section>
+</section>									
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Tours -->
 <!--------------------------------------------------------------------------------------->
+<?php if (false) : ?>
 
 <section class="sectionWhite">
-<div class="container" style="" >
 
+<!-------------------- Section header image --------->
+<div class="container" style="" >
 	<div class="sectionHeader text-center">	
-	
-		<!-- div class="sectionImage sectionImageBlue"><span class="sectionImageBlue glyphicon glyphicon-globe"></span></div -->
 		<div><img src="/img/theme1/bootprint.jpg" /></div>
 		<h1 class="sectionImageBlue">Tours, Hikes, Things to do</h1>
 		<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>		
-		
-	</div>	
-		
+	</div>			
 </div>
 
 <!---------------------- Large version----------------------->
@@ -407,9 +412,12 @@
 </div>
 </section>
 
+<?php endif; ?>
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Latest Posts -->
 <!--------------------------------------------------------------------------------------->
+<?php if (false) : ?>
 
 <section class="sectionBlue">
 	<div class="container" style="max-width:1440px;">	
@@ -471,10 +479,13 @@
 	</div><!-- container -->
 </section>
 
+<?php endif; ?>
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Contact -->
 <!--------------------------------------------------------------------------------------->
-			
+<?php if (false) : ?>
+
 <section id="contact" class="sectionWhite">
 	<div class="container" style="max-width:1400px;">
 
@@ -489,6 +500,8 @@
 	
 	</div>
 </section>
+
+<?php endif; ?>
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Current Location -->
@@ -512,5 +525,10 @@
 	
 </div>
 </section>
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: Floating boxes sample code -->
+<!--------------------------------------------------------------------------------------->
+
 
 @endsection
