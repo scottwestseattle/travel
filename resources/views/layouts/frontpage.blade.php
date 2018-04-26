@@ -39,7 +39,7 @@
     <div id="app" style="">
         <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #FF6900 /* orange */; border-width: 0 0 0px;"> 
             <div class="container">
-                <div class="navbar-header">
+                <div class="navbar-header" style="height:130px;">
 
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
@@ -51,12 +51,9 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-						<span class="glyphCustom glyphicon glyphicon-home"></span>
-						<!--
-						<img width="45px" src="/img/logo-top.png" />
-                        {{ config('app.name', 'Travel') }}
-						-->
-                    </a>
+						<!-- span class="glyphCustom glyphicon glyphicon-home"></span -->
+						<img height="100px" src="/img/theme1/epic-logo-pyramids-sm-arch.png" />
+                   </a>
 					
                 </div>
 
