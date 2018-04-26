@@ -213,7 +213,7 @@ Media specific overrides go below here
 		font-size:2em;
 	}
 	
-	#welcome-text { font-size:2em; }
+	.welcome-text { font-size:2em; }
 }
 	
 /****************** overrides for size MD ********************************/	
@@ -231,8 +231,8 @@ Media specific overrides go below here
 		display:block; 
 		font-size:1.8em;
 	}
-
-	#welcome-text { font-size:1.5em; }
+	
+	.welcome-text { font-size:1.5em; }
 
 	#logo-big {
 		/* width: 200px; */
@@ -267,8 +267,8 @@ Media specific overrides go below here
 		display:block; 
 		font-size:1.5em;
 	}
-
-	#welcome-text { font-size:1.5em; }
+	
+	.welcome-text { font-size:1.5em; }
 	
 	#logo-big {
 		width: 300px;
@@ -299,8 +299,8 @@ Media specific overrides go below here
 	#tours-md { display:initial; }
 		
 	#tag-line { display:none; }
-	
-	#welcome-text { font-size:1.3em; }
+		
+	.welcome-text { font-size:1.3em; }
 	
 	#logo-big {
 		width: 220px;

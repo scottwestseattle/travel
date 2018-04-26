@@ -7776,3 +7776,45 @@ button.close {
         display: none!important
     }
 }
+
+/**************************************************************************************************
+
+Media specific overrides go below here
+
+***************************************************************************************************/
+
+/****************** overrides for size LG ********************************/	
+@media (min-width: 1201px) 
+{	
+	#debug-tag-lg { display: initial; }
+	#debug-tag-md { display: none; }
+	#debug-tag-sm { display: none; }
+	#debug-tag-xs { display: none; }
+}
+	
+/****************** overrides for size MD ********************************/	
+@media (min-width: 992px) and (max-width: 1200px) 
+{	
+	#debug-tag-lg { display: none; }
+	#debug-tag-md { display: initial; }
+	#debug-tag-sm { display: none; }
+	#debug-tag-xs { display: none; }	
+}	
+	
+/****************** overrides for size SM ********************************/
+@media (min-width: 768px) and (max-width: 991px) 
+{	
+	#debug-tag-lg { display: none; }
+	#debug-tag-md { display: none; }
+	#debug-tag-sm { display: initial; }
+	#debug-tag-xs { display: none; }	
+}
+
+/****************** overrides for size XS *******************************/	
+@media (max-width: 767px) 
+{
+	#debug-tag-lg { display: none; }
+	#debug-tag-md { display: none; }
+	#debug-tag-sm { display: none; }
+	#debug-tag-xs { display: initial; }
+}

@@ -89,7 +89,8 @@
 			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
-		<h3 id="welcome-text">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
+		<h3 class="welcome-text">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
+		<h3 class="welcome-text">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
 	
 	</div>	
 	
@@ -106,6 +107,82 @@
 </section>
 
 <!--------------------------------------------------------------------------------------->
+<!-- SECTION: Floating boxes sample code -->
+<!--------------------------------------------------------------------------------------->
+
+<section id="" class="sectionWhite sectionWhitePattern">
+	<div class="container">	
+		<div class="text-center">			
+			
+			<div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
+				<form action="/users/register">
+					<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgBlue"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;Join Us Now</button>
+				</form>
+			</div>				
+			
+			<h1 class="xfont-open-sans-300">
+				Lorem ipsum dolor sit amet
+			</h1>
+			
+			<h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
+				Consectetur adipiscing elit:
+			</h2>
+			
+			<div class="clearfix">
+				
+				<div class="row">
+				
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step1">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step2">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step3">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step4">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step5">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="steps step6">
+							<h3><span class="glyphicon glyphicon-user glyphspace"></span>Floating Box</h3>
+							This is the text that is shown in the responsive floating box with three columns
+						</div>
+					</div>
+					
+				</div><!-- row -->			
+
+			</div>
+						
+		</div><!-- text-center -->
+	</div><!-- container -->
+</section>
+
+<!--------------------------------------------------------------------------------------->
 <!-- SECTION: Tours -->
 <!--------------------------------------------------------------------------------------->
 
@@ -117,20 +194,94 @@
 		<!-- div class="sectionImage sectionImageBlue"><span class="sectionImageBlue glyphicon glyphicon-globe"></span></div -->
 		<div><img src="/img/theme1/bootprint.jpg" /></div>
 		<h1 class="sectionImageBlue">Tours, Hikes, Things to do</h1>
+		<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>		
 		
 	</div>	
-	
+		
 </div>
 
 <!---------------------- Large version----------------------->
+
+<div id="tours-lg" >
+	<div class="container" style="max-width:1440px;">	
+		<div class="sectionHeader text-center">			
+																
+				<div class="row">
+				
+					<?php $count = 0; ?>
+					@foreach($tours as $entry)
+						
+						<div class='frontpage-box' >
+
+							<!-- BACKGROUND PHOTO LINK -->
+							
+							<?php 
+								$h = 200;
+								$w = 300;
+								
+								$link = '/view/' . $entry->id;
+								$base_folder = 'img/theme1/tours/';
+								$photo_folder = $base_folder . $entry->id . '/';
+								$photo = $photo_folder . 'main.jpg';
+								
+								// file_exists must be relative path with no leading '/'
+								if (file_exists($photo) === FALSE)
+								{
+									if (!is_dir($photo_folder)) // if folder doesn't exist
+									{							
+										// make the folder with read/execute for everbody
+										mkdir($photo_folder, 0755);
+									}
+									
+									// show the place holder
+									$photo = '/' . $base_folder . 'placeholder.jpg';
+								}
+								else
+								{
+									// to show the photo we need the leading '/'
+									$photo = '/' . $photo_folder . 'main.jpg';
+								}
+							?>
+							
+							<a 
+								href="/view/{{$entry->id}}" 
+								class="frontpage-box-link" 
+								style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" >
+							</a>
+
+							<!-- HEADER NAME/TITLE LINK ------------------------------------------ -->
+							
+							<div class='frontpage-box-text'>
+							
+								<!-- CAPTION/TITLE ------------------------------------------ -->
+								<p>		
+									<a style="font-family: Raleway; font-size:.9em;" href="/view/{{$entry->id}}">{{ $entry->title }}</a>
+								</p>	
+								
+							</div>
+								
+						</div>
+						
+					@endforeach
+					
+				</div><!-- row -->			
+
+			</div>
+						
+		</div><!-- text-center -->
+	</div><!-- container -->
+</div><!-- #tours-lg -->
+
+<!----------------------------------------------------------------------------------->
+
 <div id="tours-lg" >
 <div class="container" style="max-width:1400px;">	
-	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">LARGE USA >> Seattle >> Downtown</div>
+	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>
 
 	<table class="table" style="padding:0; margin:0">
 		<tbody>
 			@foreach($tours as $entry)
-				<?php 
+				<?php 			
 					$link = '/view/' . $entry->id;
 					$base_folder = 'img/theme1/tours/';
 					$photo_folder = $base_folder . $entry->id . '/';
@@ -155,8 +306,8 @@
 					}
 				?>
 				<tr>
-					<td style="width:100px;">
-						<a href="{{ $link }}"><img src="{{ $photo }}" width="100" /></a>
+					<td style="width:300px;">
+						<a href="{{ $link }}"><img src="{{ $photo }}" width="300" /></a>
 					</td>
 					<td>
 						<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
@@ -192,7 +343,7 @@
 <!---------------------- Md, Sm, Xs version----------------------->
 <div id="tours-md">
 <div class="" style="">	
-	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">MEDIUM USA >> Seattle >> Downtown</div>
+	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>
 		<table class="table" style="padding:0; margin:0">
 			<tbody>
 			@foreach($tours as $entry)

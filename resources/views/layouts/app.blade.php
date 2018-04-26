@@ -72,15 +72,22 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-						<li><a href="/posts">Posts</a></li>
-						<li><a href="/tours">Tours</a></li>
                         @guest
+							<li><a href="/posts">Posts</a></li>
+							<li><a href="/tours">Tours</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+							<li id="debug-tag-lg"><a href="/">Home (L)</a></li>
+							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
+							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
+							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
+							<li><a href="/posts">Posts</a></li>
+							<li><a href="/tours">Tours</a></li>
 							<li><a href="/entries/posts">Edit Posts</a></li>
 							<li><a href="/entries/tours">Edit Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
+							
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                     {{ Auth::user()->name }} <span class="caret"></span>
