@@ -89,9 +89,8 @@
 			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
-		<img height="100px" src="/img/theme1/epic-logo-pyramids-sm-arch.png" />
-		<h3 class="welcome-text">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
-		<h3 style="font-size:1.2em;" class="welcome-text">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
+		<img style="max-width:80%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
+		<h3 class="welcome-text main-font">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
 	
 	</div>	
 	
@@ -103,7 +102,11 @@
 			
 		</div>		
 	</div>
-		
+
+	<div class="sectionHeader text-center" style="margin-top:20px;">
+		<h3 style="font-size:1.2em;" class="welcome-text main-font">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
+	</div>
+	
 </div>
 </section>
 
