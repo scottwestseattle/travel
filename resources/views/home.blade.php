@@ -89,7 +89,7 @@
 			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
-		<img style="max-width:80%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
+		<img style="max-width:70%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
 		<h3 class="welcome-text main-font">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
 	
 	</div>	
