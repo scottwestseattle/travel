@@ -48,12 +48,14 @@
 <!-- Title Logo Bar -->
 <!--------------------------------------------------------------------------------------->
 
+<!--
 <section style="">
 	<div class="frontpage-container" style="padding: 5px; text-align: center;" >
 		<img id="" style="margin-right:10px; " src="/img/theme1/epic-logo-pyramids-sm-arch.png" height="100px" />
 		<h1 id="tag-line" style="margin:0;padding:0; font-family: Raleway; color:#1F5E91;">Self-guided tours, Travel Blogs, and Worldwide travel information</h1>
 	</div>
 </section>
+-->
 
 <!--------------------------------------------------------------------------------------->
 <!-- Big random photo header section -->
@@ -77,22 +79,21 @@
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->
 
-<section id="" class="sectionBlue sectionWhitePattern" style="position: relative; xtop: -30px; ">
+<section id="" class="sectionBlue" style="xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
-
 	<div class="sectionHeader text-center">	
 		
-		<h1>Welcome to {{ config('app.name', 'Travel') }}</h1>
+		<!-- h1>Welcome to {{ config('app.name', 'Travel') }}</h1 -->
 			
 		<!-- h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
 			Self-guided tours, Travel Blogs, and Worldwide travel information
 		</h2 -->
 
-		<h3>{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
+		<h3 id="welcome-text">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
 	
 	</div>	
 	
-	<div class="row text-center marginTop50">
+	<div class="row text-center" style="margin-top:40px;">
 		<div class="header">
 			<form action="#">
 				<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button>
