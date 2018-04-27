@@ -177,9 +177,9 @@
 							</a>
 							
 							<!-- tour title -->
-							<a style="font-family: Raleway; font-size:1em;" href="/view/{{$entry->id}}">
-								<div style="margin-bottom:20px; background-color: LightGray;">{{ $entry->title }}</div>
-							</a>
+							<div style="font-size:1.2em; font-weight:bold; padding:3px 0; margin-bottom:20px; background-color: LightGray;">
+								<a style="font-family: Raleway; font-size:1em; text-decoration: none; " href="/view/{{$entry->id}}">{{ $entry->title }}</a>
+							</div>
 						</div>
 					
 					@endforeach

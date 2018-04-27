@@ -21,7 +21,7 @@
 	
 	
 		<div class="entry">
-			<span name="description" class="">{!! $entry->description !!}</span>	
+			<span name="description" class="">{!! nl2br($entry->description) !!}</span>	
 		</div>
 		
 
@@ -29,7 +29,7 @@
 
 	<?php 
 		$photo_found = false;
-		$width = "1000px";
+		$width = 1000;
 		$base_folder = 'img/theme1/tours/';
 		$photo_folder = $base_folder . $entry->id . '/';
 		$photo = $photo_folder . 'main.jpg';
@@ -39,7 +39,7 @@
 		if (file_exists($photo) === FALSE)
 		{
 			$photo = '/img/theme1/placeholder.jpg';
-			$width = "300px";
+			$width = 300;
 		}
 		else
 		{

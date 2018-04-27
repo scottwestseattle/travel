@@ -42,7 +42,7 @@
 <body>
     <div id="app" style="">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
-            <div class="container">
+            <div class="xcontainer">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
