@@ -37,7 +37,7 @@
 </head>
 <body>
     <div id="app" style="">
-        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #FF6900 /* orange */; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #3F98FD /* blue */ /* #FF6900 orange */; border-width: 0 0 0px;"> 
             <div class="xcontainer">
                 <div class="navbar-header" style="">
 

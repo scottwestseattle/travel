@@ -42,7 +42,7 @@
 
 @section('content')
 
-<div style="background-color: LightGray; xbackground-size:cover; background-image:url('/img/theme1/bg-pattern.png'); " >
+<div style="background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
 
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
@@ -104,7 +104,7 @@
 	</div>
 
 	<div class="sectionHeader text-center" style="margin-top:20px;">
-		<h3 style="font-size:1.2em;" class="welcome-text main-font">Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</h3>
+		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</i></h3>
 	</div>
 	
 </div>
@@ -120,7 +120,7 @@
 	$base_folder = 'img/theme1/tours/';
 ?>
 
-<section id="" class="sectionWhite sectionWhitePattern">
+<section id="" class="sectionWhite sectionWhitePattern" style="" >
 	<div class="container">	
 		<div class="text-center">			
 			
@@ -141,7 +141,7 @@
 			
 			<!-- div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div -->
 			
-				<div class="row">
+				<div class="row hidden-xs">
 
 					@foreach($tours as $entry)
 				
@@ -184,7 +184,69 @@
 					
 					@endforeach
 					
-				</div><!-- row -->			
+				</div><!-- row -->	
+
+				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- format for XS size only using table cols -->
+					<table class="table" style="padding:0; margin:0">
+						<tbody>
+							@foreach($tours as $entry)
+								<?php 			
+									$link = '/view/' . $entry->id;
+									$base_folder = 'img/theme1/tours/';
+									$photo_folder = $base_folder . $entry->id . '/';
+									$photo = $photo_folder . 'main.jpg';
+									
+									// file_exists must be relative path with no leading '/'
+									if (file_exists($photo) === FALSE)
+									{
+										if (!is_dir($photo_folder)) // if folder doesn't exist
+										{							
+											// make the folder with read/execute for everbody
+											mkdir($photo_folder, 0755);
+										}
+										
+										// show the place holder
+										$photo = '/' . $base_folder . 'placeholder.jpg';
+									}
+									else
+									{
+										// to show the photo we need the leading '/'
+										$photo = '/' . $photo_folder . 'main.jpg';
+									}
+								?>
+								<tr>
+									<td style="width:150px;">
+										<a href="{{ $link }}"><img src="{{ $photo }}" width="150" /></a>
+									</td>
+									<td>
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
+										<?php
+											$tags = "Hike";
+											if (strpos($entry->title, "Water Taxi") === FALSE)
+											{
+												$tags = "Hike, Bike";
+											}
+											else
+											{
+												$tags = "Boat";
+											}
+										?>
+										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+										
+										@guest
+										@else
+											<a href='/entries/edit/{{$entry->id}}'>
+												<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
+											</a>
+											
+											<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
+										@endguest
+									</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div><!-- XS size only -->
 
 			</div>
 						
