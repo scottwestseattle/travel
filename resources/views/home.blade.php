@@ -177,8 +177,8 @@
 							</a>
 							
 							<!-- tour title -->
-							<div style="font-size:1.2em; font-weight:bold; padding:3px 0; margin-bottom:20px; background-color: LightGray;">
-								<a style="font-family: Raleway; font-size:1em; text-decoration: none; " href="/view/{{$entry->id}}">{{ $entry->title }}</a>
+							<div style="font-size:1.2em; font-weight:bold; padding:3px 0; margin-bottom:20px; background-color: #3F98FD;">
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="/view/{{$entry->id}}">{{ $entry->title }}</a>
 							</div>
 						</div>
 					
