@@ -42,7 +42,7 @@
 
 @section('content')
 
-<div style="background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
+<div style="background-color: LightGray; xbackground-size:cover; background-image:url('/img/theme1/bg-pattern.png'); " >
 
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
@@ -50,7 +50,7 @@
 
 <!--
 <section style="">
-	<div class="frontpage-container" style="padding: 5px; text-align: center;" >
+	<div class="container" style="padding: 5px; text-align: center;" >
 		<img id="" style="margin-right:10px; " src="/img/theme1/epic-logo-pyramids-sm-arch.png" height="100px" />
 		<h1 id="tag-line" style="margin:0;padding:0; font-family: Raleway; color:#1F5E91;">Self-guided tours, Travel Blogs, and Worldwide travel information</h1>
 	</div>
@@ -68,9 +68,11 @@
 	<img src="/img/theme1/slider4.jpg" />
 </div>
 
-<section style="">
-	<div class="frontpage-container" style="" >
-		<img id="slider" src="" width="100%" />
+<section>
+	<div class="slider-container" >
+		<div id="slider">
+			<img id="slider-spacer" src="/img/spacer.png" width="100%" />
+		</div>
 	</div>
 </section>
 

@@ -301,10 +301,23 @@ Flash Messages
 	min-height: 700px;
 }
 
-.frontpage-container {
+/**************************************************************************************************
+	Style for the frontpage big random slider image
+***************************************************************************************************/
+
+.slider-container {
 	max-width: 1550px; 
 	margin-right: auto; margin-left: auto;
     text-align: center;	
+}
+
+#slider {
+	background-size:100%; 
+	background-position:cover;
+}
+
+#slider-spacer {
+	visibility: hidden; /* don't need to see it, it's just for auto scaling
 }
 	
 /**************************************************************************************************

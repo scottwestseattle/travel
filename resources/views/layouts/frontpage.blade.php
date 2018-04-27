@@ -140,18 +140,15 @@
 		//rnd = 1;
 		//alert(img);
 
-/* using background image
+		// using background image
 		document.getElementById("slider").style.backgroundImage = "url('/img/theme1/slider" + rnd + ".jpg')";
-		document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
+		//document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
 		document.getElementById("slider").title = img;
-		document.getElementById("slider-text").innerText = sliders[rnd-1][0];
-		document.getElementById("slider-text").style.color = 'white'; //sliders[rnd-1][1];
-*/
+		//document.getElementById("slider-text").innerText = sliders[rnd-1][0];
+		//document.getElementById("slider-text").style.color = 'white'; //sliders[rnd-1][1];
 	
 		// using foreground image
-		document.getElementById("slider").src = "/img/theme1/slider" + rnd + ".jpg";
-		//alert(document.getElementById("slider").title);
-		//alert("url('/img/theme1/slider'" + rnd + "'.jpg')");
+		//document.getElementById("slider").src = "/img/theme1/slider" + rnd + ".jpg";
 	</script>
 
 </body>
