@@ -99,6 +99,47 @@ class EntryController extends Controller
              return redirect('/');
         }            	
     }
+	
+    public function upload()
+    {
+    	if (Auth::check())
+        {            
+			//todo $categories = Category::lists('title', 'id');
+	
+			return view('entries.upload', ['data' => $this->getViewData()]);							
+        }           
+        else 
+		{
+             return redirect('/');
+        }       
+	}
+	
+    public function store(Request $request)
+    {		
+    	if (Auth::check())
+        {            
+			//dd($request);
+			
+			$entry = new Entry();
+			$entry->title = $request->title;
+			$entry->description = $request->description;
+			$entry->map_link = $request->map_link;
+			$entry->description_language1 = $request->description_language1;
+			$entry->is_template_flag = (isset($request->is_template_flag)) ? 1 : 0;
+			//$entry->uses_template_flag = (isset($request->uses_template_flag)) ? 1 : 0; //sbw
+			$entry->user_id = Auth::id();
+			
+			//dd($entry);		
+			
+			$entry->save();
+			
+			return redirect('/entries/gen/' . $entry->id);
+        }           
+        else 
+		{
+             return redirect('/');
+        }            	
+    }
 
     public function view(Entry $entry)
     {
