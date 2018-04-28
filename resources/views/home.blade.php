@@ -143,6 +143,9 @@
 			
 			<!-- div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div -->
 			
+				<!-------------------------------->
+				<!-- this is the non-XS version -->
+				<!-------------------------------->
 				<div class="row hidden-xs">
 
 					@foreach($tours as $entry)
@@ -179,7 +182,7 @@
 							</a>
 							
 							<!-- tour title -->
-							<div style="font-size:1.2em; font-weight:bold; padding:3px 0; margin-bottom:20px; background-color: #3F98FD;">
+							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
 								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="/view/{{$entry->id}}">{{ $entry->title }}</a>
 							</div>
 						</div>
@@ -188,7 +191,8 @@
 					
 				</div><!-- row -->	
 
-				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- format for XS size only using table cols -->
+				<!-- this is the XS size only using table cols -->
+				<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 					<table class="table" style="padding:0; margin:0">
 						<tbody>
 							@foreach($tours as $entry)

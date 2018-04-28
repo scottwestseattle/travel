@@ -133,6 +133,12 @@
 .clearfix {
 	clear: both;
 }
+
+.trim-text {
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
+}
 	
 /*****************************************************************/
 /* front page sections */
