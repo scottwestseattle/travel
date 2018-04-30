@@ -134,7 +134,7 @@
 			 ["Costa Brava, Spain", "white"],
 		];
 
-		var total = 31;
+		var total = 32;
 		var rnd = Math.floor(Math.random() * total) + 1;
 		var img = "slider" + rnd + ".jpg";
 		//rnd = 1;
