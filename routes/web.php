@@ -37,8 +37,8 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/index', 'EntryController@index')->middleware('auth');
 
 	// photo upload/store
-	Route::get('/upload','EntryController@upload')->middleware('auth');
-	Route::post('/store','EntryController@store')->middleware('auth');
+	Route::get('/upload/{entry}','EntryController@upload')->middleware('auth');
+	Route::post('/store/{entry}','EntryController@store')->middleware('auth');
 	
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');

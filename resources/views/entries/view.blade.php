@@ -8,9 +8,10 @@
 
 	@guest
 	@else
-		<a href='/entries/edit/{{$entry->id}}'>
-			<span class="glyphCustom glyphicon glyphicon-edit"></span>
-		</a>
+		<table><tr>
+			<td style="width:40px; font-size:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/entries/upload/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+		</tr></table>
 	@endguest
 		
 	<div class="form-group">
@@ -28,6 +29,10 @@
 	</div>
 
 	<?php 
+		//
+		// show main photo
+		//
+	
 		$photo_found = false;
 		$width = 1000;
 		$base_folder = 'img/theme1/tours/';
@@ -53,6 +58,13 @@
 			<img src="{{ $photo }}" style="max-width:100%; width:{{ $width }}" />
 		</div>
 	<?php endif; ?>
+	
+	<div style="margin-top:20px;">
+	@foreach($photos as $photo)
+		<img width="300" alt="{{ str_replace('.jpg', '', $photo) }}" src="/img/theme1/tours/{{ $entry->id }}/{{$photo}}" />
+	@endforeach	
+	</div>
+	
 
 	<?php if (!empty($entry->map_link)) : ?>
 		<div id="xttd-map" style="display:default; margin-top:20px;">				

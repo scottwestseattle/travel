@@ -66,8 +66,6 @@
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @guest
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
@@ -75,10 +73,10 @@
 							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
 							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
 							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
-							<li><a href="/entries/posts">Edit Posts</a></li>
-							<li><a href="/entries/tours">Edit Tours</a></li>
+							<!-- li><a href="/posts">Posts</a></li -->
+							<!-- li><a href="/tours">Tours</a></li -->
+							<li><a href="/entries/posts">Posts</a></li>
+							<li><a href="/entries/tours">Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							
                             <li class="dropdown">
@@ -134,7 +132,7 @@
 			 ["Costa Brava, Spain", "white"],
 		];
 
-		var total = 32;
+		var total = 36;
 		var rnd = Math.floor(Math.random() * total) + 1;
 		var img = "slider" + rnd + ".jpg";
 		//rnd = 1;
