@@ -10,7 +10,7 @@
 @endcomponent
 
 <div class="container">
-	<h1>Edit Template</h1>
+	<h1>Edit Entry</h1>
 
 	<form method="POST" action="/entries/update/{{ $entry->id }}">
 		<div class="form-group form-control-big">

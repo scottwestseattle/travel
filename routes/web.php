@@ -23,8 +23,8 @@ Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
 
-// timer
-Route::get('/timer', 'EntryController@timer');
+// sliders
+Route::get('/sliders', 'HomeController@sliders')->middleware('auth');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
