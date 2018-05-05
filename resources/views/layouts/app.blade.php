@@ -19,8 +19,9 @@
     <title>{{ config('app.name', 'Template Manager') }}</title>
 	
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-   <link href="{{ asset('css/default.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/default.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -39,7 +40,7 @@
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 	
 </head>
-<body>
+<body style="margin:0; padding:0;">
     <div id="app" style="">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
             <div class="xcontainer">
@@ -114,7 +115,9 @@
         @yield('content')
 		
     </div>
-
+	
+	@component('footer')@endcomponent			
+	
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

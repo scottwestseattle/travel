@@ -12,7 +12,6 @@ define('ENDBODYSTYLE', '</span>');
 define('EMPTYBODY', 'Empty Body');
 define('BODY', 'Body');
 define('INTNOTSET', -1);
-define('TOUR_PHOTOS_PATH', '/public/img/theme1/tours/');
 
 class EntryController extends Controller
 {
@@ -181,94 +180,6 @@ class EntryController extends Controller
 						
 		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
-
-    public function getPhotos(Entry $entry)
-    {
-		$path = base_path() . TOUR_PHOTOS_PATH . $entry->id;
-		
-		//Debugger::dump('path: ' . $path);
-			
-		$files = scandir($path);						
-		foreach($files as $file)
-		{
-			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
-			{
-				$photos[] = $file;					
-			}
-		}
-		
-		//dd($photos);
-			
-		/*
-			$thumbs_path = $this->getGalleryPath($gallery . '/thumbs' . $width, $user_id);
-			$files = scandir($thumbs_path);	
-			$photos_thumbs = array();
-			foreach($files as $file)
-			{
-				if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
-				{
-					$photos_thumbs[] = $file;					
-				}
-			}
-			
-			//Debugger::dump('thumbs_path: ' . $thumbs_path);
-	
-			// if big photos and thumb lists don't match, create the thumbs
-			if ($photos != $photos_thumbs)
-			{	
-				echo  'processing ' . (count($photos) - count($photos_thumbs)) . ' photos...';
-			
-				//Debugger::dump($photos);
-				//Debugger::dump($photos_thumbs);
-				//die;
-				
-				//
-				// if thumbs are missing create them first
-				//
-				foreach($photos as $file)
-				{
-					$file_thumb = $thumbs_path . '/' . $file;
-					//Debugger::dump($file_thumb);//die($file_thumb);						
-					//Debugger::dump('file: '. $file);
-					
-					// create the thumb if it's not already there and the right size
-					$this->makeThumb($path, $thumbs_path, $file, $width, true);
-				}
-				
-				//
-				// check for orphan thumbs (big photo no longer exists so delete thumb)
-				//
-				foreach($photos_thumbs as $file)
-				{
-					$file_main = $path . '/' . $file;
-					
-					if (!file_exists($file_main))
-					{
-						//Debugger::dump('no main for thumb: ' . $file_main);
-						
-						$file_thumb = $thumbs_path . '/' . $file;
-						//Debugger::dump('deleting: ' . $file_thumb);
-						$this->deleteFile($file_thumb);
-					}
-				}				
-			}
-			else if ($fixThumbs != '')
-			{
-				//
-				// all thumbs are there, check for right size
-				//
-				foreach($photos as $file)
-				{
-					$file_thumb = $thumbs_path . '/' . $file;
-					//Debugger::dump($file_thumb);//die($file_thumb);
-											
-					$this->makeThumb($path, $thumbs_path, $file, $width, false);
-				}
-			}	
-		*/
-		
-		return $photos;
-    }
 
     public function gen(Entry $entry)
     {		
@@ -442,7 +353,7 @@ class EntryController extends Controller
 			$entry->is_template_flag 		= isset($request->is_template_flag) ? 1 : 0;
 			$entry->save();
 			
-			return redirect('/entries/gen/' . $entry->id); 
+			return redirect('/entries/view/' . $entry->id); 
 		}
 		else
 		{
