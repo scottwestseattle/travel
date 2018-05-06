@@ -21,8 +21,9 @@ H4 {
 	clear:both;
 }
 
-.single-view-page {
+.page-size {
 	max-width: 1000px;
+	min-height: 500px;
 }
 
 /***************************************************
@@ -226,6 +227,13 @@ Language Menu
     background-color: #3e8e41;
     background-color: #dfdfdf;
 	text-decoration: none;
+}
+
+
+.glyphSliders {
+	font-size:20px; 
+	color: #ff6900;
+	padding: 5px; /* makes the link space bigger */
 }
 
 </style>

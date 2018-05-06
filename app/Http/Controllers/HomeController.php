@@ -7,7 +7,6 @@ use App\Entry;
 use DB;
 
 define("LONGNAME", "Hike, Bike, Boat");
-define('PHOTOS_PATH', '/public/img/theme1/');
 
 class HomeController extends Controller
 {
@@ -54,83 +53,6 @@ class HomeController extends Controller
 		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
     }
 
-    public function sliders()
-    {
-		$photos = $this->getSliders();
-				
-		//dd($photos);
-				
-		return view('home.sliders', ['data' => $this->getViewData(), 'photos' => $photos]);
-    }
-
-    protected function getSliders()
-    {
-		$path = base_path() . PHOTOS_PATH;
-		$files = scandir($path);						
-		foreach($files as $file)
-		{
-			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
-			{
-				if ($this->startsWith($file, 'slider') && $this->endsWith($file, '.jpg'))
-				{
-					$photos[] = $file;					
-				}
-			}
-		}
-				
-		return $photos;
-    }
-
-	private function startsWith($haystack, $needle)
-	{
-		$rc = false;
-		$pos = strpos($haystack, $needle);
-
-		if ($pos === false) 
-		{
-			// not found
-		} 
-		else 
-		{
-			// found, check for pos == 0
-			if ($pos === 0)
-			{
-				$rc = true;
-			}
-			else
-			{
-				// found but string doesn't start with it
-			}
-		}
-		
-		return $rc;
-	}
-	
-	private function endsWith($haystack, $needle)
-	{
-		$rc = false;
-		$pos = strrpos($haystack, $needle);
-
-		if ($pos === false) 
-		{
-			// not found
-		} 
-		else 
-		{
-			// found, check for pos == 0
-			if ($pos === (strlen($haystack) - strlen($needle)))
-			{
-				$rc = true;
-			}
-			else
-			{
-				// found but string doesn't start with it
-			}
-		}
-		
-		return $rc;
-	}	
-	
     public function posts(Entry $entry)
     {
 		$entries = Entry::select()

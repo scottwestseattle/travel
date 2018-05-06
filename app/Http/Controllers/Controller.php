@@ -157,4 +157,53 @@ class Controller extends BaseController
 		return $photos;
     }	
 	
+	protected function startsWith($haystack, $needle)
+	{
+		$rc = false;
+		$pos = strpos($haystack, $needle);
+
+		if ($pos === false) 
+		{
+			// not found
+		} 
+		else 
+		{
+			// found, check for pos == 0
+			if ($pos === 0)
+			{
+				$rc = true;
+			}
+			else
+			{
+				// found but string doesn't start with it
+			}
+		}
+		
+		return $rc;
+	}
+	
+	protected function endsWith($haystack, $needle)
+	{
+		$rc = false;
+		$pos = strrpos($haystack, $needle);
+
+		if ($pos === false) 
+		{
+			// not found
+		} 
+		else 
+		{
+			// found, check for pos == 0
+			if ($pos === (strlen($haystack) - strlen($needle)))
+			{
+				$rc = true;
+			}
+			else
+			{
+				// found but string doesn't start with it
+			}
+		}
+		
+		return $rc;
+	}		
 }

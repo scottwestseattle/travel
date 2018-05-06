@@ -6,7 +6,7 @@
 	@component('menu-icons-start')@endcomponent
 @endcomponent
 
-<div class="single-view-page container">
+<div class="page-size container">
                
 	<div class="form-group">
 		<h1 name="name" class="">{{$tag->name }}</h1>

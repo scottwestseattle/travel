@@ -23,12 +23,28 @@ Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
 
-// sliders
-Route::get('/sliders', 'HomeController@sliders')->middleware('auth');
-
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
+
+Route::group(['prefix' => 'photos'], function () 
+{
+	// index
+	Route::get('/index', 'PhotoController@index')->middleware('auth');
+	Route::get('/sliders', 'PhotoController@sliders')->middleware('auth');
+
+	// add/create
+	Route::get('/add','PhotoController@add')->middleware('auth');
+	Route::post('/create','PhotoController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','PhotoController@edit')->middleware('auth');
+	Route::post('/update/{entry}','PhotoController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','PhotoController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','PhotoController@delete')->middleware('auth');
+});
 
 Route::group(['prefix' => 'entries'], function () {
 	

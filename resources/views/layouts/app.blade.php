@@ -41,7 +41,7 @@
 	
 </head>
 <body style="margin:0; padding:0;">
-    <div id="app" style="min-height:800px; margin-bottom:30px;">
+    <div id="app" style="min-height:500px; margin-bottom:30px;">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
             <div class="xcontainer">
                 <div class="navbar-header">
@@ -85,7 +85,7 @@
 							<!-- li><a href="/tours">Tours</a></li -->
 							<li><a href="/entries/posts">Posts</a></li>
 							<li><a href="/entries/tours">Tours</a></li>
-							<li><a href="/sliders">Sliders</a></li>
+							<li><a href="/photos/sliders">Sliders</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							
                             <li class="dropdown">

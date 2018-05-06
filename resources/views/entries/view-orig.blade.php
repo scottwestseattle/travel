@@ -9,7 +9,7 @@
 	@component('control-search')@endcomponent	
 @endcomponent
 
-<div class="single-view-page container">
+<div class="page-size container">
                
 <form method="POST" action="/entries/{{ $entry->id }}">
 
