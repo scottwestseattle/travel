@@ -8,8 +8,18 @@
 	@component('control-search')@endcomponent	
 @endcomponent
 
+<?php 
+
+$header = 'Entries';
+if (isset($title))
+{
+	$header = $title;
+}
+
+?>
+
 <div class="container">
-	<h1 style="font-size:1.3em;">Entries ({{ count($entries) }})</h1>
+	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($entries) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
@@ -18,11 +28,11 @@
 					<td style="width:20px;">
 						<a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
 					</td>
-					<td style="width:50px;">
-					{{ ($entry->is_template_flag ? 'TOUR' : 'POST') }}
+					<td style="width:20px;">
+						<a href='/entries/upload/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a>
 					</td>
 					<td>
-						<a href="/entries/gen/{{$entry->id}}">{{$entry->title}}</a>
+						<a href="/entries/view/{{$entry->id}}">{{$entry->title}}</a>
 						
 						<?php if (intval($entry->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $entry->view_count }}</span></span>

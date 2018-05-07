@@ -2,15 +2,16 @@
 
 @section('content')
 
-<div class="container">
+<div class="page-size container">
                
 <form method="POST" action="/entries/gen/{{ $entry->id }}">
 
 	@guest
 	@else
-		<a href='/entries/edit/{{$entry->id}}'>
-			<span class="glyphCustom glyphicon glyphicon-edit"></span>
-		</a>
+		<table><tr>
+			<td style="width:40px; font-size:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/entries/upload/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+		</tr></table>
 	@endguest
 		
 	<div class="form-group">
@@ -28,8 +29,12 @@
 	</div>
 
 	<?php 
+		//
+		// show main photo
+		//
+	
 		$photo_found = false;
-		$width = 1000;
+		$width = 800;
 		$base_folder = 'img/theme1/tours/';
 		$photo_folder = $base_folder . $entry->id . '/';
 		$photo = $photo_folder . 'main.jpg';
@@ -53,6 +58,15 @@
 			<img src="{{ $photo }}" style="max-width:100%; width:{{ $width }}" />
 		</div>
 	<?php endif; ?>
+	
+	<div style="margin-top:20px;">
+	@foreach($photos as $photo)
+		@if ($photo !== 'main.jpg')
+			<img style="width:300px; max-width:90%;" alt="{{ str_replace('.jpg', '', $photo) }}" src="/img/theme1/tours/{{ $entry->id }}/{{$photo}}" />
+		@endif
+	@endforeach	
+	</div>
+	
 
 	<?php if (!empty($entry->map_link)) : ?>
 		<div id="xttd-map" style="display:default; margin-top:20px;">				

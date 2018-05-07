@@ -7,7 +7,7 @@
 	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
 @endcomponent
 
-<div class="single-view-page container">
+<div class="page-size container">
                
 <form method="POST" action="/entries/{{ $entry->id }}">
 

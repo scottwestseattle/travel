@@ -19,8 +19,9 @@
     <title>{{ config('app.name', 'Template Manager') }}</title>
 	
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-   <link href="{{ asset('css/default.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/default.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -39,8 +40,8 @@
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 	
 </head>
-<body>
-    <div id="app" style="">
+<body style="margin:0; padding:0;">
+    <div id="app" style="min-height:500px; ">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
             <div class="xcontainer">
                 <div class="navbar-header">
@@ -73,8 +74,6 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         @guest
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
@@ -82,10 +81,11 @@
 							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
 							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
 							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
-							<li><a href="/entries/posts">Edit Posts</a></li>
-							<li><a href="/entries/tours">Edit Tours</a></li>
+							<!-- li><a href="/posts">Posts</a></li -->
+							<!-- li><a href="/tours">Tours</a></li -->
+							<li><a href="/entries/posts">Posts</a></li>
+							<li><a href="/entries/tours">Tours</a></li>
+							<li><a href="/photos/sliders">Sliders</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							
                             <li class="dropdown">
@@ -116,7 +116,9 @@
         @yield('content')
 		
     </div>
-
+	
+	@component('footer')@endcomponent
+	
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

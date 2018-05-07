@@ -6,7 +6,7 @@
 	@component('menu-icons-start')@endcomponent
 @endcomponent
 
-<div class="container">
+<div class="page-size container">
 	@if (Auth::check())
 		<h1>Follow Up</h1>
 		<a href="/tasks/add" class="btn btn-primary">Add</a>

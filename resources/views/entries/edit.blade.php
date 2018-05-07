@@ -10,13 +10,13 @@
 @endcomponent
 
 <div class="container">
-	<h1>Edit Template</h1>
+	<h1>Edit Entry</h1>
 
 	<form method="POST" action="/entries/update/{{ $entry->id }}">
 		<div class="form-group form-control-big">
 		
 			<div class="entry-title-div">
-				<input type="text" name="title" class="form-control" value="{{ $entry->title }}" />
+				<input type="text" name="title" class="form-control" value="{{ $entry->title }}"  placeholder="Title" />
 			</div>
 			
 	<?php
@@ -28,11 +28,11 @@
 			
 			
 			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" >{{ $entry->description }}</textarea>
+				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $entry->description }}</textarea>
 			</div>
 
 			<div style="clear:both;" class="entry-title-div">
-				<input type="text" name="map_link" class="form-control" value="{{ $entry->map_link }}" />
+				<input type="text" name="map_link" class="form-control" value="{{ $entry->map_link }}" placeholder="Map Link" />
 			</div>
 
 			<div style="clear:both;">
@@ -45,7 +45,7 @@
 			</div>
 			
 			<div style="clear:both;" class="entry-description-div">
-				<textarea name="description_language1" class="form-control entry-description-text" >{{$entry->description_language1 }}</textarea>	
+				<textarea name="description_language1" class="form-control entry-description-text" placeholder="Description 2" >{{$entry->description_language1 }}</textarea>	
 			</div>
 			
 			{{ csrf_field() }}

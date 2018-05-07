@@ -48,8 +48,9 @@ class HomeController extends Controller
 	
     public function view(Entry $entry)
     {
-		//dd('here');
-		return view('entries.view', compact('entry'));
+		$photos = $this->getPhotos($entry);
+						
+		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
     }
 
     public function posts(Entry $entry)

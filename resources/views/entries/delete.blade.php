@@ -15,7 +15,7 @@
 
 </style>
 
-<div class="container single-view-page">
+<div class="container page-size">
 	<!-- h2>Delete Entry</h2 -->
 
 	<form style="margin-top:20px;" method="POST" action="/entries/delete/{{ $entry->id }}">

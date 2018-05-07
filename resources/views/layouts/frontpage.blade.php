@@ -7,11 +7,11 @@
 
 	
 	<!-- set up the favicon.ico -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">	
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">	
 	
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,6 +21,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/frontpage.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -36,7 +37,7 @@
 		
 </head>
 <body>
-    <div id="app" style="">
+    <div id="app" style="min-height: 500px;">
         <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #3F98FD /* blue */ /* #FF6900 orange */; border-width: 0 0 0px;"> 
             <div class="xcontainer">
                 <div class="navbar-header" style="">
@@ -66,8 +67,6 @@
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @guest
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
@@ -75,10 +74,10 @@
 							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
 							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
 							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
-							<li><a href="/posts">Posts</a></li>
-							<li><a href="/tours">Tours</a></li>
-							<li><a href="/entries/posts">Edit Posts</a></li>
-							<li><a href="/entries/tours">Edit Tours</a></li>
+							<li><a href="/photos/sliders">Sliders</a></li -->
+							<!-- li><a href="/tours">Tours</a></li -->
+							<li><a href="/entries/posts">Posts</a></li>
+							<li><a href="/entries/tours">Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							
                             <li class="dropdown">
@@ -110,6 +109,8 @@
 		
     </div>
 
+	@component('footer')@endcomponent			
+		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 	
@@ -134,7 +135,7 @@
 			 ["Costa Brava, Spain", "white"],
 		];
 
-		var total = 32;
+		var total = 36;
 		var rnd = Math.floor(Math.random() * total) + 1;
 		var img = "slider" + rnd + ".jpg";
 		//rnd = 1;
