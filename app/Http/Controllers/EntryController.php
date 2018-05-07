@@ -176,7 +176,7 @@ class EntryController extends Controller
 
     public function view(Entry $entry)
     {
-		$photos = $this->getPhotos($entry);
+		$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
 						
 		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}

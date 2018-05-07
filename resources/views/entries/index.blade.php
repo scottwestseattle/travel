@@ -29,7 +29,7 @@ if (isset($title))
 						<a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
 					</td>
 					<td style="width:20px;">
-						<a href='/entries/upload/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a>
+						<a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a>
 					</td>
 					<td>
 						<a href="/entries/view/{{$entry->id}}">{{$entry->title}}</a>

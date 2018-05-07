@@ -13,6 +13,9 @@ use App\Entry;
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
 define('TOUR_PHOTOS_PATH', '/public/img/theme1/tours/');
+define('PHOTOS_FULL_PATH', '/public/img/theme1/');
+define('PHOTOS_WEB_PATH', '/img/theme1/');
+define('EXT_JPG', '.jpg');
 
 class Controller extends BaseController
 {
@@ -69,7 +72,57 @@ class Controller extends BaseController
 		return $text;
 	}
 
-    protected function getPhotos(Entry $entry)
+    protected function getPhotosWebPath($subfolder = '')
+    {
+		$path = PHOTOS_WEB_PATH;
+		
+		if (strlen($subfolder) > 0)
+			$path .= $subfolder;
+			
+		if (!$this->endsWith($path, '/'))
+			$path .= '/';
+			
+		//dd($path);
+		
+		return $path;
+	}
+	
+    protected function getPhotosFullPath($subfolder = '')
+    {
+		$path = base_path() . PHOTOS_FULL_PATH;
+		
+		if (strlen($subfolder) > 0)
+			$path .= $subfolder;
+			
+		if (!$this->endsWith($path, '/'))
+			$path .= '/';
+			
+		//dd($path);
+		
+		return $path;
+	}
+	
+    protected function getPhotos($subfolder = '', $ext = EXT_JPG)
+    {
+		$path = $this->getPhotosFullPath($subfolder, $ext);
+		
+		$files = scandir($path);		
+		
+		foreach($files as $file)
+		{
+			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
+			{
+				if ($this->endsWith($file, $ext))
+				{
+					$photos[] = $file;					
+				}
+			}
+		}
+				
+		return $photos;
+    }	
+	
+    protected function getPhotosYola($id, $ext)
     {
 		$path = base_path() . TOUR_PHOTOS_PATH . $entry->id;
 		

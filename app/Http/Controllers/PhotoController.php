@@ -5,11 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 
-define('PHOTOS_PATH', '/public/img/theme1/');
-
 class PhotoController extends Controller
 {
-	private $path = PHOTOS_PATH;
+	public function tours($id)
+	{		
+    	if (Auth::check())
+        {
+			$subfolder = 'tours/' . $id . '/';
+			
+			$photos = $this->getPhotos($subfolder, EXT_JPG);
+						
+			return view('photos.index', ['id' => $id, 'path' => $this->getPhotosWebPath($subfolder), 'photos' => $photos, 'data' => $this->getViewData()]);	
+        }           
+        else 
+		{
+             return redirect('/');
+        }
+	}
 	
 	public function sliders()
 	{		
@@ -17,7 +29,7 @@ class PhotoController extends Controller
         {
 			$photos = $this->getSliders();
 			
-			return view('photos.index', ['photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['path' => PHOTOS_WEB_PATH, 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -27,7 +39,8 @@ class PhotoController extends Controller
 
     protected function getSliders()
     {
-		$path = base_path() . $this->path;
+		$path = base_path() . PHOTOS_FULL_PATH;
+		//dd($path);
 		$files = scandir($path);						
 		foreach($files as $file)
 		{
@@ -57,11 +70,11 @@ class PhotoController extends Controller
         }
     }
 		
-    public function add()
+    public function add($id)
     {
     	if (Auth::check())
         {            
-			return view('entries.add', ['data' => $this->getViewData()]);
+			return view('photos.add', ['id' => $id, 'data' => $this->getViewData()]);
         }           
         else 
 		{
@@ -69,14 +82,15 @@ class PhotoController extends Controller
         }       
 	}
 	
-    public function create(Request $request)
-    {		
+    public function create(Request $request, $id)
+    {			
     	if (Auth::check())
         {            
 			//
 			// get file to upload
 			//
 			$file = $request->file('image');
+			
 			if (!isset($file))
 			{
 				// bad or missing file name
@@ -93,7 +107,7 @@ class PhotoController extends Controller
 			else
 			{
 				// bad or missing extension
-				return view('entries.upload', ['entry' => $entry, 'data' => $this->getViewData()]);					
+				return view('photos.add', ['id' => $id, 'data' => $this->getViewData()]);					
 			}
 						
 			//
@@ -102,24 +116,35 @@ class PhotoController extends Controller
 			$name = trim($request->name);
 			if (isset($name) && strlen($name) > 0)
 			{
-				$name = preg_replace('/[^\da-z ]/i', ' ', $name); // remove all non-alphanums
-				$name = str_replace(" ", "-", $name);			// replace spaces with dashes
+				$name = preg_replace('/[^\da-z ]/i', ' ', $name);	// remove all non-alphanums
+				$name = ucwords($name);								// cap each word in name
+				$name = str_replace(" ", "-", $name);				// replace spaces with dashes
 			}
 			else
 			{
-				// no file name given so name it with timestamp
-				$name = date("Ymd-His");
+				// no file name given so use original name
+				$name = $file->getClientOriginalName();
 			}
 
 			$name .= '.' . $ext;
 							
-			$path = base_path() . TOUR_PHOTOS_PATH . $entry->id;
+			$path = $this->getPhotosFullPath('tours/' . $id . '/');
 			
-			//dd($name);
-			
-			$request->file('image')->move($path, $name);
+			try 
+			{
+				$request->file('image')->move($path, $name);
+				
+				//$request->session()->flash('message.level', 'success');	
+				//$request->session()->flash('message.content', 'Photo was successfully added!');
+			}
+			catch (\Exception $e) 
+			{
+				dd($e.getMessage());
+				//$request->session()->flash('message.level', 'danger');
+				//$request->session()->flash('message.content', $e.getMessage());		
+			}			
 						
-			return redirect('/entries/view/' . $entry->id);
+			return redirect('/photos/tours/' . $id);
         }           
         else 
 		{
@@ -131,10 +156,10 @@ class PhotoController extends Controller
     {
 		$photos = $this->getPhotos();
 						
-		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('entries.view', ['data' => $this->getViewData(), 'photos' => $photos]);
 	}
 	
-    public function edit(Request $request)
+    public function edit()
     {
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {

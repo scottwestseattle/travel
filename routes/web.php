@@ -32,10 +32,11 @@ Route::group(['prefix' => 'photos'], function ()
 	// index
 	Route::get('/index', 'PhotoController@index')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders')->middleware('auth');
+	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
 
 	// add/create
-	Route::get('/add','PhotoController@add')->middleware('auth');
-	Route::post('/create','PhotoController@create')->middleware('auth');
+	Route::get('/add/{id}','PhotoController@add')->middleware('auth');
+	Route::post('/create/{id}','PhotoController@create')->middleware('auth');
 
 	// edit/update
 	Route::get('/edit/','PhotoController@edit')->middleware('auth');

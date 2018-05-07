@@ -10,7 +10,7 @@
 	@else
 		<table><tr>
 			<td style="width:40px; font-size:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/entries/upload/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 		</tr></table>
 	@endguest
 		
