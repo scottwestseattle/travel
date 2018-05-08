@@ -313,7 +313,7 @@ Flash Messages
 ***************************************************************************************************/
 
 .slider-container {
-	max-width: 1550px; 
+	xmax-width: 1600px;
 	margin-right: auto; margin-left: auto;
     text-align: center;	
 }

@@ -35,16 +35,16 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
 
 	// add/create
-	Route::get('/add/{id}','PhotoController@add')->middleware('auth');
-	Route::post('/create/{id}','PhotoController@create')->middleware('auth');
+	Route::get('/add/{id?}','PhotoController@add')->middleware('auth');
+	Route::post('/create/{id?}','PhotoController@create')->middleware('auth');
 
 	// edit/update
 	Route::get('/edit/','PhotoController@edit')->middleware('auth');
 	Route::post('/update/{entry}','PhotoController@update')->middleware('auth');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/','PhotoController@confirmdelete')->middleware('auth');
-	Route::post('/delete/','PhotoController@delete')->middleware('auth');
+	Route::get('/confirmdelete/{id?}','PhotoController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{id?}','PhotoController@delete')->middleware('auth');
 });
 
 Route::group(['prefix' => 'entries'], function () {

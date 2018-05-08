@@ -35,7 +35,7 @@
 	
 		$photo_found = false;
 		$width = 800;
-		$base_folder = 'img/theme1/tours/';
+		$base_folder = 'img/tours/';
 		$photo_folder = $base_folder . $entry->id . '/';
 		$photo = $photo_folder . 'main.jpg';
 			
@@ -62,7 +62,7 @@
 	<div style="margin-top:20px;">
 	@foreach($photos as $photo)
 		@if ($photo !== 'main.jpg')
-			<img style="width:300px; max-width:90%;" alt="{{ str_replace('.jpg', '', $photo) }}" src="/img/theme1/tours/{{ $entry->id }}/{{$photo}}" />
+			<img style="width:300px; max-width:90%;" alt="{{ str_replace('.jpg', '', $photo) }}" src="/img/tours/{{ $entry->id }}/{{$photo}}" />
 		@endif
 	@endforeach	
 	</div>

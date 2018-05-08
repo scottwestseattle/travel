@@ -11,8 +11,7 @@ class PhotoController extends Controller
 	{		
     	if (Auth::check())
         {
-			$subfolder = 'tours/' . $id . '/';
-			
+			$subfolder = 'tours/' . $id . '/';			
 			$photos = $this->getPhotos($subfolder, EXT_JPG);
 						
 			return view('photos.index', ['id' => $id, 'path' => $this->getPhotosWebPath($subfolder), 'photos' => $photos, 'data' => $this->getViewData()]);	
@@ -29,32 +28,13 @@ class PhotoController extends Controller
         {
 			$photos = $this->getSliders();
 			
-			return view('photos.index', ['path' => PHOTOS_WEB_PATH, 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['path' => SLIDER_PHOTOS_PATH, 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
              return redirect('/');
         }
 	}
-
-    protected function getSliders()
-    {
-		$path = base_path() . PHOTOS_FULL_PATH;
-		//dd($path);
-		$files = scandir($path);						
-		foreach($files as $file)
-		{
-			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
-			{
-				if ($this->startsWith($file, 'slider') && $this->endsWith($file, '.jpg'))
-				{
-					$photos[] = $file;					
-				}
-			}
-		}
-				
-		return $photos;
-    }	
 	
     public function index()
     {
@@ -70,7 +50,7 @@ class PhotoController extends Controller
         }
     }
 		
-    public function add($id)
+    public function add($id = 0)
     {
     	if (Auth::check())
         {            
@@ -83,7 +63,7 @@ class PhotoController extends Controller
 	}
 	
     public function create(Request $request, $id)
-    {			
+    {					
     	if (Auth::check())
         {            
 			//
@@ -119,16 +99,27 @@ class PhotoController extends Controller
 				$name = preg_replace('/[^\da-z ]/i', ' ', $name);	// remove all non-alphanums
 				$name = ucwords($name);								// cap each word in name
 				$name = str_replace(" ", "-", $name);				// replace spaces with dashes
+				$name .= '.' . $ext;								// add the extension
 			}
 			else
 			{
 				// no file name given so use original name
 				$name = $file->getClientOriginalName();
 			}
-
-			$name .= '.' . $ext;
-							
-			$path = $this->getPhotosFullPath('tours/' . $id . '/');
+						
+			$id = intval($id);
+			if ($id === 0) // for now these are sliders
+			{
+				// slider photos
+				$path = $this->getPhotosFullPath('sliders/');
+				$redirect = '/photos/sliders';
+			}
+			else
+			{
+				// tour photos
+				$path = $this->getPhotosFullPath('tours/' . $id . '/');
+				$redirect = '/photos/tours/' . $id;				
+			}
 			
 			try 
 			{
@@ -144,7 +135,7 @@ class PhotoController extends Controller
 				//$request->session()->flash('message.content', $e.getMessage());		
 			}			
 						
-			return redirect('/photos/tours/' . $id);
+			return redirect($redirect);
         }           
         else 
 		{
@@ -185,11 +176,12 @@ class PhotoController extends Controller
 		}
     }	
 	
-    public function confirmdelete(Request $request)
+    public function confirmdelete($id = 0)
     {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+		dd($id);
+    	if (Auth::check() /* && Auth::user()->id == $entry->user_id */)
         {			
-			return view('photos.delete', ['data' => $this->getViewData()]);							
+			return view('photos.confirmdelete', ['id' => $id, 'data' => $this->getViewData()]);							
         }           
         else 
 		{
@@ -197,9 +189,9 @@ class PhotoController extends Controller
 		}            	
     }
 	
-    public function delete(Request $request)
+    public function delete($id = 0)
     {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    	if (Auth::check() /* && Auth::user()->id == $entry->user_id */)
         {
 			//$entry->delete();			
 		}

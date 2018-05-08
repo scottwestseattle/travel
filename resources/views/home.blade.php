@@ -42,41 +42,53 @@
 
 @section('content')
 
-<div style="background-color: LightGray; xbackground-size:cover; background-image:url('/img/theme1/bg-pattern.png'); " >
+<div style="background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
 
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
 <!--------------------------------------------------------------------------------------->
 
-<!--
-<section style="">
-	<div class="container" style="padding: 5px; text-align: center;" >
-		<img id="" style="margin-right:10px; " src="/img/theme1/epic-logo-pyramids-sm-arch.png" height="100px" />
-		<h1 id="tag-line" style="margin:0;padding:0; font-family: Raleway; color:#1F5E91;">Self-guided tours, Travel Blogs, and Worldwide travel information</h1>
-	</div>
-</section>
--->
+	<!--------------------------------------------------------------------------------------->
+	<!-- Big random photo header section -->
+	<!--------------------------------------------------------------------------------------->
 
-<!--------------------------------------------------------------------------------------->
-<!-- Big random photo header section -->
-<!--------------------------------------------------------------------------------------->
-
-<div style="display: none; height: 0;" class="">
-	<img src="/img/theme1/slider1.jpg" />
-	<img src="/img/theme1/slider2.jpg" />
-	<img src="/img/theme1/slider3.jpg" />
-	<img src="/img/theme1/slider4.jpg" />
-</div>
-
-<section>
-	<div class="slider-container" >
-		<div id="slider">
-			<img id="slider-spacer" src="/img/spacer.png" width="100%" />
+	<section>
+		<div class="slider-container" onclick="change_slider()">
+			<div id="slider">
+				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
+			</div>
 		</div>
-	</div>
-</section>
-
+	</section>
 </div>
+
+<script>
+	// load all the sliders so we can javascript through them
+	var sliders = [
+		@foreach($sliders as $slider)
+			'{{$slider}}',
+		@endforeach
+	];
+		
+	var ix = Math.floor(Math.random() * sliders.length);
+	var img = sliders[ix];
+	
+	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
+	document.getElementById("slider").title = img;
+	
+	function change_slider()
+	{
+		ix++;
+		if (ix > sliders.length - 1)
+			ix = 0;
+		
+		img = sliders[ix];
+		
+		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
+		document.getElementById("slider").title = img;
+	}
+	
+</script>
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->
@@ -119,7 +131,8 @@
 <?php
 	$h = 200;
 	$w = 300;
-	$base_folder = 'img/theme1/tours/';
+	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
+	$tours_webpath = '/img/tours/'
 ?>
 
 <section id="" class="sectionWhite sectionWhitePattern" style="" >
@@ -149,36 +162,12 @@
 				<div class="row hidden-xs">
 
 					@foreach($tours as $entry)
-				
-						<?php 
-							$link = '/view/' . $entry->id;
-							$photo_folder = $base_folder . $entry->id . '/';
-							$photo = $photo_folder . 'main.jpg';
-									
-							// file_exists must be relative path with no leading '/'
-							if (file_exists($photo) === FALSE)
-							{
-								if (!is_dir($photo_folder)) // if folder doesn't exist
-								{							
-									// make the folder with read/execute for everbody
-									mkdir($photo_folder, 0755);
-								}
 										
-								// show the place holder
-								$photo = '/' . $base_folder . 'placeholder.jpg';
-							}
-							else
-							{
-								// to show the photo we need the leading '/'
-								$photo = '/' . $photo_folder . 'main.jpg';
-							}
-						?>				
-									
 						<div class="col-md-4 col-sm-6">
 						
 							<!-- tour image -->
 							<a href="/view/{{$entry->id}}" >
-								<div style="min-height:220px; background-color: lightSalmon; background-size: cover; background-position: center; background-image: url('<?php echo $photo; ?>'); "></div>
+								<div style="min-height:220px; background-color: lightSalmon; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
@@ -196,36 +185,12 @@
 					<table class="table" style="padding:0; margin:0">
 						<tbody>
 							@foreach($tours as $entry)
-								<?php 			
-									$link = '/view/' . $entry->id;
-									$base_folder = 'img/theme1/tours/';
-									$photo_folder = $base_folder . $entry->id . '/';
-									$photo = $photo_folder . 'main.jpg';
-									
-									// file_exists must be relative path with no leading '/'
-									if (file_exists($photo) === FALSE)
-									{
-										if (!is_dir($photo_folder)) // if folder doesn't exist
-										{							
-											// make the folder with read/execute for everbody
-											mkdir($photo_folder, 0755);
-										}
-										
-										// show the place holder
-										$photo = '/' . $base_folder . 'placeholder.jpg';
-									}
-									else
-									{
-										// to show the photo we need the leading '/'
-										$photo = '/' . $photo_folder . 'main.jpg';
-									}
-								?>
 								<tr>
 									<td style="width:150px;">
-										<a href="{{ $link }}"><img src="{{ $photo }}" width="150" /></a>
+										<a href="{{ $entry->link }}"><img src="{{ $entry->photo }}" width="150" /></a>
 									</td>
 									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ $entry->link }}">{{$entry->title}}</a>						
 										<?php
 											$tags = "Hike";
 											if (strpos($entry->title, "Water Taxi") === FALSE)
@@ -259,231 +224,6 @@
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>									
-
-<!--------------------------------------------------------------------------------------->
-<!-- SECTION: Tours -->
-<!--------------------------------------------------------------------------------------->
-<?php if (false) : ?>
-
-<section class="sectionWhite">
-
-<!-------------------- Section header image --------->
-<div class="container" style="" >
-	<div class="sectionHeader text-center">	
-		<div><img src="/img/theme1/bootprint.jpg" /></div>
-		<h1 class="sectionImageBlue">Tours, Hikes, Things to do</h1>
-		<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>		
-	</div>			
-</div>
-
-<!---------------------- Large version----------------------->
-
-<div id="tours-lg" >
-	<div class="container" style="max-width:1440px;">	
-		<div class="sectionHeader text-center">			
-																
-				<div class="row">
-				
-					<?php $count = 0; ?>
-					@foreach($tours as $entry)
-						
-						<div class='frontpage-box' >
-
-							<!-- BACKGROUND PHOTO LINK -->
-							
-							<?php 
-								$h = 200;
-								$w = 300;
-								
-								$link = '/view/' . $entry->id;
-								$base_folder = 'img/theme1/tours/';
-								$photo_folder = $base_folder . $entry->id . '/';
-								$photo = $photo_folder . 'main.jpg';
-								
-								// file_exists must be relative path with no leading '/'
-								if (file_exists($photo) === FALSE)
-								{
-									if (!is_dir($photo_folder)) // if folder doesn't exist
-									{							
-										// make the folder with read/execute for everbody
-										mkdir($photo_folder, 0755);
-									}
-									
-									// show the place holder
-									$photo = '/' . $base_folder . 'placeholder.jpg';
-								}
-								else
-								{
-									// to show the photo we need the leading '/'
-									$photo = '/' . $photo_folder . 'main.jpg';
-								}
-							?>
-							
-							<a 
-								href="/view/{{$entry->id}}" 
-								class="frontpage-box-link" 
-								style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" >
-							</a>
-
-							<!-- HEADER NAME/TITLE LINK ------------------------------------------ -->
-							
-							<div class='frontpage-box-text'>
-							
-								<!-- CAPTION/TITLE ------------------------------------------ -->
-								<p>		
-									<a style="font-family: Raleway; font-size:.9em;" href="/view/{{$entry->id}}">{{ $entry->title }}</a>
-								</p>	
-								
-							</div>
-								
-						</div>
-						
-					@endforeach
-					
-				</div><!-- row -->			
-
-			</div>
-						
-		</div><!-- text-center -->
-	</div><!-- container -->
-</div><!-- #tours-lg -->
-
-<!----------------------------------------------------------------------------------->
-
-<div id="tours-lg" >
-<div class="container" style="max-width:1400px;">	
-	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>
-
-	<table class="table" style="padding:0; margin:0">
-		<tbody>
-			@foreach($tours as $entry)
-				<?php 			
-					$link = '/view/' . $entry->id;
-					$base_folder = 'img/theme1/tours/';
-					$photo_folder = $base_folder . $entry->id . '/';
-					$photo = $photo_folder . 'main.jpg';
-					
-					// file_exists must be relative path with no leading '/'
-					if (file_exists($photo) === FALSE)
-					{
-						if (!is_dir($photo_folder)) // if folder doesn't exist
-						{							
-							// make the folder with read/execute for everbody
-							mkdir($photo_folder, 0755);
-						}
-						
-						// show the place holder
-						$photo = '/' . $base_folder . 'placeholder.jpg';
-					}
-					else
-					{
-						// to show the photo we need the leading '/'
-						$photo = '/' . $photo_folder . 'main.jpg';
-					}
-				?>
-				<tr>
-					<td style="width:300px;">
-						<a href="{{ $link }}"><img src="{{ $photo }}" width="300" /></a>
-					</td>
-					<td>
-						<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
-						<?php
-							$tags = "Hike";
-							if (strpos($entry->title, "Water Taxi") === FALSE)
-							{
-								$tags = "Hike, Bike";
-							}
-							else
-							{
-								$tags = "Boat";
-							}
-						?>
-						<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
-						
-                        @guest
-						@else
-							<a href='/entries/edit/{{$entry->id}}'>
-								<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
-							</a>
-							
-							<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
-						@endguest
-					</td>
-				</tr>
-			@endforeach
-		</tbody>
-	</table>
-</div>
-</div>
-	
-<!---------------------- Md, Sm, Xs version----------------------->
-<div id="tours-md">
-<div class="" style="">	
-	<div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div>
-		<table class="table" style="padding:0; margin:0">
-			<tbody>
-			@foreach($tours as $entry)
-				<?php 
-					$link = '/view/' . $entry->id;
-					$base_folder = 'img/theme1/tours/';
-					$photo_folder = $base_folder . $entry->id . '/';
-					$photo = $photo_folder . 'main.jpg';
-					
-					// file_exists must be relative path with no leading '/'
-					if (file_exists($photo) === FALSE)
-					{
-						if (!is_dir($photo_folder)) // if folder doesn't exist
-						{							
-							// make the folder with read/execute for everbody
-							mkdir($photo_folder, 0755);
-						}
-						
-						// show the place holder
-						$photo = '/' . $base_folder . 'placeholder.jpg';
-					}
-					else
-					{
-						// to show the photo we need the leading '/'
-						$photo = '/' . $photo_folder . 'main.jpg';
-					}
-				?>
-				<tr>
-					<td style="width:100px;">
-						<a href="{{ $link }}"><img src="{{ $photo }}" width="100" /></a>
-					</td>
-					<td>
-						<a style="font-family: Raleway; font-size:.8em;" href="{{ $link }}">{{$entry->title}}</a>						
-						<?php
-							$tags = "Hike";
-							if (strpos($entry->title, "Water Taxi") === FALSE)
-							{
-								$tags = "Hike, Bike";
-							}
-							else
-							{
-								$tags = "Boat";
-							}
-						?>
-						<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
-						
-                        @guest
-						@else
-							<a href='/entries/edit/{{$entry->id}}'>
-								<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
-							</a>
-							
-							<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
-						@endguest
-					</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
-	</div>	
-</div>
-</section>
-
-<?php endif; ?>
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Latest Posts -->

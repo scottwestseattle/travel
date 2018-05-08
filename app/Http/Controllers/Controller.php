@@ -12,9 +12,10 @@ use App\Task;
 use App\Entry;
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
-define('TOUR_PHOTOS_PATH', '/public/img/theme1/tours/');
-define('PHOTOS_FULL_PATH', '/public/img/theme1/');
-define('PHOTOS_WEB_PATH', '/img/theme1/');
+define('TOUR_PHOTOS_PATH', '/public/img/tours/');
+define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
+define('PHOTOS_FULL_PATH', '/public/img/');
+define('PHOTOS_WEB_PATH', '/img/');
 define('EXT_JPG', '.jpg');
 
 class Controller extends BaseController
@@ -72,6 +73,26 @@ class Controller extends BaseController
 		return $text;
 	}
 
+    protected function getSliders()
+    {
+		$path = base_path() . SLIDER_PHOTOS_PATH;
+		//dd($path);
+		$files = scandir($path);
+		$photos = [];
+		foreach($files as $file)
+		{
+			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
+			{
+				if (/* $this->startsWith($file, 'slider') && */ $this->endsWith($file, '.jpg'))
+				{
+					$photos[] = $file;					
+				}
+			}
+		}
+				
+		return $photos;
+    }	
+	
     protected function getPhotosWebPath($subfolder = '')
     {
 		$path = PHOTOS_WEB_PATH;
@@ -104,17 +125,21 @@ class Controller extends BaseController
 	
     protected function getPhotos($subfolder = '', $ext = EXT_JPG)
     {
+		$photos = [];
 		$path = $this->getPhotosFullPath($subfolder, $ext);
 		
-		$files = scandir($path);		
-		
-		foreach($files as $file)
+		if (is_dir($path))
 		{
-			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
+			$files = scandir($path);		
+			
+			foreach($files as $file)
 			{
-				if ($this->endsWith($file, $ext))
+				if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
 				{
-					$photos[] = $file;					
+					if ($this->endsWith($file, $ext))
+					{
+						$photos[] = $file;					
+					}
 				}
 			}
 		}

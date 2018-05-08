@@ -8,8 +8,12 @@
     </div>
 @endif
 
+<?php
+	$id = (isset($id) ? $id : '');
+?>
+
 <div class="container">
-	<h1 style="font-size:1.5em;"><a href="/photos/add/{{ (isset($id) ? $id : '') }}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a><span style="margin-left: 5px;">Photos ({{ count($photos) }})</span></h1>
+	<h1 style="font-size:1.5em;"><a href="/photos/add/{{$id}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a><span style="margin-left: 5px;">Photos ({{ count($photos) }})</span></h1>
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)
@@ -19,7 +23,7 @@
 						<table>
 							<tr><td>{{ $photo }}</td></tr>
 							<tr><td style="padding-top:15px;"><a href="/photos/edit"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
-							<tr><td style="padding-top:15px;"><a href="/photos/delete"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
+							<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 						</table>
 					</td>
 					<td><a href="/view/{{$photo}}"><img src="{{$fullpath}}" style="width: 100%; max-width:500px"/></a></td>
