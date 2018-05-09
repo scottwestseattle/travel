@@ -14,7 +14,11 @@
 			</div>
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="name" class="form-control" placeholder="Photo Name (optional: uploaded file name)"/>
+				Slider size = 1920 x 934
+			</div>
+
+			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
+				<input type="text" name="name" class="form-control" placeholder="Optional: new photo name"/>
 			</div>			
 
 			<div class="">
