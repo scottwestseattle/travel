@@ -3,12 +3,12 @@
 @section('content')
 
 <div class="container">
-	<h1>Delete Template</h1>
+	<h1>Delete Photos</h1>
 
 	<form method="POST" action="/photo/delete/{{ $id }}">
 
 		<div class="form-group">
-			<span name="title" class="">{{$id }}</span>
+			<img name=""  />{{$id }}
 		</div>
 		
 		<div class="form-group">

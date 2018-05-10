@@ -8,6 +8,9 @@ php artisan make:migration add_settings_to_users --table=users
 php artisan migrate
 php artisan migrate:rollback
 
+// rollback the last migration only:
+php artisan migrate:rollback --step=1
+
 
 // create Migration, Model and Controller
 php artisan make:model Tag -m -c

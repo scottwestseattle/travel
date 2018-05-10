@@ -6,16 +6,16 @@
 
 	<h1>Add Slider</h1>
                			   
-	<form method="POST" action="/photos/create" enctype="multipart/form-data">
+	<form method="POST" action="/photos/createslider/">
 		<div class="form-control-big">	
-
-			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="file" name="image" id="image" class="" />
-			</div>
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 				Slider size = 1920 x 934
 			</div>
+		
+			<!-- div style="clear:both; margin:20px 0; font-size:20px;" class="">
+				<input type="file" name="image" id="image" class="" />
+			</div -->
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 				<input type="text" name="filename" class="form-control" placeholder="Optional: new photo name"/>
@@ -23,10 +23,6 @@
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 				<input type="text" name="alt_text" class="form-control" placeholder="Optional: alt text"/>
-			</div>			
-
-			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="location" class="form-control" placeholder="Required: location"/>
 			</div>			
 			
 			<div class="">

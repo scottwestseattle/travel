@@ -37,10 +37,10 @@ Route::group(['prefix' => 'photos'], function ()
 	// add/create
 	Route::get('/add/{id?}','PhotoController@add')->middleware('auth');
 	Route::post('/create/{id?}','PhotoController@create')->middleware('auth');
-
+	
 	// edit/update
 	Route::get('/edit/','PhotoController@edit')->middleware('auth');
-	Route::post('/update/{entry}','PhotoController@update')->middleware('auth');
+	Route::post('/update/{photo}','PhotoController@update')->middleware('auth');
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{id?}','PhotoController@confirmdelete')->middleware('auth');
