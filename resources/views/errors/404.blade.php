@@ -2,10 +2,6 @@
 
 @section('content')
 
-@component('menu-submenu')
-	@component('menu-icons-start')@endcomponent
-@endcomponent
-
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
@@ -44,7 +40,7 @@
             }
 </style>
 
-<div class="container">
+<div class="page-size container">
 	<div class="flex-center position-ref full-height">
 		<div class="content">
 			<div style="font-size:3em; color:#636b6f; font-family:'Raleway', sans-serif;font-weight: 100;" class="title">

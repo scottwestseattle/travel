@@ -73,7 +73,7 @@
 	var img = sliders[ix];
 	
 	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
-	document.getElementById("slider").title = img;
+	//document.getElementById("slider").title = img;
 	
 	function change_slider()
 	{

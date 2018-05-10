@@ -189,10 +189,10 @@ class PhotoController extends Controller
 		return view('entries.view', ['data' => $this->getViewData(), 'photos' => $photos]);
 	}
 	
-    public function edit()
+    public function edit(Request $request, Photo $photo)
     {
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
-        {
+    	if (Auth::check() && Auth::id() == $photo->user_id)
+        {			
 			return view('photos.edit', ['photo' => $photo, 'data' => $this->getViewData()]);							
         }           
         else 
@@ -201,13 +201,32 @@ class PhotoController extends Controller
 		}            	
     }
 	
-    public function update(Request $request)
+    public function update(Request $request, Photo $photo)
     {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    	if (Auth::check() && Auth::id() == $photo->user_id)
         {
-			//dd($request);
-							
-			return redirect('/photo/view/'); 
+			if ($request->filename_orig === $request->filename)
+			{
+				// file name not changed
+			}
+			else
+			{
+				// file name changed, change it
+				$path_from = base_path() . '/public/img/sliders/';
+				$path_to = $path_from;
+				
+				$path_from .= $request->filename_orig;
+				$path_to .= $request->filename;
+
+				rename($path_from, $path_to);				
+			}	
+			
+			$photo->filename = $request->filename;
+			$photo->alt_text = $request->alt_text;
+			$photo->location = $request->location;
+			$photo->save();
+			
+			return redirect('/photos/sliders/'); 
 		}
 		else
 		{

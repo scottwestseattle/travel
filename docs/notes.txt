@@ -14,3 +14,9 @@ php artisan migrate:rollback --step=1
 
 // create Migration, Model and Controller
 php artisan make:model Tag -m -c
+
+
+
+ADD TO PHOTOS:
+- Title Position
+

@@ -2,51 +2,32 @@
 
 @section('content')
 
-@component('menu-submenu')
-	@component('menu-icons-start')@endcomponent
-	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
-	@component('menu-icons-links', ['data' => (isset($data) ? $data : null)])@endcomponent	
-	@component('control-search')@endcomponent	
-@endcomponent
-
 <div class="container">
-	<h1>Edit Entry</h1>
+	<h1>Edit Photo</h1>
 
-	<form method="POST" action="/entries/update/{{ $entry->id }}">
+	<form method="POST" action="/photos/update/{{$photo->id}}">
 		<div class="form-group form-control-big">
 		
 			<div class="entry-title-div">
-				<input type="text" name="title" class="form-control" value="{{ $entry->title }}"  placeholder="Title" />
-			</div>
-			
-	<?php
-		$tags = [];
-	?>
-		
-	@component('control-entry-tags', ['entry' => $entry])
-	@endcomponent		
-			
-			
-			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $entry->description }}</textarea>
+				<input type="text" name="filename" class="form-control" value="{{ $photo->filename }}" placeholder="File Name" />
+				<input type="hidden" name="filename_orig" value="{{ $photo->filename }}" />
 			</div>
 
-			<div style="clear:both;" class="entry-title-div">
-				<input type="text" name="map_link" class="form-control" value="{{ $entry->map_link }}" placeholder="Map Link" />
+			<div class="entry-title-div">
+				<input type="text" name="alt_text" class="form-control" value="{{ $photo->alt_text }}" placeholder="Alt Text" />
 			</div>
 
-			<div style="clear:both;">
-				<input type="checkbox" name="is_template_flag" id="is_template_flag" class="" value="{{$entry->is_template_flag }}" {{ ($entry->is_template) ? 'checked' : '' }} />
-				<label for="is_template_flag" class="checkbox-big-label">Is Tour</label>
-				
-				<div class="">
-					<button type="submit" name="update" class="btn btn-primary">Save</button>
-				</div>
+			<div class="entry-title-div">
+				<input type="text" name="location" class="form-control" value="{{ $photo->location }}" placeholder="Location" />
+			</div>
+
+			<div style="margin:20px 0;">				
+				<button type="submit" name="update" class="btn btn-primary">Update</button>
 			</div>
 			
-			<div style="clear:both;" class="entry-description-div">
-				<textarea name="description_language1" class="form-control entry-description-text" placeholder="Description 2" >{{$entry->description_language1 }}</textarea>	
-			</div>
+			<div class="entry-title-div">
+				<img style="width:100%; max-width:500px;" src="/img/sliders/{{$photo->filename}}" title="{{$photo->alt_text}}" />
+			</div>			
 			
 			{{ csrf_field() }}
 		</div>
