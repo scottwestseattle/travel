@@ -20,7 +20,7 @@
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)
-			<?php $fullpath = $path . $photo->filename; ?>
+			<?php $fullpath = $path . $photo->filename; //dd($fullpath); ?>
 				<tr>
 					<td>
 						<table>
@@ -31,7 +31,7 @@
 							<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 						</table>
 					</td>
-					<td><a href="/view/{{$photo->id}}"><img src="{{$fullpath}}" style="width: 100%; max-width:500px"/></a></td>
+					<td><img title="{{ $photo->alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/></td>
 				</tr>
 			@endforeach
 			</tbody>

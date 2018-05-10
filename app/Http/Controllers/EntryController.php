@@ -385,7 +385,6 @@ class EntryController extends Controller
 			$entry->delete();
 			
 			return redirect('/entries/index/');
-			
 		}
 		
 		return redirect('/entries/index');

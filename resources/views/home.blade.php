@@ -65,7 +65,7 @@
 	// load all the sliders so we can javascript through them
 	var sliders = [
 		@foreach($sliders as $slider)
-			'{{$slider}}',
+			'{{$slider->filename}}',
 		@endforeach
 	];
 		

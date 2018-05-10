@@ -43,8 +43,8 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::post('/update/{photo}','PhotoController@update')->middleware('auth');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/{id?}','PhotoController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{id?}','PhotoController@delete')->middleware('auth');
+	Route::get('/confirmdelete/{photo}','PhotoController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{photo}','PhotoController@delete')->middleware('auth');
 });
 
 Route::group(['prefix' => 'entries'], function () {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Entry;
+use App\Photo;
 use DB;
 
 define("LONGNAME", "Hike, Bike, Boat");
@@ -91,19 +92,14 @@ class HomeController extends Controller
 			$entry['photo'] = $photo;
 			$entry['link'] = $link;
 		}		
-			
-		//dd($entries);
-		$sliders = $this->getSliders();
-		$cnt = count($sliders) - 1;
-		$slider = '';
-		$ix = 0;
-		if ($cnt > 0)
-		{
-			$ix = rand(0, $cnt);
-			$slider = $sliders[$ix];
-		}
 		
-    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'slider_ix' => $ix]);
+		$sliders = Photo::select()
+		//->where('user_id', '=', Auth::id())
+		->where('deleted_flag', '=', 0)
+		->orderByRaw('id ASC')
+		->get();
+		
+    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
     }
 	
     public function view(Entry $entry)

@@ -35,7 +35,7 @@ class PhotoController extends Controller
 				->orderByRaw('photos.id DESC')
 				->get();
 			
-			return view('photos.index', ['path' => SLIDER_PHOTOS_PATH, 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -215,12 +215,11 @@ class PhotoController extends Controller
 		}
     }	
 	
-    public function confirmdelete($id = 0)
-    {	
-		dd($id);
-    	if (Auth::check() /* && Auth::user()->id == $entry->user_id */)
+    public function confirmdelete(Request $request, Photo $photo)
+    {			
+    	if (Auth::check() && Auth::id() == $photo->user_id)
         {			
-			return view('photos.confirmdelete', ['id' => $id, 'data' => $this->getViewData()]);							
+			return view('photos.confirmdelete', ['photo' => $photo, 'data' => $this->getViewData()]);							
         }           
         else 
 		{
@@ -228,14 +227,28 @@ class PhotoController extends Controller
 		}            	
     }
 	
-    public function delete($id = 0)
+    public function delete(Request $request, Photo $photo)
     {	
-    	if (Auth::check() /* && Auth::user()->id == $entry->user_id */)
+    	if (Auth::check() && Auth::id() == $photo->user_id)
         {
-			//$entry->delete();			
+			$photo->deleted_flag = 1;
+			$photo->save();		
+			$path_from = base_path() . '/public/img/sliders/';
+			$path_to = $path_from . 'deleted/';
+			
+			if (!is_dir($path_to)) 
+			{
+				// make the folder with read/execute for everybody
+				mkdir($path_to, 0755);
+			}
+			
+			$path_from .= $photo->filename;
+			$path_to .= $photo->filename;
+
+			rename($path_from, $path_to);
 		}
 		
-		return redirect('/photos/index');
+		return redirect('/photos/sliders');
     }	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
