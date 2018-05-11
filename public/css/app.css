@@ -5858,9 +5858,9 @@ a.thumbnail:hover {
 }
 
 .alert-success {
-    background-color: #dff0d8;
+    background-color: #5CB85C;
     border-color: #d6e9c6;
-    color: #3c763d
+    color: white;
 }
 
 .alert-success hr {
@@ -5868,7 +5868,7 @@ a.thumbnail:hover {
 }
 
 .alert-success .alert-link {
-    color: #2b542c
+    color: white;
 }
 
 .alert-info {
@@ -5900,9 +5900,9 @@ a.thumbnail:hover {
 }
 
 .alert-danger {
-    background-color: #f2dede;
+    background-color: red;
     border-color: #ebccd1;
-    color: #a94442
+    color: white;
 }
 
 .alert-danger hr {
@@ -5910,7 +5910,7 @@ a.thumbnail:hover {
 }
 
 .alert-danger .alert-link {
-    color: #843534
+    color: white;
 }
 
 @-webkit-keyframes progress-bar-stripes {

@@ -2,12 +2,6 @@
 
 @section('content')
 
-@if(session()->has('message.level'))
-    <div class="alert alert-{{ session('message.level') }}"> 
-    {!! session('message.content') !!}
-    </div>
-@endif
-
 <?php
 	$add_link = '/photos/add/';
 	$id = (isset($id) ? $id : 0);
@@ -16,7 +10,10 @@
 ?>
 
 <div class="container">
-	<h1 style="font-size:1.5em;"><a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a><span style="margin-left: 5px;">Photos ({{ count($photos) }})</span></h1>
+	<h1 style="font-size:1.5em;">
+		<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
+		<span style="margin-left: 5px;">{{$title}} Photos ({{ count($photos) }})</span>
+	</h1>
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)

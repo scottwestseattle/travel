@@ -8,6 +8,8 @@
 	<form method="POST" action="/photos/update/{{$photo->id}}">
 		<div class="form-group form-control-big">
 		
+			<input type="hidden" name="parent_id" value={{$id}} />
+
 			<div class="entry-title-div">
 				<input type="text" name="filename" class="form-control" value="{{ $photo->filename }}" placeholder="File Name" />
 				<input type="hidden" name="filename_orig" value="{{ $photo->filename }}" />
