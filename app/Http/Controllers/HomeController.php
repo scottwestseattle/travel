@@ -94,19 +94,13 @@ class HomeController extends Controller
 		}		
 		
 		$sliders = Photo::select()
-		//->where('user_id', '=', Auth::id())
+		->where('parent_id', '=', 0)
+		//->whereNull('parent_id')
 		->where('deleted_flag', '=', 0)
 		->orderByRaw('id ASC')
 		->get();
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
-    }
-	
-    public function view(Entry $entry)
-    {
-		$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
-						
-		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
     }
 
     public function posts(Entry $entry)

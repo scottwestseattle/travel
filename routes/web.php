@@ -67,7 +67,7 @@ Route::group(['prefix' => 'entries'], function () {
 	
 	// other gets
 	Route::get('/viewcount/{entry}','EntryController@viewcount')->middleware('auth');
-	Route::get('/view/{entry}','EntryController@view')->middleware('auth');
+	Route::get('/view/{entry}','EntryController@view');
 	Route::get('/gen/{entry}','EntryController@gen')->middleware('auth');
 	Route::get('/search/{entry}','EntryController@search')->middleware('auth');
 	Route::get('/gendex/{id?}','EntryController@gendex')->middleware('auth');

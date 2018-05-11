@@ -4,7 +4,7 @@
 
 <div class="page-size container">
                
-<form method="POST" action="/entries/gen/{{ $entry->id }}">
+<form method="POST" action="/entries/view/{{ $entry->id }}">
 
 	@guest
 	@else
@@ -19,20 +19,15 @@
 	</div>
 	
 	<div class="entry-div">
-	
-	
 		<div class="entry">
 			<span name="description" class="">{!! nl2br($entry->description) !!}</span>	
 		</div>
-		
-
 	</div>
 
 	<?php 
 		//
 		// show main photo
 		//
-	
 		$photo_found = false;
 		$width = 800;
 		$base_folder = 'img/tours/';
@@ -53,21 +48,22 @@
 		}
 	?>
 
-	<?php if ($photo_found) : ?>
-		<div style="display:default; margin-top:20px;">
-			<img src="{{ $photo }}" style="max-width:100%; width:{{ $width }}" />
-		</div>
-	<?php endif; ?>
-	
-	<div style="margin-top:20px;">
-	@foreach($photos as $photo)
-		@if ($photo !== 'main.jpg')
-			<img style="width:300px; max-width:90%;" alt="{{ str_replace('.jpg', '', $photo) }}" src="/img/tours/{{ $entry->id }}/{{$photo}}" />
-		@endif
-	@endforeach	
+	<div style="display:default; margin-top:20px;">
+		@foreach($photos as $photo)
+			@if ($photo->main_flag === 1)
+				<img src="'/img/tours/{{$entry->id}}/{{$photo->filename}}" title="{{$photo->alt_text}}" style="max-width:100%; width:{{ $width }}" />
+			@endif
+		@endforeach	
 	</div>
 	
-
+	<div style="display:default; margin-top:5px;">
+		@foreach($photos as $photo)
+			@if ($photo->main_flag !== 1)
+				<img style="width:300px; max-width:100%;" title="{{$photo->alt_text}}" src="/img/tours/{{$entry->id}}/{{$photo->filename}}" />		
+			@endif
+		@endforeach	
+	</div>
+	
 	<?php if (!empty($entry->map_link)) : ?>
 		<div id="xttd-map" style="display:default; margin-top:20px;">				
 			<iframe id="xttd-map" src="{{ $entry->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
