@@ -11,12 +11,22 @@ class PhotoController extends Controller
 {
 	public function tours($id)
 	{		
-    	if (Auth::check())
+		$id = intval($id);
+		
+    	if ($id > 0 && Auth::check())
         {
 			$subfolder = 'tours/' . $id . '/';			
-			$photos = $this->getPhotos($subfolder, EXT_JPG);
-						
-			return view('photos.index', ['id' => $id, 'path' => $this->getPhotosWebPath($subfolder), 'photos' => $photos, 'data' => $this->getViewData()]);	
+			$path = $this->getPhotosWebPath($subfolder);
+			
+			//old way, folder based: $photos = $this->getPhotos($subfolder, EXT_JPG);
+			$photos = Photo::select()
+				->where('user_id', '=', Auth::id())
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', '=', $id)
+				->orderByRaw('photos.id DESC')
+				->get();
+				
+			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -35,7 +45,7 @@ class PhotoController extends Controller
 				->orderByRaw('photos.id DESC')
 				->get();
 			
-			return view('photos.index', ['path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['title' => 'Slider', 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -61,7 +71,7 @@ class PhotoController extends Controller
     {
     	if (Auth::check())
         {            
-			return view('photos.add', ['id' => isset($id) ? $id : 0, 'data' => $this->getViewData()]);
+			return view('photos.add', ['id' => $id, 'data' => $this->getViewData()]);
         }           
         else 
 		{
@@ -81,10 +91,10 @@ class PhotoController extends Controller
 			if (!isset($file))
 			{
 				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', 'Image to upload not set');		
+				$request->session()->flash('message.content', 'Image to upload must be set using the [Browse] button');		
 				
 				// bad or missing file name
-				return view('photos.add', ['data' => $this->getViewData()]);	
+				return view('photos.add', ['id' => $request->parent_id, 'data' => $this->getViewData()]);					
 			}
 			
 			//
@@ -93,31 +103,21 @@ class PhotoController extends Controller
 			$ext = strtolower($file->getClientOriginalExtension());
 			if (isset($ext) && $ext === 'jpg')
 			{
+				// correct extension
 			}
 			else
 			{
 				// bad or missing extension
-				return view('photos.add', ['id' => $id, 'data' => $this->getViewData()]);					
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', 'Only JPG images can be uploaded');	
+				
+				return view('photos.add', ['id' => $request->parent_id, 'data' => $this->getViewData()]);					
 			}
 						
 			//
 			// get and check new file name
 			//
-			$name_fixed = trim($request->filename);
-			$name = $name_fixed;
-			if (isset($name_fixed) && strlen($name_fixed) > 0)
-			{
-				$name_fixed = preg_replace('/[^\da-z ]/i', ' ', $name_fixed);	// replace all non-alphanums with space
-				$name_fixed = ucwords($name_fixed);								// cap each word in name
-				$name = str_replace(" ", "-", $name_fixed);						// replace spaces with dashes
-				$name .= '.' . $ext;											// add the extension
-			}
-			else
-			{
-				// no file name given so use original name
-				$name = $file->getClientOriginalName();
-				$name_fixed = $name;
-			}
+			$filename = $this->getPhotoName($request->filename, $file->getClientOriginalName(), $alt_text_default);
 			
 			//
 			// alt text is optional. if not included, use the file name
@@ -130,57 +130,93 @@ class PhotoController extends Controller
 			else
 			{
 				// use the photo name instead
-				$alt_text = $name_fixed;	// use the version without the dashes
+				$alt_text = $alt_text_default; // use the default alt_text which is created from the file name
 			}					
 					
-			$id = isset($id) ? intval($id) : 0;
+			$id = intval($request->parent_id);
 			
 			if ($id === 0) // for now these are sliders
 			{
 				// slider photos
 				$path = $this->getPhotosFullPath('sliders/');
+				
 				$redirect = '/photos/sliders';
+				$redirect_error = '/photos/add/0';
 			}
 			else
 			{
 				// tour photos
 				$path = $this->getPhotosFullPath('tours/' . $id . '/');
-				$redirect = '/photos/tours/' . $id;				
+
+				$redirect = '/entries/view/' . $id;
+				$redirect_error = '/photos/add/' . $id;				
 			}
 						
 			try 
 			{
 				// upload the file
-				$request->file('image')->move($path, $name);
+				$request->file('image')->move($path, $filename);
 				
 				// add the photo record
 				$photo = new Photo();
-				$photo->filename = $name;
+				$photo->filename = $filename;
 				$photo->alt_text = $alt_text;
 				$photo->location = trim($request->location);
+				$photo->parent_id = $request->parent_id;
 				$photo->user_id = Auth::id();
 				
 				//dd($photo);		
 				
 				$photo->save();
 				
-				//$request->session()->flash('message.level', 'success');	
-				//$request->session()->flash('message.content', 'Photo was successfully added!');
+				$request->session()->flash('message.level', 'success');	
+				$request->session()->flash('message.content', 'Photo was successfully uploaded!');
+				
+				return redirect($redirect);
 			}
 			catch (\Exception $e) 
 			{
-				dd($e->getMessage());
-				//$request->session()->flash('message.level', 'danger');
-				//$request->session()->flash('message.content', $e.getMessage());		
-			}			
-						
-			return redirect($redirect);
+				if ($e->getCode() == 0)
+				{
+				}
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());
+				
+				return redirect($redirect_error);
+			}					
         }           
         else 
 		{
              return redirect('/');
         }            	
-    }	
+    }
+
+    protected function getPhotoName($filename_to, $filename_from, &$alt_text)
+    {
+		$filename = trim($filename_to); // use $alt_text as a holder
+		if (isset($filename) && strlen($filename) > 0)
+		{
+			//
+			// a new file name has been provided, fix it up
+			//
+			$filename = preg_replace('/[^\da-z ]/i', ' ', $filename);	// replace all non-alphanums with space
+			$filename = ucwords($filename);								// cap each word in name
+			$alt_text = $filename;										// use this as the default alt_text
+			
+			$filename = str_replace(" ", "-", $filename);				// replace spaces with dashes
+			$filename .= '.jpg';										// add the extension
+		}
+		else
+		{
+			//
+			// no file name given so use the original file name from the actual file
+			//
+			$filename = $filename_from;
+			$alt_text = $filename;	// use this as the default alt_text
+		}
+			
+		return $filename;
+	}
 
     public function view()
     {
@@ -205,25 +241,71 @@ class PhotoController extends Controller
     {	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {
-			if ($request->filename_orig === $request->filename)
+			$filename = trim($request->filename);
+			
+			if ($request->filename_orig === $filename)
 			{
 				// file name not changed
 			}
 			else
 			{
-				// file name changed, change it
-				$path_from = base_path() . '/public/img/sliders/';
-				$path_to = $path_from;
-				
-				$path_from .= $request->filename_orig;
-				$path_to .= $request->filename;
+				if (strlen($filename) > 0)
+				{
+					//
+					// file name changed, change the physical file name
+					//
+					$id = intval($request->parent_id);
+					if ($id === 0)
+						$path_from = base_path() . '/public/img/sliders/';
+					else
+						$path_from = base_path() . '/public/img/tours/' . $id . '/';
+					
+					$path_to = $path_from;
+					
+					$path_from .= $request->filename_orig;
+					
+					// get and fix up the new file name
+					$filename = $this->getPhotoName($filename, $request->filename_orig, $alt_text_default);
+					$path_to .= $filename;
 
-				rename($path_from, $path_to);				
+					rename($path_from, $path_to);
+				}
+				else
+				{
+					// new file name can't be blank
+					$filename = $request->filename_orig;
+				}
 			}	
 			
-			$photo->filename = $request->filename;
-			$photo->alt_text = $request->alt_text;
-			$photo->location = $request->location;
+			//
+			// get and fix alt_text
+			//
+			$alt_text = trim($request->alt_text);
+			if (isset($alt_text) && strlen($alt_text) > 0)
+			{
+				// alt_text is set
+			}
+			else
+			{
+				// alt_text not set, fix it up
+				if (isset($alt_text_default) && strlen($alt_text_default) > 0)
+				{
+					$alt_text = $alt_text_default;
+				}
+				else
+				{
+					// alt_text_default not set, so use filename to gen alt_text
+					$alt_text = str_replace("-", " ", $filename);	// replace dashes with spaces
+					$alt_text = str_replace(".jpg", "", $alt_text);	// remove file extension
+				}
+			}
+			
+			//
+			// update the db record
+			//
+			$photo->filename = $filename;
+			$photo->alt_text = $alt_text;
+			$photo->location = trim($request->location);
 			$photo->save();
 			
 			return redirect('/photos/sliders/'); 
@@ -250,9 +332,21 @@ class PhotoController extends Controller
     {	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {
+			// 
+			// update the database record
+			//
 			$photo->deleted_flag = 1;
-			$photo->save();		
-			$path_from = base_path() . '/public/img/sliders/';
+			$photo->save();	
+
+			//
+			// move the file to the deleted folder
+			//
+			$id = intval($request->parent_id);
+			if ($id === 0)
+				$path_from = base_path() . '/public/img/sliders/';
+			else
+				$path_from = base_path() . '/public/img/tours/' . $id . '/';
+			
 			$path_to = $path_from . 'deleted/';
 			
 			if (!is_dir($path_to)) 
@@ -264,7 +358,15 @@ class PhotoController extends Controller
 			$path_from .= $photo->filename;
 			$path_to .= $photo->filename;
 
-			rename($path_from, $path_to);
+			try
+			{
+				rename($path_from, $path_to);
+			}
+			catch (\Exception $e) 
+			{
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());
+			}
 		}
 		
 		return redirect('/photos/sliders');
