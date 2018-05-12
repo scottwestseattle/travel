@@ -11,6 +11,9 @@ class PhotoController extends Controller
 {
 	public function tours($id)
 	{		
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$id = intval($id);
 		
     	if ($id > 0 && Auth::check())
@@ -36,7 +39,10 @@ class PhotoController extends Controller
 	
 	public function sliders()
 	{		
-    	if (Auth::check())
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		 if (Auth::check())
         {
 			//old photo driven: $photos = $this->getSliders();
 			$photos = Photo::select()
@@ -56,7 +62,10 @@ class PhotoController extends Controller
 	
     public function index()
     {
-    	if (Auth::check())
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		if (Auth::check())
         {
 			$photos = [];
 			
@@ -70,6 +79,9 @@ class PhotoController extends Controller
 		
     public function add($id = 0)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
     	if (Auth::check())
         {            
 			return view('photos.add', ['id' => $id, 'data' => $this->getViewData()]);
@@ -81,7 +93,10 @@ class PhotoController extends Controller
 	}
 	
     public function create(Request $request)
-    {					
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+	
     	if (Auth::check())
         {            
 			//
@@ -229,6 +244,9 @@ class PhotoController extends Controller
 	
     public function edit(Request $request, Photo $photo)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {			
 			return view('photos.edit', ['photo' => $photo, 'data' => $this->getViewData()]);							
@@ -240,7 +258,10 @@ class PhotoController extends Controller
     }
 	
     public function update(Request $request, Photo $photo)
-    {	
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {
 			$id = intval($request->parent_id);
@@ -326,7 +347,10 @@ class PhotoController extends Controller
     }	
 	
     public function confirmdelete(Request $request, Photo $photo)
-    {			
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {			
 			return view('photos.confirmdelete', ['photo' => $photo, 'data' => $this->getViewData()]);							
@@ -338,7 +362,10 @@ class PhotoController extends Controller
     }
 	
     public function delete(Request $request, Photo $photo)
-    {	
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {
 			// 
