@@ -163,7 +163,7 @@ class PhotoController extends Controller
 				$photo->filename = $filename;
 				$photo->alt_text = $alt_text;
 				$photo->location = trim($request->location);
-				$photo->main_flag = $request->main_flag;
+				$photo->main_flag = intval($request->main_flag);
 				$photo->parent_id = $id;
 				$photo->user_id = Auth::id();
 				
@@ -313,7 +313,7 @@ class PhotoController extends Controller
 			//
 			$photo->filename = $filename;
 			$photo->alt_text = $alt_text;
-			$photo->main_flag = $request->main_flag;
+			$photo->main_flag = intval($request->main_flag);
 			$photo->location = trim($request->location);
 			$photo->save();
 			

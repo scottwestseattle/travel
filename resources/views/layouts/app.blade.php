@@ -40,77 +40,37 @@
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 	
 </head>
+
+<?php 
+
+$is_logged_in = (null !== Auth::user());
+$user_type = $is_logged_in ? intval(Auth::user()->type) : 0;
+//echo $user_type;
+
+if ($user_type >= 1000) // super admin
+{
+	$color = 'red'; 
+}
+else if ($user_type >= 100) // site admin
+{
+	$color = '#5CB85C'; // green
+}
+else if ($is_logged_in) // logged in, regular user
+{
+	$color = '#FF6900'; // orange header
+}
+else // not logged in
+{
+	$color = '#4993FD'; // blue header
+}
+
+?>
+
 <body style="margin:0; padding:0;">
     <div id="app" style="min-height:500px; ">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: #FF6900; ">
-            <div class="xcontainer">
-                <div class="navbar-header">
-
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-						<span class="glyphCustom glyphicon glyphicon-home"></span>
-						<!--
-						<img width="45px" src="/img/logo-top.png" />
-                        {{ config('app.name', 'Travel') }}
-						-->
-                    </a>
-					
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-							<li id="debug-tag-lg"><a href="/">Home (L)</a></li>
-							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
-							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
-							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
-							<!-- li><a href="/posts">Posts</a></li -->
-							<!-- li><a href="/tours">Tours</a></li -->
-							<li><a href="/visits/">Visits</a></li>
-							<li><a href="/entries/tours">Tours</a></li>
-							<li><a href="/photos/sliders">Sliders</a></li>
-                            <li><a href="/tasks/index">Tasks</a></li>
-							
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
+        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; ">
+			@component('menu-main')
+			@endcomponent
         </nav>
 
 @if(session()->has('message.level'))

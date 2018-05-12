@@ -48,6 +48,9 @@ class HomeController extends Controller
 		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
 		$tours_webpath = '/img/tours/';
 		
+		//
+		// loop through and get the main photo to show
+		//
 		foreach($tours as $entry)
 		{
 			$link = '/view/' . $entry->id;
@@ -92,14 +95,17 @@ class HomeController extends Controller
 			$entry['photo'] = $photo;
 			$entry['link'] = $link;
 		}		
-		
+
+		//
+		// get the slider list
+		//
 		$sliders = Photo::select()
-		->where('parent_id', '=', 0)
-		//->whereNull('parent_id')
-		->where('deleted_flag', '=', 0)
-		->orderByRaw('id ASC')
-		->get();
-		
+			->where('parent_id', '=', 0)
+			//->whereNull('parent_id')
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id ASC')
+			->get();
+			
 		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
 		{
 			$ip = $_SERVER["HTTP_CLIENT_IP"];
@@ -118,9 +124,12 @@ class HomeController extends Controller
 		$entry->user_id = 0;
 		$entry->title = $ip;
 		$entry->description = $host;
-		$entry->is_template_flag = 0;			
-		$entry->save();		
-		
+		$entry->is_template_flag = 0;
+			
+		//dd($entry->title);
+			
+		$entry->save();
+
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
     }
 
@@ -130,8 +139,10 @@ class HomeController extends Controller
 			->where('user_id', '=', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
-						
-		return view('visits', compact('entries'));
+			
+		//dd($entries);
+			
+		return view('visits', ['entries' => $entries, 'title' => 'Visits']);
     }
 	
     public function posts(Entry $entry)

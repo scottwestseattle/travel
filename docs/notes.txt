@@ -20,3 +20,14 @@ php artisan make:model Tag -m -c
 ADD TO PHOTOS:
 - Title Position
 
+Primary Colors:
+
+Header Orange:
+$color = '#FF6900'; // orange header
+
+Header Blue:
+$color = ''; // blue header
+
+Footer Green:
+$color = '#5CB85C'; // green
+

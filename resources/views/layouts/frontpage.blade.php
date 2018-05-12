@@ -38,71 +38,9 @@
 </head>
 <body>
     <div id="app" style="min-height: 500px;">
-        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #3F98FD /* blue */ /* #FF6900 orange */; border-width: 0 0 0px;"> 
-            <div class="xcontainer">
-                <div class="navbar-header" style="">
-
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                        <span class="icon-bar" style="background-color: white;"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a style="" class="navbar-brand" href="{{ url('/') }}">
-						<span class="glyphCustom glyphicon glyphicon-home"></span>
-                   </a>
-					
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-							<li id="debug-tag-lg"><a href="/">Home (L)</a></li>
-							<li id="debug-tag-md"><a href="/">Home (M)</a></li>
-							<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
-							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
-							<li><a href="/photos/sliders">Sliders</a></li -->
-							<!-- li><a href="/tours">Tours</a></li -->
-							<li><a href="/visits/">Visits</a></li>
-							<li><a href="/entries/tours">Tours</a></li>
-                            <li><a href="/tasks/index">Tasks</a></li>
-							
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom:0px; background-color: #3F98FD /* power blue */; border-width: 0 0 0px;"> 
+			@component('menu-main')
+			@endcomponent
         </nav>
 
         @yield('content')
