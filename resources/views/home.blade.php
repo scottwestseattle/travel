@@ -167,13 +167,21 @@
 						<div class="col-md-4 col-sm-6">
 						
 							<!-- tour image -->
+<<<<<<< HEAD
 							<a href="{{$link_view . $entry->id}}" >
+=======
+							<a href="/entries/view/{{$entry->id}}" >
+>>>>>>> ece35ee1ba517bbcbe8c9241408a87e6edccf7dc
 								<div style="min-height:220px; background-color: lightSalmon; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
+<<<<<<< HEAD
 								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{$link_view . $entry->id}}">{{ $entry->title }}</a>
+=======
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="/entries/view/{{$entry->id}}">{{ $entry->title }}</a>
+>>>>>>> ece35ee1ba517bbcbe8c9241408a87e6edccf7dc
 							</div>
 						</div>
 					

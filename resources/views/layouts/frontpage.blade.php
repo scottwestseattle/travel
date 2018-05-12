@@ -76,7 +76,7 @@
 							<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
 							<li><a href="/photos/sliders">Sliders</a></li -->
 							<!-- li><a href="/tours">Tours</a></li -->
-							<li><a href="/entries/posts">Posts</a></li>
+							<li><a href="/visits/">Visits</a></li>
 							<li><a href="/entries/tours">Tours</a></li>
                             <li><a href="/tasks/index">Tasks</a></li>
 							

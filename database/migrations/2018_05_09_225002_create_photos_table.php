@@ -22,7 +22,8 @@ class CreatePhotosTable extends Migration
 			$table->string('filename');							// physical file name
 			$table->string('title')->nullable();					// photo title (not used yet)
 			$table->string('location')->nullable();				// photo location (place, city, region, country)
-			$table->tinyInteger('approved_flag')->default(-1);	// has been approved by super-admin
+			$table->tinyInteger('approved_flag')->default(0);	// has been approved by admin
+			$table->tinyInteger('main_flag')->default(0);		// the main photo
 			$table->unsignedInteger('view_count')->default(0);	// optional: view count
 			$table->tinyInteger('type')->default(-1);			// photo type: slider, tour entry, post entry, etc
 			$table->tinyInteger('deleted_flag')->default(0);	// photo record has been deleted or not			

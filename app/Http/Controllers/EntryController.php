@@ -370,9 +370,21 @@ class EntryController extends Controller
 		}
     }	
 	
+	protected function checkUser($entry)
+	{
+		$rc = false;
+		
+    	if (Auth::check() && (Auth::user()->id == $entry->user_id || Auth::user()->user_type >= USER_SITE_ADMIN))  
+		{
+			$rc = true;
+		}
+
+		return $rc;
+	}
+	
     public function confirmdelete(Request $request, Entry $entry)
-    {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    {		
+    	if ($this->checkUser($entry))       
         {
 			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
 			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
@@ -387,7 +399,7 @@ class EntryController extends Controller
 	
     public function delete(Request $request, Entry $entry)
     {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    	if ($this->checkUser($entry))       
         {
 			//dd($entry);
 			
