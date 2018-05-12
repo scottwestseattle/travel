@@ -28,7 +28,18 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-						<?php $user_type = (null !== Auth::user()) ? intval(Auth::user()->type) : 0; ?>
+						<?php 
+							$user_type = (null !== Auth::user()) ? intval(Auth::user()->user_type) : 0; 
+							$user_type_name = 'not set';
+							if ($user_type >= 1000)
+								$user_type_name = "super admin";
+							else if ($user_type >= 100)
+								$user_type_name = "admin";
+							else if ($user_type >= 10)
+								$user_type_name = "confirmed";
+							else
+								$user_type_name = "unconfirmed";	
+						?>
                         @guest
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
@@ -42,20 +53,26 @@
 							<?php endif; ?>
 							
 							<?php if ($user_type >= 100) : ?>
+								<li><a href="/photos/sliders">Sliders</a></li>
+								<li><a href="/users/">Users</a></li>
 								<li><a href="/visits/">Visits</a></li>
 								<li><a href="/entries/index/">Entries</a></li>
+								<li><a href="/entries/tours">Tours</a></li>
+								<li><a href="/tasks/index">Tasks</a></li>
 							<?php endif; ?>
 														
-							<li><a href="/entries/tours">Tours</a></li>
-							<li><a href="/photos/sliders">Sliders</a></li>
-                            <li><a href="/tasks/index">Tasks</a></li>
-							
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                     {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu">
+								
+									<?php if (Auth::check()) : ?>
+										<li><span style="padding-left:20px; color:black;">{{$user_type_name}}</span></li>
+										<li><a href="/users/">Settings</a></li>
+									<?php endif; ?>
+
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
