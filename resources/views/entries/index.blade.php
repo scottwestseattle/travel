@@ -18,7 +18,7 @@ if (isset($title))
 
 ?>
 
-<div class="container">
+<div class="page-size container">
 	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($entries) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">

@@ -132,4 +132,22 @@ Route::group(['prefix' => 'tasks'], function () {
 	Route::post('/delete/{task}','TasksController@delete')->middleware('auth');
 });
 
+Route::group(['prefix' => 'users'], function () {
+	Route::get('/', 'UsersController@index')->middleware('auth');
+	Route::get('/index', 'UsersController@index')->middleware('auth');
+	Route::get('/view/{user}','UsersController@view')->middleware('auth');
+
+	// add/create
+	Route::get('/add','UsersController@add')->middleware('auth');
+	Route::post('/create','UsersController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{user}','UsersController@edit')->middleware('auth');
+	Route::post('/update/{user}','UsersController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{user}','UsersController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{user}','UsersController@delete')->middleware('auth');
+});
+
 

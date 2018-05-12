@@ -17,24 +17,24 @@ define('INTNOTSET', -1);
 class EntryController extends Controller
 {
     public function index()
-    {
-    	//$user = Auth::user(); // original gets current user with all entries
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
 		
 		$entries = Entry::select()
 			->where('user_id', '=', Auth::id())
 			//->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
-			->orderByRaw('entries.id')
+			->orderByRaw('entries.id DESC')
 			->get();
-			
-		//dd($entries);
 		
     	return view('entries.index', compact('entries'));
     }
 
     public function posts()
     {
-    	//$user = Auth::user(); // original gets current user with all entries
+		if (!$this->isAdmin())
+             return redirect('/');
 		
 		$entries = Entry::select()
 			->where('user_id', '=', Auth::id())
@@ -50,6 +50,9 @@ class EntryController extends Controller
 	
     public function tours()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$entries = Entry::select()
 			->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '=', 1)
@@ -62,7 +65,10 @@ class EntryController extends Controller
 	
     public function add()
     {
-    	if (Auth::check())
+		if (!$this->isAdmin())
+             return redirect('/');
+
+			 if (Auth::check())
         {            
 			//todo $categories = Category::lists('title', 'id');
 	
@@ -76,33 +82,30 @@ class EntryController extends Controller
 
     public function create(Request $request)
     {		
-    	if (Auth::check())
-        {            
+		if (!$this->isAdmin())
+             return redirect('/');
+           
 			//dd($request);
 			
-			$entry = new Entry();
-			$entry->title = $request->title;
-			$entry->description = $request->description;
-			$entry->map_link = $request->map_link;
-			$entry->description_language1 = $request->description_language1;
-			$entry->is_template_flag = (isset($request->is_template_flag)) ? 1 : 0;
-			//$entry->uses_template_flag = (isset($request->uses_template_flag)) ? 1 : 0; //sbw
-			$entry->user_id = Auth::id();
+		$entry = new Entry();
+		$entry->title = $request->title;
+		$entry->description = $request->description;
+		$entry->map_link = $request->map_link;
+		$entry->description_language1 = $request->description_language1;
+		$entry->is_template_flag = (isset($request->is_template_flag)) ? 1 : 0;
+		//$entry->uses_template_flag = (isset($request->uses_template_flag)) ? 1 : 0; //sbw
+		$entry->user_id = Auth::id();
+						
+		$entry->save();
 			
-			//dd($entry);		
-			
-			$entry->save();
-			
-			return redirect('/entries/view/' . $entry->id);
-        }           
-        else 
-		{
-             return redirect('/');
-        }            	
+		return redirect('/entries/view/' . $entry->id);          	
     }
 
     public function upload(Entry $entry)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+			 
     	if (Auth::check())
         {            
 			//todo $categories = Category::lists('title', 'id');
@@ -117,7 +120,10 @@ class EntryController extends Controller
 	
     public function store(Request $request, Entry $entry)
     {		
-    	if (Auth::check())
+		if (!$this->isAdmin())
+             return redirect('/');
+
+			 if (Auth::check())
         {            
 			//dd($request->file('image'));
 				
@@ -190,151 +196,19 @@ class EntryController extends Controller
 		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 
-    public function gen(Entry $entry)
-    {		
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
-        {
-			$entry = $this->merge_entry($entry);
-			$entry['data'] = $this->getViewData();
-
-			return view('entries.gen', $entry);			
-        }           
-        else 
-		{
-             return redirect('/');
-		}            	
-    }
-
-    public function settemplate($id)
-    {
-		$id = (intval($id) >= 0) ? intval($id) : 0;
-
-		// if id set and it is changing
-		if ($id > 0 && Auth::check() && intval(Auth::user()->template_id) != $id)
-		{
-			// template is changing
-			//dd('template change');
-			
-			Auth::user()->template_id = $id;
-			Auth::user()->save();
-		}
-
-    	return view('entries.settemplate');
-	}
-
     public function home()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		return $this->index();
 	}
 	
-    public function gendex($id = INTNOTSET)
-    {
-		$id = (intval($id) >= 0) ? intval($id) : 0;
-		
-		if (Auth::check())
-        {			
-			//
-			// get the template or entry to show
-			//
-			if ($id > 0) // get the specified article
-			{
-				$entry = Entry::select()
-					->where('user_id', '=', Auth::id())
-					->where('id', '=' , $id)
-					->first();
-				
-				if ($entry !== null)
-				{
-					$data = $this->merge_entry($entry);
-					$data['entry']['description'] = $this->formatLinks($data['entry']['description']);
-					$data['entry']['description_language1'] = $this->formatLinks($data['entry']['description_language1']);
-				}
-				else
-				{
-					// entry doesn't exist or it's not their entry
-					$this->index();
-				}
-			}
-			else // get the default template
-			{
-				$template_id = intval(Auth::user()->template_id);
-				
-				if ($template_id === 0) // default template not set, use first template
-				{
-					$entry = Entry::select()
-						->where('user_id', '=', Auth::id())
-						->where('is_template_flag', '=', 1)
-						->first();
-
-				}
-				else // get user's default template
-				{
-					$entry = Entry::select()
-						->where('user_id', '=', Auth::id())
-						->where('is_template_flag', '=', 1)
-						->where('id', '=',  $template_id)
-						->first();
-				}
-
-				if ($entry === null)
-				{	
-					// new user won't have any data					
-					$entry = new Entry();
-					$entry->title = "Standard Layout";
-					$entry->description = BODY_PLACEHODER;
-					$entry->description_language1 = BODY_PLACEHODER;
-					$entry->is_template_flag = 1;
-					$entry->user_id = Auth::id();
-								
-					$entry->save();					
-				}
-
-				$entry->description = str_replace(BODY_PLACEHODER, $this->fixEmpty('', BODY), $entry->description) . '<br/>';
-				$entry->description_language1 = str_replace(BODY_PLACEHODER, $this->fixEmpty('', BODY), $entry->description_language1) . '<br/>';
-					
-				$data = $this->merge_entry($entry);	
-			}			
-			
-			//
-			// get entry list
-			//
-			$entries = Entry::select()
-				->where('user_id', '=', Auth::id())
-				->where('is_template_flag', '<>', 1)
-				->where('view_count', '>=', 0)
-				->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')				
-				//->orderBy('title')
-				->limit(25)
-				->get();
-
-			//
-			// get template list
-			//
-			$templates = Entry::select('id', 'title')
-				->where('user_id', '=', Auth::id())
-				->where('is_template_flag', '=', 1)
-				->orderBy('title')
-				->get();
-			
-			$data['entries'] = $entries;
-			$data['templates'] = $templates;
-			$data['data'] = $this->getViewData();
-						
-			if ($entry === null)
-			{
-				// no entries, take them to index
-				return view('entries.index', compact('entries'));
-			}
-			else
-			{
-				// show default or selected entry
-				return view('entries.gendex', $data);
-			}
-        }          	
-    }
-	
     public function edit(Request $request, Entry $entry)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {
 			//dd($entry);
@@ -351,6 +225,9 @@ class EntryController extends Controller
 	
     public function update(Request $request, Entry $entry)
     {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {
 			//dd($request);
@@ -370,21 +247,12 @@ class EntryController extends Controller
 		}
     }	
 	
-	protected function checkUser($entry)
-	{
-		$rc = false;
-		
-    	if (Auth::check() && (Auth::user()->id == $entry->user_id || Auth::user()->user_type >= USER_SITE_ADMIN))  
-		{
-			$rc = true;
-		}
-
-		return $rc;
-	}
-	
     public function confirmdelete(Request $request, Entry $entry)
-    {		
-    	if ($this->checkUser($entry))       
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+	
+    	if ($this->isOwnerOrAdmin($entry))       
         {
 			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
 			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
@@ -399,6 +267,9 @@ class EntryController extends Controller
 	
     public function delete(Request $request, Entry $entry)
     {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
     	if ($this->checkUser($entry))       
         {
 			//dd($entry);
@@ -410,49 +281,6 @@ class EntryController extends Controller
 		
 		return redirect('/entries/index');
     }
-		
-    public function search($search)
-    {
-		$rc = 0;
-		$userId = 1;
-		$entries = null;
-
-		if (mb_strlen($search) > 0)
-		{
-			// strip everything except alpha-numerics, colon, and spaces
-			$search = preg_replace("/[^:a-zA-Z0-9 .]+/", "", $search);
-		}
-		else
-		{
-			echo 'no search string';
-			return $rc;
-		}
-
-		if (mb_strlen($search) == 0)
-		{
-			echo 'no search string';
-			return $rc;
-		}
-
-		$entries = Entry::select()->whereRaw('1 = 1')
-			->where('user_id', '=', Auth::id())
-			->where('is_template_flag', '=', 0)
-			->where(function ($query) use ($search) {
-				return $query
-					->where('title', 'like', '%' . $search . '%')
-					->orWhere('description', 'like', '%' . $search . '%')
-					->orWhere('description_language1', 'like', '%' . $search . '%')
-			;})
-			->orderBy('title')
-			->limit(25)
-			->get();
-
-		$entries = compact('entries');
-
-		//dd($entries);
-				
-    	return view('entries.search', $entries);
-	}
 	
     public function viewcount(Entry $entry)
     {		
@@ -478,12 +306,7 @@ class EntryController extends Controller
 		$data['hashed'] = $hashed;
 
 		return view('entries.hash', $data);
-	}
-	
-    public function timer()
-    {
-		return view('entries.timer');
-    }		
+	}		
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

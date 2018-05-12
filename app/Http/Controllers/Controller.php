@@ -32,6 +32,40 @@ class Controller extends BaseController
 	{
 	}
 
+	protected function isOwnerOrAdmin($user_id)
+	{
+		$rc = false;
+		
+		// if owner
+		if ($this->isOwner($user_id))
+		{
+			$rc = true;
+		}
+
+		// if site or super admin
+		if ($this->isAdmin())
+		{
+			$rc = true;
+		}
+
+		return $rc;
+	}
+
+	protected function isOwner($user_id)
+	{
+		return (Auth::check() && Auth::user()->id == $user_id);
+	}	
+
+	protected function isAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
+	}	
+	
+	protected function isSuperAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
+	}	
+	
 	protected function getViewData()
 	{
 		$taskCount = Task::select()

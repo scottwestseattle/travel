@@ -44,7 +44,7 @@
 <?php 
 
 $is_logged_in = (null !== Auth::user());
-$user_type = $is_logged_in ? intval(Auth::user()->type) : 0;
+$user_type = $is_logged_in ? intval(Auth::user()->user_type) : 0;
 //echo $user_type;
 
 if ($user_type >= 1000) // super admin

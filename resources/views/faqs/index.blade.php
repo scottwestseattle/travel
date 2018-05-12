@@ -8,7 +8,7 @@
 	@component('control-search', ['command' => '/faqs/search/', 'placeholder' => 'Search Kbase', 'popup' => false ])@endcomponent
 @endcomponent
 
-<div id="" class="container">
+<div id="" class="page-size container">
 	@if (Auth::check())
 		<h1>Faqs</h1>
 		<a href="/faqs/add" class="btn btn-primary">Add</a>
