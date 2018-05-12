@@ -40,11 +40,12 @@ class PhotoController extends Controller
         {
 			//old photo driven: $photos = $this->getSliders();
 			$photos = Photo::select()
-				->where('user_id', '=', Auth::id())
+				->where('parent_id', '=', 0)
+				//->whereNull('parent_id')
 				->where('deleted_flag', '<>', 1)
 				->orderByRaw('photos.id DESC')
 				->get();
-			
+				
 			return view('photos.index', ['title' => 'Slider', 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
@@ -132,7 +133,7 @@ class PhotoController extends Controller
 				// use the photo name instead
 				$alt_text = $alt_text_default; // use the default alt_text which is created from the file name
 			}					
-					
+				
 			$id = intval($request->parent_id);
 			
 			if ($id === 0) // for now these are sliders
@@ -153,7 +154,7 @@ class PhotoController extends Controller
 			}
 						
 			try 
-			{
+			{				
 				// upload the file
 				$request->file('image')->move($path, $filename);
 				
@@ -162,7 +163,8 @@ class PhotoController extends Controller
 				$photo->filename = $filename;
 				$photo->alt_text = $alt_text;
 				$photo->location = trim($request->location);
-				$photo->parent_id = $request->parent_id;
+				$photo->main_flag = $request->main_flag;
+				$photo->parent_id = $id;
 				$photo->user_id = Auth::id();
 				
 				//dd($photo);		
@@ -241,6 +243,18 @@ class PhotoController extends Controller
     {	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {
+			$id = intval($request->parent_id);
+			if ($id === 0)
+			{
+				$path_from = base_path() . '/public/img/sliders/';
+				$redirect = '/photos/sliders/';
+			}
+			else
+			{
+				$path_from = base_path() . '/public/img/tours/' . $id . '/';
+				$redirect = '/entries/view/' . $id;
+			}
+
 			$filename = trim($request->filename);
 			
 			if ($request->filename_orig === $filename)
@@ -253,13 +267,7 @@ class PhotoController extends Controller
 				{
 					//
 					// file name changed, change the physical file name
-					//
-					$id = intval($request->parent_id);
-					if ($id === 0)
-						$path_from = base_path() . '/public/img/sliders/';
-					else
-						$path_from = base_path() . '/public/img/tours/' . $id . '/';
-					
+					//					
 					$path_to = $path_from;
 					
 					$path_from .= $request->filename_orig;
@@ -305,10 +313,11 @@ class PhotoController extends Controller
 			//
 			$photo->filename = $filename;
 			$photo->alt_text = $alt_text;
+			$photo->main_flag = $request->main_flag;
 			$photo->location = trim($request->location);
 			$photo->save();
 			
-			return redirect('/photos/sliders/'); 
+			return redirect($redirect); 
 		}
 		else
 		{

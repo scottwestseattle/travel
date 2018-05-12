@@ -48,6 +48,9 @@ class HomeController extends Controller
 		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
 		$tours_webpath = '/img/tours/';
 		
+		//
+		// loop through and get the main photo to show
+		//
 		foreach($tours as $entry)
 		{
 			$link = '/view/' . $entry->id;
@@ -92,23 +95,56 @@ class HomeController extends Controller
 			$entry['photo'] = $photo;
 			$entry['link'] = $link;
 		}		
-		
+
+		//
+		// get the slider list
+		//
 		$sliders = Photo::select()
-		//->where('user_id', '=', Auth::id())
-		->where('deleted_flag', '=', 0)
-		->orderByRaw('id ASC')
-		->get();
-		
+			->where('parent_id', '=', 0)
+			//->whereNull('parent_id')
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id ASC')
+			->get();
+			
+		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		else
+		{
+		 $ip = $_SERVER["REMOTE_ADDR"];
+		}	
+		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
+
+		$entry = new Entry();
+		$entry->user_id = 0;
+		$entry->title = $ip;
+		$entry->description = $host;
+		$entry->is_template_flag = 0;
+			
+		//dd($entry->title);
+			
+		$entry->save();
+
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
     }
-	
-    public function view(Entry $entry)
-    {
-		$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
-						
-		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
-    }
 
+    public function visits()
+    {
+		$entries = Entry::select()
+			->where('user_id', '=', 0)
+			->orderByRaw('entries.id DESC')
+			->get();
+			
+		//dd($entries);
+			
+		return view('visits', ['entries' => $entries, 'title' => 'Visits']);
+    }
+	
     public function posts(Entry $entry)
     {
 		$entries = Entry::select()

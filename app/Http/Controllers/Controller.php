@@ -17,6 +17,10 @@ define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
 define('PHOTOS_FULL_PATH', '/public/img/');
 define('PHOTOS_WEB_PATH', '/img/');
 define('EXT_JPG', '.jpg');
+define('USER_UNCONFIRMED', 0);		// user unconfirmed
+define('USER_CONFIRMED', 10);		// user confirmed
+define('USER_SITE_ADMIN', 100);		// user site admin
+define('USER_SUPER_ADMIN', 1000);	// user super admin
 
 class Controller extends BaseController
 {

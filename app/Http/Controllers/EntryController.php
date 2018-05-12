@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Entry;
+use App\Photo;
 use DB;
 
 define('BODYSTYLE', '<span style="color:green;">');
@@ -176,8 +177,16 @@ class EntryController extends Controller
 
     public function view(Entry $entry)
     {
-		$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
-						
+		//$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
+		
+		$photos = Photo::select()
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('photos.id DESC')
+			->get();
+			
+		//dd($photos);
+		
 		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 
@@ -361,9 +370,21 @@ class EntryController extends Controller
 		}
     }	
 	
+	protected function checkUser($entry)
+	{
+		$rc = false;
+		
+    	if (Auth::check() && (Auth::user()->id == $entry->user_id || Auth::user()->user_type >= USER_SITE_ADMIN))  
+		{
+			$rc = true;
+		}
+
+		return $rc;
+	}
+	
     public function confirmdelete(Request $request, Entry $entry)
-    {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    {		
+    	if ($this->checkUser($entry))       
         {
 			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
 			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
@@ -378,7 +399,7 @@ class EntryController extends Controller
 	
     public function delete(Request $request, Entry $entry)
     {	
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    	if ($this->checkUser($entry))       
         {
 			//dd($entry);
 			

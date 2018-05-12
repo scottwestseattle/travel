@@ -31,6 +31,11 @@
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 				<input type="text" name="location" class="form-control" placeholder="Required: location"/>
+			</div>	
+
+			<div style="clear: both;" class="">
+				<input type="checkbox" name="main_flag" id="main_flag" class="" />
+				<label for="main_flag" class="checkbox-big-label">Main Photo</label>
 			</div>			
 			
 			<div class="">
