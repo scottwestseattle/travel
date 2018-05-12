@@ -20,7 +20,7 @@ if (isset($title))
 			@foreach($entries as $entry)
 				<tr>
 					<td>{{$entry->created_at}}</td>
-					<td>{{$entry->title}}</td>
+					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$entry->title}}">{{$entry->title}}</a></td>
 					<td>{{$entry->description}}</td>
 					<td><a href='/entries/confirmdelete/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
