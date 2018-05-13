@@ -252,12 +252,12 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 	
-    	if ($this->isOwnerOrAdmin($entry))       
+    	if ($this->isOwnerOrAdmin($entry->user_id))
         {
 			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
 			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
 			
-			return view('entries.delete', ['entry' => $entry, 'data' => $this->getViewData()]);							
+			return view('entries.delete', ['entry' => $entry, 'data' => $this->getViewData(), 'referrer' => $_SERVER["HTTP_REFERER"]]);							
         }           
         else 
 		{
@@ -270,16 +270,16 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if ($this->checkUser($entry))       
+    	if ($this->isOwnerOrAdmin($entry->user_id))
         {
 			//dd($entry);
 			
 			$entry->delete();
 			
-			return redirect('/entries/index/');
+			return redirect('/index');
 		}
 		
-		return redirect('/entries/index');
+		return redirect('/');
     }
 	
     public function viewcount(Entry $entry)

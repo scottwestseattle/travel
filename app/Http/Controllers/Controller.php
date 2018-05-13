@@ -53,7 +53,7 @@ class Controller extends BaseController
 
 	protected function isOwner($user_id)
 	{
-		return (Auth::check() && Auth::user()->id == $user_id);
+		return (Auth::check() && Auth::id() == $user_id);
 	}	
 
 	protected function isAdmin()

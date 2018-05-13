@@ -121,12 +121,14 @@ class HomeController extends Controller
 		}	
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
+		$referrer = $_SERVER["HTTP_REFERER"];		
+		
 		$entry = new Entry();
 		$entry->user_id = 0;
 		$entry->title = $ip;
-		$entry->description = $host;
+		$entry->description = $host . ', Referrer: ' . $referrer;
 		$entry->is_template_flag = 0;			
-		$entry->save();		
+		$entry->save();
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
     }
