@@ -26,7 +26,7 @@ class PhotoController extends Controller
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $id)
-				->orderByRaw('photos.id DESC')
+				->orderByRaw('photos.main_flag DESC, photos.id DESC')
 				->get();
 				
 			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	
@@ -136,18 +136,27 @@ class PhotoController extends Controller
 			$filename = $this->getPhotoName($request->filename, $file->getClientOriginalName(), $alt_text_default);
 			
 			//
-			// alt text is optional. if not included, use the file name
+			// get and fix alt_text
 			//
 			$alt_text = trim($request->alt_text);
 			if (isset($alt_text) && strlen($alt_text) > 0)
 			{
-				// use it as is
+				// alt_text is set
 			}
 			else
 			{
-				// use the photo name instead
-				$alt_text = $alt_text_default; // use the default alt_text which is created from the file name
-			}					
+				// alt_text not set, fix it up
+				if (isset($alt_text_default) && strlen($alt_text_default) > 0)
+				{
+					$alt_text = $alt_text_default;
+				}
+				else
+				{
+					// alt_text_default not set, so use filename to gen alt_text
+					$alt_text = str_replace("-", " ", $filename);	// replace dashes with spaces
+					$alt_text = str_replace(".jpg", "", $alt_text);	// remove file extension
+				}
+			}				
 				
 			$id = intval($request->parent_id);
 			
@@ -178,7 +187,7 @@ class PhotoController extends Controller
 				$photo->filename = $filename;
 				$photo->alt_text = $alt_text;
 				$photo->location = trim($request->location);
-				$photo->main_flag = intval($request->main_flag);
+				$photo->main_flag = isset($request->main_flag) ? 1 : 0;
 				$photo->parent_id = $id;
 				$photo->user_id = Auth::id();
 				
@@ -334,10 +343,10 @@ class PhotoController extends Controller
 			//
 			$photo->filename = $filename;
 			$photo->alt_text = $alt_text;
-			$photo->main_flag = intval($request->main_flag);
+			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
 			$photo->save();
-			
+				
 			return redirect($redirect); 
 		}
 		else

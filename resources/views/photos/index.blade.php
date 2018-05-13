@@ -24,6 +24,9 @@
 							<tr><td>{{ $photo->filename }}</td></tr>
 							<tr><td>{{ $photo->alt_text }}</td></tr>
 							<tr><td>{{ $photo->location }}</td></tr>
+							@if ($photo->main_flag === 1)
+							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span>{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
+							@endif
 							<tr><td style="padding-top:15px;"><a href="/photos/edit/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
 							<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 						</table>

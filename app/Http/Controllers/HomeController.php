@@ -85,8 +85,15 @@ class HomeController extends Controller
 				// show the place holder
 				if (strlen($photo) === 0)
 					$photo = $tours_webpath . 'placeholder.jpg';
+								
+				$main_photo = Photo::select()
+				->where('parent_id', '=', $entry->id)
+				->where('main_flag', '=', 1)
+				->where('deleted_flag', '=', 0)
+				->first();
 				
-				//dd($photo);
+				if (isset($main_photo))
+					$photo = $tours_webpath . $entry->id . '/' . $main_photo->filename;			
 			}
 			
 			$entry['photo'] = $photo;
