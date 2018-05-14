@@ -69,8 +69,7 @@
                                 <ul class="dropdown-menu">
 								
 									<?php if (Auth::check()) : ?>
-										<li><span style="padding-left:20px; color:black;">{{$user_type_name}}</span></li>
-										<li><a href="/users/">Settings</a></li>
+										<li><a href="/users/">Settings ({{$user_type_name}})</a></li>
 									<?php endif; ?>
 
                                     <li>

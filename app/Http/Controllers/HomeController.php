@@ -121,12 +121,18 @@ class HomeController extends Controller
 		}	
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
-		$referrer = $_SERVER["HTTP_REFERER"];		
+		$referrer = '';
+		if (array_key_exists("HTTP_REFERER", $_SERVER))
+			$referrer = $_SERVER["HTTP_REFERER"];
 		
 		$entry = new Entry();
 		$entry->user_id = 0;
 		$entry->title = $ip;
-		$entry->description = $host . ', Referrer: ' . $referrer;
+		$entry->description = $host;
+		
+		if (strlen($referrer) > 0)
+			$entry->description .= ', Referrer: ' . $referrer;
+		
 		$entry->is_template_flag = 0;			
 		$entry->save();
 		

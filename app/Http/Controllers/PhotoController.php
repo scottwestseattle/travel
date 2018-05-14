@@ -29,7 +29,7 @@ class PhotoController extends Controller
 				->orderByRaw('photos.main_flag DESC, photos.id DESC')
 				->get();
 				
-			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -52,7 +52,7 @@ class PhotoController extends Controller
 				->orderByRaw('photos.id DESC')
 				->get();
 				
-			return view('photos.index', ['title' => 'Slider', 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
         }           
         else 
 		{
@@ -173,7 +173,7 @@ class PhotoController extends Controller
 				// tour photos
 				$path = $this->getPhotosFullPath('tours/' . $id . '/');
 
-				$redirect = '/entries/view/' . $id;
+				$redirect = '/photos/tours/' . $id;
 				$redirect_error = '/photos/add/' . $id;				
 			}
 						
@@ -362,7 +362,15 @@ class PhotoController extends Controller
 	
     	if (Auth::check() && Auth::id() == $photo->user_id)
         {			
-			return view('photos.confirmdelete', ['photo' => $photo, 'data' => $this->getViewData()]);							
+			$path = '';
+			if ($this->isSlider($photo))
+				$path .= '/img/sliders/';
+			else
+				$path .= '/img/tours/' . $photo->parent_id . '/';
+	
+			//dd($path);
+	
+			return view('photos.confirmdelete', ['photo' => $photo, 'path' => $path, 'data' => $this->getViewData()]);							
         }           
         else 
 		{
@@ -374,9 +382,11 @@ class PhotoController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
+		 
+		$redirect = '/';
 	
     	if (Auth::check() && Auth::id() == $photo->user_id)
-        {
+        {			
 			// 
 			// update the database record
 			//
@@ -386,14 +396,19 @@ class PhotoController extends Controller
 			//
 			// move the file to the deleted folder
 			//
-			$id = intval($request->parent_id);
-			if ($id === 0)
+			if ($this->isSlider($photo))
+			{
 				$path_from = base_path() . '/public/img/sliders/';
+				$redirect = '/photos/sliders';
+			}
 			else
-				$path_from = base_path() . '/public/img/tours/' . $id . '/';
+			{
+				$path_from = base_path() . '/public/img/tours/' . $request->parent_id . '/';
+				$redirect = '/photos/tours/' . $request->parent_id;
+			}
 			
 			$path_to = $path_from . 'deleted/';
-			
+						
 			if (!is_dir($path_to)) 
 			{
 				// make the folder with read/execute for everybody
@@ -414,8 +429,15 @@ class PhotoController extends Controller
 			}
 		}
 		
-		return redirect('/photos/sliders');
-    }	
+		return redirect($redirect);
+    }
+
+	protected function isSlider(Photo $photo)
+	{
+		$id = intval($photo->parent_id);
+		
+		return ($id === 0);
+	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

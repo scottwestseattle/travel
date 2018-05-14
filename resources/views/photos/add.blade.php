@@ -14,9 +14,9 @@
 			</div>
 
 			@if ($id === 0)
-			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				Slider size = 1920 x 934
-			</div>
+				<div style="clear:both; margin:20px 0; font-size:20px;" class="">
+					Slider size = 1920 x 934
+				</div>
 			@endif
 
 			<input type="hidden" name="parent_id" value={{$id}} />
@@ -33,10 +33,12 @@
 				<input type="text" name="location" class="form-control" placeholder="Required: location"/>
 			</div>	
 
-			<div style="clear: both;" class="">
-				<input type="checkbox" name="main_flag" id="main_flag" class="" />
-				<label for="main_flag" class="checkbox-big-label">Main Photo</label>
-			</div>			
+			@if ($id !== 0)
+				<div style="clear: both;" class="">
+					<input type="checkbox" name="main_flag" id="main_flag" class="" />
+					<label for="main_flag" class="checkbox-big-label">Main Photo</label>
+				</div>			
+			@endif
 			
 			<div class="">
 				<button type="submit" name="update" class="btn btn-primary">Upload</button>

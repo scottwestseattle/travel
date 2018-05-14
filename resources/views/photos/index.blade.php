@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+<!--
+@component('menu-submenu-tours')
+@endcomponent
+-->
+
 @section('content')
 
 <?php
@@ -10,6 +15,9 @@
 ?>
 
 <div class="container">
+	@if ($photo_type == 2)
+	<a href="/entries/view/{{$id}}">Back to Tour</a>
+	@endif
 	<h1 style="font-size:1.5em;">
 		<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
 		<span style="margin-left: 5px;">{{$title}} Photos ({{ count($photos) }})</span>

@@ -61,7 +61,7 @@
 	<div style="display:default; margin-top:5px;">
 		@foreach($photos as $photo)
 			@if ($photo->main_flag !== 1)
-				<img style="width:300px; max-width:100%;" title="{{$photo->alt_text}}" src="/img/tours/{{$entry->id}}/{{$photo->filename}}" />		
+				<img style="width:100%; max-width:400px; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$entry->id}}/{{$photo->filename}}" />		
 			@endif
 		@endforeach	
 	</div>
