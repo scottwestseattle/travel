@@ -3,9 +3,9 @@
 @section('content')
 
 <div class="page-size container">
-	<h1 style="">Admin Dashboard</h1>
+	<h2 style="">Admin Dashboard</h2>
 	@if (Auth::check())
-		<h2 style="">New Users</h2>
+		<h3 style="">New Users ({{count($users)}})</h3>
 		<table class="table table-striped">
 			<tbody>
 				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
@@ -24,7 +24,7 @@
 		<a href="/users/index">Show All Users</a>
 		
 		<div style="height:30px;clear:both;"></div>
-		<h2 style="">Visits</h2>
+		<h3 style="">Visitor IPs ({{count($visits)}})</h3>
 		<table class="table table-striped">
 			<tbody>
 			<tr><th>Count</th><th>IP</th><th>Host</th></tr>

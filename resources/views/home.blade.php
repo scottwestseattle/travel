@@ -42,7 +42,7 @@
 
 @section('content')
 
-<div style="background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
+<div style="width:100%; background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
 
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
