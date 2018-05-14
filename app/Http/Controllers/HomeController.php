@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Entry;
+use App\User;
 use App\Photo;
 use DB;
 
@@ -26,8 +27,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-    	//$user = Auth::user(); // original gets current user with all entries
-		
 		$posts = Entry::select()
 			//->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '<>', 1)
@@ -131,7 +130,7 @@ class HomeController extends Controller
 		$entry->description = $host;
 		
 		if (strlen($referrer) > 0)
-			$entry->description .= ', Referrer: ' . $referrer;
+			$entry->description_language1 = $referrer;
 		
 		$entry->is_template_flag = 0;			
 		$entry->save();
@@ -147,6 +146,29 @@ class HomeController extends Controller
 			->get();
 						
 		return view('visits', compact('entries'));
+    }
+
+    public function admin()
+    {
+		// get unconfirmed users
+		$users = User::select()
+			->where('user_type', '<=', USER_UNCONFIRMED)
+			->orderByRaw('id DESC')
+			->get();
+			
+		// get latest content entries
+		
+		// get latest visits
+		$visits = DB::table('entries')
+			->select('title', 'description', 'user_id', DB::raw('count(*) as total'))
+			->groupBy('title', 'description', 'user_id') // ip address
+			->having('user_id', '=', 0)
+			->orderByRaw('total DESC')
+			->get();
+			
+		//dd($visits);
+			
+		return view('admin', ['users' => $users, 'visits' => $visits]);
     }
 	
     public function posts(Entry $entry)

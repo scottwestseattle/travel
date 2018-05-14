@@ -17,11 +17,13 @@ if (isset($title))
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
+				<tr><th>Created</th><th>IP</th><th>Host</th><th>Referrer</th><th></th></tr>
 			@foreach($entries as $entry)
 				<tr>
 					<td>{{$entry->created_at}}</td>
 					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$entry->title}}">{{$entry->title}}</a></td>
 					<td>{{$entry->description}}</td>
+					<td>{{$entry->description_language1}}</td>
 					<td><a href='/entries/confirmdelete/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 			@endforeach

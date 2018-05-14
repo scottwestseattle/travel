@@ -19,6 +19,8 @@ define('PHOTOS_WEB_PATH', '/img/');
 define('EXT_JPG', '.jpg');
 define('USER_UNCONFIRMED', 0);		// user unconfirmed
 define('USER_CONFIRMED', 10);		// user confirmed
+define('USER_WRITER', 20);			// article/tour write
+define('USER_EDITOR', 30);			// content editor
 define('USER_SITE_ADMIN', 100);		// user site admin
 define('USER_SUPER_ADMIN', 1000);	// user super admin
 

@@ -23,6 +23,7 @@ Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
 Route::get('/visits', 'HomeController@visits');
+Route::get('/admin', 'HomeController@admin');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');

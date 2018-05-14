@@ -44,15 +44,15 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
-							<?php if ($user_type >= 1000) : ?>
-								<li id="debug-tag-lg"><a href="/">Home (L)</a></li>
-								<li id="debug-tag-md"><a href="/">Home (M)</a></li>
-								<li id="debug-tag-sm"><a href="/">Home (S)</a></li>
-								<li id="debug-tag-xs"><a href="/">Home (X)</a></li>
+							<?php if (false && $user_type >= 1000) : ?>
 								<li><a href="/tests/">Tests</a></li>
 							<?php endif; ?>
 							
 							<?php if ($user_type >= 100) : ?>
+								<li id="debug-tag-lg"><a href="/admin">Admin (L)</a></li>
+								<li id="debug-tag-md"><a href="/admin">Admin (M)</a></li>
+								<li id="debug-tag-sm"><a href="/admin">Admin (S)</a></li>
+								<li id="debug-tag-xs"><a href="/admin">Admin (X)</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/users/">Users</a></li>
 								<li><a href="/visits/">Visits</a></li>
