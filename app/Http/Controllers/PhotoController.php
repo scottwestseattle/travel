@@ -238,7 +238,11 @@ class PhotoController extends Controller
 			// no file name given so use the original file name from the actual file
 			//
 			$filename = $filename_from;
-			$alt_text = $filename;	// use this as the default alt_text
+			
+			// fix up the alt text
+			$alt_text = preg_replace('/[^\da-z ]/i', ' ', $filename);	// replace all non-alphanums with space
+			$alt_text = preg_replace('/.jpg/i', '', $alt_text);			// get rid of the file extension
+			$alt_text = ucwords($alt_text);								// cap each word in name
 		}
 			
 		return $filename;

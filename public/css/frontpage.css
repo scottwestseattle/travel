@@ -312,8 +312,7 @@ Flash Messages
 	Style for the frontpage big random slider image
 ***************************************************************************************************/
 
-.slider-container {
-	xmax-width: 1600px;
+.slider-center {
 	margin-right: auto; margin-left: auto;
     text-align: center;	
 }

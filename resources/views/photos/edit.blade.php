@@ -35,15 +35,17 @@
 				<input type="text" name="location" class="form-control" value="{{ $photo->location }}" placeholder="Location" />
 			</div>
 			
+			@if (intval($photo->parent_id) !== 0)
 			<div style="clear: both;" class="">
 				<input type="checkbox" name="main_flag" id="main_flag" class="" value="{{ intval($photo->main_flag) }}" {{ (intval($photo->main_flag)) ? 'checked' : '' }} />
 				<label for="main_flag" class="checkbox-big-label">Main Photo</label>
 			</div>	
+			@endif
 
 			<div style="margin:20px 0;">				
 				<button type="submit" name="update" class="btn btn-primary">Update</button>
 			</div>
-			
+						
 			<div class="entry-title-div">
 				<img style="width:100%; max-width:500px;" src="{{$path}}" title="{{$photo->alt_text}}" />
 			</div>			

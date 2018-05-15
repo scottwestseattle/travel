@@ -2,11 +2,13 @@
 
 @section('content')
 
+@if (false)
 @component('menu-submenu')
 	@component('menu-icons-start')@endcomponent
 	@component('menu-icons-links', ['data' => (isset($data) ? $data : null)])@endcomponent	
 	@component('control-search')@endcomponent	
 @endcomponent
+@endif
 
 <?php 
 
@@ -25,12 +27,8 @@ if (isset($title))
 			<tbody>
 			@foreach($entries as $entry)
 				<tr>
-					<td style="width:20px;">
-						<a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
-					</td>
-					<td style="width:20px;">
-						<a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a>
-					</td>
+					<td style="width:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td style="width:20px;"><a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td>
 						<a href="/entries/view/{{$entry->id}}">{{$entry->title}}</a>
 						

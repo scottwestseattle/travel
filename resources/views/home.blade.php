@@ -53,9 +53,10 @@
 	<!--------------------------------------------------------------------------------------->
 
 	<section>
-		<div class="slider-container" onclick="change_slider()">
-			<div id="slider">
+		<div class="slider-center" onclick="change_slider()">
+			<div id="slider" style="xz-index:-1; background-repeat: no-repeat; position:relative;">
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
+				<div id="slider-text" style="background-color:black; color:white; position:absolute; top:0px; width:100%; font-style:italic; opacity: 0.7;"></div>
 			</div>
 		</div>
 	</section>
@@ -65,15 +66,17 @@
 	// load all the sliders so we can javascript through them
 	var sliders = [
 		@foreach($sliders as $slider)
-			'{{$slider->filename}}',
+			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}'],
 		@endforeach
 	];
-		
 	var ix = Math.floor(Math.random() * sliders.length);
-	var img = sliders[ix];
+	var img = sliders[ix][0];
+	var loc = sliders[ix][1];
+	var alt = sliders[ix][2];
 	
 	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
-	//document.getElementById("slider").title = img;
+	document.getElementById("slider-text").innerHTML = loc;
+	document.getElementById("slider").title = alt + ', ' + loc;
 	
 	function change_slider()
 	{
@@ -81,12 +84,14 @@
 		if (ix > sliders.length - 1)
 			ix = 0;
 		
-		img = sliders[ix];
+		var img = sliders[ix][0];
+		var loc = sliders[ix][1];
+		var alt = sliders[ix][2];
 		
 		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
-		document.getElementById("slider").title = img;
+		document.getElementById("slider-text").innerHTML = loc;
+		document.getElementById("slider").title = alt + ', ' + loc;
 	}
-	
 </script>
 
 <!--------------------------------------------------------------------------------------->
@@ -168,7 +173,7 @@
 						
 							<!-- tour image -->
 							<a href="{{$link_view . $entry->id}}" >
-								<div style="min-height:220px; background-color: lightSalmon; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
+								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->

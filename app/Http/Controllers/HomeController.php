@@ -23,7 +23,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Home page
+     * This is the Home page
      */
     public function index()
     {
@@ -99,6 +99,9 @@ class HomeController extends Controller
 			$entry['link'] = $link;
 		}		
 		
+		//
+		// get the sliders
+		//
 		$sliders = Photo::select()
 		->where('parent_id', '=', 0)
 		//->whereNull('parent_id')
@@ -106,6 +109,9 @@ class HomeController extends Controller
 		->orderByRaw('id ASC')
 		->get();
 		
+		//
+		// get visitor stats
+		//
 		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
 		{
 			$ip = $_SERVER["HTTP_CLIENT_IP"];
@@ -134,6 +140,8 @@ class HomeController extends Controller
 		
 		$entry->is_template_flag = 0;			
 		$entry->save();
+		
+		//dd($sliders);
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
     }

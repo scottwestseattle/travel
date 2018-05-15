@@ -17,8 +17,19 @@ php artisan make:model Tag -m -c
 
 
 
-ADD TO PHOTOS:
-- Title Position
+TODO:
+- Add tour attributes
+- Add content / maps
+- Refine visits to add counts
+- Add private/published/reviewed flag for tours
+- add site id to every thing
+- add location tags
+
+DONE:
+x Show slider location text from db
+x Admin Dashboard
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Primary Colors:
 
@@ -26,7 +37,7 @@ Header Orange:
 $color = '#FF6900'; // orange header
 
 Header Blue:
-$color = ''; // blue header
+$color = '#4993FD'; // blue header
 
 Footer Green:
 $color = '#5CB85C'; // green
