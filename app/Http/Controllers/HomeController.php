@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Entry;
+use App\Activity;
 use App\User;
 use App\Photo;
 use DB;
@@ -34,11 +35,11 @@ class HomeController extends Controller
 			->orderByRaw('entries.id DESC')
 			->get();
 
-		$tours = Entry::select()
-			//->where('user_id', '=', Auth::id())
-			->where('is_template_flag', '=', 1)
-			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
-			->orderByRaw('entries.id DESC')
+		$tours = Activity::select()
+			->where('approved_flag', '=', 0)
+			->where('published_flag', '=', 0)
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id DESC')
 			->get();
 			
 		//

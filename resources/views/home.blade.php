@@ -138,7 +138,7 @@
 	$w = 300;
 	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
 	$tours_webpath = '/img/tours/';
-	$link_view = '/entries/view/';
+	$link = '/activities/';
 ?>
 
 <section id="" class="sectionWhite sectionWhitePattern" style="" >
@@ -172,13 +172,13 @@
 						<div class="col-md-4 col-sm-6">
 						
 							<!-- tour image -->
-							<a href="{{$link_view . $entry->id}}" >
+							<a href="{{$link . 'view/' . $entry->id}}" >
 								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{$link_view . $entry->id}}">{{ $entry->title }}</a>
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{$link . 'view/' . $entry->id}}">{{ $entry->title }}</a>
 							</div>
 						</div>
 					
@@ -193,10 +193,10 @@
 							@foreach($tours as $entry)
 								<tr>
 									<td style="width:150px;">
-										<a href="{{$link_view . $entry->id}}"><img src="{{ $entry->photo }}" width="150" /></a>
+										<a href="{{$link . 'view/' . $entry->id}}"><img src="{{ $entry->photo }}" width="150" /></a>
 									</td>
 									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{$link_view . $entry->id}}">{{$entry->title}}</a>						
+										<a style="font-family: Raleway; font-size:.8em;" href="{{$link . 'view/' . $entry->id}}">{{$entry->title}}</a>						
 										<?php
 											$tags = "Hike";
 											if (strpos($entry->title, "Water Taxi") === FALSE)
