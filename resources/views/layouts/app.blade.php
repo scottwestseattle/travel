@@ -31,7 +31,7 @@
 	
 	<!-- Fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu" rel="stylesheet">
-	
+		
 	<!-- google fonts
 	font-family: 'Raleway', sans-serif;
 	-->

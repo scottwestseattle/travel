@@ -231,14 +231,22 @@
 		font-size:1.2em;
 		color: #4993FD;
 	}
+	
 	.amenities h3 {
 		font-size:1.1em;
 		xfont-weight: bold;
 		color: #4993FD;
 	}
+	
 	.amenities {
 		margin-bottom: 20px;
 		font-size:.8em;
+	}
+
+	.amenity-item {
+		margin-label: 5px;
+		font-size:1em;
+		font-family: 'Oswald', sans-serif;
 	}
 
 	.step1 {

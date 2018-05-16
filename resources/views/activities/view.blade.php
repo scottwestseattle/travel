@@ -2,6 +2,18 @@
 
 @section('content')
 
+<?php 
+$main_photo = null;
+$regular_photos = 0;
+foreach($photos as $photo)
+{
+	if ($photo->main_flag === 1)
+		$main_photo = $photo;
+	else
+		$regular_photos++;
+}
+?>
+
 <div class="page-size container">
                
 <form method="POST" action="/activities/view/{{ $record->id }}">
@@ -47,63 +59,74 @@
 		}
 	?>
 
+	@if ($main_photo !== null)
 	<div style="display:default; margin-top:20px;">
-		@foreach($photos as $photo)
-			@if ($photo->main_flag === 1)
-				<img src="/img/tours/{{$record->id}}/{{$photo->filename}}" title="{{$photo->alt_text}}" style="max-width:100%; width:{{ $width }}" />
-			@endif
-		@endforeach	
+		<img src="/img/tours/{{$record->id}}/{{$main_photo->filename}}" title="{{$main_photo->alt_text}}" style="max-width:100%; width:{{ $width }}" />
 	</div>	
+	@endif
 	
+	@if (strlen(trim($record->highlights)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
 		<h3>Highlights</h3>
 		<div>{{$record->highlights}}</div>
 	</div>
+	@endif
 	
 	<div style="clear:both;">
 		<div class="row">
-				
+			@if (strlen($record->distance) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3>Distance:</h3>
-							{{$record->distance}}
+						<div class="amenity-item">
+							<h3>DISTANCE</h3>
+							<p>{{$record->distance}}</p>
 						</div>
 					</div>
+			@endif
 
+			@if (strlen($record->difficulty) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3>Difficulty:</h3>
-							{{$record->difficulty}}
+						<div class="amenity-item">
+							<h3>DIFFICULTY</h3>
+							<p>{{$record->difficulty}}</p>
 						</div>
 					</div>
+			@endif
 
+			@if (strlen($record->parking) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3>Parking:</h3>
-							{{$record->parking}}
+						<div class="amenity-item">
+							<h3>PARKING</h3>
+							<p>{{$record->parking}}</p>
 						</div>
 					</div>
+			@endif
 
+			@if (strlen($record->season) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3></span>Season:</h3>
-							{{$record->season}}
+						<div class="amenity-item">
+							<h3></span>SEASON</h3>
+							<p>{{$record->season}}</p>
 						</div>
 					</div>
+			@endif
 
+			@if (strlen($record->map_link) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3>Location:</h3>
-							<a target="_blank" href="{{$record->map_link}}">Google Maps</a>
+						<div class="amenity-item">
+							<h3>LOCATION</h3>
+							<p><a target="_blank" href="{{$record->map_link}}">Show Map</a></p>
 						</div>
 					</div>
+			@endif
 
+			@if (strlen($record->elevation_change) > 0)
 					<div class="col-md-4 col-sm-6">
-						<div class="center steps">
-							<h3>Elevation Change</h3>
-							{{$record->elevation_change}}
+						<div class="amenity-item">
+							<h3>ELEVATION</h3>
+							<p>{{$record->elevation_change}}</p>
 						</div>
 					</div>
+			@endif
 					
 				</div><!-- row -->	
 	</div>
@@ -118,8 +141,8 @@
 	
 	@if (!empty(trim($record->map_link)))
 		<div class="entry-div">
-			<div class="entry">
-				<h3>Trail Map</h3>
+			<div class="entry amenity-item">
+				<h3>Map</h3>
 				<div id="" style="display:default; margin-top:20px;">				
 					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
 				</div>
@@ -129,7 +152,7 @@
 	
 	@if (strlen(trim($record->entry_fee)) > 0)
 		<div class="entry-div">
-			<div class="entry">
+			<div class="entry amenity-item">
 				<h3>Entry Fee</h3>
 				<span name="entry_fee" class="">{{$record->entry_fee}}</span>	
 			</div>
@@ -138,7 +161,7 @@
 	
 	@if (strlen(trim($record->facilities)) > 0)
 		<div class="entry-div">
-			<div class="entry">
+			<div class="entry amenity-item">
 				<h3>Facilities</h3>
 				<span name="facilities" class="">{{$record->facilities}}</span>	
 			</div>
@@ -147,7 +170,7 @@
 			
 	@if (strlen(trim($record->public_transportation)) > 0)
 		<div class="entry-div">
-			<div class="entry">
+			<div class="entry amenity-item">
 				<h3>Public Transportation</h3>
 				<span name="facilities" class="">{{$record->public_transportation}}</span>	
 			</div>
@@ -156,16 +179,16 @@
 
 	@if (strlen(trim($record->wildlife)) > 0)
 		<div class="entry-div">
-			<div class="entry">
+			<div class="entry amenity-item">
 				<h3>Wildlife</h3>
 				<span name="facilities" class="">{{$record->wildlife}}</span>	
 			</div>
 		</div>
 	@endif
 
-	@if (count($photos) > 0)
+	@if ($regular_photos > 0)
 		<div class="entry-div">
-			<div class="entry">
+			<div class="entry amenity-item">
 				<h3>Photos</h3>
 			</div>
 		</div>
@@ -173,6 +196,7 @@
 	
 	</div><!-- class="amenities" -->
 	
+	@if ($regular_photos > 0)
 	<div style="display:default; margin-top:5px;">	
 		@foreach($photos as $photo)
 			@if ($photo->main_flag !== 1)
@@ -180,6 +204,7 @@
 			@endif
 		@endforeach	
 	</div>
+	@endif
 		
 {{ csrf_field() }}
 
