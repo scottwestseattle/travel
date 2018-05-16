@@ -43,128 +43,50 @@ class ActivityController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 			
-		$record = new Activity();
-		$record->title = $request->title;
-		$record->description = $request->description;
-		$record->map_link = $request->map_link;
-		$record->user_id = Auth::id();
-						
-		$record->save();
-			
-		return redirect('/activities/view/' . $record->id);          	
-    }
-
-    public function upload(Activity $record)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-			 
-    	if (Auth::check())
-        {            
-			//todo $categories = Category::lists('title', 'id');
-	
-			return view('activities.upload', ['record' => $record, 'data' => $this->getViewData()]);
-        }           
-        else 
-		{
-             return redirect('/');
-        }       
-	}
-	
-    public function store(Request $request, Activity $record)
-    {		
-		if (!$this->isAdmin())
-             return redirect('/');
-
-			 if (Auth::check())
-        {            
-			//dd($request->file('image'));
-				
-			//
-			// get file to upload
-			//
-			$file = $request->file('image');
-			if (!isset($file))
-			{
-				// bad or missing file name
-				return view('activities.upload', ['record' => $record, 'data' => $this->getViewData()]);	
-			}
-			
-			//
-			// get and check file extension
-			//
-			$ext = strtolower($file->getClientOriginalExtension());
-			if (isset($ext) && $ext === 'jpg')
-			{
-			}
-			else
-			{
-				// bad or missing extension
-				return view('activities.upload', ['record' => $record, 'data' => $this->getViewData()]);					
-			}
-						
-			//
-			// get and check new file name
-			//
-			$name = trim($request->name);
-			if (isset($name) && strlen($name) > 0)
-			{
-				$name = preg_replace('/[^\da-z ]/i', ' ', $name); // remove all non-alphanums
-				$name = str_replace(" ", "-", $name);			// replace spaces with dashes
-			}
-			else
-			{
-				// no file name given so name it with timestamp
-				$name = date("Ymd-His");
-			}
-
-			$name .= '.' . $ext;
-							
-			$path = base_path() . TOUR_PHOTOS_PATH . $record->id;
-			
-			//dd($name);
-			
-			$request->file('image')->move($path, $name);
-						
-			return redirect('/activities/view/' . $record->id);
-        }           
-        else 
-		{
-             return redirect('/');
-        }            	
-    }
-
-    public function view(Activity $record)
-    {
-		dd($record);
+		$activity = new Activity();
+		$activity->title = $request->title;
+		$activity->description = $request->description;
 		
+		$activity->highlights = $request->highlights;
+		$activity->entry_fee = $request->entry_fee;
+		$activity->parking = $request->parking;
+		$activity->distance = $request->distance;
+		$activity->difficulty = $request->difficulty;
+		$activity->season = $request->season;
+		$activity->wildlife = $request->wildlife;
+		$activity->facilities = $request->facilities;
+		$activity->elevation_change = $request->elevation_change;
+		$activity->public_transportation = $request->public_transportation;
+		
+		$activity->map_link = $request->map_link;
+		$activity->user_id = Auth::id();
+						
+		$activity->save();
+			
+		return redirect('/activities/view/' . $activity->id);          	
+    }
+
+    public function view(Activity $activity)
+    {		
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
-			->where('parent_id', '=', $record->id)
+			->where('parent_id', '=', $activity->id)
 			->orderByRaw('photos.id DESC')
 			->get();
 			
 		//dd($photos);
 		
-		return view('activities.view', ['record' => $record, 'data' => $this->getViewData(), 'photos' => $photos]);
-	}
-
-    public function home()
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-
-		return $this->index();
+		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 	
-    public function edit(Request $request, Activity $record)
-    {
+    public function edit(Request $request, Activity $activity)
+    {		
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $record->user_id)
+    	if (Auth::check() && Auth::user()->id == $activity->user_id)
         {
-			return view('activities.edit', ['record' => $record, 'data' => $this->getViewData()]);							
+			return view('activities.edit', ['record' => $activity, 'data' => $this->getViewData()]);							
         }           
         else 
 		{
@@ -172,19 +94,31 @@ class ActivityController extends Controller
 		}            	
     }
 	
-    public function update(Request $request, Activity $record)
+    public function update(Request $request, Activity $activity)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $record->user_id)
+    	if (Auth::check() && Auth::user()->id == $activity->user_id)
         {
-			$record->title 					= $request->title;
-			$record->description 			= $request->description;
-			$record->map_link	 			= $request->map_link;
-			$record->save();
+			$activity->title 					= $request->title;
+			$activity->description 			= $request->description;
+			$activity->map_link	 			= $request->map_link;
 			
-			return redirect('/activities/view/' . $record->id); 
+			$activity->highlights = $request->highlights;
+			$activity->entry_fee = $request->entry_fee;
+			$activity->parking = $request->parking;
+			$activity->distance = $request->distance;
+			$activity->difficulty = $request->difficulty;
+			$activity->season = $request->season;
+			$activity->wildlife = $request->wildlife;
+			$activity->facilities = $request->facilities;
+			$activity->elevation_change = $request->elevation_change;
+			$activity->public_transportation = $request->public_transportation;
+						
+			$activity->save();
+			
+			return redirect('/activities/view/' . $activity->id); 
 		}
 		else
 		{
@@ -192,16 +126,16 @@ class ActivityController extends Controller
 		}
     }	
 	
-    public function confirmdelete(Request $request, Activity $record)
+    public function confirmdelete(Request $request, Activity $activity)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 	
-    	if ($this->isOwnerOrAdmin($record->user_id))
+    	if ($this->isOwnerOrAdmin($activity->user_id))
         {
-			$record->description = nl2br($this->fixEmpty(trim($record->description), EMPTYBODY));
+			$activity->description = nl2br(trim($activity->description));
 			
-			return view('activities.delete', ['record' => $record, 'data' => $this->getViewData(), 'referrer' => $_SERVER["HTTP_REFERER"]]);							
+			return view('activities.confirmdelete', ['record' => $activity, 'data' => $this->getViewData(), 'referrer' => $_SERVER["HTTP_REFERER"]]);							
         }           
         else 
 		{
@@ -209,27 +143,25 @@ class ActivityController extends Controller
 		}            	
     }
 	
-    public function delete(Request $request, Activity $record)
+    public function delete(Request $request, Activity $activity)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if ($this->isOwnerOrAdmin($record->user_id))
-        {
-			//dd($record);
+    	if ($this->isOwnerOrAdmin($activity->user_id))
+        {			
+			$activity->delete();
 			
-			$record->delete();
-			
-			return redirect('/index');
+			return redirect('/activities/index');
 		}
 		
 		return redirect('/');
     }
 	
-    public function viewcount(Activity $record)
+    public function viewcount(Activity $activity)
     {		
-    	$record->view_count++;
-    	$record->save();	
+    	$activity->view_count++;
+    	$activity->save();	
     	return view('activities.viewcount');
 	}
 

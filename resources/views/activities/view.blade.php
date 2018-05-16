@@ -10,7 +10,8 @@
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/tours/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
@@ -22,12 +23,104 @@
 		<h1 name="title" class="">{{$record->title }}</h1>
 	</div>
 	
-	<div class="entry-div">
+	<div class="entry" style="margin-bottom:20px;">
+		<div>{{$record->highlights}}</div>
+	</div>
+	
+	<div style="clear:both;">
+		<div class="row">
+				
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3>Distance:</h3>
+							{{$record->distance}}
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3>Difficulty:</h3>
+							{{$record->difficulty}}
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3>Parking:</h3>
+							{{$record->parking}}
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3></span>Season:</h3>
+							{{$record->season}}
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3>Location:</h3>
+							<a target="_blank" href="{{$record->map_link}}">Google Maps</a>
+						</div>
+					</div>
+
+					<div class="col-md-4 col-sm-6">
+						<div class="center steps">
+							<h3>Elevation Change</h3>
+							{{$record->elevation_change}}
+						</div>
+					</div>
+					
+				</div><!-- row -->	
+	</div>
+					
+	<div class="entry-div" style="margin-top:20px;">
 		<div class="entry">
 			<span name="description" class="">{!! nl2br($record->description) !!}</span>	
 		</div>
 	</div>
+		
+	<div class="amenities">
+	
+	@if (strlen(trim($record->entry_fee)) > 0)
+		<div class="entry-div">
+			<div class="entry">
+				<h3>Entry Fee</h3>
+				<span name="entry_fee" class="">{{$record->entry_fee}}</span>	
+			</div>
+		</div>
+	@endif
+	
+	@if (strlen(trim($record->facilities)) > 0)
+		<div class="entry-div">
+			<div class="entry">
+				<h3>Facilities</h3>
+				<span name="facilities" class="">{{$record->facilities}}</span>	
+			</div>
+		</div>
+	@endif
+			
+	@if (strlen(trim($record->public_transportation)) > 0)
+		<div class="entry-div">
+			<div class="entry">
+				<h3>Public Transportation</h3>
+				<span name="facilities" class="">{{$record->public_transportation}}</span>	
+			</div>
+		</div>
+	@endif
 
+	@if (strlen(trim($record->wildlife)) > 0)
+		<div class="entry-div">
+			<div class="entry">
+				<h3>Wildlife</h3>
+				<span name="facilities" class="">{{$record->wildlife}}</span>	
+			</div>
+		</div>
+	@endif
+	
+	</div>
+	
 	<?php 
 		//
 		// show main photo

@@ -6,7 +6,7 @@
 	@component('menu-icons-start')@endcomponent
 @endcomponent
 
-<div class="container">
+<div class="page-size container">
 	<h1>Delete</h1>
 
 	<form method="POST" action="/activities/delete/{{ $record->id }}">

@@ -208,23 +208,33 @@
 		text-decoration: none;
 	}
 	
-	.steps /* fixed size */{
+	.stepsOrig /* fixed size */{
 		float: left;
-		width: 250px;
+		width: 200px;
 		padding: 10px;
 		font-size: 20px;
 		margin: 5px;
-		min-height: 220px;
-		border: white 3px solid;
-		xborder-radius: 10px;
+		min-height: 200px;
+		border: gray 1px solid;
+		xborder-radius: 5px;
 	}
-	.stepsFlexSize {
-		padding: 10px;
-		font-size: 20px;
+	.steps{
+		padding: 5px;
+		font-size: 16px;
 		margin: 5px;
-		min-height: 220px;
-		border: white 3px solid;
-		border-radius: 10px;
+		min-height: 100px;
+		border: gray 1px solid;
+		border-radius: 5px;
+	}
+	
+	.row h3, .amenities h3 {
+		font-size:1.2em;
+		color: #4993FD;
+	}
+	.amenities h3 {
+		font-size:1em;
+		xfont-weight: bold;
+		color: #4993FD;
 	}
 
 	.step1 {
