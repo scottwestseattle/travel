@@ -227,14 +227,18 @@
 		border-radius: 5px;
 	}
 	
-	.row h3, .amenities h3 {
+	.row h3 {
 		font-size:1.2em;
 		color: #4993FD;
 	}
 	.amenities h3 {
-		font-size:1em;
+		font-size:1.1em;
 		xfont-weight: bold;
 		color: #4993FD;
+	}
+	.amenities {
+		margin-bottom: 20px;
+		font-size:.8em;
 	}
 
 	.step1 {
