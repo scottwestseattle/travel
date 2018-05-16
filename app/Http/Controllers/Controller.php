@@ -98,7 +98,9 @@ class Controller extends BaseController
 				}
 				else if (sizeof($title) > 0 && sizeof($link)) // if its a link
 				{
-					$text .= '<a href=' . $link[1] . ' target="_blank">' . $title[1] . '</a><br/>';
+					//$text .= '<br/>';
+					$text .= '<div style="font-family: \'Handlee\', cursive; margin:14px 0px;"><a href=' . $link[1] . ' target="_blank">' . $title[1] . '</a></div>';
+					//$text .= '<br/>';
 				}
 				else if (mb_strlen($line) === 0) // blank line
 				{

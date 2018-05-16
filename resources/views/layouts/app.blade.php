@@ -30,7 +30,7 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
 		
 	<!-- google fonts
 	font-family: 'Raleway', sans-serif;

@@ -19,26 +19,44 @@
 	<form method="POST" action="/activities/create">
 		<div class="form-control-big">	
 			<div class="entry-title-div">
-				<input type="text" name="title" placeholder="Title" class="form-control" />
+				<label for="title">Title:</label>
+				<input type="text" name="title" class="form-control" />
 			</div>
 
 			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" placeholder="Description"></textarea>	
+			
+				<label for="description">Description:</label>
+				<textarea name="description" class="form-control entry-description-text" ></textarea>	
 				
-				<textarea name="highlights" class="form-control entry-description-text" placeholder="Highlights"></textarea>	
-				<input type="text" name="distance" class="form-control" placeholder="Distance" />
-				<input type="text" name="difficulty" class="form-control" placeholder="Difficulty" />
-				<input type="text" name="elevation_change" class="form-control" placeholder="Elevation Change" />
-				<input type="text" name="season" class="form-control" placeholder="Season" />
-				<input type="text" name="entry_fee" class="form-control" placeholder="Entry Fee" />
-				<input type="text" name="parking" class="form-control" placeholder="Parking" />
-				<input type="text" name="public_transportation" class="form-control" placeholder="Public Transportation" />
-				<input type="text" name="facilities" class="form-control" placeholder="Facilities" />
-				<input type="text" name="wildlife" class="form-control" placeholder="Wildlife" />
+				<label for="highlights">Highlights:</label>
+				<textarea name="highlights" class="form-control entry-description-text" ></textarea>	
+				<label for="distance">Distance:</label>
+				<input type="text" name="distance" class="form-control" />
+				<label for="difficulty">Difficulty:</label>
+				<input type="text" name="difficulty" class="form-control" />
+				<label for="elevation">Elevation:</label>
+				<input type="text" name="elevation" class="form-control" />
+				<label for="trail_type">Trail Type:</label>
+				<input type="text" name="trail_type" class="form-control" />
+				<label for="season">Season:</label>
+				<input type="text" name="season" class="form-control" />
+				<label for="costs">Cost:</label>
+				<input type="text" name="cost" class="form-control" />
+				<label for="parking">Parking:</label>
+				<input type="text" name="parking" class="form-control" />
+				<label for="public_transportation">Public Transportation:</label>
+				<input type="text" name="public_transportation" class="form-control" />
+				<label for="facilities">Facilities:</label>
+				<input type="text" name="facilities" class="form-control" />
+				<label for="wildlife">Wildlife:</label>
+				<input type="text" name="wildlife" class="form-control" />
 			</div>
 
 			<div style="clear:both;" class="entry-title-div">
-				<input type="text" name="map_link" class="form-control"  placeholder="Map Link" />
+				<label for="map_link">Map Link:</label>
+				<input type="text" name="map_link" class="form-control" />
+				<label for="info_link">More Info Link:</label>
+				<input type="text" name="info_link" class="form-control" />
 			</div>
 			
 			<div class="">

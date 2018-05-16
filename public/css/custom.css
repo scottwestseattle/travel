@@ -51,7 +51,7 @@ Controls
 }
 
 .entry-description-text {
-	height: 400px !important;
+	height: 200px !important;
 }
 
 .entry-div {
@@ -89,7 +89,7 @@ Controls
 {
 	font-size: 1.5em;
 	padding: 5px 5px 5px 10px;
-	margin-top: 10px;
+	margin-bottom: 20px;
 	height: 45px;
 	border-radius: 7px;
 }
@@ -98,7 +98,6 @@ Controls
 {
 	font-size: 1.5em;
 	padding: 5px 5px 5px 10px;
-	margin-top: 10px;
 	border-radius: 7px;
 	margin-bottom: 20px;
 }
@@ -109,7 +108,7 @@ Controls
 	line-height: 20px;
 	vertical-align: middle;
 	font-size: 1.5em;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .checkbox-big-label

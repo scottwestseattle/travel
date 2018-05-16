@@ -22,30 +22,47 @@
 		<div class="form-group form-control-big">
 		
 			<div class="entry-title-div">
-				<input type="text" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
+				<label for="title">Title:</label>
+				<input type="text" name="title" class="form-control" value="{{ $record->title }}"  />
 			</div>
 						
 			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $record->description }}</textarea>
+				<label for="description">Description:</label>
+				<textarea name="description" class="form-control entry-description-text" >{{ $record->description }}</textarea>
 			</div>
 
 			<div class="entry-title-div">
 
-				<textarea name="highlights" class="form-control entry-description-text" placeholder="Highlights" >{{ $record->highlights }}</textarea>
-				<input type="text" name="distance" class="form-control" value="{{ $record->distance }}"  placeholder="Distance" />
-				<input type="text" name="difficulty" class="form-control" value="{{ $record->difficulty }}"  placeholder="Difficulty" />
-				<input type="text" name="elevation_change" class="form-control" value="{{ $record->elevation_change }}"  placeholder="Elevation Change" />
-				<input type="text" name="season" class="form-control" value="{{ $record->season }}"  placeholder="Season" />
-				<input type="text" name="entry_fee" class="form-control" value="{{ $record->entry_fee }}"  placeholder="Entry Fee" />
-				<input type="text" name="parking" class="form-control" value="{{ $record->parking }}"  placeholder="Parking" />
-				<input type="text" name="public_transportation" class="form-control" value="{{ $record->public_transportation }}"  placeholder="Public Transportation" />
-				<input type="text" name="facilities" class="form-control" value="{{ $record->facilities }}"  placeholder="Facilities" />
-				<input type="text" name="wildlife" class="form-control" value="{{ $record->wildlife }}"  placeholder="Wildlife" />
+				<label for="highlights">Highlights:</label>
+				<textarea name="highlights" class="form-control entry-description-text" >{{ $record->highlights }}</textarea>
+				<label for="distance">Distance:</label>
+				<input type="text" name="distance" class="form-control" value="{{ $record->distance }}"  />
+				<label for="difficulty">Difficulty:</label>
+				<input type="text" name="difficulty" class="form-control" value="{{ $record->difficulty }}" />
+				<label for="elevation">Elevation:</label>
+				<input type="text" name="elevation" class="form-control" value="{{ $record->elevation }}"  />
+				<label for="trail_type">Trail Type:</label>
+				<input type="text" name="trail_type" class="form-control" value="{{ $record->trail_type }}"  />
+				<label for="season">Season:</label>
+				<input type="text" name="season" class="form-control" value="{{ $record->season }}"  />
+				<label for="cost">Cost / Entry Fee:</label>
+				<input type="text" name="cost" class="form-control" value="{{ $record->cost }}"  />
+				<label for="parking">Parking:</label>
+				<input type="text" name="parking" class="form-control" value="{{ $record->parking }}"  />
+				<label for="public_transportation">Public Transportation:</label>
+				<input type="text" name="public_transportation" class="form-control" value="{{ $record->public_transportation }}"  />
+				<label for="facilities">Facilities:</label>
+				<input type="text" name="facilities" class="form-control" value="{{ $record->facilities }}"  />
+				<label for="wildlife">Wildlife:</label>
+				<input type="text" name="wildlife" class="form-control" value="{{ $record->wildlife }}"  />
 			
 			</div>
 					
 			<div style="clear:both;" class="entry-title-div">
-				<input type="text" name="map_link" class="form-control" value="{{ $record->map_link }}" placeholder="Map Link" />
+				<label for="map_link">Map Link:</label>
+				<input type="text" name="map_link" class="form-control" value="{{ $record->map_link }}" />
+				<label for="info_link">More Info Link:</label>
+				<input type="text" name="info_link" class="form-control" value="{{ $record->info_link }}" />
 			</div>
 
 			<div style="clear:both;">				

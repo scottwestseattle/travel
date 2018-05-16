@@ -44,21 +44,28 @@ class ActivityController extends Controller
              return redirect('/');
 			
 		$activity = new Activity();
+		
 		$activity->title = $request->title;
 		$activity->description = $request->description;
-		
+		$activity->map_link	 = $request->map_link;
+		$activity->info_link = $request->info_link;
+			
 		$activity->highlights = $request->highlights;
-		$activity->entry_fee = $request->entry_fee;
+		$activity->cost = $request->cost;
 		$activity->parking = $request->parking;
 		$activity->distance = $request->distance;
 		$activity->difficulty = $request->difficulty;
 		$activity->season = $request->season;
 		$activity->wildlife = $request->wildlife;
 		$activity->facilities = $request->facilities;
-		$activity->elevation_change = $request->elevation_change;
+		$activity->elevation = $request->elevation;
 		$activity->public_transportation = $request->public_transportation;
-		
-		$activity->map_link = $request->map_link;
+		$activity->trail_type = $request->trail_type;
+		$activity->activity_type = $request->activity_type;
+			
+		$activity->published_flag = isset($request->published_flag) ? 1 : 0;
+		$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
+
 		$activity->user_id = Auth::id();
 						
 		$activity->save();
@@ -75,6 +82,8 @@ class ActivityController extends Controller
 			->get();
 			
 		//dd($photos);
+		
+		$activity->description = $this->formatLinks($activity->description);
 		
 		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
@@ -101,21 +110,27 @@ class ActivityController extends Controller
 
     	if (Auth::check() && Auth::user()->id == $activity->user_id)
         {
-			$activity->title 					= $request->title;
-			$activity->description 			= $request->description;
-			$activity->map_link	 			= $request->map_link;
+			$activity->title = $request->title;
+			$activity->description = $request->description;
+			$activity->map_link	 = $request->map_link;
+			$activity->info_link = $request->info_link;
 			
 			$activity->highlights = $request->highlights;
-			$activity->entry_fee = $request->entry_fee;
+			$activity->cost = $request->cost;
 			$activity->parking = $request->parking;
 			$activity->distance = $request->distance;
 			$activity->difficulty = $request->difficulty;
 			$activity->season = $request->season;
 			$activity->wildlife = $request->wildlife;
 			$activity->facilities = $request->facilities;
-			$activity->elevation_change = $request->elevation_change;
+			$activity->elevation = $request->elevation;
 			$activity->public_transportation = $request->public_transportation;
-						
+			$activity->trail_type = $request->trail_type;
+			$activity->activity_type = $request->activity_type;
+			
+			$activity->published_flag = isset($request->published_flag) ? 1 : 0;
+			$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			
 			$activity->save();
 			
 			return redirect('/activities/view/' . $activity->id); 

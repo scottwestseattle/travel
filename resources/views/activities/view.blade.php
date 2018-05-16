@@ -92,11 +92,11 @@ foreach($photos as $photo)
 					</div>
 			@endif
 
-			@if (strlen($record->parking) > 0)
+			@if (strlen($record->trail_type) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3>PARKING</h3>
-							<p>{{$record->parking}}</p>
+							<h3>TRAIL TYPE</h3>
+							<p>{{$record->trail_type}}</p>
 						</div>
 					</div>
 			@endif
@@ -119,11 +119,11 @@ foreach($photos as $photo)
 					</div>
 			@endif
 
-			@if (strlen($record->elevation_change) > 0)
+			@if (strlen($record->elevation) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
 							<h3>ELEVATION</h3>
-							<p>{{$record->elevation_change}}</p>
+							<p>{{$record->elevation}}</p>
 						</div>
 					</div>
 			@endif
@@ -136,8 +136,19 @@ foreach($photos as $photo)
 			<span name="description" class="">{!! nl2br($record->description) !!}</span>	
 		</div>
 	</div>
-		
+
 	<div class="amenities">
+
+	@if (!empty(trim($record->info_link)))
+		<div class="entry-div">
+			<div class="entry amenity-item">
+				<!-- h3>MORE INFORMATION</h3 -->
+				<div id="" style="display:default; margin-top:20px;">				
+					<a href="{{ $record->info_link }}">Please click here for prices and schedules</a>
+				</div>
+			</div>
+		</div>
+	@endif			
 	
 	@if (!empty(trim($record->map_link)))
 		<div class="entry-div">
@@ -150,11 +161,20 @@ foreach($photos as $photo)
 		</div>
 	@endif		
 	
-	@if (strlen(trim($record->entry_fee)) > 0)
+	@if (strlen($record->parking) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Entry Fee</h3>
-				<span name="entry_fee" class="">{{$record->entry_fee}}</span>	
+				<h3>PARKING</h3>
+				<span name="parking" class="">{{$record->parking}}</span>	
+			</div>
+		</div>
+	@endif
+
+	@if (strlen(trim($record->cost)) > 0)
+		<div class="entry-div">
+			<div class="entry amenity-item">
+				<h3>COST / ENTRY FEE</h3>
+				<span name="cost" class="">{{$record->cost}}</span>	
 			</div>
 		</div>
 	@endif
@@ -162,7 +182,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->facilities)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Facilities</h3>
+				<h3>FACILITIES</h3>
 				<span name="facilities" class="">{{$record->facilities}}</span>	
 			</div>
 		</div>
@@ -171,7 +191,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->public_transportation)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Public Transportation</h3>
+				<h3>PUBLIC TRANSPORTATION</h3>
 				<span name="facilities" class="">{{$record->public_transportation}}</span>	
 			</div>
 		</div>
@@ -180,7 +200,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->wildlife)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Wildlife</h3>
+				<h3>WILDLIFE</h3>
 				<span name="facilities" class="">{{$record->wildlife}}</span>	
 			</div>
 		</div>
