@@ -29,6 +29,25 @@ Route::get('/admin', 'HomeController@admin');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+Route::group(['prefix' => 'activities'], function () 
+{
+	// index
+	Route::get('/index', 'ActivityController@index')->middleware('auth');
+	Route::get('/view/{id}', 'ActivityController@view')->middleware('auth');
+
+	// add/create
+	Route::get('/add','ActivityController@add')->middleware('auth');
+	Route::post('/create','ActivityController@create')->middleware('auth');
+	
+	// edit/update
+	Route::get('/edit/{activity}','ActivityController@edit')->middleware('auth');
+	Route::post('/update/{activity}','ActivityController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{activity}','ActivityController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{activity}','ActivityController@delete')->middleware('auth');
+});
+
 Route::group(['prefix' => 'photos'], function () 
 {
 	// index

@@ -57,7 +57,7 @@
 								<li><a href="/users/">Users</a></li>
 								<li><a href="/visits/">Visits</a></li>
 								<li><a href="/entries/index/">Entries</a></li>
-								<li><a href="/entries/tours">Tours</a></li>
+								<li><a href="/activities/index">Activities</a></li>
 								<li><a href="/tasks/index">Tasks</a></li>
 							<?php endif; ?>
 														
