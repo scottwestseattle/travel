@@ -153,7 +153,7 @@ foreach($photos as $photo)
 	@if (!empty(trim($record->map_link)))
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Map</h3>
+				<h3>MAP</h3>
 				<div id="" style="display:default; margin-top:20px;">				
 					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
 				</div>
@@ -209,7 +209,7 @@ foreach($photos as $photo)
 	@if ($regular_photos > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>Photos</h3>
+				<h3>PHOTOS</h3>
 			</div>
 		</div>
 	@endif
