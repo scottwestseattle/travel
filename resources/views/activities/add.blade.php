@@ -28,6 +28,10 @@
 				<label for="description">Description:</label>
 				<textarea name="description" class="form-control entry-description-text" ></textarea>	
 				
+				<div style="margin-bottom:10px;">
+					<button type="submit" name="update" class="btn btn-primary">Add</button>
+				</div>	
+								
 				<label for="highlights">Highlights:</label>
 				<textarea name="highlights" class="form-control entry-description-text" ></textarea>	
 				<label for="distance">Distance:</label>

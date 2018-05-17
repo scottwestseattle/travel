@@ -83,9 +83,10 @@ class ActivityController extends Controller
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
-			->orderByRaw('photos.id DESC')
+			->orderByRaw('created_at ASC')
 			->get();
 		
+		$activity->description = nl2br($activity->description);
 		$activity->description = $this->formatLinks($activity->description);
 		
 		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
@@ -148,6 +149,46 @@ class ActivityController extends Controller
 			
 			$activity->published_flag = isset($request->published_flag) ? 1 : 0;
 			$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			
+			$activity->save();
+			
+			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }	
+	
+    public function publish(Request $request, Activity $activity)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check() && Auth::user()->id == $activity->user_id)
+        {
+			return view('activities.publish', ['record' => $activity, 'data' => $this->getViewData()]);							
+        }           
+        else 
+		{
+             return redirect('/');
+		}            	
+    }
+	
+    public function publishupdate(Request $request, Activity $activity)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check() && Auth::user()->id == $activity->user_id)
+        {			
+			$published = isset($request->published_flag) ? 1 : 0;
+			$activity->published_flag = $published;
+			
+			if ($published === 0) // if it goes back to private, then it has to be approved again
+				$activity->approved_flag = 0;
+			else
+				$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
 			$activity->save();
 			

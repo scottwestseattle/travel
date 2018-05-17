@@ -20,14 +20,29 @@ foreach($photos as $photo)
 
 	@guest
 	@else
-		@if (Auth::user()->user_type >= 100)
-		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+		@if (Auth::user()->user_type >= 1000)
+		<div class="" style="font-size:20px;">
+		<table class=""><tr>			
+			<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
+			<td style="width:40px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+			<td style="width:40px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+			<td style="width:40px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 		</tr></table>
+		</div>
+		@endif
+		@if (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id)
+		<div class="publish-pills">
+			<ul class="nav nav-pills">
+				@if ($record->published_flag === 0)
+					<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
+				@elseif ($record->approved_flag === 0)
+					<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
+				@else
+					<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
+				@endif
+			</ul>
+		</div>
 		@endif
 	@endguest
 		
@@ -133,7 +148,7 @@ foreach($photos as $photo)
 					
 	<div class="entry-div" style="margin-top:20px;width:100%;">
 		<div class="entry" style="width:100%;">
-			<span name="description" class="">{!! nl2br($record->description) !!}</span>	
+			<span name="description" class="">{!! $record->description !!}</span>	
 		</div>
 	</div>
 
@@ -144,7 +159,7 @@ foreach($photos as $photo)
 			<div class="entry amenity-item">
 				<!-- h3>MORE INFORMATION</h3 -->
 				<div id="" style="display:default; margin-top:20px;">				
-					<a href="{{ $record->info_link }}">Please click here for prices and schedules</a>
+					<a href="{{ $record->info_link }}">Please click here for more information</a>
 				</div>
 			</div>
 		</div>

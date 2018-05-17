@@ -1,5 +1,19 @@
 <style>
 
+.submenu-icons {
+	width: 40px; 
+	font-size: 50px;
+}
+
+.publish-pills {
+}
+
+.publish-pills ul {
+	margin-top: 10px; 
+	font-size:.8em;
+	line-height:7px;
+}
+
 .entry-div-page {
 	border: solid 1px rgb(232, 232, 232);
     border-radius: 6px;	

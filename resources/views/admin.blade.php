@@ -4,7 +4,51 @@
 
 <div class="page-size container">
 	<h2 style="">Admin Dashboard</h2>
+	
 	@if (Auth::check())
+		
+	<div xstyle="border: 1px solid gray">
+		<h3>Pending Activities ({{ count($records) }})</h3>
+		<table class="table table-striped">
+			<tbody>
+			@foreach($records as $record)
+				<tr>
+					<td style="width:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td style="width:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+					<td>
+						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}</a>
+							
+						<?php if (intval($record->view_count) > 0) : ?>
+							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
+						<?php endif; ?>
+						
+						@if ($record->published_flag === 0 || $record->approved_flag === 0)
+							<div class="publish-pills">
+								<ul class="nav nav-pills">
+									@if ($record->published_flag === 0)
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
+									@elseif ($record->approved_flag === 0)
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
+									@else
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
+									@endif
+								</ul>
+							</div>
+						@endif
+					</td>
+					<td>
+						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
+					</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>   	
+		<a href="/activities/index">Show All Activities</a>	
+	</div>
+	<hr />
+	
+		<div style="height:30px;clear:both;"></div>
+	
 		<h3 style="">New Users ({{count($users)}})</h3>
 		<table class="table table-striped">
 			<tbody>
@@ -22,6 +66,7 @@
 			</tbody>
 		</table>
 		<a href="/users/index">Show All Users</a>
+		<hr />
 		
 		<div style="height:30px;clear:both;"></div>
 		<h3 style="">Visitor IPs ({{count($visits)}})</h3>

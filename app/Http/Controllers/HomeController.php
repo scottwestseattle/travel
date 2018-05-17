@@ -36,8 +36,8 @@ class HomeController extends Controller
 			->get();
 
 		$tours = Activity::select()
-			->where('approved_flag', '=', 0)
-			->where('published_flag', '=', 0)
+			->where('approved_flag', '=', 1)
+			->where('published_flag', '=', 1)
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('id DESC')
 			->get();
@@ -159,14 +159,27 @@ class HomeController extends Controller
 
     public function admin()
     {
+		//
+		// get activities pending approval
+		//
+		// get latest visits
+		$activities = DB::table('activities')
+			->select()
+			->where('published_flag', '<>', 0)
+			->where('approved_flag', '=', 0)
+			->orderByRaw('updated_at ASC')
+			->get();
+			
+		//dd($activities);
+
+		//
 		// get unconfirmed users
+		//
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
 			->get();
-			
-		// get latest content entries
-		
+					
 		// get latest visits
 		$visits = DB::table('entries')
 			->select('title', 'description', 'user_id', DB::raw('count(*) as total'))
@@ -177,7 +190,7 @@ class HomeController extends Controller
 			
 		//dd($visits);
 			
-		return view('admin', ['users' => $users, 'visits' => $visits]);
+		return view('admin', ['records' => $activities, 'users' => $users, 'visits' => $visits]);
     }
 	
     public function posts(Entry $entry)

@@ -26,7 +26,7 @@ class PhotoController extends Controller
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $id)
-				->orderByRaw('photos.main_flag DESC, photos.id DESC')
+				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
 			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	

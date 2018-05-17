@@ -30,11 +30,17 @@
 				<label for="description">Description:</label>
 				<textarea name="description" class="form-control entry-description-text" >{{ $record->description }}</textarea>
 			</div>
+			
+				<div style="margin-bottom:20px;">
+					<button type="submit" name="update" class="btn btn-primary">Save</button>
+				</div>
+			
 
 			<div class="entry-title-div">
 
 				<label for="highlights">Highlights:</label>
 				<textarea name="highlights" class="form-control entry-description-text" >{{ $record->highlights }}</textarea>
+												
 				<label for="distance">Distance:</label>
 				<input type="text" name="distance" class="form-control" value="{{ $record->distance }}"  />
 				<label for="difficulty">Difficulty:</label>
@@ -59,10 +65,12 @@
 			</div>
 					
 			<div style="clear:both;" class="entry-title-div">
-				<label for="map_link">Map Link:</label>
+				<label for="map_link">Map Embed Link:</label>
 				<input type="text" name="map_link" class="form-control" value="{{ $record->map_link }}" />
+				@if (false)
 				<label for="info_link">More Info Link:</label>
 				<input type="text" name="info_link" class="form-control" value="{{ $record->info_link }}" />
+				@endif
 			</div>
 
 			<div style="clear:both;">				

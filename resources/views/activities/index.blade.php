@@ -35,6 +35,19 @@ if (isset($title))
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
+						@if ($record->published_flag === 0 || $record->approved_flag === 0)
+							<div class="publish-pills">
+								<ul class="nav nav-pills">
+									@if ($record->published_flag === 0)
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
+									@elseif ($record->approved_flag === 0)
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
+									@else
+										<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
+									@endif
+								</ul>
+							</div>
+						@endif
 					</td>
 					<td>
 						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>

@@ -82,25 +82,17 @@ class Controller extends BaseController
 	protected function formatLinks($text)
 	{
 		$lines = explode("\r\n", $text);
-		//dd($text);
-		$text = "";
+
+		$text = '';
 		
 		foreach($lines as $line)
 		{
-				preg_match('/\[(.*?)\]/', $line, $title);		// replace the chars between []
+				preg_match('/\[(.*?)\]/', $line, $title);	// replace the chars between []
 				preg_match('/\((.*?)\)/', $line, $link);	// replace the chars between ()
 				
-				if ($line === BODY_PLACEHODER)
+				if (sizeof($title) > 0 && sizeof($link)) // if its a link
 				{
-					dd($line);
-					// this is for the template replacement tag 
-					$text .= $line;
-				}
-				else if (sizeof($title) > 0 && sizeof($link)) // if its a link
-				{
-					//$text .= '<br/>';
-					$text .= '<div style="font-family: \'Handlee\', cursive; margin:14px 0px;"><a href=' . $link[1] . ' target="_blank">' . $title[1] . '</a></div>';
-					//$text .= '<br/>';
+					$text .= '<div style="font-family: \'Raleway\';font-weight:bold;"><a style="font-size:.9em; color:#4993FD;" href=' . $link[1] . ' target="_blank">' . $title[1] . '</a></div>';
 				}
 				else if (mb_strlen($line) === 0) // blank line
 				{

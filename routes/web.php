@@ -39,6 +39,10 @@ Route::group(['prefix' => 'activities'], function ()
 	
 	//Route::get('/view/{activity}', 'ActivityController@view');
 
+	// publish
+	Route::get('/publish/{activity}','ActivityController@publish')->middleware('auth');
+	Route::post('/publishupdate/{activity}','ActivityController@publishupdate')->middleware('auth');
+	
 	// add/create
 	Route::get('/add','ActivityController@add')->middleware('auth');
 	Route::post('/create','ActivityController@create')->middleware('auth');
