@@ -33,7 +33,11 @@ Route::group(['prefix' => 'activities'], function ()
 {
 	// index
 	Route::get('/index', 'ActivityController@index')->middleware('auth');
-	Route::get('/view/{activity}', 'ActivityController@view')->middleware('auth');
+	
+	Route::get('/view/{title}/{id}', ['as' => 'activity.view', 'uses' => 'ActivityController@view']);
+	Route::resource('activity', 'ActivityController');	
+	
+	//Route::get('/view/{activity}', 'ActivityController@view');
 
 	// add/create
 	Route::get('/add','ActivityController@add')->middleware('auth');

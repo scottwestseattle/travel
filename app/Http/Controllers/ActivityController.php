@@ -70,11 +70,29 @@ class ActivityController extends Controller
 						
 		$activity->save();
 			
-		return redirect('/activities/view/' . $activity->id);          	
+		return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
     }
 
-    public function view(Activity $activity)
-    {		
+    public function view($title, $id)
+    {
+		$activity = Activity::select()
+			->where('deleted_flag', '<>', 1)
+			->where('id', '=', $id)
+			->first();
+		
+		$photos = Photo::select()
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $activity->id)
+			->orderByRaw('photos.id DESC')
+			->get();
+		
+		$activity->description = $this->formatLinks($activity->description);
+		
+		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
+	}
+	
+    public function viewOrig(Activity $activity)
+    {
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
@@ -89,7 +107,7 @@ class ActivityController extends Controller
 	}
 	
     public function edit(Request $request, Activity $activity)
-    {		
+    {	
 		if (!$this->isAdmin())
              return redirect('/');
 
@@ -133,7 +151,7 @@ class ActivityController extends Controller
 			
 			$activity->save();
 			
-			return redirect('/activities/view/' . $activity->id); 
+			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
 		}
 		else
 		{

@@ -54,10 +54,26 @@
 
 	<section>
 		<div class="slider-center" onclick="change_slider()">
-			<div id="slider" style="xz-index:-1; background-repeat: no-repeat; position:relative;">
+		@if (false) 
+			<!------------------------------------------------------->
+			<!-- version that overlaps the top of the slider image -->
+			<!------------------------------------------------------->
+			<div id="slider" style="background-repeat: no-repeat; position:relative;">
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				<div id="slider-text" style="background-color:black; color:white; position:absolute; top:0px; width:100%; font-style:italic; opacity: 0.7;"></div>
 			</div>
+		@else
+			<div id="slider" style="background-repeat: no-repeat;">
+				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
+				
+				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
+					<div id="slider-text-xs" style="xfont-family: Handlee; font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+				</div>
+				<div class="hidden-xs" ><!-- all other sizes -->
+					<div id="slider-text" style="xfont-family: Handlee; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+				</div>				
+			</div>
+		@endif
 		</div>
 	</section>
 </div>
@@ -76,6 +92,7 @@
 	
 	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
 	document.getElementById("slider-text").innerHTML = loc;
+	document.getElementById("slider-text-xs").innerHTML = loc;
 	document.getElementById("slider").title = alt + ', ' + loc;
 	
 	function change_slider()
@@ -90,6 +107,7 @@
 		
 		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
 		document.getElementById("slider-text").innerHTML = loc;
+		document.getElementById("slider-text-xs").innerHTML = loc;
 		document.getElementById("slider").title = alt + ', ' + loc;
 	}
 </script>
@@ -98,18 +116,26 @@
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->
 
+<?php 
+	$welcome_msg = 'provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.';
+?>
+
 <section id="" class="sectionBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
-		<!-- h1>Welcome to {{ config('app.name', 'Travel') }}</h1 -->
-			
-		<!-- h2 style="margin-bottom: 30px;" class="xfont-open-sans-300">
-			Self-guided tours, Travel Blogs, and Worldwide travel information
-		</h2 -->
-
-		<img style="max-width:70%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
-		<h3 class="welcome-text main-font">{{ config('app.name', 'Travel') }} provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.</h3>
+		<div class="hidden-xl hidden-lg hidden-md hidden-sm">
+			<!-- xs only -->
+			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{ config('app.name', 'Travel') . '&nbsp;' . $welcome_msg }} </h3>
+		</div>
+		<div class="hidden-xs" >
+			<!-- all other sizes -->
+			<h3 class="welcome-text main-font">{{ config('app.name', 'Travel') . '&nbsp;' . $welcome_msg }} </h3>
+		</div>
+		
+		<div style="margin-top:40px;">
+			<img style="max-width:70%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
+		</div>
 	
 	</div>	
 	
@@ -150,18 +176,10 @@
 				<div><img src="/img/theme1/bootprint.jpg" /></div>				
 				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
 				
-			</div>			
-			
-			<!-- div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
-				<form action="/users/register">
-					<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgBlue"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;Join Us Now</button>
-				</form>
-			</div -->				
+			</div>						
 						
 			<div class="clearfix">
-			
-			<!-- div style="adding-left: 10px; margin-bottom: 10px; font-family: Raleway; color: green; font-size:.9em;">USA >> Seattle >> Downtown</div -->
-			
+						
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
 				<!-------------------------------->
@@ -172,13 +190,20 @@
 						<div class="col-md-4 col-sm-6">
 						
 							<!-- tour image -->
-							<a href="{{$link . 'view/' . $entry->id}}" >
+							<!-- a href="{{$link . 'view/' . $entry->id}}" -->
+							<!-- a href="{{ route('activity.view', [preg_replace('/\+/', '-', urlencode($entry->title)), $entry->id]) }}" -->
+							<?php 
+								//$title = preg_replace('/[^\da-z ]/i', '', $entry->title); // remove all chars except alphanums and space
+								//$title = urlencode($title);
+								//$title = str_replace('+', '-', $title);
+							?>
+							<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">
 								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{$link . 'view/' . $entry->id}}">{{ $entry->title }}</a>
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{ $entry->title }}</a>
 							</div>
 						</div>
 					
@@ -193,10 +218,10 @@
 							@foreach($tours as $entry)
 								<tr>
 									<td style="width:150px;">
-										<a href="{{$link . 'view/' . $entry->id}}"><img src="{{ $entry->photo }}" width="150" /></a>
+										<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}"><img src="{{ $entry->photo }}" width="150" /></a>
 									</td>
 									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{$link . 'view/' . $entry->id}}">{{$entry->title}}</a>						
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>						
 										<?php
 											$tags = "Hike";
 											if (strpos($entry->title, "Water Taxi") === FALSE)
@@ -212,7 +237,7 @@
 										
 										@guest
 										@else
-											<a href='/entries/edit/{{$entry->id}}'>
+											<a href='{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}'>
 												<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
 											</a>
 											

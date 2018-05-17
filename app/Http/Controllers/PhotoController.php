@@ -286,7 +286,7 @@ class PhotoController extends Controller
 			else
 			{
 				$path_from = base_path() . '/public/img/tours/' . $id . '/';
-				$redirect = '/entries/view/' . $id;
+				$redirect = '/photos/tours/' . $id;
 			}
 
 			$filename = trim($request->filename);

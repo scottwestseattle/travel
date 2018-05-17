@@ -16,7 +16,7 @@
 
 <div class="container">
 	@if ($photo_type == 2)
-	<a href="/entries/view/{{$id}}">Back to Tour</a>
+	<a href="/activities/index/">Back to Tours</a>
 	@endif
 	<h1 style="font-size:1.5em;">
 		<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
