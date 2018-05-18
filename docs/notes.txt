@@ -28,6 +28,11 @@ x Admin Dashboard
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+world / usa 		/ washington 	/ seattle	/ west seattle
+world / indonesia 	/ bali 			/ kuta
+
+
 Primary Colors:
 
 Header Orange:
@@ -38,4 +43,22 @@ $color = '#4993FD'; // blue header
 
 Footer Green:
 $color = '#5CB85C'; // green
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+SELECT
+   e.id
+ , e.title
+FROM 
+ entries e
+INNER JOIN
+ entries_tags
+ON
+ e.id = entries_tags.entry_id
+INNER JOIN 
+ tags
+ON
+ entries_tags.tag_id = tags.id
+WHERE
+tags.id = 1
 
