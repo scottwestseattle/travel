@@ -68,11 +68,17 @@
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				
 				<!-- these are the slider mover arrows -->
-				<div id="slider-arrow-left" style="font-size: 200px; position:absolute; top:0; left:0"><span style="opacity:0.0; color: white;" href="#" onclick="slider_left()">
-					<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span></span></div>
+				<div id="slider-arrow-left" style="font-size: 200px; position:absolute; top:0; left:0">
+					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
+					</span>
+				</div>
 					
-				<div id="slider-arrow-right" style="font-size:200px; position:absolute; top:0; right:0;"><span style="opacity:0.0; color: white;" href="#" onclick="slider_right()">
-					<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span></span></div>
+				<div id="slider-arrow-right" style="font-size:200px; position:absolute; top:0; right:0;">
+					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
+					</span>
+				</div>
 				<!------------------------------------------------------->
 					
 			</div>
@@ -107,6 +113,20 @@
 	document.getElementById("slider-text-xs").innerHTML = loc;
 	document.getElementById("slider").title = alt + ', ' + loc;
 
+	function showSliderControls(show)
+	{	
+		if (show)
+		{
+			document.getElementById("slider-control-left").style.opacity = "0.9";
+		}
+		else
+		{
+			document.getElementById("slider-control-left").style.opacity = "0.0";
+		}
+		
+		document.getElementById("slider-control-right").style.opacity = document.getElementById("slider-control-left").style.opacity;
+	}
+	
 	function slider_left()
 	{
 		ix--;

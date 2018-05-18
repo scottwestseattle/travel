@@ -259,8 +259,8 @@ class PhotoController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-
-    	if (Auth::check() && Auth::id() == $photo->user_id)
+		 
+    	if ($this->isOwnerOrAdmin($photo->user_id))
         {			
 			return view('photos.edit', ['photo' => $photo, 'data' => $this->getViewData()]);							
         }           
@@ -275,7 +275,7 @@ class PhotoController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 	
-    	if (Auth::check() && Auth::id() == $photo->user_id)
+    	if ($this->isOwnerOrAdmin($photo->user_id))
         {
 			$id = intval($request->parent_id);
 			if ($id === 0)
@@ -364,7 +364,7 @@ class PhotoController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 	
-    	if (Auth::check() && Auth::id() == $photo->user_id)
+    	if ($this->isOwnerOrAdmin($photo->user_id))
         {			
 			$path = '';
 			if ($this->isSlider($photo))
@@ -389,7 +389,7 @@ class PhotoController extends Controller
 		 
 		$redirect = '/';
 	
-    	if (Auth::check() && Auth::id() == $photo->user_id)
+    	if ($this->isOwnerOrAdmin($photo->user_id))
         {			
 			// 
 			// update the database record
