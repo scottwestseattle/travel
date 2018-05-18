@@ -42,7 +42,8 @@
 
 @section('content')
 
-<div style="width:100%; background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " >
+<!-- div style="width:100%; background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " -->
+<div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
@@ -53,7 +54,7 @@
 	<!--------------------------------------------------------------------------------------->
 
 	<section>
-		<div class="slider-center" onclick="change_slider()">
+		<div class="slider-center" xonclick="slider_right()">
 		@if (false) 
 			<!------------------------------------------------------->
 			<!-- version that overlaps the top of the slider image -->
@@ -63,14 +64,24 @@
 				<div id="slider-text" style="background-color:black; color:white; position:absolute; top:0px; width:100%; font-style:italic; opacity: 0.7;"></div>
 			</div>
 		@else
-			<div id="slider" style="background-repeat: no-repeat;">
+			<div id="slider" style="background-repeat: no-repeat; position: relative;">
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				
+				<!-- these are the slider mover arrows -->
+				<div id="slider-arrow-left" style="font-size: 200px; position:absolute; top:0; left:0"><span style="opacity:0.0; color: white;" href="#" onclick="slider_left()">
+					<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span></span></div>
+					
+				<div id="slider-arrow-right" style="font-size:200px; position:absolute; top:0; right:0;"><span style="opacity:0.0; color: white;" href="#" onclick="slider_right()">
+					<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span></span></div>
+				<!------------------------------------------------------->
+					
+			</div>
+			<div>
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
-					<div id="slider-text-xs" style="xfont-family: Handlee; font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text-xs" style="font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
 				</div>
 				<div class="hidden-xs" ><!-- all other sizes -->
-					<div id="slider-text" style="xfont-family: Handlee; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text" style="background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
 				</div>				
 			</div>
 		@endif
@@ -79,6 +90,7 @@
 </div>
 
 <script>
+
 	// load all the sliders so we can javascript through them
 	var sliders = [
 		@foreach($sliders as $slider)
@@ -94,13 +106,29 @@
 	document.getElementById("slider-text").innerHTML = loc;
 	document.getElementById("slider-text-xs").innerHTML = loc;
 	document.getElementById("slider").title = alt + ', ' + loc;
+
+	function slider_left()
+	{
+		ix--;
+		
+		if (ix < 0)
+			ix = sliders.length - 1;
+			
+		slider_update();
+	}
 	
-	function change_slider()
+	function slider_right()
 	{
 		ix++;
+		
 		if (ix > sliders.length - 1)
 			ix = 0;
-		
+			
+		slider_update();
+	}
+	
+	function slider_update()
+	{
 		var img = sliders[ix][0];
 		var loc = sliders[ix][1];
 		var alt = sliders[ix][2];
