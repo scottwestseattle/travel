@@ -47,6 +47,13 @@ foreach($photos as $photo)
 	@endguest
 		
 	<div class="form-group">
+		@foreach($locations as $location)
+			<span name="" class=""><a href="\locations\activities\{{$location->id}}">{{$location->name}}</a>&nbsp;>&nbsp;</span>		
+		@endforeach
+	</div>
+
+		
+	<div class="form-group">
 		<h1 name="title" class="">{{$record->title }}</h1>
 	</div>
 	

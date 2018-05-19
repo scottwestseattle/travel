@@ -79,7 +79,9 @@ class ActivityController extends Controller
 			->where('deleted_flag', '<>', 1)
 			->where('id', '=', $id)
 			->first();
-		
+			
+		$locations = $activity->locations()->orderByRaw('level ASC')->get();
+
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
@@ -89,7 +91,7 @@ class ActivityController extends Controller
 		$activity->description = nl2br($activity->description);
 		$activity->description = $this->formatLinks($activity->description);
 		
-		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('activities.view', ['record' => $activity, 'locations' => $locations, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 	
     public function viewOrig(Activity $activity)

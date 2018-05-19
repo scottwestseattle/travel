@@ -21,6 +21,12 @@
 	<div class="form-group">
 		<h1 name="title" class="">{{$entry->title }}</h1>
 	</div>
+
+	<div class="form-group">
+	@foreach($tags as $tag)
+		<span name="" class=""><a href="\tags\entries\{{$tag->id}}">{{$tag->name}}</a>&nbsp;>&nbsp;</span>		
+	@endforeach
+	</div>
 	
 	<div class="entry-div">
 		<div class="entry">

@@ -2,10 +2,6 @@
 
 @section('content')
 
-@component('menu-submenu', ['data' => $data])
-	@component('menu-icons-start')@endcomponent
-@endcomponent
-
 <div class="container">
 	@if (Auth::check())
 		<h1>Tags</h1>
@@ -20,7 +16,7 @@
 						<a href='/tags/confirmdelete/{{$tag->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
 					</td>
 					<td>
-						<a target="" href="/tags/view/{{$tag->id}}">{{$tag->name}}</a>
+						<a target="" href="/tags/entries/{{$tag->id}}">{{$tag->name}}</a>
 					</td>
 				</tr>
 			@endforeach</tbody>

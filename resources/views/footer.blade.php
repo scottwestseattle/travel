@@ -56,9 +56,15 @@
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
-								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>FAQ</a></li>
+								<!-- li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>FAQ</a></li -->
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>Contact Us</a></li>
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Login</a></li>
+						
+								<li id="debug-tag-lg"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (L)</a></li>
+								<li id="debug-tag-md"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (M)</a></li>
+								<li id="debug-tag-sm"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (S)</a></li>
+								<li id="debug-tag-xs"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (X)</a></li>
+
 							</ul>
 
 						</div>

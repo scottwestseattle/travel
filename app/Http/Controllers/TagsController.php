@@ -15,7 +15,13 @@ class TagsController extends Controller
 			->orderByRaw('tags.id ASC')
 			->get();
 		
-    	return view('tags.index', ['tags' => $tags, 'data' => $this->viewData]);
+    	return view('tags.index', ['tags' => $tags]);
+    }
+
+    public function entries(Tag $tag)
+    {
+		//dd($tag->entries);
+    	return view('entries.index', ['entries' => $tag->entries]);
     }
 	
     public function add()
