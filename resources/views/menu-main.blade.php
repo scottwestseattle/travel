@@ -49,11 +49,10 @@
 							<?php endif; ?>
 							
 							<?php if ($user_type >= 100) : ?>
-								<li id="debug-tag-lg"><a href="/admin">Admin (L)</a></li>
-								<li id="debug-tag-md"><a href="/admin">Admin (M)</a></li>
-								<li id="debug-tag-sm"><a href="/admin">Admin (S)</a></li>
-								<li id="debug-tag-xs"><a href="/admin">Admin (X)</a></li>
+								<li><a href="/admin">Admin</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
+								<li><a href="/locations/index">Locations</a></li>
+								<li><a href="/tags/index">Tags</a></li>
 								<li><a href="/users/">Users</a></li>
 								<li><a href="/visits/">Visits</a></li>
 								<li><a href="/entries/index/">Entries</a></li>

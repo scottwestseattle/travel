@@ -31,6 +31,21 @@ class EntryController extends Controller
     	return view('entries.index', compact('entries'));
     }
 
+    public function tag($tag_id)
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$entries = Entry::select()
+			->where('user_id', '=', Auth::id())
+			//->where('is_template_flag', '<>', 1)
+			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->orderByRaw('entries.id DESC')
+			->get();
+		
+    	return view('entries.index', compact('entries'));
+    }
+
     public function posts()
     {
 		if (!$this->isAdmin())
@@ -184,6 +199,10 @@ class EntryController extends Controller
     public function view(Entry $entry)
     {
 		//$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
+		//foreach ($user->roles as $role) 		{		}
+		//dd($entry->tags);
+		
+		$tags = $entry->tags()->orderByRaw('level ASC')->get();
 		
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
@@ -193,7 +212,7 @@ class EntryController extends Controller
 			
 		//dd($photos);
 		
-		return view('entries.view', ['entry' => $entry, 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('entries.view', ['entry' => $entry, 'tags' => $tags, 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 
     public function home()

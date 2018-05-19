@@ -29,6 +29,26 @@ Route::get('/admin', 'HomeController@admin');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+Route::group(['prefix' => 'locations'], function () 
+{
+	Route::get('/', 'LocationsController@index')->middleware('auth');
+	Route::get('/index', 'LocationsController@index')->middleware('auth');
+	Route::get('/activities/{location}', 'LocationsController@activities')->middleware('auth');
+	Route::get('/view/{location}','LocationsController@view')->middleware('auth');
+
+	// add/create
+	Route::get('/add','LocationsController@add')->middleware('auth');
+	Route::post('/create','LocationsController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{location}','LocationsController@edit')->middleware('auth');
+	Route::post('/update/{location}','LocationsController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{location}','LocationsController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{location}','LocationsController@delete')->middleware('auth');
+});
+
 Route::group(['prefix' => 'activities'], function () 
 {
 	// index
@@ -81,6 +101,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/tours', 'EntryController@tours')->middleware('auth');
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
 	Route::get('/index', 'EntryController@index')->middleware('auth');
+	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 	
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');
@@ -128,6 +149,7 @@ Route::group(['prefix' => 'faqs'], function () {
 Route::group(['prefix' => 'tags'], function () {
 	Route::get('/', 'TagsController@index')->middleware('auth');
 	Route::get('/index', 'TagsController@index')->middleware('auth');
+	Route::get('/entries/{tag}', 'TagsController@entries')->middleware('auth');
 
 	// add/create
 	Route::get('/add','TagsController@add')->middleware('auth');

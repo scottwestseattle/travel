@@ -2,10 +2,6 @@
 
 @section('content')
 
-@component('menu-submenu')
-	@component('menu-icons-start')@endcomponent
-@endcomponent
-
 <div class="page-size container">
 	<h1>Delete</h1>
 
