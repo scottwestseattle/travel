@@ -56,9 +56,12 @@ Route::group(['prefix' => 'activities'], function ()
 	
 	Route::get('/view/{title}/{id}', ['as' => 'activity.view', 'uses' => 'ActivityController@view']);
 	Route::resource('activity', 'ActivityController');	
-	
-	//Route::get('/view/{activity}', 'ActivityController@view');
+	//orig: Route::get('/view/{activity}', 'ActivityController@view');
 
+	// location
+	Route::get('/location/{activity}','ActivityController@location')->middleware('auth');
+	Route::post('/locationupdate/{activity}','ActivityController@locationupdate')->middleware('auth');
+	
 	// publish
 	Route::get('/publish/{activity}','ActivityController@publish')->middleware('auth');
 	Route::post('/publishupdate/{activity}','ActivityController@publishupdate')->middleware('auth');

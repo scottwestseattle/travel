@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Activity;
 use App\Photo;
+use App\Location;
 use DB;
 
 class ActivityController extends Controller
@@ -16,8 +17,8 @@ class ActivityController extends Controller
              return redirect('/');
 		
 		$records = Activity::select()
-			->where('user_id', '=', Auth::id())
-			->orderByRaw('activities.id DESC')
+			//->where('user_id', '=', Auth::id())
+			->orderByRaw('activities.created_at DESC')
 			->get();
 		
     	return view('activities.index', compact('records'));
@@ -240,6 +241,69 @@ class ActivityController extends Controller
     	$activity->save();	
     	return view('activities.viewcount');
 	}
+	
+    public function location(Request $request, Activity $activity)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
+		$locations = Location::select()
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->orderByRaw('locations.location_type ASC')
+			->get();
+
+		$current_location = $activity->locations()->orderByRaw('location_type DESC')->first();
+			
+    	if (Auth::check())
+        {			
+			//dd($request);
+			
+			return view('activities.location', ['record' => $activity, 'locations' => $locations, 'current_location' => $current_location]);							
+        }           
+        else 
+		{
+             return redirect('/');
+		}            	
+    }
+	
+    public function locationupdate(Request $request, Activity $activity)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check())
+        {						
+			$activity->locations()->detach();	// remove all existing locations
+			$activity_id = $activity->id;
+			
+			$location = Location::select()
+				->where('id', '=', $request->location_id)
+				->first();
+
+			if (isset($location))
+			{
+				$location_id = $location->id;
+				$activity->locations()->save($location);
+				
+				$locationParent = Location::select()
+					->where('id', '=', $location->parent_id)
+					->first();
+					
+				if (isset($locationParent))
+				{
+					$location_parent_id = $locationParent->id;
+					$activity->locations()->save($locationParent);
+				}
+			}
+			
+			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }	
+	
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

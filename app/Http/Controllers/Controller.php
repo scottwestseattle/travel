@@ -24,6 +24,16 @@ define('USER_EDITOR', 30);			// content editor
 define('USER_SITE_ADMIN', 100);		// user site admin
 define('USER_SUPER_ADMIN', 1000);	// user super admin
 
+define('LOCATION_TYPE_PLANET', 0);
+define('LOCATION_TYPE_CONTINENT', 100);
+define('LOCATION_TYPE_SUBCONTINENT', 200);
+define('LOCATION_TYPE_COUNTRY', 300);
+define('LOCATION_TYPE_REGION', 400);
+define('LOCATION_TYPE_STATE', 500);
+define('LOCATION_TYPE_ZONE', 600);
+define('LOCATION_TYPE_CITY', 700); // City or Place, such as Seattle or Olympic National Park
+define('LOCATION_TYPE_NEIGHBORHOOD_AREA', 800); // Neighborhood OR Area, such as West Seattle or Downtown
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

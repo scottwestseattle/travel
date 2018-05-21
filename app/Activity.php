@@ -16,6 +16,6 @@ class Activity extends Model
 	//
     public function locations()
     {
-		return $this->belongsToMany('App\Location');
+		return $this->belongsToMany('App\Location')->withTimestamps();
     }	
 }

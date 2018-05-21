@@ -67,7 +67,9 @@
 			<div id="slider" style="background-repeat: no-repeat; position: relative;">
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				
+				<!------------------------------------------------------->
 				<!-- these are the slider mover arrows -->
+				<!------------------------------------------------------->
 				<div id="slider-arrow-left" style="font-size: 200px; position:absolute; top:0; left:0">
 					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
@@ -79,6 +81,8 @@
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
+				<!------------------------------------------------------->
+				<!------------------------------------------------------->
 				<!------------------------------------------------------->
 					
 			</div>
@@ -117,7 +121,7 @@
 	{	
 		if (show)
 		{
-			document.getElementById("slider-control-left").style.opacity = "0.9";
+			document.getElementById("slider-control-left").style.opacity = "0.3";
 		}
 		else
 		{

@@ -3,6 +3,19 @@
 @section('content')
 
 <div class="container">
+
+	@guest
+	@else
+		@if (Auth::user()->user_type >= 100)
+		<table><tr>			
+			<td style="width:40px; font-size:20px;"><a href='/locations/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/locations/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/locations/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/locations/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
+		</tr></table>
+		@endif
+	@endguest
+
 	<h1>Delete</h1>
 
 	<form method="POST" action="/locations/delete/{{ $record->id }}">

@@ -63,21 +63,3 @@ ON
 WHERE
 tags.id = 1
 
-
-
-
-<select name="data[Subcategory][category]" id="SubcategoryCategory">
-<option value="15">Auto</option>
-<option value="13">Bank</option>
-<option value="10">Business Expense</option>
-<option value="3">Cash</option>
-<option value="14">Entertainment</option>
-<option value="2">Food</option>
-<option value="32">Housing</option>
-<option value="11">Income</option>
-<option value="16">Loan</option>
-<option value="12">Medical</option>
-<option value="4">Personal</option>
-<option value="9">Transfer</option>
-<option value="1">Travel</option>
-</select>

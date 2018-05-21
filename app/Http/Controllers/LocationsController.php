@@ -10,9 +10,12 @@ class LocationsController extends Controller
 {
     public function index()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
 		$locations = Location::select()
-			->where('user_id', '=', Auth::id())
-			->orderByRaw('locations.id ASC')
+			//->where('user_id', '=', Auth::id())
+			->orderByRaw('locations.location_type ASC')
 			->get();
 		
     	return view('locations.index', ['records' => $locations]);
@@ -20,8 +23,11 @@ class LocationsController extends Controller
 	
    public function view(Location $location)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
 		$parent = Location::select()
-			->where('user_id', '=', Auth::id())
+			//->where('user_id', '=', Auth::id())
 			->where('id', '=', $location->parent_id)
 			->first();
 			
@@ -37,8 +43,11 @@ class LocationsController extends Controller
 	
     public function add()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
 		$locations = Location::select()
-			->where('user_id', '=', Auth::id())
+			//->where('user_id', '=', Auth::id())
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('locations.level ASC')
 			->get();
@@ -48,6 +57,9 @@ class LocationsController extends Controller
 
     public function create(Request $request)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
     	$location = new Location();
     	$location->name = $request->name;
     	$location->parent_id = $request->parent_id;
@@ -61,14 +73,17 @@ class LocationsController extends Controller
 
     public function edit(Location $location)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
 		$locations = Location::select()
-			->where('user_id', '=', Auth::id())
+			//->where('user_id', '=', Auth::id())
 			->where('deleted_flag', '=', 0)
 			->where('id', '<>', $location->id)
 			->orderByRaw('locations.level ASC')
 			->get();
 
-    	if (Auth::check() && Auth::user()->id == $location->user_id)
+    	if (Auth::check())
         {
 			return view('locations.edit', ['location' => $location, 'records' => $locations]);			
         }
@@ -80,7 +95,10 @@ class LocationsController extends Controller
 	
     public function update(Request $request, Location $location)
     {	
-    	if (Auth::check() && Auth::user()->id == $location->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+	
+    	if (Auth::check())
         {
 			$location->name = $request->name;
 			$location->location_type = $request->location_type;
@@ -97,7 +115,10 @@ class LocationsController extends Controller
 
     public function confirmdelete(Location $location)
     {	
-    	if (Auth::check() && Auth::user()->id == $location->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check())
         {			
 			return view('locations.confirmdelete', ['record' => $location]);				
         }           
@@ -108,8 +129,11 @@ class LocationsController extends Controller
     }
 	
     public function delete(Location $location)
-    {	
-    	if (Auth::check() && Auth::user()->id == $location->user_id)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+    	if (Auth::check())
         {			
 			$location->delete();
 		}

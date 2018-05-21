@@ -10,8 +10,11 @@ class TagsController extends Controller
 {
     public function index()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
 		$tags = Tag::select()
-			->where('user_id', '=', Auth::id())
+			//->where('user_id', '=', Auth::id())
 			->orderByRaw('tags.id ASC')
 			->get();
 		
@@ -19,18 +22,24 @@ class TagsController extends Controller
     }
 
     public function entries(Tag $tag)
-    {
+    {		
 		//dd($tag->entries);
     	return view('entries.index', ['entries' => $tag->entries]);
     }
 	
     public function add()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
     	return view('tags.add', ['data' => $this->viewData]);
     }
 
     public function create(Request $request)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
     	$tag = new Tag();
     	$tag->name = $request->name;
     	$tag->user_id = Auth::id();
@@ -41,7 +50,10 @@ class TagsController extends Controller
 
     public function edit(Tag $tag)
     {
-    	if (Auth::check() && Auth::user()->id == $tag->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
+    	if (Auth::check())
         {
 			return view('tags.edit', ['tag' => $tag, 'data' => $this->viewData]);			
         }
@@ -53,7 +65,10 @@ class TagsController extends Controller
 	
     public function update(Request $request, Tag $tag)
     {	
-    	if (Auth::check() && Auth::user()->id == $tag->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
+    	if (Auth::check())
         {
 			$tag->name = $request->name;
 			$tag->save();
@@ -68,7 +83,10 @@ class TagsController extends Controller
 
     public function confirmdelete(Tag $tag)
     {	
-    	if (Auth::check() && Auth::user()->id == $tag->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check())
         {			
 			return view('tags.confirmdelete', ['tag' => $tag, 'data' => $this->viewData]);				
         }           
@@ -80,7 +98,10 @@ class TagsController extends Controller
 	
     public function delete(Tag $tag)
     {	
-    	if (Auth::check() && Auth::user()->id == $tag->user_id)
+		if (!$this->isAdmin())
+             return redirect('/');
+	
+    	if (Auth::check())
         {			
 			$tag->delete();
 		}

@@ -27,9 +27,14 @@ if (isset($title))
 			@foreach($records as $record)
 				<tr>
 					<td style="width:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td style="width:20px;"><a href='/activities/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
 					<td style="width:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+					<?php 
+						$loc = $record->locations()->orderByRaw('location_type DESC')->first(); 
+						$loc = (isset($loc) ? $loc->name : 'no location'); 
+					?>
 					<td>
-						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}</a>
+						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title . ' (' . $loc . ')'}}</a>
 							
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
