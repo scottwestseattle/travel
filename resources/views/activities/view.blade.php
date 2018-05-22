@@ -28,6 +28,8 @@ foreach($photos as $photo)
 			<td style="width:40px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td style="width:40px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 			<td style="width:40px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+			<td style="width:40px;"><a href='/activities/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
+			
 		</tr></table>
 		</div>
 		@endif
@@ -48,7 +50,7 @@ foreach($photos as $photo)
 		
 	<div style="margin-top:10px;" class="form-group">
 		@foreach($locations as $location)
-			<span name="" class=""><a href="\locations\activities\{{$location->id}}">{{$location->name}}</a>&nbsp;>&nbsp;</span>		
+			<span name="" class=""><a href="\locations\activities\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>		
 		@endforeach
 	</div>
 		

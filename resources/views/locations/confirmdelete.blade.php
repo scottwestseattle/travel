@@ -16,16 +16,16 @@
 		@endif
 	@endguest
 
-	<h1>Delete</h1>
+	<h1>Delete: {{$record->name }}</h1>
 
 	<form method="POST" action="/locations/delete/{{ $record->id }}">
 
 	<div class="form-group">
-		<h1 name="name" class="">{{$record->name }}</h1>
+		<h3 name="name" class="">Parent: {{isset($record->parent_name) ? $record->parent_name : 'None'}}</h3>
 	</div>
-
+	
 	<div class="form-group">
-		<h3 name="name" class="">Level: {{$record->level}}</h3>
+		<h3 name="name" class="">Location Type: {{$record->location_type}}</h3>
 	</div>
 
 	<div class="form-group">
@@ -33,7 +33,12 @@
 	</div>
 
 	<div class="form-group">
-		<h3 name="name" class="">Parent: {{isset($parent) ? $parent->name : 'None' }}</h3>
+		<h3 name="name" class="">Users: {{isset($activities) && count($activities) > 0 ? '' : 'None' }}</h3>
+		<ul>
+		@foreach($activities as $activity)
+			<li>{{$activity->title}}</li>
+		@endforeach
+		</ul>
 	</div>		
 				
 		<div class="form-group">

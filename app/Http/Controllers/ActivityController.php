@@ -16,10 +16,20 @@ class ActivityController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
+		/* orig: without location
 		$records = Activity::select()
 			//->where('user_id', '=', Auth::id())
+			->where('deleted_flag', '=', 0)
 			->orderByRaw('activities.created_at DESC')
+			->get(); */
+			
+		// get the list with the location included
+		$records = DB::table('activities')
+			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
+			->select('activities.*', 'locations.name as location_name')
 			->get();
+			
+		//dd($records);
 		
     	return view('activities.index', compact('records'));
     }
@@ -80,9 +90,96 @@ class ActivityController extends Controller
 			->where('deleted_flag', '<>', 1)
 			->where('id', '=', $id)
 			->first();
-			
-		$locations = $activity->locations()->orderByRaw('level ASC')->get();
+		
+		// original using many tags attached to activity
+		//$locations = $activity->locations()->orderByRaw('level ASC')->get();
+		
+		// try just using the main tag and getting all the parents
+		//$locations = $activity->locations()->orderByRaw('location_type DESC')->first();
+		
+		$locations = DB::table('activities')
+			->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
+			->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
+			->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
+			->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
+			->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
+			->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
+			->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
+			->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
+			->select(
+				  'l1.name as loc1', 'l1.id as loc1_id'
+				, 'l2.name as loc2', 'l2.id as loc2_id'
+				, 'l3.name as loc3', 'l3.id as loc3_id'
+				, 'l4.name as loc4', 'l4.id as loc4_id'
+				, 'l5.name as loc5', 'l5.id as loc5_id'
+				, 'l6.name as loc6', 'l6.id as loc6_id'
+				, 'l7.name as loc7', 'l7.id as loc7_id'
+				, 'l8.name as loc8', 'l8.id as loc8_id'
+				)
+			->where('activities.id', $activity->id)
+			->first();
+		//dd($locations);
 
+		$location = array();
+		if (isset($locations->loc1))
+		{
+			$location[0]['name'] = $locations->loc1;
+			$location[0]['id'] = $locations->loc1_id;
+		}
+		if (isset($locations->loc2))
+		{
+			$location[1]['name'] = $locations->loc2;
+			$location[1]['id'] = $locations->loc2_id;
+		}
+		if (isset($locations->loc3))
+		{
+			$location[2]['name'] = $locations->loc3;
+			$location[2]['id'] = $locations->loc3_id;
+		}
+		if (isset($locations->loc4))
+		{
+			$location[3]['name'] = $locations->loc4;
+			$location[3]['id'] = $locations->loc4_id;
+		}
+		if (isset($locations->loc5))
+		{
+			$location[4]['name'] = $locations->loc5;
+			$location[4]['id'] = $locations->loc5_id;
+		}
+		if (isset($locations->loc6))
+		{
+			$location[5]['name'] = $locations->loc6;
+			$location[5]['id'] = $locations->loc6_id;
+		}
+		if (isset($locations->loc7))
+		{
+			$location[6]['name'] = $locations->loc7;
+			$location[6]['id'] = $locations->loc7_id;
+		}
+		if (isset($locations->loc8))
+		{
+			$location[7]['name'] = $locations->loc8;
+			$location[7]['id'] = $locations->loc8_id;
+		}
+
+		//dd('joins=' . count($location) . ', hasMany=' . $activity->locations()->count());
+		
+		// this happens if the location structure has been changed, the hasMany table needs to be updated
+		if (count($location) != $activity->locations()->count())
+		{
+			//
+			// remove all current locations so they can be replaced
+			//
+			$activity->locations()->detach();
+			
+			//
+			// save current structure
+			//
+			$this->saveLocations($activity, $locations);
+		}
+					
+		//dd($location);
+					
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
@@ -92,7 +189,7 @@ class ActivityController extends Controller
 		$activity->description = nl2br($activity->description);
 		$activity->description = $this->formatLinks($activity->description);
 		
-		return view('activities.view', ['record' => $activity, 'locations' => $locations, 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('activities.view', ['record' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos]);
 	}
 	
     public function viewOrig(Activity $activity)
@@ -272,28 +369,54 @@ class ActivityController extends Controller
              return redirect('/');
 
     	if (Auth::check())
-        {						
-			$activity->locations()->detach();	// remove all existing locations
+        {									
 			$activity_id = $activity->id;
-			
+
 			$location = Location::select()
 				->where('id', '=', $request->location_id)
 				->first();
 
 			if (isset($location))
 			{
-				$location_id = $location->id;
-				$activity->locations()->save($location);
+				//
+				// remove all current locations so they can be replaced
+				//
+				$activity->locations()->detach();
 				
-				$locationParent = Location::select()
-					->where('id', '=', $location->parent_id)
+				//
+				// set the primary has-one location
+				//
+				$activity->location_id = $request->location_id;
+				$activity->save();
+				
+				//
+				// set the hasmany locations
+				//
+				
+				$locations = DB::table('activities')
+					->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
+					->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
+					->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
+					->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
+					->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
+					->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
+					->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
+					->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
+					->select(
+						  'l1.name as loc1', 'l1.id as loc1_id'
+						, 'l2.name as loc2', 'l2.id as loc2_id'
+						, 'l3.name as loc3', 'l3.id as loc3_id'
+						, 'l4.name as loc4', 'l4.id as loc4_id'
+						, 'l5.name as loc5', 'l5.id as loc5_id'
+						, 'l6.name as loc6', 'l6.id as loc6_id'
+						, 'l7.name as loc7', 'l7.id as loc7_id'
+						, 'l8.name as loc8', 'l8.id as loc8_id'
+					)
+					->where('activities.id', $activity->id)
 					->first();
-					
-				if (isset($locationParent))
-				{
-					$location_parent_id = $locationParent->id;
-					$activity->locations()->save($locationParent);
-				}
+				//dd($locations);
+				
+				$this->saveLocations($activity, $locations);
 			}
 			
 			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
@@ -303,10 +426,44 @@ class ActivityController extends Controller
 			return redirect('/');
 		}
     }	
-	
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates
 	//////////////////////////////////////////////////////////////////////////////////////////
 
+    private function saveLocations($activity, $locations)
+    {	
+		$this->saveLocation($activity, $locations->loc1_id);
+		$this->saveLocation($activity, $locations->loc2_id);
+		$this->saveLocation($activity, $locations->loc3_id);
+		$this->saveLocation($activity, $locations->loc4_id);
+		$this->saveLocation($activity, $locations->loc5_id);
+		$this->saveLocation($activity, $locations->loc6_id);
+		$this->saveLocation($activity, $locations->loc7_id);
+		$this->saveLocation($activity, $locations->loc8_id);
+	}
+
+    private function saveLocation($activity, $id)
+    {	
+		if (isset($id))
+		{
+			$record = Location::select()
+					->where('id', '=', $id)
+					->first();
+			//dd($record);
+					
+			if (isset($record))
+			{
+				$activity->locations()->save($record);
+			}
+			else
+			{
+				dd('location record not found');
+			}
+		}
+		else
+		{
+			// valid condition because the records don't have all location levels
+		}	
+	}
 }

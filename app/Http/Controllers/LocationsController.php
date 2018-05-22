@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Location;
+use App\Activity;
+use DB;
 
 class LocationsController extends Controller
 {
@@ -31,12 +33,15 @@ class LocationsController extends Controller
 			->where('id', '=', $location->parent_id)
 			->first();
 			
-		return view('locations.view', ['record' => $location, 'parent' => $parent]);
+		$activities = null;
+		$location = $this->getLocation($location->id, $activities);			
+			
+		return view('locations.view', ['record' => $location, 'activities' => $activities]);
 	}
 
     public function activities(Location $location)
     {
-		//dd($location->activities);
+		//dd($location->activities[0]->location);
 		
     	return view('activities.index', ['records' => $location->activities]);
     }
@@ -113,15 +118,36 @@ class LocationsController extends Controller
 		}
     }
 
+    private function getLocation($id, &$activities)
+    {				
+		$location = DB::table('locations')
+			->leftJoin('locations as parent', 'locations.parent_id', '=', 'parent.id')
+			->select('locations.*', 'parent.name as parent_name', 'parent.id as parent_id')
+			->where('locations.id', $id)
+			->first();
+			
+		//dd($location);
+			
+		$activities = Activity::select()
+			->where('deleted_flag', '<>', 1)
+			->where('location_id', '=', $id)
+			->get();
+			
+		return $location;
+	}
+	
     public function confirmdelete(Location $location)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 
     	if (Auth::check())
-        {			
-			return view('locations.confirmdelete', ['record' => $location]);				
-        }           
+        {
+			$activities = null;
+			$location = $this->getLocation($location->id, $activities);
+			
+			return view('locations.confirmdelete', ['record' => $location, 'activities' => $activities]);
+        }
         else 
 		{
              return redirect('/locations');

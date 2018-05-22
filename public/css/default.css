@@ -2,6 +2,20 @@
 /* navbar and slider */
 /*****************************************************************/
 
+a .btn-alert {
+	background-color:red;
+	color: white;	
+	margin:5px 3px 0 0; 
+	padding:5px; 
+	font-size:.7em;	
+	font-weight:bold;
+}
+
+.label-danger a:link {
+	background-color:red;
+	color: white;
+}
+
 #logo-big-text {
 	font-size: 3em;
 	font-weight: bold;

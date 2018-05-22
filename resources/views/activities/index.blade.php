@@ -20,7 +20,17 @@ if (isset($title))
 
 <div class="page-size container">
 	
-	<h1 style="font-size:1.3em;"><a href="/activities/add"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>{{ $header }} ({{ count($records) }})</h1>
+	@guest
+	@else
+		@if (Auth::user()->user_type >= 100)
+		<table><tr>			
+			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
+		</tr></table>
+		@endif
+	@endguest
+	
+	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($records) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
@@ -30,27 +40,41 @@ if (isset($title))
 					<td style="width:20px;"><a href='/activities/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
 					<td style="width:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<?php 
-						$loc = $record->locations()->orderByRaw('location_type DESC')->first(); 
-						$loc = (isset($loc) ? $loc->name : 'no location'); 
+						$location_name = null;
+						$location_id = 0;
+						if (isset($record->location_name)) // if coming from activities controller
+						{
+							$location_name = $record->location_name;
+							$location_id = $record->location_id;
+						}
+						else if (isset($record->location)) // if coming from locations controller (showing by location)
+						{
+							$location_name = $record->location->name;
+							$location_id = $record->location->id;
+						}
 					?>
 					<td>
-						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title . ' (' . $loc . ')'}}</a>
+						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}</a>
+						@if (isset($location_name))
+							&nbsp;(<a href="/locations/activities/{{$location_id}}">{{$location_name}}</a>)
+						@endif
 							
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
-						@if ($record->published_flag === 0 || $record->approved_flag === 0)
-							<div class="publish-pills">
-								<ul class="nav nav-pills">
-									@if ($record->published_flag === 0)
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
-									@elseif ($record->approved_flag === 0)
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
-									@else
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
-									@endif
-								</ul>
+						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($location_name))
+							<div>
+							@if ($record->approved_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
+							@elseif ($record->published_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button</a></li>
+							@else
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Published</button></a></li>
+							@endif
+							@if (!isset($location_name))
+								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+							@endif
 							</div>
 						@endif
 					</td>

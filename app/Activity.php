@@ -10,12 +10,18 @@ class Activity extends Model
     {
     	return $this->belongsTo(User::class);
     }
-	
+
+    public function location()
+    {
+		return $this->belongsTo('App\Location');
+    }	
+
 	//
 	// has many locations
 	//
     public function locations()
     {
 		return $this->belongsToMany('App\Location')->withTimestamps();
-    }	
+    }
+	
 }

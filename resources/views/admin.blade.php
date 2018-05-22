@@ -22,17 +22,18 @@
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
-						@if ($record->published_flag === 0 || $record->approved_flag === 0)
-							<div class="publish-pills">
-								<ul class="nav nav-pills">
-									@if ($record->published_flag === 0)
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
-									@elseif ($record->approved_flag === 0)
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
-									@else
-										<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
-									@endif
-								</ul>
+						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($location_name))
+							<div>
+							@if ($record->approved_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
+							@elseif ($record->published_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button</a></li>
+							@else
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Published</button></a></li>
+							@endif
+							@if (!isset($location_name))
+								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+							@endif
 							</div>
 						@endif
 					</td>
