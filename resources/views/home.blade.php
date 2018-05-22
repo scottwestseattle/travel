@@ -121,7 +121,7 @@
 	{	
 		if (show)
 		{
-			document.getElementById("slider-control-left").style.opacity = "0.3";
+			document.getElementById("slider-control-left").style.opacity = "0.0";
 		}
 		else
 		{
@@ -190,19 +190,20 @@
 		</div>
 	
 	</div>	
-	
+
+	@if (true)	
 	<div class="row text-center" style="margin-top:40px;">
 		<div class="header">
 			<form action="#">
 				<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button>
-			</form>
-			
+			</form>	
 		</div>		
 	</div>
 
 	<div class="sectionHeader text-center" style="margin-top:20px;">
 		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</i></h3>
 	</div>
+	@endif
 	
 </div>
 </section>
@@ -219,17 +220,30 @@
 	$link = '/activities/';
 ?>
 
-<section id="" class="sectionWhite sectionWhitePattern" style="" >
+<section id="" class="sectionWhite" style="" >
 	<div class="container">	
 		<div class="text-center">			
 			
 			<!-------------------- Section header image --------->
 			<div class="sectionHeader">	
-				<div><img src="/img/theme1/bootprint.jpg" /></div>				
-				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
-				
-			</div>						
+				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<h3 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h3>
+			</div>		
+
+			<!---------------------------------------------------->
+			<!-- Locations -->
+			<!---------------------------------------------------->
+			<div style="margin:20px; 0" class="text-center">
+				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
+				<a href="/locations/activities/{{2}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">USA</button></a></li>
+				<a href="/locations/activities/{{4}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Seattle</button></a></li>
+				<a href="/locations/activities/{{5}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Olympic National Park</button></a></li>			
+				<a href="/locations/activities/{{6}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Port Angeles</button></a></li>
+			</div>			
 						
+			<!---------------------------------------------------->
+			<!-- Tours, Hikes, Things To Do -->
+			<!---------------------------------------------------->
 			<div class="clearfix">
 						
 				<!-------------------------------->
@@ -273,7 +287,9 @@
 										<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}"><img src="{{ $entry->photo }}" width="150" /></a>
 									</td>
 									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>						
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>
+										
+										@if (false)
 										<?php
 											$tags = "Hike";
 											if (strpos($entry->title, "Water Taxi") === FALSE)
@@ -286,6 +302,7 @@
 											}
 										?>
 										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+										@endif
 										
 										@guest
 										@else

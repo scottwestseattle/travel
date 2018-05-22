@@ -46,16 +46,26 @@ foreach($photos as $photo)
 			</ul>
 		</div>
 		@endif
+				
 	@endguest
 		
+	<!----------------------->
+	<!-- show bread crumbs -->
+	<!----------------------->
 	<div style="margin-top:10px;" class="form-group">
 		@foreach($locations as $location)
-			<span name="" class=""><a href="\locations\activities\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>		
+			@if ($location['breadcrumb_flag'] == 1)
+				<span name="" class=""><a href="\locations\activities\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>
+			@endif
 		@endforeach
-	</div>
+	</div>		
 		
 	<div class="form-group">
-		<h1 name="title" class="">{{$record->title }}</h1>
+		<h1 name="title" class="">{{$record->title }}
+			@if (false)
+				{{' (' . $main_photo->filename . ')'}}
+			@endif
+		</h1>
 	</div>
 	
 	<?php 

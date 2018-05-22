@@ -11,18 +11,11 @@ use DB;
 
 class ActivityController extends Controller
 {
-    public function index()
+    public function indexadmin()
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-		
-		/* orig: without location
-		$records = Activity::select()
-			//->where('user_id', '=', Auth::id())
-			->where('deleted_flag', '=', 0)
-			->orderByRaw('activities.created_at DESC')
-			->get(); */
-			
+					
 		// get the list with the location included
 		$records = DB::table('activities')
 			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
@@ -31,9 +24,81 @@ class ActivityController extends Controller
 			
 		//dd($records);
 		
-    	return view('activities.index', compact('records'));
+    	return view('activities.indexadmin', compact('records'));
     }
 
+    public function index()
+    {
+		$tours = Activity::select()
+			->where('approved_flag', '=', 1)
+			->where('published_flag', '=', 1)
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id DESC')
+			->get();
+			
+		//
+		// get tour page link and main photo
+		//
+		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
+		$tours_webpath = '/img/tours/';
+		
+		foreach($tours as $entry)
+		{
+			$link = '/view/' . $entry->id;
+			$photo_fullpath = $tours_fullpath . $entry->id . '/';
+			$photo = $photo_fullpath . 'main.jpg';
+			$photoUc = $photo_fullpath . 'Main.jpg';
+										
+			// file_exists must be relative path with no leading '/'
+			if (file_exists($photo) === TRUE)
+			{
+				// to show the photo we need the leading '/'
+				$photo = $tours_webpath . $entry->id . '/main.jpg';
+			}
+			else if (file_exists($photoUc) === TRUE)
+			{
+				// to show the photo we need the leading '/'
+				$photo = $tours_webpath . $entry->id . '/Main.jpg';
+			}
+			else
+			{
+				$photo = '';
+				
+				if (is_dir($photo_fullpath)) // if photo folder exists, get the first photo
+				{
+					$photos = $this->getPhotos('tours/' . $entry->id);
+					if (count($photos) > 0)
+						$photo = $tours_webpath . $entry->id . '/' . $photos[0];
+				}
+				else
+				{																
+					// make the folder with read/execute for everybody
+					mkdir($photo_fullpath, 0755);
+				}								
+										
+				// show the place holder
+				if (strlen($photo) === 0)
+					$photo = $tours_webpath . 'placeholder.jpg';
+								
+				$main_photo = Photo::select()
+				->where('parent_id', '=', $entry->id)
+				->where('main_flag', '=', 1)
+				->where('deleted_flag', '=', 0)
+				->first();
+				
+				if (isset($main_photo))
+					$photo = $tours_webpath . $entry->id . '/' . $main_photo->filename;			
+			}
+			
+			$entry['photo'] = $photo;
+			$entry['link'] = $link;
+		}		
+
+		//dd($sliders);
+		
+    	return view('activities.index', ['records' => $tours]);
+    }
+	
     public function add()
     {
 		if (!$this->isAdmin())
@@ -107,14 +172,14 @@ class ActivityController extends Controller
 			->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
 			->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
 			->select(
-				  'l1.name as loc1', 'l1.id as loc1_id'
-				, 'l2.name as loc2', 'l2.id as loc2_id'
-				, 'l3.name as loc3', 'l3.id as loc3_id'
-				, 'l4.name as loc4', 'l4.id as loc4_id'
-				, 'l5.name as loc5', 'l5.id as loc5_id'
-				, 'l6.name as loc6', 'l6.id as loc6_id'
-				, 'l7.name as loc7', 'l7.id as loc7_id'
-				, 'l8.name as loc8', 'l8.id as loc8_id'
+				  'l1.name as loc1', 'l1.id as loc1_id', 'l1.breadcrumb_flag as loc1_breadcrumb_flag'
+				, 'l2.name as loc2', 'l2.id as loc2_id', 'l2.breadcrumb_flag as loc2_breadcrumb_flag'
+				, 'l3.name as loc3', 'l3.id as loc3_id', 'l3.breadcrumb_flag as loc3_breadcrumb_flag'
+				, 'l4.name as loc4', 'l4.id as loc4_id', 'l4.breadcrumb_flag as loc4_breadcrumb_flag'
+				, 'l5.name as loc5', 'l5.id as loc5_id', 'l5.breadcrumb_flag as loc5_breadcrumb_flag'
+				, 'l6.name as loc6', 'l6.id as loc6_id', 'l6.breadcrumb_flag as loc6_breadcrumb_flag'
+				, 'l7.name as loc7', 'l7.id as loc7_id', 'l7.breadcrumb_flag as loc7_breadcrumb_flag'
+				, 'l8.name as loc8', 'l8.id as loc8_id', 'l8.breadcrumb_flag as loc8_breadcrumb_flag'
 				)
 			->where('activities.id', $activity->id)
 			->first();
@@ -125,41 +190,49 @@ class ActivityController extends Controller
 		{
 			$location[0]['name'] = $locations->loc1;
 			$location[0]['id'] = $locations->loc1_id;
+			$location[0]['breadcrumb_flag'] = $locations->loc1_breadcrumb_flag;
 		}
-		if (isset($locations->loc2))
+		if (isset($locations->loc2) && $locations->loc2_breadcrumb_flag == 1)
 		{
 			$location[1]['name'] = $locations->loc2;
 			$location[1]['id'] = $locations->loc2_id;
+			$location[1]['breadcrumb_flag'] = $locations->loc2_breadcrumb_flag;
 		}
-		if (isset($locations->loc3))
+		if (isset($locations->loc3) && $locations->loc3_breadcrumb_flag == 1)
 		{
 			$location[2]['name'] = $locations->loc3;
 			$location[2]['id'] = $locations->loc3_id;
+			$location[2]['breadcrumb_flag'] = $locations->loc3_breadcrumb_flag;
 		}
-		if (isset($locations->loc4))
+		if (isset($locations->loc4) && $locations->loc4_breadcrumb_flag == 1)
 		{
 			$location[3]['name'] = $locations->loc4;
 			$location[3]['id'] = $locations->loc4_id;
+			$location[3]['breadcrumb_flag'] = $locations->loc4_breadcrumb_flag;
 		}
-		if (isset($locations->loc5))
+		if (isset($locations->loc5) && $locations->loc5_breadcrumb_flag == 1)
 		{
 			$location[4]['name'] = $locations->loc5;
 			$location[4]['id'] = $locations->loc5_id;
+			$location[4]['breadcrumb_flag'] = $locations->loc5_breadcrumb_flag;
 		}
-		if (isset($locations->loc6))
+		if (isset($locations->loc6) && $locations->loc6_breadcrumb_flag == 1)
 		{
 			$location[5]['name'] = $locations->loc6;
 			$location[5]['id'] = $locations->loc6_id;
+			$location[5]['breadcrumb_flag'] = $locations->loc6_breadcrumb_flag;
 		}
-		if (isset($locations->loc7))
+		if (isset($locations->loc7) && $locations->loc7_breadcrumb_flag == 1)
 		{
 			$location[6]['name'] = $locations->loc7;
 			$location[6]['id'] = $locations->loc7_id;
+			$location[6]['breadcrumb_flag'] = $locations->loc7_breadcrumb_flag;
 		}
-		if (isset($locations->loc8))
+		if (isset($locations->loc8) && $locations->loc8_breadcrumb_flag == 1)
 		{
 			$location[7]['name'] = $locations->loc8;
 			$location[7]['id'] = $locations->loc8_id;
+			$location[7]['breadcrumb_flag'] = $locations->loc8_breadcrumb_flag;
 		}
 
 		//dd('joins=' . count($location) . ', hasMany=' . $activity->locations()->count());

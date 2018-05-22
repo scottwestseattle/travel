@@ -63,13 +63,18 @@
 	.sectionYellow, .sectionBlue, .sectionWhite {
 		padding: 50px 0 40px 0;
 	}
+
+	.sectionWhite {
+		background-color: white;
+		color: #3F98FD;
+	}
 	
 	.sectionYellow {
 		background-color: #FF6900;
 		color: white;
 	}
-	.sectionBlue {
-		background-color: #3F98FD;		
+	.sectionBlue, .sectionBlue h3 {
+		background-color: #3F98FD;
 		color: white;
 	}
 	.sectionWhitePattern {

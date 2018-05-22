@@ -56,6 +56,11 @@
 			<input type="text" name="name" class="form-control"  placeholder="Name"></input>
 		</div>
 		
+		<div style="clear: both;" class="">
+			<input type="checkbox" name="breadcrumb_flag" id="breadcrumb_flag" class="" />
+			<label for="breadcrumb_flag" class="checkbox-big-label">Show as Bread Crumb</label>
+		</div>			
+		
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Add</button>
 		</div>

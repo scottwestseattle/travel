@@ -29,7 +29,7 @@
 	</div>
 
 	<div class="form-group">
-		<h3 name="name" class="">Breadcrumb: {{isset($record->breadcrumb) ? 'Yes' : 'No'}}</h3>
+		<h3 name="name" class="">Breadcrumb: {{isset($record->breadcrumb_flag) && $record->breadcrumb_flag == 1 ? 'Yes' : 'No'}}</h3>
 	</div>
 
 	<div class="form-group">

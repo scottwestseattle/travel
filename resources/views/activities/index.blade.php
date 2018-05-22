@@ -2,91 +2,112 @@
 
 @section('content')
 
-@if (false)
-@component('menu-submenu')
-	@component('menu-icons-start')@endcomponent
-@endcomponent
-@endif
-
-<?php 
-
-$header = 'Activites';
-if (isset($title))
-{
-	$header = $title;
-}
-
+<?php
+	$h = 200;
+	$w = 300;
+	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
+	$tours_webpath = '/img/tours/';
+	$link = '/activities/';
 ?>
 
-<div class="page-size container">
-	
-	@guest
-	@else
-		@if (Auth::user()->user_type >= 100)
-		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
-		</tr></table>
-		@endif
-	@endguest
-	
-	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($records) }})</h1>
-	@if (Auth::check())
-		<table class="table table-striped">
-			<tbody>
-			@foreach($records as $record)
-				<tr>
-					<td style="width:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td style="width:20px;"><a href='/activities/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
-					<td style="width:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
-					<?php 
-						$location_name = null;
-						$location_id = 0;
-						if (isset($record->location_name)) // if coming from activities controller
-						{
-							$location_name = $record->location_name;
-							$location_id = $record->location_id;
-						}
-						else if (isset($record->location)) // if coming from locations controller (showing by location)
-						{
-							$location_name = $record->location->name;
-							$location_id = $record->location->id;
-						}
-					?>
-					<td>
-						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}</a>
-						@if (isset($location_name))
-							&nbsp;(<a href="/locations/activities/{{$location_id}}">{{$location_name}}</a>)
-						@endif
-							
-						<?php if (intval($record->view_count) > 0) : ?>
-							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
-						<?php endif; ?>
+<section id="" class="sectionWhite sectionWhitePattern" style="" >
+	<div class="container">	
+		<div class="text-center">			
+
+			<!-- Sub-menu ------>
+			<div class="" style="font-size:20px;">
+				<table class=""><tr>			
+					<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>			
+				</tr></table>
+			</div>			
+			
+			<!-------------------- Section header image --------->
+			<div class="sectionHeader">	
+				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
+				
+			</div>						
 						
-						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($location_name))
-							<div>
-							@if ($record->approved_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
-							@elseif ($record->published_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button</a></li>
-							@else
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Published</button></a></li>
-							@endif
-							@if (!isset($location_name))
-								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
-							@endif
+			<div class="clearfix">
+						
+				<!-------------------------------->
+				<!-- this is the non-XS version -->
+				<!-------------------------------->
+				<div class="row hidden-xs">
+
+					@foreach($records as $entry)
+								
+						@if ($entry->published_flag && $entry->approved_flag)
+						<div class="col-md-4 col-sm-6">
+						
+							<!-- tour image -->
+							<!-- a href="{{$link . 'view/' . $entry->id}}" -->
+							<!-- a href="{{ route('activity.view', [preg_replace('/\+/', '-', urlencode($entry->title)), $entry->id]) }}" -->
+							<?php 
+								//$title = preg_replace('/[^\da-z ]/i', '', $entry->title); // remove all chars except alphanums and space
+								//$title = urlencode($title);
+								//$title = str_replace('+', '-', $title);
+							?>
+							<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">
+								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
+							</a>
+							
+							<!-- tour title -->
+							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{ $entry->title }}</a>
 							</div>
+						</div>
 						@endif
-					</td>
-					<td>
-						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
-					</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
-	@else
-		<h3>You need to log in. <a href="/login">Click here to login</a></h3>
-	@endif       
-</div>
+					
+					@endforeach
+					
+				</div><!-- row -->	
+
+				<!-- this is the XS size only using table cols -->
+				<div class="hidden-xl hidden-lg hidden-md hidden-sm">
+					<table class="table" style="padding:0; margin:0">
+						<tbody>
+							@foreach($records as $entry)
+								@if ($entry->published_flag && $entry->approved_flag)
+								<tr>
+									<td style="width:150px;">
+										<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}"><img src="{{ $entry->photo }}" width="150" /></a>
+									</td>
+									<td>
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>						
+										<?php
+											$tags = "Hike";
+											if (strpos($entry->title, "Water Taxi") === FALSE)
+											{
+												$tags = "Hike, Bike";
+											}
+											else
+											{
+												$tags = "Boat";
+											}
+										?>
+										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+										
+										@guest
+										@else
+											<a href='{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}'>
+												<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
+											</a>
+											
+											<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
+										@endguest
+									</td>
+								</tr>
+								@endif
+							@endforeach
+						</tbody>
+					</table>
+				</div><!-- XS size only -->
+
+			</div>
+						
+		</div><!-- text-center -->
+	</div><!-- container -->
+</section>	
+
 @endsection

@@ -33,7 +33,7 @@ Route::group(['prefix' => 'locations'], function ()
 {
 	Route::get('/', 'LocationsController@index')->middleware('auth');
 	Route::get('/index', 'LocationsController@index')->middleware('auth');
-	Route::get('/activities/{location}', 'LocationsController@activities')->middleware('auth');
+	Route::get('/activities/{location}', 'LocationsController@activities');
 	Route::get('/view/{location}','LocationsController@view')->middleware('auth');
 
 	// add/create
@@ -52,7 +52,8 @@ Route::group(['prefix' => 'locations'], function ()
 Route::group(['prefix' => 'activities'], function () 
 {
 	// index
-	Route::get('/index', 'ActivityController@index')->middleware('auth');
+	Route::get('/index', 'ActivityController@index');
+	Route::get('/indexadmin', 'ActivityController@indexadmin')->middleware('auth');
 	
 	Route::get('/view/{title}/{id}', ['as' => 'activity.view', 'uses' => 'ActivityController@view']);
 	Route::resource('activity', 'ActivityController');	

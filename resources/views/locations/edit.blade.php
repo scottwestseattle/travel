@@ -51,6 +51,11 @@
 	<div class="form-group">
 		<input type="text" name="name" class="form-control" value="{{$location->name }}"></input>
 	</div>
+	
+	<div style="clear: both;" class="">
+		<input type="checkbox" name="breadcrumb_flag" id="breadcrumb_flag" class="" value="{{$location->breadcrumb_flag }}" {{ ($location->breadcrumb_flag) ? 'checked' : '' }} />
+		<label for="breadcrumb_flag" class="checkbox-big-label">Show as Bread Crumb</label>
+	</div>		
 
 	<div class="form-group">
 		<button type="submit" name="update" class="btn btn-primary">Update</button>

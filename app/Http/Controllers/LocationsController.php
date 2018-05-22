@@ -41,9 +41,54 @@ class LocationsController extends Controller
 
     public function activities(Location $location)
     {
-		//dd($location->activities[0]->location);
+		// set up the main photo
+		$records = $location->activities()->orderByRaw('activities.id DESC')->get();
+		foreach($records as $record)
+		{
+			//
+			// set up tour page link and main photo
+			//
+			$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
+			$tours_webpath = '/img/tours/';
+			$link = '/view/' . $record->id;
+			$photo_fullpath = $tours_fullpath . $record->id . '/';
+
+			// get the main photo from the db
+			$main_photo = $record->photos()
+				->where('main_flag', 1)
+				->where('deleted_flag', 0)
+				->first();	
+				
+			if (isset($main_photo))
+			{
+				$main_photo = $tours_webpath . $record->id . '/' . $main_photo->filename;			
+				
+				$record['photo'] = $main_photo;
+				$record['link'] = $link;
+				//dd($main_photo);
+			}		
+		}
+
+/* attempt to get all info with joins		
+		$tours = DB::table('activities as a')
+			//->leftJoin('photos as p', 'a.id', '=', 'p.parent_id')
+			->leftJoin('activity_location as al', 'al.activity_id', '=', 'a.id')
+			->leftJoin('locations as l', 'al.location_id', '=', 'l.id')
+			->select('a.*', 'al.*', 'l.*'
+			//	, 'p.*'
+			)
+			->where('al.location_id', $location->id)
+			//->where('p.main_flag', '=', 1)
+			//->where('a.approved_flag', '=', 1)
+			//->where('a.published_flag', '=', 1)
+			->where('a.deleted_flag', '=', 0)
+			->orderByRaw('a.id DESC')
+			->get();
+					
+    	return view('activities.index', ['records' => $tours]);	
+*/
 		
-    	return view('activities.index', ['records' => $location->activities]);
+    	return view('activities.index', ['records' => $records]);
     }
 	
     public function add()
@@ -70,6 +115,7 @@ class LocationsController extends Controller
     	$location->parent_id = $request->parent_id;
     	$location->user_id = Auth::id();
 		$location->location_type = $request->location_type;
+		$location->breadcrumb_flag = isset($request->breadcrumb_flag) ? 1 : 0;
 		
     	$location->save();
 		
@@ -108,6 +154,7 @@ class LocationsController extends Controller
 			$location->name = $request->name;
 			$location->location_type = $request->location_type;
 			$location->parent_id = $request->parent_id;
+			$location->breadcrumb_flag = isset($request->breadcrumb_flag) ? 1 : 0;
 			$location->save();
 			
 			return redirect('/locations/'); 

@@ -24,4 +24,8 @@ class Activity extends Model
 		return $this->belongsToMany('App\Location')->withTimestamps();
     }
 	
+	public function photos()
+    {
+		return $this->hasMany('App\Photo', 'parent_id');
+    }	
 }

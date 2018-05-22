@@ -50,14 +50,14 @@
 							
 							<?php if ($user_type >= 100) : ?>
 								<li><a href="/admin">Admin</a></li>
-								<li><a href="/photos/sliders">Sliders</a></li>
+								<li><a href="/activities/indexadmin">Activities</a></li>
+								<li><a href="/entries/index/">Entries</a></li>
 								<li><a href="/locations/index">Locations</a></li>
+								<li><a href="/photos/sliders">Sliders</a></li>
+								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tags/index">Tags</a></li>
 								<li><a href="/users/">Users</a></li>
 								<li><a href="/visits/">Visits</a></li>
-								<li><a href="/entries/index/">Entries</a></li>
-								<li><a href="/activities/index">Activities</a></li>
-								<li><a href="/tasks/index">Tasks</a></li>
 							<?php endif; ?>
 														
                             <li class="dropdown">
