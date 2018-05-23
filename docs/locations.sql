@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2018 at 02:59 AM
+-- Generation Time: May 23, 2018 at 01:13 AM
 -- Server version: 5.7.14
 -- PHP Version: 7.0.10
 
@@ -23,25 +23,39 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `locations`
+-- Table structure for table `activities`
 --
 
-CREATE TABLE `locations` (
+CREATE TABLE `activities` (
   `id` int(10) UNSIGNED NOT NULL,
+  `location_id` int(11) DEFAULT NULL,
+  `title` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `map_link` text COLLATE utf8mb4_unicode_ci,
+  `info_link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `activity_type` tinyint(4) DEFAULT '0' COMMENT '0=not set, 1=trail, 2=tour, 3=attraction',
+  `highlights` text COLLATE utf8mb4_unicode_ci,
+  `wildlife` text COLLATE utf8mb4_unicode_ci,
+  `facilities` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `parking` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cost` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `distance` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `difficulty` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `elevation` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `season` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `public_transportation` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `trail_type` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'out and back, loop, etc',
   `user_id` int(10) UNSIGNED NOT NULL,
-  `parent_id` int(11) NOT NULL,
-  `location_type` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `level` smallint(4) DEFAULT '0',
-  `popular_flag` tinyint(4) DEFAULT '0' COMMENT 'include in quick links to popular locations',
-  `breadcrumb_flag` tinyint(4) DEFAULT '1',
-  `deleted_flag` tinyint(4) DEFAULT '0',
+  `view_count` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `published_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `approved_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `deleted_flag` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `locations`
+-- Dumping data for table `activities`
 --
 
 --
@@ -49,9 +63,9 @@ CREATE TABLE `locations` (
 --
 
 --
--- Indexes for table `locations`
+-- Indexes for table `activities`
 --
-ALTER TABLE `locations`
+ALTER TABLE `activities`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -59,10 +73,10 @@ ALTER TABLE `locations`
 --
 
 --
--- AUTO_INCREMENT for table `locations`
+-- AUTO_INCREMENT for table `activities`
 --
-ALTER TABLE `locations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+ALTER TABLE `activities`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
