@@ -39,25 +39,14 @@ class PhotoController extends Controller
 	
 	public function sliders()
 	{		
-		if (!$this->isAdmin())
-             return redirect('/');
-
-		 if (Auth::check())
-        {
-			//old photo driven: $photos = $this->getSliders();
-			$photos = Photo::select()
-				->where('parent_id', '=', 0)
-				//->whereNull('parent_id')
-				->where('deleted_flag', '<>', 1)
-				->orderByRaw('photos.id DESC')
-				->get();
+		$photos = Photo::select()
+			->where('parent_id', '=', 0)
+			//->whereNull('parent_id')
+			->where('deleted_flag', 0)
+			->orderByRaw('photos.id DESC')
+			->get();
 				
-			return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
-        }           
-        else 
-		{
-             return redirect('/');
-        }
+		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
 	}
 	
     public function index()
@@ -248,11 +237,10 @@ class PhotoController extends Controller
 		return $filename;
 	}
 
-    public function view()
+    public function view(Photo $photo)
     {
-		$photos = $this->getPhotos();
-						
-		return view('entries.view', ['data' => $this->getViewData(), 'photos' => $photos]);
+		$path = '/img/sliders/';
+		return view('photos.view', ['photo' => $photo, 'path' => $path]);
 	}
 	
     public function edit(Request $request, Photo $photo)

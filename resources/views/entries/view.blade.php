@@ -10,10 +10,9 @@
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/entries/tours/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/entries/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/entries/confirmdelete/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 		</tr></table>
 		@endif
 	@endguest
@@ -22,11 +21,13 @@
 		<h1 name="title" class="">{{$entry->title }}</h1>
 	</div>
 
+	@if (isset($tags))
 	<div class="form-group">
 	@foreach($tags as $tag)
 		<span name="" class=""><a href="\tags\entries\{{$tag->id}}">{{$tag->name}}</a>&nbsp;>&nbsp;</span>		
 	@endforeach
 	</div>
+	@endif
 	
 	<div class="entry-div">
 		<div class="entry">
@@ -58,6 +59,7 @@
 		}
 	?>
 
+	@if (isset($photos))
 	<div style="display:default; margin-top:20px;">
 		@foreach($photos as $photo)
 			@if ($photo->main_flag === 1)
@@ -73,12 +75,7 @@
 			@endif
 		@endforeach	
 	</div>
-	
-	<?php if (!empty($entry->map_link)) : ?>
-		<div id="xttd-map" style="display:default; margin-top:20px;">				
-			<iframe id="xttd-map" src="{{ $entry->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
-		</div>
-	<?php endif; ?>	
+	@endif
 	
 {{ csrf_field() }}
 

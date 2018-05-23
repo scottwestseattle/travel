@@ -11,6 +11,16 @@ use DB;
 class LocationsController extends Controller
 {
     public function index()
+    {		
+		$locations = Location::select()
+			//->where('user_id', '=', Auth::id())
+			->orderByRaw('locations.location_type ASC')
+			->get();
+		
+    	return view('locations.index', ['records' => $locations]);
+    }
+
+    public function indexadmin()
     {
 		if (!$this->isAdmin())
              return redirect('/');
@@ -20,7 +30,7 @@ class LocationsController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('locations.index', ['records' => $locations]);
+    	return view('locations.indexadmin', ['records' => $locations]);
     }
 	
    public function view(Location $location)
@@ -116,10 +126,11 @@ class LocationsController extends Controller
     	$location->user_id = Auth::id();
 		$location->location_type = $request->location_type;
 		$location->breadcrumb_flag = isset($request->breadcrumb_flag) ? 1 : 0;
+		$location->popular_flag = isset($request->popular_flag) ? 1 : 0;
 		
     	$location->save();
 		
-    	return redirect('/locations'); 
+    	return redirect('/locations/indexadmin'); 
     }
 
     public function edit(Location $location)
@@ -140,7 +151,7 @@ class LocationsController extends Controller
         }
         else 
 		{
-             return redirect('/locations');
+             return redirect('/locations/indexadmin');
 		}            	
     }
 	
@@ -155,9 +166,10 @@ class LocationsController extends Controller
 			$location->location_type = $request->location_type;
 			$location->parent_id = $request->parent_id;
 			$location->breadcrumb_flag = isset($request->breadcrumb_flag) ? 1 : 0;
+			$location->popular_flag = isset($request->popular_flag) ? 1 : 0;
 			$location->save();
 			
-			return redirect('/locations/'); 
+			return redirect('/locations/indexadmin'); 
 		}
 		else
 		{
@@ -197,7 +209,7 @@ class LocationsController extends Controller
         }
         else 
 		{
-             return redirect('/locations');
+             return redirect('/locations/indexadmin');
 		}            	
     }
 	
@@ -211,7 +223,7 @@ class LocationsController extends Controller
 			$location->delete();
 		}
 		
-		return redirect('/locations');
+		return redirect('/locations/indexadmin');
     }	
 	
 }

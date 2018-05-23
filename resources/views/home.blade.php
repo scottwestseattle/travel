@@ -194,9 +194,7 @@
 	@if (true)	
 	<div class="row text-center" style="margin-top:40px;">
 		<div class="header">
-			<form action="#">
-				<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button>
-			</form>	
+			<a href="/register"><button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button></a>
 		</div>		
 	</div>
 
@@ -227,19 +225,23 @@
 			<!-------------------- Section header image --------->
 			<div class="sectionHeader">	
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<!-- div><img src="/img/round-mountain.png" /></div -->
 				<h3 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h3>
 			</div>		
 
 			<!---------------------------------------------------->
 			<!-- Locations -->
 			<!---------------------------------------------------->
+			@if (isset($locations))
 			<div style="margin:20px; 0" class="text-center">
 				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
-				<a href="/locations/activities/{{2}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">USA</button></a></li>
-				<a href="/locations/activities/{{4}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Seattle</button></a></li>
-				<a href="/locations/activities/{{5}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Olympic National Park</button></a></li>			
-				<a href="/locations/activities/{{6}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">Port Angeles</button></a></li>
+				@foreach($locations as $location)
+				@if ($location->activities()->count() > 0)
+					<a href="/locations/activities/{{$location->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}</button></a></li>
+				@endif
+				@endforeach
 			</div>			
+			@endif
 						
 			<!---------------------------------------------------->
 			<!-- Tours, Hikes, Things To Do -->

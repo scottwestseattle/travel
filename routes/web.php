@@ -24,6 +24,7 @@ Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
 Route::get('/visits', 'HomeController@visits');
 Route::get('/admin', 'HomeController@admin');
+Route::get('/home', 'HomeController@index');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
@@ -31,9 +32,11 @@ Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
 Route::group(['prefix' => 'locations'], function () 
 {
-	Route::get('/', 'LocationsController@index')->middleware('auth');
-	Route::get('/index', 'LocationsController@index')->middleware('auth');
 	Route::get('/activities/{location}', 'LocationsController@activities');
+	Route::get('/index', 'LocationsController@index');
+	
+	Route::get('/', 'LocationsController@index')->middleware('auth');
+	Route::get('/indexadmin', 'LocationsController@indexadmin')->middleware('auth');
 	Route::get('/view/{location}','LocationsController@view')->middleware('auth');
 
 	// add/create
@@ -84,8 +87,9 @@ Route::group(['prefix' => 'photos'], function ()
 {
 	// index
 	Route::get('/index', 'PhotoController@index')->middleware('auth');
-	Route::get('/sliders', 'PhotoController@sliders')->middleware('auth');
+	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
+	Route::get('/view/{photo}', 'PhotoController@view');
 
 	// add/create
 	Route::get('/add/{id?}','PhotoController@add')->middleware('auth');

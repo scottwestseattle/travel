@@ -31,6 +31,10 @@
 	<div class="form-group">
 		<h3 name="name" class="">Breadcrumb: {{isset($record->breadcrumb_flag) && $record->breadcrumb_flag == 1 ? 'Yes' : 'No'}}</h3>
 	</div>
+	
+	<div class="form-group">
+		<h3 name="name" class="">Popular: {{isset($record->popular_flag) && $record->popular_flag == 1 ? 'Yes' : 'No'}}</h3>
+	</div>	
 
 	<div class="form-group">
 		<h3 name="name" class="">Users: {{isset($activities) && count($activities) > 0 ? '' : 'None' }}</h3>

@@ -7,6 +7,7 @@ use App\Entry;
 use App\Activity;
 use App\User;
 use App\Photo;
+use App\Location;
 use DB;
 
 define("LONGNAME", "Hike, Bike, Boat");
@@ -41,6 +42,21 @@ class HomeController extends Controller
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('id DESC')
 			->get();
+
+		$locations = Location::select()
+			//->leftJoin('locations as l1', 'l1.id', '=', 'locations.parent_id')
+			->where('locations.deleted_flag', '=', 0)
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->where('popular_flag', 1)
+			->orderByRaw('locations.location_type ASC')
+			->get();
+
+/*			
+		$records = DB::table('activities')
+			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
+			->select('activities.*', 'locations.name as location_name')
+			->get();
+*/		
 			
 		//
 		// get tour page link and main photo
@@ -144,7 +160,7 @@ class HomeController extends Controller
 		
 		//dd($sliders);
 		
-    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders]);
+    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations]);
     }
 
     public function visits()

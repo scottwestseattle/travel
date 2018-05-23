@@ -7783,9 +7783,20 @@ Media specific overrides go below here
 
 ***************************************************************************************************/
 
-/****************** overrides for size LG ********************************/	
-@media (min-width: 1201px) 
+/****************** overrides for size XL ********************************/	
+@media (min-width: 1901px) 
 {	
+	#debug-tag-xl { display: initial; }
+	#debug-tag-lg { display: none; }
+	#debug-tag-md { display: none; }
+	#debug-tag-sm { display: none; }
+	#debug-tag-xs { display: none; }
+}
+
+/****************** overrides for size LG ********************************/	
+@media (min-width: 1201px) and (max-width: 1900px) 
+{	
+	#debug-tag-xl { display: none; }
 	#debug-tag-lg { display: initial; }
 	#debug-tag-md { display: none; }
 	#debug-tag-sm { display: none; }
@@ -7795,6 +7806,7 @@ Media specific overrides go below here
 /****************** overrides for size MD ********************************/	
 @media (min-width: 992px) and (max-width: 1200px) 
 {	
+	#debug-tag-xl { display: none; }
 	#debug-tag-lg { display: none; }
 	#debug-tag-md { display: initial; }
 	#debug-tag-sm { display: none; }
@@ -7804,6 +7816,7 @@ Media specific overrides go below here
 /****************** overrides for size SM ********************************/
 @media (min-width: 768px) and (max-width: 991px) 
 {	
+	#debug-tag-xl { display: none; }
 	#debug-tag-lg { display: none; }
 	#debug-tag-md { display: none; }
 	#debug-tag-sm { display: initial; }
@@ -7813,6 +7826,7 @@ Media specific overrides go below here
 /****************** overrides for size XS *******************************/	
 @media (max-width: 767px) 
 {
+	#debug-tag-xl { display: none; }
 	#debug-tag-lg { display: none; }
 	#debug-tag-md { display: none; }
 	#debug-tag-sm { display: none; }

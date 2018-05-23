@@ -55,7 +55,12 @@
 	<div style="clear: both;" class="">
 		<input type="checkbox" name="breadcrumb_flag" id="breadcrumb_flag" class="" value="{{$location->breadcrumb_flag }}" {{ ($location->breadcrumb_flag) ? 'checked' : '' }} />
 		<label for="breadcrumb_flag" class="checkbox-big-label">Show as Bread Crumb</label>
-	</div>		
+	</div>	
+
+	<div style="clear: both;" class="">
+		<input type="checkbox" name="popular_flag" id="popular_flag" class="" value="{{$location->popular_flag }}" {{ ($location->popular_flag) ? 'checked' : '' }} />
+		<label for="popular_flag" class="checkbox-big-label">Show in Popular</label>
+	</div>	
 
 	<div class="form-group">
 		<button type="submit" name="update" class="btn btn-primary">Update</button>

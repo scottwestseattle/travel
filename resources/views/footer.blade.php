@@ -26,6 +26,7 @@
 
 						</div>
 
+						@if (false)
 						<div class="col-md-3">
 
 							<!---------------------------------------------------->
@@ -47,6 +48,7 @@
 							</ul>
 
 						</div>
+						@endif
 
 						<div class="col-md-2">
 
@@ -56,19 +58,25 @@
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
+								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Tours/Hikes</a></li>
+								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 								<!-- li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>FAQ</a></li -->
-								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>Contact Us</a></li>
-								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Login</a></li>
+								<!-- li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>Contact Us</a></li -->
+								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
+								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
 						
-								<li id="debug-tag-lg"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (L)</a></li>
-								<li id="debug-tag-md"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (M)</a></li>
-								<li id="debug-tag-sm"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (S)</a></li>
-								<li id="debug-tag-xs"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About (X)</a></li>
+								<li id="debug-tag-xl"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Extra Large</a></li>
+								<li id="debug-tag-lg"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Large</a></li>
+								<li id="debug-tag-md"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Medium</a></li>
+								<li id="debug-tag-sm"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Small</a></li>
+								<li id="debug-tag-xs"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Extra Small</a></li>
 
 							</ul>
 
 						</div>
 
+						@if (false)
 						<div class="col-md-4">
 
 							<!---------------------------------------------------->
@@ -120,6 +128,7 @@
 							<!-- /Social Icons -->
 
 						</div>
+						@endif
 
 					</div>
 

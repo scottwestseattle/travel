@@ -3,30 +3,14 @@
 @section('content')
 
 <div class="container">
-	@if (Auth::check())
-		<h1>Locations</h1>
-		<a href="/locations/add" class="btn btn-primary">Add</a>
-		<table class="table">
-			<tbody>@foreach($records as $record)
-				<tr>
-					<td style="width:10px; padding-right:20px;">
-						<a href='/locations/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a>
-					</td>
-					<td style="width:10px; padding-right:20px;">
-						<a href='/locations/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
-					</td>
-					<td>
-						<a target="" href="/locations/activities/{{$record->id}}">{{$record->name}}</a>
-					</td>
-					<td style="width:10px; padding-right:20px;">
-						<a href='/locations/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
-					</td>
-				</tr>
-			@endforeach</tbody>
-		</table>
-	@else
-		<h3>You need to log in. <a href="/login">Click here to login</a></h3>
-	@endif
+	<h1>Locations</h1>
+	
+			<div style="margin:20px; 0" class="text-center">
+				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
+				@foreach($records as $record)
+					<a href="/locations/activities/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-primary">{{$record->name}}&nbsp;<span class="badge badge-light">{{$record->activities()->count()}}</span></button></a></li>
+				@endforeach
+			</div>			
                
 </div>
 @endsection

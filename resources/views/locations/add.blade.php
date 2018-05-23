@@ -60,6 +60,11 @@
 			<input type="checkbox" name="breadcrumb_flag" id="breadcrumb_flag" class="" />
 			<label for="breadcrumb_flag" class="checkbox-big-label">Show as Bread Crumb</label>
 		</div>			
+
+		<div style="clear: both;" class="">
+			<input type="checkbox" name="popular_flag" id="popular_flag" class="" />
+			<label for="popular_flag" class="checkbox-big-label">Include in Popular</label>
+		</div>			
 		
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Add</button>

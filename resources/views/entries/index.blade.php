@@ -21,6 +21,14 @@ if (isset($title))
 ?>
 
 <div class="page-size container">
+
+			<!-- Sub-menu ------>
+			<div class="" style="font-size:20px;">
+				<table class=""><tr>			
+					<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
+				</tr></table>
+			</div>			
+
 	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($entries) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
@@ -28,7 +36,6 @@ if (isset($title))
 			@foreach($entries as $entry)
 				<tr>
 					<td style="width:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td style="width:20px;"><a href='/photos/tours/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td>
 						<a href="/entries/view/{{$entry->id}}">{{$entry->title}}</a>
 						

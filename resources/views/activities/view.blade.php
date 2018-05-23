@@ -26,9 +26,10 @@ foreach($photos as $photo)
 			<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			<td style="width:40px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-			<td style="width:40px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 			<td style="width:40px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 			<td style="width:40px;"><a href='/activities/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
+			<td style="width:40px;"><a href='/activities/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+			<td style="width:40px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 			
 		</tr></table>
 		</div>
@@ -40,8 +41,6 @@ foreach($photos as $photo)
 					<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
 				@elseif ($record->approved_flag === 0)
 					<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
-				@else
-					<li class="active"><a href="/activities/publish/{{$record->id}}">Published</a></li>
 				@endif
 			</ul>
 		</div>

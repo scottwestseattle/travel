@@ -198,21 +198,7 @@ class EntryController extends Controller
 
     public function view(Entry $entry)
     {
-		//$photos = $this->getPhotos('tours/' . $entry->id, EXT_JPG);
-		//foreach ($user->roles as $role) 		{		}
-		//dd($entry->tags);
-		
-		$tags = $entry->tags()->orderByRaw('level ASC')->get();
-		
-		$photos = Photo::select()
-			->where('deleted_flag', '<>', 1)
-			->where('parent_id', '=', $entry->id)
-			->orderByRaw('photos.id DESC')
-			->get();
-			
-		//dd($photos);
-		
-		return view('entries.view', ['entry' => $entry, 'tags' => $tags, 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('entries.view', ['entry' => $entry]);
 	}
 
     public function home()
@@ -295,7 +281,7 @@ class EntryController extends Controller
 			
 			$entry->delete();
 			
-			return redirect('/index');
+			return redirect('/entries/index');
 		}
 		
 		return redirect('/');

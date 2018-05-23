@@ -2,14 +2,25 @@
 
 @section('content')
 
+@if (false)
 @component('menu-submenu')
 	@component('menu-icons-start')@endcomponent
 	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
 	@component('menu-icons-links', ['data' => (isset($data) ? $data : null)])@endcomponent	
 	@component('control-search')@endcomponent	
 @endcomponent
+@endif
 
 <div class="container">
+
+			<!-- Sub-menu ------>
+			<div class="" style="font-size:20px;">
+				<table class=""><tr>			
+					<td style="width:40px;"><a href='/entries/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>			
+				</tr></table>
+			</div>			
+
+
 	<h1>Edit Entry</h1>
 
 	<form method="POST" action="/entries/update/{{ $entry->id }}">

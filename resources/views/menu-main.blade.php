@@ -41,8 +41,11 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+							<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Tours/Hikes</a></li>
+							<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+							<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+                            <li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
+                            <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
                         @else
 							<?php if (false && $user_type >= 1000) : ?>
 								<li><a href="/tests/">Tests</a></li>
@@ -52,7 +55,7 @@
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/activities/indexadmin">Activities</a></li>
 								<li><a href="/entries/index/">Entries</a></li>
-								<li><a href="/locations/index">Locations</a></li>
+								<li><a href="/locations/indexadmin">Locations</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tags/index">Tags</a></li>

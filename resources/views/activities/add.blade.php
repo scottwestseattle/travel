@@ -13,7 +13,6 @@
 		@endif
 	@endguest
 
-
 	<h1>Add</h1>
                
 	<form method="POST" action="/activities/create">
