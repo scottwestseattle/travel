@@ -33,6 +33,7 @@ CREATE TABLE `locations` (
   `location_type` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `level` smallint(4) DEFAULT '0',
+  `popular_flag` tinyint(4) DEFAULT '0' COMMENT 'include in quick links to popular locations',
   `breadcrumb_flag` tinyint(4) DEFAULT '1',
   `deleted_flag` tinyint(4) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
