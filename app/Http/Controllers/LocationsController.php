@@ -33,22 +33,6 @@ class LocationsController extends Controller
     	return view('locations.indexadmin', ['records' => $locations]);
     }
 	
-   public function view(Location $location)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-		
-		$parent = Location::select()
-			//->where('user_id', '=', Auth::id())
-			->where('id', '=', $location->parent_id)
-			->first();
-			
-		$activities = null;
-		$location = $this->getLocation($location->id, $activities);			
-			
-		return view('locations.view', ['record' => $location, 'activities' => $activities]);
-	}
-
     public function activities(Location $location = null)
     {
 		if (isset($location))
@@ -121,6 +105,22 @@ class LocationsController extends Controller
 		
     	return view('activities.index', ['records' => $records, 'locations' => $locations]);
     }
+	
+   public function view(Location $location)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$parent = Location::select()
+			//->where('user_id', '=', Auth::id())
+			->where('id', '=', $location->parent_id)
+			->first();
+			
+		$activities = null;
+		$location = $this->getLocation($location->id, $activities);			
+			
+		return view('locations.view', ['record' => $location, 'activities' => $activities]);
+	}
 	
     public function add()
     {
