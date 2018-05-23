@@ -24,7 +24,7 @@ if (isset($title))
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/activities/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 		</tr></table>
 		@endif
@@ -65,13 +65,13 @@ if (isset($title))
 						
 						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($location_name))
 							<div>
-							@if ($record->approved_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
-							@elseif ($record->published_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button</a></li>
+							@if ($record->published_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
+							@elseif ($record->approved_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
 							@endif
 							@if (!isset($location_name))
-								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+								<a href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
 							@endif
 							</div>
 						@endif

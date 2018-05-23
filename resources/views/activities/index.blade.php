@@ -10,25 +10,30 @@
 	$link = '/activities/';
 ?>
 
-<section id="" class="sectionWhite sectionWhitePattern" style="" >
-	<div class="container">	
-		<div class="text-center">			
-
-			<!-- Sub-menu ------>
-			<div class="" style="font-size:20px;">
-				<table class=""><tr>			
-					<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>			
-				</tr></table>
-			</div>			
+<div class="page-size container">	
+	<div class="text-center">			
 			
 			<!-------------------- Section header image --------->
-			<div class="sectionHeader">	
+			<div style="" class="sectionHeader">	
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
-				
+				<h1 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>				
 			</div>						
 						
 			<div class="clearfix">
+						
+				<!---------------------------------------------------->
+				<!-- Locations -->
+				<!---------------------------------------------------->
+				@if (isset($locations))
+				<div style="margin:20px; 0" class="text-center">
+					<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All</button></a></li>
+					@foreach($locations as $location)
+						@if ($location->activities()->count() > 0)
+							<a href="/locations/activities/{{$location->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}</button></a></li>
+						@endif
+					@endforeach
+				</div>			
+				@endif
 						
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
@@ -111,8 +116,7 @@
 
 			</div>
 						
-		</div><!-- text-center -->
-	</div><!-- container -->
-</section>	
+	</div><!-- text-center -->
+</div><!-- container -->
 
 @endsection

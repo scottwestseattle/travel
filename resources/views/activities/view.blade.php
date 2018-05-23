@@ -42,6 +42,9 @@ foreach($photos as $photo)
 				@elseif ($record->approved_flag === 0)
 					<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
 				@endif
+				@if (!isset($record->location))
+					<li class="active"><a href="/activities/location/{{$record->id}}">No Location</a></a>
+				@endif
 			</ul>
 		</div>
 		@endif

@@ -49,10 +49,22 @@ class LocationsController extends Controller
 		return view('locations.view', ['record' => $location, 'activities' => $activities]);
 	}
 
-    public function activities(Location $location)
+    public function activities(Location $location = null)
     {
-		// set up the main photo
-		$records = $location->activities()->orderByRaw('activities.id DESC')->get();
+		if (isset($location))
+		{
+			$records = $location->activities()->orderByRaw('activities.id DESC')->get();
+		}
+		else
+		{
+			$records = Activity::select()
+			->where('approved_flag', '=', 1)
+			->where('published_flag', '=', 1)
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id DESC')
+			->get();
+		}
+		
 		foreach($records as $record)
 		{
 			//
@@ -97,8 +109,17 @@ class LocationsController extends Controller
 					
     	return view('activities.index', ['records' => $tours]);	
 */
+
+		// get locations so we can show the pills
+		$locations = Location::select()
+			//->leftJoin('locations as l1', 'l1.id', '=', 'locations.parent_id')
+			->where('locations.deleted_flag', '=', 0)
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->where('popular_flag', 1)
+			->orderByRaw('locations.location_type ASC')
+			->get();
 		
-    	return view('activities.index', ['records' => $records]);
+    	return view('activities.index', ['records' => $records, 'locations' => $locations]);
     }
 	
     public function add()

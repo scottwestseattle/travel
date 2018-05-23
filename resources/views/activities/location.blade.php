@@ -31,7 +31,7 @@
 		<div class="form-group">
 			<label for="location_id">Location:&nbsp;</label>		
 			<select name="location_id" id="location_id">
-				<option value="-1">(Select)</option>
+				<option value="-1">(No Location)</option>
 				@foreach($locations as $location)
 					@if (isset($current_location) && $location->id === $current_location->id)
 						<option value="{{$location->id}}" selected>{{$location->name}}</option>
