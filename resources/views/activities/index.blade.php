@@ -8,15 +8,20 @@
 	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
 	$tours_webpath = '/img/tours/';
 	$link = '/activities/';
+	$title = "Tours, Hikes, Things To Do";
 ?>
 
-<div class="page-size container">	
-	<div class="text-center">			
+<div class="page-size container text-center">
 			
 			<!-------------------- Section header image --------->
-			<div style="" class="sectionHeader">	
+			<div class="sectionHeader hidden-xs">
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<h1 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>				
+				<h1 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">{{$title}}</h1>
+			</div>	
+			
+			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">
+				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<h2 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">{{$title}}</h2>
 			</div>						
 						
 			<div class="clearfix">
@@ -116,7 +121,6 @@
 
 			</div>
 						
-	</div><!-- text-center -->
 </div><!-- container -->
 
 @endsection
