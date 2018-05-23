@@ -74,7 +74,9 @@
 										<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}"><img src="{{ $entry->photo }}" width="150" /></a>
 									</td>
 									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>						
+										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>
+										
+										@if (false)
 										<?php
 											$tags = "Hike";
 											if (strpos($entry->title, "Water Taxi") === FALSE)
@@ -87,6 +89,9 @@
 											}
 										?>
 										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+										@else
+										<div></div>
+										@endif
 										
 										@guest
 										@else

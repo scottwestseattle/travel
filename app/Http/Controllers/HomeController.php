@@ -181,8 +181,10 @@ class HomeController extends Controller
 		// get latest visits
 		$activities = DB::table('activities')
 			->select()
-			->where('published_flag', '<>', 0)
-			->where('approved_flag', '=', 0)
+			->where('published_flag', 0)
+			->orWhere('approved_flag', 0)
+			->orWhere('location_id', null)
+			->orWhere('location_id', 0)
 			->orderByRaw('updated_at ASC')
 			->get();
 			

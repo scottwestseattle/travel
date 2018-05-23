@@ -304,6 +304,8 @@
 											}
 										?>
 										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
+										@else
+										<div></div>
 										@endif
 										
 										@guest
