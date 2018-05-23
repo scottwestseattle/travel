@@ -223,10 +223,13 @@
 		<div class="text-center">			
 			
 			<!-------------------- Section header image --------->
-			<div class="sectionHeader">	
+			<div class="sectionHeader hidden-xs">	
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
 				<!-- div><img src="/img/round-mountain.png" /></div -->
-				<h3 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h3>
+				<h1 style="" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
+			</div>		
+			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">	
+				<h3 style="margin:0; padding:0;" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h3>
 			</div>		
 
 			<!---------------------------------------------------->
@@ -251,7 +254,7 @@
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
 				<!-------------------------------->
-				<div class="row hidden-xs">
+				<div class="row Xhidden-xs">
 
 					@foreach($tours as $entry)
 										
@@ -279,6 +282,7 @@
 					
 				</div><!-- row -->	
 
+				@if (false)
 				<!-- this is the XS size only using table cols -->
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 					<table class="table" style="padding:0; margin:0">
@@ -322,6 +326,7 @@
 						</tbody>
 					</table>
 				</div><!-- XS size only -->
+				@endif
 
 			</div>
 						

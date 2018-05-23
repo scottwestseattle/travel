@@ -43,7 +43,7 @@
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
 				<!-------------------------------->
-				<div class="row hidden-xs">
+				<div class="row xhidden-xs">
 
 					@foreach($records as $entry)
 								
@@ -73,6 +73,7 @@
 					
 				</div><!-- row -->	
 
+				@if (false)
 				<!-- this is the XS size only using table cols -->
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 					<table class="table" style="padding:0; margin:0">
@@ -118,6 +119,7 @@
 						</tbody>
 					</table>
 				</div><!-- XS size only -->
+				@endif
 
 			</div>
 						
