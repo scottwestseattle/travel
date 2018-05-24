@@ -22,18 +22,22 @@
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
-						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($location_name))
-							<div>
-							@if ($record->approved_flag === 0)
+						<div>
+							@if ($record->published_flag === 0)
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></li>
+							@elseif ($record->approved_flag === 0)
 								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
-							@elseif ($record->published_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button</a></li>
 							@endif
-							@if (!isset($location_name))
+							@if (!isset($record->location_id))
 								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
 							@endif
-							</div>
-						@endif
+							@if (strlen($record->map_link) == 0)
+								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
+							@endif
+							@if ($record->photos->count() < 5)
+								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Photos</button></a>
+							@endif
+						</div>
 					</td>
 					<td>
 						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
