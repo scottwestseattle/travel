@@ -94,9 +94,17 @@ class ActivityController extends Controller
 			$entry['link'] = $link;
 		}		
 
-		//dd($sliders);
+		//
+		// get locations so we can show the pills
+		//
+		$locations = Location::select()
+			->where('locations.deleted_flag', '=', 0)
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->where('popular_flag', 1)
+			->orderByRaw('locations.location_type ASC')
+			->get();
 		
-    	return view('activities.index', ['records' => $tours]);
+    	return view('activities.index', ['records' => $tours, 'locations' => $locations]);
     }
 	
     public function add()
@@ -444,52 +452,70 @@ class ActivityController extends Controller
     	if (Auth::check())
         {									
 			$activity_id = $activity->id;
+			$location_id = intval($request->location_id);
 
-			$location = Location::select()
-				->where('id', '=', $request->location_id)
-				->first();
-
-			if (isset($location))
+			if ($location_id <= 0)
 			{
 				//
-				// remove all current locations so they can be replaced
+				// location is being removed
 				//
+				
+				// remove the hasMnay
 				$activity->locations()->detach();
 				
-				//
-				// set the primary has-one location
-				//
-				$activity->location_id = $request->location_id;
+				// remove the hasOne
+				$activity->location_id = null;
 				$activity->save();
-				
-				//
-				// set the hasmany locations
-				//
-				
-				$locations = DB::table('activities')
-					->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
-					->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
-					->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
-					->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
-					->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
-					->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
-					->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
-					->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
-					->select(
-						  'l1.name as loc1', 'l1.id as loc1_id'
-						, 'l2.name as loc2', 'l2.id as loc2_id'
-						, 'l3.name as loc3', 'l3.id as loc3_id'
-						, 'l4.name as loc4', 'l4.id as loc4_id'
-						, 'l5.name as loc5', 'l5.id as loc5_id'
-						, 'l6.name as loc6', 'l6.id as loc6_id'
-						, 'l7.name as loc7', 'l7.id as loc7_id'
-						, 'l8.name as loc8', 'l8.id as loc8_id'
-					)
-					->where('activities.id', $activity->id)
+			}
+			else
+			{
+				// get the new location
+				$location = Location::select()
+					->where('id', '=', $location_id)
 					->first();
-				//dd($locations);
-				
-				$this->saveLocations($activity, $locations);
+
+				if (isset($location))
+				{
+					//
+					// remove all current locations so they can be replaced
+					//
+					$activity->locations()->detach();
+					
+					//
+					// set the primary has-one location
+					//
+					$activity->location_id = $location_id;
+					$activity->save();
+					
+					//
+					// set the hasmany locations
+					//
+					
+					$locations = DB::table('activities')
+						->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
+						->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
+						->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
+						->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
+						->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
+						->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
+						->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
+						->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
+						->select(
+							  'l1.name as loc1', 'l1.id as loc1_id'
+							, 'l2.name as loc2', 'l2.id as loc2_id'
+							, 'l3.name as loc3', 'l3.id as loc3_id'
+							, 'l4.name as loc4', 'l4.id as loc4_id'
+							, 'l5.name as loc5', 'l5.id as loc5_id'
+							, 'l6.name as loc6', 'l6.id as loc6_id'
+							, 'l7.name as loc7', 'l7.id as loc7_id'
+							, 'l8.name as loc8', 'l8.id as loc8_id'
+						)
+						->where('activities.id', $activity->id)
+						->first();
+					//dd($locations);
+					
+					$this->saveLocations($activity, $locations);
+				}
 			}
 			
 			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));

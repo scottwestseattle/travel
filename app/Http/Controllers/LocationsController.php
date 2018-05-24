@@ -33,26 +33,22 @@ class LocationsController extends Controller
     	return view('locations.indexadmin', ['records' => $locations]);
     }
 	
-   public function view(Location $location)
+    public function activities(Location $location = null)
     {
-		if (!$this->isAdmin())
-             return redirect('/');
+		if (isset($location))
+		{
+			$records = $location->activities()->orderByRaw('activities.id DESC')->get();
+		}
+		else
+		{
+			$records = Activity::select()
+			->where('approved_flag', '=', 1)
+			->where('published_flag', '=', 1)
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id DESC')
+			->get();
+		}
 		
-		$parent = Location::select()
-			//->where('user_id', '=', Auth::id())
-			->where('id', '=', $location->parent_id)
-			->first();
-			
-		$activities = null;
-		$location = $this->getLocation($location->id, $activities);			
-			
-		return view('locations.view', ['record' => $location, 'activities' => $activities]);
-	}
-
-    public function activities(Location $location)
-    {
-		// set up the main photo
-		$records = $location->activities()->orderByRaw('activities.id DESC')->get();
 		foreach($records as $record)
 		{
 			//
@@ -97,9 +93,34 @@ class LocationsController extends Controller
 					
     	return view('activities.index', ['records' => $tours]);	
 */
+
+		// get locations so we can show the pills
+		$locations = Location::select()
+			//->leftJoin('locations as l1', 'l1.id', '=', 'locations.parent_id')
+			->where('locations.deleted_flag', '=', 0)
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->where('popular_flag', 1)
+			->orderByRaw('locations.location_type ASC')
+			->get();
 		
-    	return view('activities.index', ['records' => $records]);
+    	return view('activities.index', ['records' => $records, 'locations' => $locations]);
     }
+	
+   public function view(Location $location)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$parent = Location::select()
+			//->where('user_id', '=', Auth::id())
+			->where('id', '=', $location->parent_id)
+			->first();
+			
+		$activities = null;
+		$location = $this->getLocation($location->id, $activities);			
+			
+		return view('locations.view', ['record' => $location, 'activities' => $activities]);
+	}
 	
     public function add()
     {

@@ -51,45 +51,5 @@
 		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-	
-	<script>
-/*	
-	var items = [
-  [1, 2],
-  [3, 4],
-  [5, 6]
-];
-		var sliders = [
-			 ["Jerusalem, Israel", "white"],
-			 ["Vienna, Austria", "black"],
-			 ["Budapest, Hungary", "white"],
-			 ["Notre Dame, Paris", "#3F98FD"],
-			 ["Bandar Seri Begawan, Brunei", "white"],
-			 ["Vietnam", "white"],
-			 ["Kuala Selangor, Malaysia", "white"],
-			 ["Mekong River, Cambodia", "white"],
-			 ["Ankgor Wat, Cambodia", "white"],
-			 ["Mongolia", "white"],
-			 ["Costa Brava, Spain", "white"],
-		];
-
-		var total = 36;
-		var rnd = Math.floor(Math.random() * total) + 1;
-		var img = "slider" + rnd + ".jpg";
-		//rnd = 1;
-		//alert(img);
-
-		// using background image
-		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/slider" + rnd + ".jpg')";
-		//document.getElementById("logo-big-text").style.color = sliders[rnd-1][1];
-		document.getElementById("slider").title = img;
-		//document.getElementById("slider-text").innerText = sliders[rnd-1][0];
-		//document.getElementById("slider-text").style.color = 'white'; //sliders[rnd-1][1];
-	
-		// using foreground image
-		//document.getElementById("slider").src = "/img/theme1/slider" + rnd + ".jpg";
-*/
-	</script>
-
 </body>
 </html>

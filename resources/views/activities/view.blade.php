@@ -23,7 +23,7 @@ foreach($photos as $photo)
 		@if (Auth::user()->user_type >= 1000)
 		<div class="" style="font-size:20px;">
 		<table class=""><tr>			
-			<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px;"><a href='/activities/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			<td style="width:40px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td style="width:40px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
@@ -41,6 +41,9 @@ foreach($photos as $photo)
 					<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
 				@elseif ($record->approved_flag === 0)
 					<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
+				@endif
+				@if (!isset($record->location))
+					<li class="active"><a href="/activities/location/{{$record->id}}">No Location</a></a>
 				@endif
 			</ul>
 		</div>
@@ -142,15 +145,6 @@ foreach($photos as $photo)
 					</div>
 			@endif
 
-			@if (strlen($record->map_link) > 0)
-					<div class="col-md-4 col-sm-6">
-						<div class="amenity-item">
-							<h3>LOCATION</h3>
-							<p><a target="_blank" href="{{$record->map_link}}">Show Map</a></p>
-						</div>
-					</div>
-			@endif
-
 			@if (strlen($record->elevation) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
@@ -186,12 +180,24 @@ foreach($photos as $photo)
 		<div class="entry-div">
 			<div class="entry amenity-item">
 				<h3>MAP</h3>
-				<div id="" style="display:default; margin-top:20px;">				
+				<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
 					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
 				</div>
+				
+				<p><a target="_blank" href="{{$record->map_link}}">Open in Google Maps to Navigate</a></p>
+				
 			</div>
 		</div>
-	@endif		
+	@endif	
+
+	@if (false && strlen($record->map_link) > 0)
+		<div class="col-md-4 col-sm-6">
+			<div class="amenity-item">
+				<h3>LOCATION</h3>
+				<p><a target="_blank" href="{{$record->map_link}}">Show Map</a></p>
+			</div>
+		</div>
+	@endif	
 	
 	@if (strlen($record->parking) > 0)
 		<div class="entry-div">

@@ -8,7 +8,7 @@
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/locations/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/locations/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 		</tr></table>
 		@endif
 	@endguest

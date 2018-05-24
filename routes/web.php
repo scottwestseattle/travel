@@ -32,7 +32,7 @@ Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
 Route::group(['prefix' => 'locations'], function () 
 {
-	Route::get('/activities/{location}', 'LocationsController@activities');
+	Route::get('/activities/{location?}', 'LocationsController@activities');
 	Route::get('/index', 'LocationsController@index');
 	
 	Route::get('/', 'LocationsController@index')->middleware('auth');

@@ -7,7 +7,7 @@
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/activities/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='{{ route('activity.view', [urlencode($record->title), $record->id]) }}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
@@ -31,7 +31,7 @@
 		<div class="form-group">
 			<label for="location_id">Location:&nbsp;</label>		
 			<select name="location_id" id="location_id">
-				<option value="-1">(Select)</option>
+				<option value="-1">(No Location)</option>
 				@foreach($locations as $location)
 					@if (isset($current_location) && $location->id === $current_location->id)
 						<option value="{{$location->id}}" selected>{{$location->name}}</option>

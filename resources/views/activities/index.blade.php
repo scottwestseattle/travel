@@ -8,27 +8,37 @@
 	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
 	$tours_webpath = '/img/tours/';
 	$link = '/activities/';
+	$title = "Tours, Hikes, Things To Do";
 ?>
 
-<section id="" class="sectionWhite sectionWhitePattern" style="" >
-	<div class="container">	
-		<div class="text-center">			
-
-			<!-- Sub-menu ------>
-			<div class="" style="font-size:20px;">
-				<table class=""><tr>			
-					<td style="width:40px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>			
-				</tr></table>
-			</div>			
+<div class="page-size container text-center">
 			
 			<!-------------------- Section header image --------->
-			<div class="sectionHeader">	
+			<div class="sectionHeader hidden-xs">
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<h1 class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
-				
+				<h1 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">{{$title}}</h1>
+			</div>	
+			
+			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">
+				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<h2 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">{{$title}}</h2>
 			</div>						
 						
 			<div class="clearfix">
+						
+				<!---------------------------------------------------->
+				<!-- Locations -->
+				<!---------------------------------------------------->
+				@if (isset($locations))
+				<div style="margin:20px; 0" class="text-center">
+					<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All</button></a></li>
+					@foreach($locations as $location)
+						@if ($location->activities()->count() > 0)
+							<a href="/locations/activities/{{$location->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}</button></a></li>
+						@endif
+					@endforeach
+				</div>			
+				@endif
 						
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
@@ -111,8 +121,6 @@
 
 			</div>
 						
-		</div><!-- text-center -->
-	</div><!-- container -->
-</section>	
+</div><!-- container -->
 
 @endsection
