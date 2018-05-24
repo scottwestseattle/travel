@@ -446,9 +446,44 @@
 </div>
 </section>
 
-<!--------------------------------------------------------------------------------------->
-<!-- SECTION: Floating boxes sample code -->
-<!--------------------------------------------------------------------------------------->
+<section class="sectionWhite">
+<div class="container">	
+	<div class="sectionHeader text-center">	
+	
+		<!-- div class="" style="font-size: 6em;"><span class="glyphicon glyphicon-shopping-cart"></span></div -->
+		<h1>Affiliate Partners</h1>	
+		
+		<!-- AGODA AFFILIATE -->
+		<div style="float:left; margin:20px;">
+		
+			<div id="adgshp2008177892"></div>
+			<script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script><script type="text/javascript">
+			var stg = new Object(); stg.crt="9181526501892";stg.version="1.04"; stg.id=stg.name="adgshp2008177892"; stg.width="300px"; stg.height="250px";stg.ReferenceKey="0xsHqxj9SidZIQaBKVV3aA=="; stg.Layout="OblongStatic"; stg.Language="en-us";stg.Cid="1806200"; stg.OverideConf=false; new AgdSherpa(stg,3).initialize();
+			</script>
+			
+		</div>
+		
+		<!-- BOOKING AFFILIATE -->
+		<div style="float:left; margin:20px;">
 
+			<ins class="bookingaff" data-aid="1535322" data-target_aid="1535306" data-prod="banner" data-width="300" data-height="250" data-lang="en-US">
+				<!-- Anything inside will go away once widget is loaded. -->
+				<a href="//www.booking.com?aid=1535306">Booking.com</a>
+			</ins>
+			<script type="text/javascript">
+				(function(d, sc, u) {
+				  var s = d.createElement(sc), p = d.getElementsByTagName(sc)[0];
+				  s.type = 'text/javascript';
+				  s.async = true;
+				  s.src = u + '?v=' + (+new Date());
+				  p.parentNode.insertBefore(s,p);
+				  })(document, 'script', '//aff.bstatic.com/static/affiliate_base/js/flexiproduct.js');
+			</script>
+		
+		</div>
+				
+	</div>
+</div>
+</section>
 
 @endsection
