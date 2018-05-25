@@ -431,14 +431,10 @@
 <section class="sectionYellow">
 <div class="container">	
 
-	<div class="sectionHeader text-center">	
+	<div class="sectionHeader text-center main-font">	
 	
 		<div class="" style="font-size: 6em;"><span class="glyphicon glyphicon-globe"></span></div>
 		<h1>Current Location:</h1>
-	
-		<!-- h3>We are currently exploring:</h3 -->
-		
-		<h2 style="margin-bottom:50px;">Seattle, Washington, USA</h2>
 
 		<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d172138.65427095353!2d-122.48214666413614!3d47.61317464018482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5490102c93e83355%3A0x102565466944d59a!2sSeattle%2C+WA!5e0!3m2!1sen!2sus!4v1523908332154" width="90%" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>		
 		

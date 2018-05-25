@@ -96,7 +96,12 @@ foreach($photos as $photo)
 
 	@if ($main_photo !== null)
 	<div style="display:default; margin-top:20px;">
-		<img src="/img/tours/{{$record->id}}/{{$main_photo->filename}}" title="{{$main_photo->alt_text}}" style="max-width:100%; width:{{ $width }}" />
+		<?php 
+			$title = $main_photo->alt_text;
+			if (strlen($main_photo->location) > 0)
+				$title .= ', ' . $main_photo->location;
+		?>
+		<img src="/img/tours/{{$record->id}}/{{$main_photo->filename}}" title="{{$title}}" style="max-width:100%; width:{{ $width }}" />
 	</div>	
 	@endif
 	

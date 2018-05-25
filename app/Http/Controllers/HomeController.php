@@ -185,6 +185,7 @@ class HomeController extends Controller
 			->orWhere('approved_flag', 0)
 			->orWhere('location_id', null)
 			->orWhere('location_id', 0)
+			->orWhere('map_link', null)
 			->orderByRaw('updated_at ASC')
 			->get();
 			

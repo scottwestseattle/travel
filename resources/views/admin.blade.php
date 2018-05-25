@@ -31,7 +31,7 @@
 							@if (!isset($record->location_id))
 								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
 							@endif
-							@if (strlen($record->map_link) == 0)
+							@if (strlen($record->map_link) === 0)
 								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
 							@endif
 						</div>
