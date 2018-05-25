@@ -167,38 +167,12 @@ class HomeController extends Controller
 			$visitor = new Visitor();
 			$visitor->ip_address = $ip;			
 		}
-		
-		$url = 'https://whatismyipaddress.com/ip/' . $ip;
-		$url = 'https://whatismyipaddress.com/ip/73.97.216.226';
-
-		$fp = fopen($url, "rb");
-		if (FALSE === $fp) {
-			dd("Failed to open stream to URL");
-		}
-
-		$result = '';
-
-		while (!feof($fp)) {
-			$result .= fread($fp, 8192);
-		}
-		fclose($fp);
-		dd($result);
-		
-		/*
-		$pos = strpos($body_raw, substr($sample, 0, 30));
-		if ($pos != false)
-		{
-			$body_raw = substr($body_raw, $pos, strlen($sample));
-		}
-		*/
 			   
 		$visitor->site_id = 1;
 		$visitor->host_name = $host;
 		$visitor->user_agent = $userAgent;
 		$visitor->referrer = $referrer;
 		$visitor->save();
-		
-		//dd($sliders);
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations]);
     }
