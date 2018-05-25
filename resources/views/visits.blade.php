@@ -2,31 +2,23 @@
 
 @section('content')
 
-<?php 
-
-$header = 'Entries';
-if (isset($title))
-{
-	$header = $title;
-}
-
-?>
-
 <div class="page-size container">
-	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($entries) }})</h1>
+	<h1 style="font-size:1.3em;">Visitors ({{ count($records) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
-				<tr><th>Created</th><th>IP</th><th>Host</th><th>Referrer</th><th></th></tr>
-			@foreach($entries as $entry)
+				<tr><th>Timestamp</th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
+				@foreach($records as $record)
 				<tr>
-					<td>{{$entry->created_at}}</td>
-					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$entry->title}}">{{$entry->title}}</a></td>
-					<td>{{$entry->description}}</td>
-					<td>{{$entry->description_language1}}</td>
-					<td><a href='/entries/confirmdelete/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					<td>{{$record->updated_at}}</td>
+					<td>{{$record->visit_count}}</td>
+					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->ip_address}}">{{$record->ip_address}}</a></td>
+					<td>{{$record->host_name}}</td>
+					<td>{{$record->referrer}}</td>
+					<td>{{$record->user_agent}}</td>
+					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
-			@endforeach
+				@endforeach
 			</tbody>
 		</table>
 	@else

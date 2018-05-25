@@ -20,6 +20,7 @@ class ActivityController extends Controller
 		$records = DB::table('activities')
 			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
 			->select('activities.*', 'locations.name as location_name')
+			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC')
 			->get();
 			
 		//dd($records);

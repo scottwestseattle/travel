@@ -15,24 +15,7 @@ php artisan migrate:rollback --step=1
 // create Migration, Model and Controller
 php artisan make:model Tag -m -c
 
-TODO:
-- Add tour attributes
-- Add content / maps
-- Refine visits to add counts
-- Add private/published/reviewed flag for tours
-- add site id to every thing
-- add location tags
-
-DONE:
-x Show slider location text from db
-x Admin Dashboard
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-world / usa 		/ washington 	/ seattle	/ west seattle
-world / indonesia 	/ bali 			/ kuta
-
 
 Primary Colors:
 

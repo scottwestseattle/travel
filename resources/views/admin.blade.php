@@ -69,17 +69,21 @@
 		<hr />
 		
 		<div style="height:30px;clear:both;"></div>
-		<h3 style="">Visitor IPs ({{count($visits)}})</h3>
+		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
 		<table class="table table-striped">
 			<tbody>
-			<tr><th>Count</th><th>IP</th><th>Host</th></tr>
-			@foreach($visits as $record)
+				<tr><th>Timestamp</th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
+				@foreach($visitors as $record)
 				<tr>
-					<td>{{$record->total}}</td>
-					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->title}}">{{$record->title}}</a></td>
-					<td>{{$record->description}}</td>
+					<td>{{$record->updated_at}}</td>
+					<td>{{$record->visit_count}}</td>
+					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->ip_address}}">{{$record->ip_address}}</a></td>
+					<td>{{$record->host_name}}</td>
+					<td>{{$record->referrer}}</td>
+					<td>{{$record->user_agent}}</td>
+					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
-			@endforeach
+				@endforeach
 			</tbody>
 		</table>
 		<a href="/visits">Show All Visits</a>

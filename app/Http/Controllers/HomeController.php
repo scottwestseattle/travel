@@ -8,6 +8,7 @@ use App\Activity;
 use App\User;
 use App\Photo;
 use App\Location;
+use App\Visitor;
 use DB;
 
 define("LONGNAME", "Hike, Bike, Boat");
@@ -139,24 +140,63 @@ class HomeController extends Controller
 		}
 		else
 		{
-		 $ip = $_SERVER["REMOTE_ADDR"];
+			$ip = $_SERVER["REMOTE_ADDR"];
 		}	
+				
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
-		$referrer = '';
+		$referrer = null;
 		if (array_key_exists("HTTP_REFERER", $_SERVER))
 			$referrer = $_SERVER["HTTP_REFERER"];
+
+		$userAgent = null;
+		if (array_key_exists("HTTP_USER_AGENT", $_SERVER))
+			$userAgent = $_SERVER["HTTP_USER_AGENT"];		
 		
-		$entry = new Entry();
-		$entry->user_id = 0;
-		$entry->title = $ip;
-		$entry->description = $host;
+		$visitor = Visitor::select()
+			->where('ip_address', '=', $ip)
+			->where('deleted_flag', 0)
+			->first();
+			
+		if (isset($visitor)) // repeat visitor
+		{
+			$visitor->visit_count++;
+		}
+		else // new visitor
+		{
+			$visitor = new Visitor();
+			$visitor->ip_address = $ip;			
+		}
 		
-		if (strlen($referrer) > 0)
-			$entry->description_language1 = $referrer;
+		$url = 'https://whatismyipaddress.com/ip/' . $ip;
+		$url = 'https://whatismyipaddress.com/ip/73.97.216.226';
+
+		$fp = fopen($url, "rb");
+		if (FALSE === $fp) {
+			dd("Failed to open stream to URL");
+		}
+
+		$result = '';
+
+		while (!feof($fp)) {
+			$result .= fread($fp, 8192);
+		}
+		fclose($fp);
+		dd($result);
 		
-		$entry->is_template_flag = 0;			
-		$entry->save();
+		/*
+		$pos = strpos($body_raw, substr($sample, 0, 30));
+		if ($pos != false)
+		{
+			$body_raw = substr($body_raw, $pos, strlen($sample));
+		}
+		*/
+			   
+		$visitor->site_id = 1;
+		$visitor->host_name = $host;
+		$visitor->user_agent = $userAgent;
+		$visitor->referrer = $referrer;
+		$visitor->save();
 		
 		//dd($sliders);
 		
@@ -164,13 +204,14 @@ class HomeController extends Controller
     }
 
     public function visits()
-    {
-		$entries = Entry::select()
-			->where('user_id', '=', 0)
-			->orderByRaw('entries.id DESC')
+    {			
+		$records = Visitor::select()
+			->where('site_id', 1)
+			->where('deleted_flag', 0)
+			->latest()
 			->get();
 						
-		return view('visits', compact('entries'));
+		return view('visits', ['records' => $records]);
     }
 
     public function admin()
@@ -186,7 +227,7 @@ class HomeController extends Controller
 			->orWhere('location_id', null)
 			->orWhere('location_id', 0)
 			->orWhere('map_link', null)
-			->orderByRaw('updated_at ASC')
+			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC')
 			->get();
 			
 		//dd($activities);
@@ -200,16 +241,24 @@ class HomeController extends Controller
 			->get();
 					
 		// get latest visits
-		$visits = DB::table('entries')
+		/* old way with groupby
+		$visitors = DB::table('visitors')
 			->select('title', 'description', 'user_id', DB::raw('count(*) as total'))
 			->groupBy('title', 'description', 'user_id') // ip address
 			->having('user_id', '=', 0)
 			->orderByRaw('total DESC')
 			->get();
+		*/
+		$visitors = Visitor::select()
+			->where('site_id', 1)
+			->where('deleted_flag', 0)
+			->latest()
+			->limit(10)
+			->get();
 			
-		//dd($visits);
+		//dd($visitors);
 			
-		return view('admin', ['records' => $activities, 'users' => $users, 'visits' => $visits]);
+		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors]);
     }
 	
     public function posts(Entry $entry)
