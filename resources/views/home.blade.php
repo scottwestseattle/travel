@@ -201,6 +201,7 @@
 	<div class="sectionHeader text-center" style="margin-top:20px;">
 		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</i></h3>
 	</div>
+
 	@endif
 	
 </div>
@@ -450,8 +451,8 @@
 <div class="container">	
 	<div class="sectionHeader text-center">	
 	
-		<!-- div class="" style="font-size: 6em;"><span class="glyphicon glyphicon-shopping-cart"></span></div -->
-		<h1>Affiliate Partners</h1>	
+		<div class="" style="font-size: 6em; margin-bottom:20px;"><span class="glyphicon glyphicon-bed"></span></div>
+		<!-- h1>Affiliate Partners</h1 -->	
 		
 		<!-- AGODA AFFILIATE -->
 		<div style="float:left; margin:20px;">

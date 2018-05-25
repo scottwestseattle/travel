@@ -26,9 +26,23 @@
 
 						</div>
 
-						@if (false)
-						<div class="col-md-3">
+						<div style="margin:15px 0px 25px 0px" class="col-md-3">
 
+<ins class="bookingaff" data-aid="1535308" data-target_aid="1535306" data-prod="banner" data-width="200" data-height="200" data-banner_id="67896" data-lang="en-US">
+    <!-- Anything inside will go away once widget is loaded. -->
+    <a href="//www.booking.com?aid=1535306">Booking.com</a>
+</ins>
+<script type="text/javascript">
+    (function(d, sc, u) {
+      var s = d.createElement(sc), p = d.getElementsByTagName(sc)[0];
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = u + '?v=' + (+new Date());
+      p.parentNode.insertBefore(s,p);
+      })(document, 'script', '//aff.bstatic.com/static/affiliate_base/js/flexiproduct.js');
+</script>
+
+						@if (false)
 							<!---------------------------------------------------->
 							<!-- Latest kb's -->
 							<!---------------------------------------------------->
@@ -47,8 +61,8 @@
 								<?php endif; ?>
 							</ul>
 
-						</div>
 						@endif
+						</div>
 
 						<div class="col-md-2">
 
@@ -76,9 +90,11 @@
 
 						</div>
 
-						@if (false)
-						<div class="col-md-4">
+						<div style="margin-top:15px;" class="col-md-4">
 
+<a href="https://www.agoda.com/partners/partnersearch.aspx?cid=1729782&pcs=8" target="_blank"><img src="//sherpa.agoda.com/Badge/GetBadge?badgetype=1&refkey=eQRoFwsbQxjYbmldH%2B6nvQ%3D%3D" /></a>
+
+						@if (false)
 							<!---------------------------------------------------->
 							<!-- Newsletter Form -->
 							<!---------------------------------------------------->
@@ -126,9 +142,9 @@
 					
 							</div>
 							<!-- /Social Icons -->
+						@endif
 
 						</div>
-						@endif
 
 					</div>
 
