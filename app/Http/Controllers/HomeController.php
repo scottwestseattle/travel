@@ -174,7 +174,7 @@ class HomeController extends Controller
 		$visitor->referrer = $referrer;
 		$visitor->save();
 		
-    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations]);
+    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
     }
 
     public function visits()

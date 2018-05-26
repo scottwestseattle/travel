@@ -46,7 +46,7 @@ class PhotoController extends Controller
 			->orderByRaw('photos.id DESC')
 			->get();
 				
-		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'data' => $this->getViewData()]);	
+		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'page_title' => 'Photos']);	
 	}
 	
     public function index()
@@ -240,7 +240,8 @@ class PhotoController extends Controller
     public function view(Photo $photo)
     {
 		$path = '/img/sliders/';
-		return view('photos.view', ['photo' => $photo, 'path' => $path]);
+		
+		return view('photos.view', ['photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text]);
 	}
 	
     public function edit(Request $request, Photo $photo)

@@ -8,7 +8,7 @@
 	
 		<div class="form-group">
 			<span name="alt_text" class="">
-				<p><a href="#" onclick="window.history.back();">&lt;&nbsp;Back to Photos</a></p>
+				<p><a href="#" onclick="window.history.back();"><span style="font-size: 23px" class="glyphCustom glyphicon glyphicon-circle-arrow-left"></span></a></p>
 				{{trim($photo->alt_text)}}
 				@if (isset($photo->location) && strlen($photo->location) > 0)
 					&nbsp;&mdash;&nbsp;{{$photo->location}}

@@ -25,7 +25,7 @@ class ActivityController extends Controller
 			
 		//dd($records);
 		
-    	return view('activities.indexadmin', compact('records'));
+    	return view('activities.indexadmin', ['records' => $records]);
     }
 
     public function index()
@@ -105,7 +105,7 @@ class ActivityController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('activities.index', ['records' => $tours, 'locations' => $locations]);
+    	return view('activities.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
     }
 	
     public function add()
@@ -271,7 +271,7 @@ class ActivityController extends Controller
 		$activity->description = nl2br($activity->description);
 		$activity->description = $this->formatLinks($activity->description);
 		
-		return view('activities.view', ['record' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos]);
+		return view('activities.view', ['record' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos, 'page_title' => $activity->title]);
 	}
 	
     public function viewOrig(Activity $activity)

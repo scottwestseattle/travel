@@ -17,7 +17,7 @@ class LocationsController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('locations.index', ['records' => $locations]);
+    	return view('locations.index', ['records' => $locations, 'page_title' => 'Locations']);
     }
 
     public function indexadmin()
@@ -35,8 +35,10 @@ class LocationsController extends Controller
 	
     public function activities(Location $location = null)
     {
+		$location_name = '';
 		if (isset($location))
 		{
+			$location_name = ' - ' . $location->name;
 			$records = $location->activities()->orderByRaw('activities.id DESC')->get();
 		}
 		else
@@ -103,7 +105,7 @@ class LocationsController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('activities.index', ['records' => $records, 'locations' => $locations]);
+    	return view('activities.index', ['records' => $records, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do' . $location_name]);
     }
 	
    public function view(Location $location)

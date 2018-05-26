@@ -41,7 +41,7 @@ class Controller extends BaseController
 	private $viewData = [];
 	
 	public function __construct ()
-	{
+	{		
 	}
 
 	protected function isOwnerOrAdmin($user_id)
