@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 <!--
-@component('menu-submenu-tours')
+@component('menu-submenu-entries')
 @endcomponent
 -->
 
@@ -15,9 +15,17 @@
 ?>
 
 <div class="container">
-	@if ($photo_type == 2)
-	<a href="/activities/index/">Back to Tours</a>
-	@endif
+
+	@guest
+	@else
+	
+		@if (Auth::user()->user_type >= 1000)
+			@component('menu-submenu-activities', ['record_id' => $record_id])
+			@endcomponent
+		@endif
+				
+	@endguest
+		
 	<h1 style="font-size:1.5em;">
 	@guest
 		<span style="margin-left: 5px;">Photos ({{ count($photos) }})</span>

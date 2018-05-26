@@ -18,12 +18,12 @@
 					<td>
 						<a target="" href="/locations/activities/{{$record->id}}">{{$record->name}}</a>
 					</td>
-					<td style="width:200px; padding-right:20px;">
+					<td style="width:200px; margin-right: 20px;">
 						@if ($record->breadcrumb_flag)
-							<a href="/locations/edit/{{$record->id}}"><button style="font-size:.6em;" type="button" class="btn btn-info">Breadcrumb</button></a>
+							<a href="/locations/edit/{{$record->id}}"><button style="font-size:.6em; margin-bottom:3px;" type="button" class="btn btn-info">Breadcrumb</button></a>
 						@endif
 						@if ($record->popular_flag)
-							<a href="/locations/edit/{{$record->id}}"><button style="font-size:.6em;" type="button" class="btn btn-primary">Popular</button></a>
+							<a href="/locations/edit/{{$record->id}}"><button style="font-size:.6em; margin-bottom:3px;" type="button" class="btn btn-primary">Popular</button></a>
 						@endif
 					</td>
 					<td style="width:10px; padding-right:20px;">

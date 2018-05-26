@@ -29,7 +29,7 @@ class PhotoController extends Controller
 				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
-			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'data' => $this->getViewData()]);	
+			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
         }           
         else 
 		{

@@ -3,6 +3,13 @@
 @section('content')
 
 <div class="page-size container">
+
+	@guest
+	@else
+		@component('menu-submenu-activities', ['record_id' => $record->id, 'record_title' => $record->title])
+		@endcomponent
+	@endguest
+
 	<h1>Delete</h1>
 
 	<form method="POST" action="/activities/delete/{{ $record->id }}">

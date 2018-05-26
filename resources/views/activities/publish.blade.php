@@ -5,15 +5,8 @@
 <div class="page-size container">
 	@guest
 	@else
-		@if (Auth::user()->user_type >= 100)
-		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/activities/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='{{ route('activity.view', [urlencode($record->title), $record->id]) }}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
-		</tr></table>
-		@endif
+		@component('menu-submenu-activities', ['record_id' => $record->id, 'record_title' => $record->title])
+		@endcomponent
 	@endguest
 	
 	<h1>Publish</h1>
