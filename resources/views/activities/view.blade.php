@@ -250,13 +250,22 @@ foreach($photos as $photo)
 	</div><!-- class="amenities" -->
 	
 	@if ($regular_photos > 0)
-	<div style="display:default; margin-top:5px;">	
-		@foreach($photos as $photo)
+			
+	<div class="text-center" style="display:default; margin-top:5px;">	
+		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
-				<img style="width:100%; max-width:400px; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />		
+				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
+					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />				
+				</span>
+				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
+					<img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />		
+				</span>									
 			@endif
 		@endforeach	
 	</div>
+	
+	
+	
 	@endif
 	
 	<div class="amenities">

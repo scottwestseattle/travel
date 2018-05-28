@@ -30,6 +30,22 @@ class ActivityController extends Controller
 
     public function index()
     {
+		$locations = null;
+		$tours = $this->getIndexData($locations);
+
+    	return view('activities.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
+	}		
+
+    public function maps()
+    {
+		$locations = null;
+		$tours = $this->getIndexData($locations);
+
+    	return view('activities.maps', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - Maps']);
+	}		
+	
+    private function getIndexData(&$locations)
+    {
 		$tours = Activity::select()
 			->where('approved_flag', '=', 1)
 			->where('published_flag', '=', 1)
@@ -104,8 +120,8 @@ class ActivityController extends Controller
 			->where('popular_flag', 1)
 			->orderByRaw('locations.location_type ASC')
 			->get();
-		
-    	return view('activities.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
+
+		return $tours;
     }
 	
     public function add()
@@ -267,9 +283,39 @@ class ActivityController extends Controller
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('created_at ASC')
 			->get();
+
+		if (false) // this gets the aspect ratio, vertical or not
+		{
+			foreach($photos as $photo)
+			{
+				$photo_file = base_path() . '/public/img/tours/' . $id . '/' . $photo->filename;
+				if ($photo_file)
+				{
+					$size = getimagesize($photo_file);
+					$width = $size[0];
+					$height = $size[1];
+					if ($height > $width)
+					{
+						$photo['vertical'] = true;
+						//dd($photo);
+					}
+					else
+					{
+						$photo['vertical'] = false;
+					}
+				}
+			}
+		}
 		
 		$activity->description = nl2br($activity->description);
 		$activity->description = $this->formatLinks($activity->description);
+		
+		// update the view count for new visitors only
+		if ($this->isNewVisitor())
+		{
+			$activity->view_count++;
+			$activity->save();
+		}
 		
 		return view('activities.view', ['record' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos, 'page_title' => $activity->title]);
 	}
@@ -347,7 +393,7 @@ class ActivityController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $activity->user_id)
+    	if ($this->isOwnerOrAdmin($activity->user_id))
         {
 			return view('activities.publish', ['record' => $activity, 'data' => $this->getViewData()]);							
         }           
@@ -362,7 +408,7 @@ class ActivityController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $activity->user_id)
+    	if ($this->isOwnerOrAdmin($activity->user_id))
         {			
 			$published = isset($request->published_flag) ? 1 : 0;
 			$activity->published_flag = $published;
@@ -372,6 +418,7 @@ class ActivityController extends Controller
 			else
 				$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
+			$activity->view_count = intval($request->view_count);
 			$activity->save();
 			
 			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use App\Task;
 use App\Entry;
+use App\Visitor;
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
 define('TOUR_PHOTOS_PATH', '/public/img/tours/');
@@ -33,6 +34,8 @@ define('LOCATION_TYPE_STATE', 500);
 define('LOCATION_TYPE_ZONE', 600);
 define('LOCATION_TYPE_CITY', 700); // City or Place, such as Seattle or Olympic National Park
 define('LOCATION_TYPE_NEIGHBORHOOD_AREA', 800); // Neighborhood OR Area, such as West Seattle or Downtown
+define('SHOW_NON_XS', 'hidden-xs');
+define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 
 class Controller extends BaseController
 {
@@ -44,6 +47,92 @@ class Controller extends BaseController
 	{		
 	}
 
+	protected function SaveVisitor($newOnly = false)
+	{
+		$save = false;
+		
+		//
+		// get visitor stats
+		//
+		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		else
+		{
+			$ip = $_SERVER["REMOTE_ADDR"];
+		}	
+				
+		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
+
+		$referrer = null;
+		if (array_key_exists("HTTP_REFERER", $_SERVER))
+			$referrer = $_SERVER["HTTP_REFERER"];
+
+		$userAgent = null;
+		if (array_key_exists("HTTP_USER_AGENT", $_SERVER))
+			$userAgent = $_SERVER["HTTP_USER_AGENT"];		
+		
+		$visitor = Visitor::select()
+			->where('ip_address', '=', $ip)
+			->where('deleted_flag', 0)
+			->first();
+			
+		if (isset($visitor)) // repeat visitor
+		{
+			$visitor->visit_count++;
+			
+			if (!$newOnly)
+				$save = true;
+		}
+		else // new visitor
+		{
+			$visitor = new Visitor();
+			$visitor->ip_address = $ip;	
+
+			if ($newOnly)
+				$save = true;
+		}	
+
+		if ($save)
+		{
+			$visitor->site_id = 1;
+			$visitor->host_name = $host;
+			$visitor->user_agent = $userAgent;
+			$visitor->referrer = $referrer;
+			$visitor->save();		
+		}
+	}	
+	
+	protected function isNewVisitor()
+	{
+		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		else
+		{
+			$ip = $_SERVER["REMOTE_ADDR"];
+		}
+		
+		$visitor = Visitor::select()
+			->where('ip_address', '=', $ip)
+			->where('deleted_flag', 0)
+			->first();
+
+		//dd($visitor);
+		
+		return(!isset($visitor));
+	}		
+	
 	protected function isOwnerOrAdmin($user_id)
 	{
 		$rc = false;

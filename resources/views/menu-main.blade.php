@@ -41,9 +41,10 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
-							<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Tours/Hikes</a></li>
+							<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
 							<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+							<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
                             <li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
                             <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
                         @else

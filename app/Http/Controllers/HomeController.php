@@ -128,51 +128,9 @@ class HomeController extends Controller
 		->get();
 		
 		//
-		// get visitor stats
+		// save visitor stats
 		//
-		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
-		{
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
-		{
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		else
-		{
-			$ip = $_SERVER["REMOTE_ADDR"];
-		}	
-				
-		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
-
-		$referrer = null;
-		if (array_key_exists("HTTP_REFERER", $_SERVER))
-			$referrer = $_SERVER["HTTP_REFERER"];
-
-		$userAgent = null;
-		if (array_key_exists("HTTP_USER_AGENT", $_SERVER))
-			$userAgent = $_SERVER["HTTP_USER_AGENT"];		
-		
-		$visitor = Visitor::select()
-			->where('ip_address', '=', $ip)
-			->where('deleted_flag', 0)
-			->first();
-			
-		if (isset($visitor)) // repeat visitor
-		{
-			$visitor->visit_count++;
-		}
-		else // new visitor
-		{
-			$visitor = new Visitor();
-			$visitor->ip_address = $ip;			
-		}
-			   
-		$visitor->site_id = 1;
-		$visitor->host_name = $host;
-		$visitor->user_agent = $userAgent;
-		$visitor->referrer = $referrer;
-		$visitor->save();
+		$this->SaveVisitor();
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
     }

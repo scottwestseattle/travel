@@ -1,6 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
+/public/img/sliders
+/public/img/tours
 /storage/*.key
 /.idea
 /.vagrant

@@ -19,7 +19,7 @@
 	@guest
 	@else
 	
-		@if (Auth::user()->user_type >= 1000)
+		@if (Auth::user()->user_type >= 1000 && isset($record_id))
 			@component('menu-submenu-activities', ['record_id' => $record_id])
 			@endcomponent
 		@endif
@@ -48,6 +48,7 @@
 						@else
 							@if (Auth::user()->user_type >= 100)
 								<tr><td>{{ $photo->filename }}</td></tr>
+								<tr><td>{{ number_format($photo->size) }} bytes</td></tr>
 							@endif
 						@endguest						
 						
@@ -68,8 +69,13 @@
 						</table>
 					</td>
 					<td>
+						<?php
+							$alt_text = $photo->alt_text;
+							if (strlen($photo->location) > 0)
+								$alt_text .= ' - ' . $photo->location;
+						?>					
 						<a href="/photos/view/{{$photo->id}}">
-							<img title="{{ $photo->alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/>
+							<img title="{{ $alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/>
 						</a>
 					</td>
 				</tr>

@@ -56,6 +56,7 @@ Route::group(['prefix' => 'activities'], function ()
 {
 	// index
 	Route::get('/index', 'ActivityController@index');
+	Route::get('/maps', 'ActivityController@maps');
 	Route::get('/indexadmin', 'ActivityController@indexadmin')->middleware('auth');
 	
 	Route::get('/view/{title}/{id}', ['as' => 'activity.view', 'uses' => 'ActivityController@view']);

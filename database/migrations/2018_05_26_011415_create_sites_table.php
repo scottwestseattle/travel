@@ -20,10 +20,12 @@ class CreateSitesTable extends Migration
 			$table->string('host_name', 100);
 			$table->string('logo_path', 100);
 			$table->string('title', 50)->nullable();
+			$table->text('seo_text');
 			$table->text('main_section_text');
 			$table->text('main_section_subtext')->nullable();
 			$table->tinyInteger('deleted_flag')->default(0);			
 			$table->text('current_location_map_link')->nullable();
+			$table->text('previous_location_list')->nullable();
 			$table->text('affiliate_link_home_section1_1')->nullable();
 			$table->text('affiliate_link_home_section1_2')->nullable();
 			$table->text('affiliate_link_home_section1_3')->nullable();

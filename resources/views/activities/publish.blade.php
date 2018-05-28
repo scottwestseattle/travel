@@ -22,6 +22,11 @@
 		</div>
 		
 		<div class="form-group">
+			<label for="distance">View Count:</label>
+			<input type="text" name="view_count" class="form-control" value="{{ $record->view_count }}"  />		
+		</div>
+		
+		<div class="form-group">
 			<input type="checkbox" name="published_flag" id="published_flag" class="" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
 			<label for="published_flag" class="checkbox-big-label">Published</label>
 		</div>

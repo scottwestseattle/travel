@@ -29,6 +29,13 @@ class PhotoController extends Controller
 				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
+			foreach($photos as $photo)
+			{
+				$fullPath = $this->getPhotosFullPath('tours/' . $id . '/') . $photo->filename;
+				$size = filesize($fullPath);
+				$photo['size'] = $size;
+			}
+				
 			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
         }           
         else 
@@ -122,7 +129,7 @@ class PhotoController extends Controller
 			//
 			// get and check new file name
 			//
-			$filename = $this->getPhotoName($request->filename, $file->getClientOriginalName(), $alt_text_default);
+			$filename = $this->getPhotoName(trim($request->filename), $file->getClientOriginalName(), $alt_text_default);
 			
 			//
 			// get and fix alt_text
@@ -167,10 +174,42 @@ class PhotoController extends Controller
 			}
 						
 			try 
-			{				
+			{
+				$tempPath = $path . 'tmp/';
+				if (!is_dir($tempPath)) 
+					mkdir($tempPath, 0755);// make the folder with read/execute for everybody
+		
 				// upload the file
-				$request->file('image')->move($path, $filename);
+				$request->file('image')->move($tempPath, $filename);
 				
+				//
+				// check the file size in case it needs to be reduced
+				//
+				$newSize = 0;
+				$size = filesize($tempPath . $filename);
+				$resized = false;
+				if (intval($size) > 2000000) // 2mb limit
+				{
+					// resize and put it up in the live photo folder
+					if ($this->resizeImage($tempPath, $path, $filename, /* new size = */ 750, /* makeOnly = */ true))
+					{
+						$resized = true;
+						$newSize = filesize($path . $filename);
+						unlink($tempPath . $filename); // delete the oversized file
+					}
+					else
+					{
+						dd('here');
+						$request->session()->flash('message.level', 'danger');
+						$request->session()->flash('message.content', 'Resizing of image failed');
+					}
+				}
+				else
+				{
+					// no need to resize, just move it from temp to live photo folder
+					rename($tempPath . $filename, $path . $filename);
+				}
+								
 				// add the photo record
 				$photo = new Photo();
 				$photo->filename = $filename;
@@ -185,7 +224,11 @@ class PhotoController extends Controller
 				$photo->save();
 				
 				$request->session()->flash('message.level', 'success');	
-				$request->session()->flash('message.content', 'Photo was successfully uploaded!');
+				
+				if ($resized)
+					$request->session()->flash('message.content', 'Photo was successfully uploaded and resized from ' . number_format($size) . ' bytes to ' . number_format($newSize) . ' bytes');
+				else
+					$request->session()->flash('message.content', 'Photo was successfully uploaded');
 				
 				return redirect($redirect);
 			}
@@ -205,6 +248,163 @@ class PhotoController extends Controller
              return redirect('/');
         }            	
     }
+	
+	private function resizeImage($fromPath, $toPath, $filename, $heightNew, $makeOnly)
+	{
+		if (!is_dir($toPath)) 
+			mkdir($toPath, 0755);// make the folder with read/execute for everybody
+		
+		//
+		// get image info
+		//
+		//Debugger::dump('from: ' . $toPath);die;	
+			
+		$file = $fromPath;
+				
+		if (!$this->endsWith($fromPath, '/'))
+			$file .= '/';
+		
+		$file .= $filename;
+		
+		$fileThumb = $toPath . '/' . $filename;
+		
+		if ($makeOnly && file_exists($fileThumb))
+			return false; 
+			
+		$image_info = getimagesize($file);
+		
+		switch($image_info["mime"])
+		{
+			case "image/jpeg":
+				$image = @imagecreatefromjpeg($file); //jpeg file
+				break;
+				
+			case "image/gif":
+				$image = @imagecreatefromgif($file); //gif file
+				break;
+				
+			case "image/png":
+				$image = @imagecreatefrompng($file); //png file
+				break;
+				
+			default: 
+				$image = false;
+				break;
+		}
+		
+		// check for bad image
+		if (!$image)
+		{
+			//Debugger::dump('filename = ' . $filename);
+			//Debugger::dump('file = ' . $file);
+			//Debugger::dump($image_info);
+	
+			return false;
+		}
+		
+		//
+		// resize the file
+		//
+		
+		$portrait = (imagesy($image) > imagesx($image));
+		
+		$width = 0;
+		$height = $heightNew;
+		
+		if ($portrait)
+		{
+			$ratio = $height / imagesy($image);
+			$width = imagesx($image) * $ratio; 			
+		}
+		else
+		{
+			$ratio = $height / imagesy($image);			
+			$width = imagesx($image) * $ratio; 			
+		}
+
+		$fileThumb = $toPath . '/' . $filename;
+
+		if (file_exists($fileThumb))
+		{			
+			// check the thumb
+			$image_info_thumb = getimagesize($fileThumb);
+			
+			switch($image_info_thumb["mime"])
+			{
+				case "image/jpeg":
+					$imageThumb = @imagecreatefromjpeg($fileThumb); //jpeg file
+					break;
+					
+				case "image/gif":
+					$imageThumb = @imagecreatefromgif($fileThumb); //gif file
+					break;
+					
+				case "image/png":
+					$imageThumb = @imagecreatefrompng($fileThumb); //png file
+					break;
+					
+				default: 
+					$imageThumb = false;
+					break;
+			}
+			
+			// check for bad image
+			if (!$imageThumb)
+			{		
+				return false;
+			}	
+
+			//Debugger::dump( 'r = ' . $ratio .', h = ' . $height . ', w = ' . $width . ', ' . $portrait . ', ' . $file . '<br />' );
+			//Debugger::dump( 'r = ' . $ratio .', h = ' . imagesy($imageThumb) . ', w = ' . imagesx($imageThumb) . ', ' . $portrait . ', ' . $file . '<br />' );
+			
+			if (intval($height) == imagesy($imageThumb) && intval($width) == imagesx($imageThumb))
+			{
+				return false;
+			}
+		}
+		
+		//echo 'rewriting file...<b />';
+		
+		$new_image = imagecreatetruecolor($width, $height); 
+		
+		imagecopyresampled($new_image, $image, 0, 0, 0, 0, $width, $height
+			, imagesx($image)
+			, imagesy($image)
+			); 
+			
+		$image = $new_image;
+		
+		//
+		// save the thumb
+		//
+		$permissions = null;
+
+		switch($image_info["mime"])
+		{
+			case "image/jpeg":
+				$compression = 75;
+				imagejpeg($image, $fileThumb, $compression); 
+				break;
+				
+			case "image/gif":
+				imagegif($image, $fileThumb); 
+				break;
+				
+			case "image/png":
+				imagepng($image, $fileThumb); 
+				break;
+				
+			default: 
+				break;
+		}
+		
+		if( $permissions != null) 
+		{   
+			chmod($fileThumb, $permissions); 
+		}
+		
+		return true;
+	}	
 
     protected function getPhotoName($filename_to, $filename_from, &$alt_text)
     {
