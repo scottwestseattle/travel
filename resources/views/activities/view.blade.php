@@ -253,7 +253,7 @@ foreach($photos as $photo)
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
 				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
-					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />
+					<img class="popupPhotos" style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />
 				</span>
 				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
 					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}')"><img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" /></span>
@@ -329,11 +329,33 @@ function popup(id, filename)
 	popupDiv.style.display = "block";
 	
 	var popupImg = document.getElementById("popupImg");
-	popupImg.src = "/public/img/tours/" + id + "/" + filename;
+	popupImg.src = "/img/tours/" + id + "/" + filename;
 }
 
 function popdown()
-{
+{	
+	var found = false;
+	var popupImg = null;
+	var photos = document.getElementsByClassName("popupPhotos");
+	var popupImg = document.getElementById("popupImg");
+	for(var i = 0; i < photos.length; i++)
+	{
+		if (found)
+		{
+			popupImg.src = photos.item(i).src;
+			//alert(popupImg.src);
+			return;
+		}
+
+		//alert(popupImg.src);
+		//alert(photos.item(i).src);
+		if (popupImg.src == photos.item(i).src)
+		{
+			//alert(0);
+			found = true;
+		}
+	}	
+	
 	var popupDiv = document.getElementById("myModal");
 	popupDiv.style.display = "none";
 }
