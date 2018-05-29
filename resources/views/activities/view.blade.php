@@ -16,8 +16,6 @@ foreach($photos as $photo)
 
 <div class="page-size container">
                
-<form method="POST" action="/activities/view/{{ $record->id }}">
-
 	@guest
 	@else
 	
@@ -149,7 +147,7 @@ foreach($photos as $photo)
 					</div>
 			@endif
 					
-				</div><!-- row -->	
+		</div><!-- row -->	
 	</div>
 					
 	<div class="entry-div" style="margin-top:20px;width:100%;">
@@ -255,17 +253,15 @@ foreach($photos as $photo)
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
 				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
-					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />				
+					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />
 				</span>
 				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
-					<img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" />		
+					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}')"><img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/tours/{{$record->id}}/{{$photo->filename}}" /></span>
 				</span>									
 			@endif
 		@endforeach	
 	</div>
-	
-	
-	
+
 	@endif
 	
 	<div class="amenities">
@@ -276,6 +272,7 @@ foreach($photos as $photo)
 		</div>
 	</div>	
 	
+@if (true)
 	<div style="display:default; float:left; margin:5px 10px 5px 0px">	
 		
 		<div id="adgshp2008177892"></div>
@@ -302,10 +299,51 @@ foreach($photos as $photo)
 		</script>
 	
 	</div>
-		
-{{ csrf_field() }}
+@endif
 
-</form>
+	</div><!-- class="amenities" -->
+
+<!-- photo view popup -->
+<div id="myModal" onclick="popdown()" class="modal-popup text-center">
+
+	<div  style="cursor:pointer;" class="modal-content">
+		<span onclick="popdown()" id="modalSpan" class="close-popup">&times;</span>
+		<img id="popupImg" style="max-width:900px;" width="100%" src="" />
+	</div>
 
 </div>
+
+<script>
+
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the <span> element that closes the modal
+var span = document.getElementById("modalSpan");
+
+function popup(id, filename)
+{
+	//alert(filename);
+	
+	var popupDiv = document.getElementById("myModal");
+	popupDiv.style.display = "block";
+	
+	var popupImg = document.getElementById("popupImg");
+	popupImg.src = "/public/img/tours/" + id + "/" + filename;
+}
+
+function popdown()
+{
+	var popupDiv = document.getElementById("myModal");
+	popupDiv.style.display = "none";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+	alert(2);
+    modal.style.display = "none";
+}
+
+</script>		
+
 @endsection
