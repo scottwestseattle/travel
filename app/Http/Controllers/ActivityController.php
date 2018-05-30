@@ -306,16 +306,16 @@ class ActivityController extends Controller
 				}
 			}
 		}
-		
-		$activity->description = nl2br($activity->description);
-		$activity->description = $this->formatLinks($activity->description);
-		
+				
 		// update the view count for new visitors only
 		if ($this->isNewVisitor())
 		{
 			$activity->view_count++;
 			$activity->save();
 		}
+		
+		$activity->description = nl2br($activity->description);
+		$activity->description = $this->formatLinks($activity->description);		
 		
 		return view('activities.view', ['record' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos, 'page_title' => $activity->title]);
 	}

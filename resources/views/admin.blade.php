@@ -70,6 +70,8 @@
 		
 		<div style="height:30px;clear:both;"></div>
 		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
+		<p>My IP:&nbsp;{{$ip}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</p>
+		<p><a href="/visitors">Show All Visits</a></p>
 		<table class="table table-striped">
 			<tbody>
 				<tr><th>Timestamp</th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
@@ -86,7 +88,6 @@
 				@endforeach
 			</tbody>
 		</table>
-		<a href="/visits">Show All Visits</a>
 	@else
 		<h3>You need to log in. <a href="/login">Click here to login</a></h3>
 	@endif       

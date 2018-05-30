@@ -130,7 +130,7 @@ class HomeController extends Controller
 		//
 		// save visitor stats
 		//
-		$this->SaveVisitor();
+		$this->saveVisitor();
 		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
     }
@@ -146,6 +146,29 @@ class HomeController extends Controller
 		return view('visits', ['records' => $records]);
     }
 
+    public function visitors($sort = null)
+    {			
+		if (isset($sort))
+		{
+			$records = Visitor::select()
+				->where('site_id', 1)
+				->where('deleted_flag', 0)
+				->orderByRaw('updated_at DESC')
+				->get();
+		}
+		else
+		{
+			$records = Visitor::select()
+				->where('site_id', 1)
+				->where('deleted_flag', 0)
+				->latest()
+				->get();
+		}
+		
+						
+		return view('visits', ['records' => $records]);
+    }
+	
     public function admin()
     {
 		//
@@ -188,9 +211,9 @@ class HomeController extends Controller
 			->limit(10)
 			->get();
 			
-		//dd($visitors);
+		$ip = $this->getVisitorIp();
 			
-		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors]);
+		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
     }
 	
     public function posts(Entry $entry)

@@ -7,7 +7,7 @@
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
-				<tr><th>Timestamp</th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
+				<tr><th><a href="/visitors/date">Timestamp</a></th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
 				@foreach($records as $record)
 				<tr>
 					<td>{{$record->updated_at}}</td>

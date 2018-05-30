@@ -11,6 +11,7 @@
 		@if (Auth::user()->user_type >= 100)
 		<table><tr>			
 			<td style="width:40px; font-size:20px;"><a href='/entries/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+			<td style="width:40px; font-size:20px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/entries/edit/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 			<td style="width:40px; font-size:20px;"><a href='/entries/confirmdelete/{{$entry->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 		</tr></table>

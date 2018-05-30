@@ -61,7 +61,7 @@
 								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tags/index">Tags</a></li>
 								<li><a href="/users/">Users</a></li>
-								<li><a href="/visits/">Visits</a></li>
+								<li><a href="/visitors/">Visitors</a></li>
 							<?php endif; ?>
 														
                             <li class="dropdown">

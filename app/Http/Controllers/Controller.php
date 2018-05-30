@@ -47,13 +47,10 @@ class Controller extends BaseController
 	{		
 	}
 
-	protected function SaveVisitor($newOnly = false)
+	protected function getVisitorIp()
 	{
-		$save = false;
+		$ip = null;
 		
-		//
-		// get visitor stats
-		//
 		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
 		{
 			$ip = $_SERVER["HTTP_CLIENT_IP"];
@@ -66,7 +63,17 @@ class Controller extends BaseController
 		{
 			$ip = $_SERVER["REMOTE_ADDR"];
 		}	
-				
+		
+		return $ip;
+	}
+	
+	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
+	{
+		//
+		// get visitor info
+		//
+		$ip = $this->getVisitorIp();
+						
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
 		$referrer = null;
@@ -75,53 +82,42 @@ class Controller extends BaseController
 
 		$userAgent = null;
 		if (array_key_exists("HTTP_USER_AGENT", $_SERVER))
-			$userAgent = $_SERVER["HTTP_USER_AGENT"];		
+			$userAgent = $_SERVER["HTTP_USER_AGENT"];
+
+		return $ip;
+	}
+	
+	protected function saveVisitor()
+	{
+		$save = false;
+		$host = null;
+		$referrer = null;
+		$userAgent = null;
+		
+		$ip = $this->getVisitorInfo($host, $referrer, $userAgent);
 		
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)
 			->where('deleted_flag', 0)
 			->first();
 			
-		if (isset($visitor)) // repeat visitor
-		{
-			$visitor->visit_count++;
-			
-			if (!$newOnly)
-				$save = true;
-		}
-		else // new visitor
+		if (!isset($visitor)) // new visitor
 		{
 			$visitor = new Visitor();
 			$visitor->ip_address = $ip;	
-
-			if ($newOnly)
-				$save = true;
-		}	
-
-		if ($save)
-		{
-			$visitor->site_id = 1;
-			$visitor->host_name = $host;
-			$visitor->user_agent = $userAgent;
-			$visitor->referrer = $referrer;
-			$visitor->save();		
 		}
+		
+		$visitor->visit_count++;			
+		$visitor->site_id = 1;
+		$visitor->host_name = $host;
+		$visitor->user_agent = $userAgent;
+		$visitor->referrer = $referrer;
+		$visitor->save();		
 	}	
 	
 	protected function isNewVisitor()
 	{
-		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
-		{
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
-		{
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		else
-		{
-			$ip = $_SERVER["REMOTE_ADDR"];
-		}
+		$ip = $this->getVisitorIp();
 		
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)

@@ -23,6 +23,7 @@ Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
 Route::get('/visits', 'HomeController@visits');
+Route::get('/visitors/{sort?}', 'HomeController@visitors');
 Route::get('/admin', 'HomeController@admin');
 Route::get('/home', 'HomeController@index');
 

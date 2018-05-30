@@ -239,9 +239,6 @@ class EntryController extends Controller
 				
 			$entry->title 					= $request->title;
 			$entry->description 			= $request->description;
-			$entry->map_link	 			= $request->map_link;
-			$entry->description_language1 	= $request->description_language1;
-			$entry->is_template_flag 		= isset($request->is_template_flag) ? 1 : 0;
 			$entry->save();
 			
 			return redirect('/entries/view/' . $entry->id); 

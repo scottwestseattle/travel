@@ -80,6 +80,9 @@ foreach($photos as $photo)
 			$photo = '/' . $photo;
 			$photo_found = true;
 		}
+		
+		// map size
+		$mapWidth = 500;
 	?>
 
 	@if ($main_photo !== null)
@@ -174,7 +177,7 @@ foreach($photos as $photo)
 			<div class="entry amenity-item">
 				<h3>MAP</h3>
 				<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
-					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $width }}" height="{{ floor($width * .75) }}"></iframe>
+					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
 				</div>
 				
 				<p><a target="_blank" href="{{$record->map_link}}">Open in Google Maps to Navigate</a></p>
@@ -304,7 +307,7 @@ foreach($photos as $photo)
 	</div><!-- class="amenities" -->
 
 <!-- photo view popup -->
-<div id="myModal" onclick="popdown()" class="modal-popup text-center">
+<div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
 
 	<div  style="cursor:pointer;" class="modal-content">
 		<span onclick="popdown()" id="modalSpan" class="close-popup">&times;</span>
@@ -332,9 +335,8 @@ function popup(id, filename)
 	popupImg.src = "/img/tours/" + id + "/" + filename;
 }
 
-function popdown()
+function nextPhoto(found)
 {	
-	var found = false;
 	var popupImg = null;
 	var photos = document.getElementsByClassName("popupPhotos");
 	var popupImg = document.getElementById("popupImg");
@@ -343,19 +345,27 @@ function popdown()
 		if (found)
 		{
 			popupImg.src = photos.item(i).src;
-			//alert(popupImg.src);
 			return;
 		}
 
-		//alert(popupImg.src);
-		//alert(photos.item(i).src);
-		if (popupImg.src == photos.item(i).src)
+		// if it's the current photo and then set the found flag to stop at the 
+		// next photo at the top of the next iterartion
+		var count = i + 1; // if it's the last item don't consider it found so we can wrap to the first item
+		if (count < photos.length && popupImg.src == photos.item(i).src)
 		{
-			//alert(0);
 			found = true;
 		}
 	}	
 	
+	if (!found)
+	{
+		// show the first photo
+		nextPhoto(true);
+	}
+}
+
+function popdown()
+{	
 	var popupDiv = document.getElementById("myModal");
 	popupDiv.style.display = "none";
 }
