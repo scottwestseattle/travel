@@ -30,12 +30,15 @@ class HomeController extends Controller
      */
     public function index()
     {
+		$posts = null;
+		/*
 		$posts = Entry::select()
 			//->where('user_id', '=', Auth::id())
-			->where('is_template_flag', '<>', 1)
+			//->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
 			->orderByRaw('entries.id DESC')
 			->get();
+		*/
 
 		$tours = Activity::select()
 			->where('approved_flag', '=', 1)

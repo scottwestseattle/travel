@@ -36,6 +36,7 @@ define('LOCATION_TYPE_CITY', 700); // City or Place, such as Seattle or Olympic 
 define('LOCATION_TYPE_NEIGHBORHOOD_AREA', 800); // Neighborhood OR Area, such as West Seattle or Downtown
 define('SHOW_NON_XS', 'hidden-xs');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
+define('VISITOR_MAX_LENGTH', 200);
 
 class Controller extends BaseController
 {
@@ -109,10 +110,21 @@ class Controller extends BaseController
 		
 		$visitor->visit_count++;			
 		$visitor->site_id = 1;
-		$visitor->host_name = $host;
-		$visitor->user_agent = $userAgent;
-		$visitor->referrer = $referrer;
+		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
+		$visitor->user_agent = $this->trunc($userAgent, VISITOR_MAX_LENGTH);
+		$visitor->referrer = $this->trunc($referrer, VISITOR_MAX_LENGTH);
+		
 		$visitor->save();		
+	}	
+
+	protected function trunc($string, $length)
+	{
+		$ellipsis = '...';
+		$newLength = $length - strlen($ellipsis);
+		$string = (strlen($string) > $length) ? substr($string, 0, $newLength) . $ellipsis : $string;
+		//dd($string);
+		
+		return $string;
 	}	
 	
 	protected function isNewVisitor()
