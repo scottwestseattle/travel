@@ -212,12 +212,20 @@ class PhotoController extends Controller
 				$tempPath = $path . PHOTO_TMP_FOLDER . '/';
 				if (!is_dir($tempPath)) 
 				{
+					$image_folder = $this->getPhotosFullPath(PHOTO_ENTRY_FOLDER);
+					if (!is_dir($image_folder))
+					{
+						// make the main folder
+						mkdir($image_folder, 0755);						
+					}
+
 					if (!is_dir($path))
 					{
+						// make the entry folder
 						mkdir($path, 0755);
-					}
+					}					
 					
-					mkdir($tempPath, 0755);// make the folder with read/execute for everybody
+					mkdir($tempPath, 0755);// make the tmp folder with read/execute for everybody
 				}
 		
 				// upload the file
@@ -229,7 +237,7 @@ class PhotoController extends Controller
 				$newSize = 0;
 				$size = filesize($tempPath . $filename);
 				$resized = false;
-				if (intval($size) > 2000000) // 2mb limit
+				if ($id > 0 && intval($size) > 2000000) // 2mb limit for non-sliders only
 				{
 					// resize and put it up in the live photo folder
 					if ($this->resizeImage($tempPath, $path, $filename, /* new size = */ 750, /* makeOnly = */ true))

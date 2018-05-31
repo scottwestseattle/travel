@@ -1,4 +1,4 @@
-@if (Auth::user()->user_type >= 1000)
+@if (Auth::user() && Auth::user()->user_type >= 1000)
 	<div class="" style="font-size:20px;">
 		<table><tr>
 			<td style="width:40px;"><a href="#" onclick="window.history.back()"><span style="font-size: 23px" class="glyphCustom glyphicon glyphicon-circle-arrow-left"></span></a></td>
