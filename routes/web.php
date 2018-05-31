@@ -91,11 +91,12 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/index', 'PhotoController@index')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
+	Route::get('/entries/{id}', 'PhotoController@entries')->middleware('auth');
 	Route::get('/view/{photo}', 'PhotoController@view');
 
 	// add/create
-	Route::get('/add/{id?}','PhotoController@add')->middleware('auth');
-	Route::post('/create/{id?}','PhotoController@create')->middleware('auth');
+	Route::get('/add/{parent_id?}','PhotoController@add')->middleware('auth');
+	Route::post('/create','PhotoController@create')->middleware('auth');
 	
 	// edit/update
 	Route::get('/edit/{photo}','PhotoController@edit')->middleware('auth');
@@ -111,7 +112,12 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/tours', 'EntryController@tours')->middleware('auth');
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
 	Route::get('/index', 'EntryController@index')->middleware('auth');
+	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
+
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
 	
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');

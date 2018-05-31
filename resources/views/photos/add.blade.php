@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	<h1>Add {{($id === 0 ? 'Slider' : '' )}} Photo</h1>
+	<h1>Add {{($parent_id === 0 ? 'Slider' : '' )}} Photo</h1>
                			   
 	<form method="POST" action="/photos/create" enctype="multipart/form-data">
 		<div class="form-control-big">	
@@ -13,13 +13,13 @@
 				<input type="file" name="image" id="image" class="" />
 			</div>
 
-			@if ($id === 0)
+			@if ($parent_id === 0)
 				<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 					Slider size = 1920 x 934
 				</div>
 			@endif
 
-			<input type="hidden" name="parent_id" value={{$id}} />
+			<input type="hidden" name="parent_id" value={{$parent_id}} />
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 				<input type="text" name="filename" class="form-control" placeholder="Optional: new photo name"/>
@@ -33,7 +33,7 @@
 				<input type="text" name="location" class="form-control" placeholder="Required: location"/>
 			</div>	
 
-			@if ($id !== 0)
+			@if ($parent_id !== 0)
 				<div style="clear: both;" class="">
 					<input type="checkbox" name="main_flag" id="main_flag" class="" />
 					<label for="main_flag" class="checkbox-big-label">Main Photo</label>

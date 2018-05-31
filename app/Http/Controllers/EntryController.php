@@ -31,6 +31,19 @@ class EntryController extends Controller
     	return view('entries.index', compact('entries'));
     }
 
+    public function indexadmin()
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$entries = Entry::select()
+			->where('user_id', '=', Auth::id())
+			->orderByRaw('entries.id DESC')
+			->get();
+		
+    	return view('entries.indexadmin', compact('entries'));
+    }
+	
     public function tag($tag_id)
     {		
 		if (!$this->isAdmin())
@@ -84,9 +97,7 @@ class EntryController extends Controller
              return redirect('/');
 
 			 if (Auth::check())
-        {            
-			//todo $categories = Category::lists('title', 'id');
-	
+        {            	
 			return view('entries.add', ['data' => $this->getViewData()]);							
         }           
         else 
@@ -103,13 +114,12 @@ class EntryController extends Controller
 			//dd($request);
 			
 		$entry = new Entry();
+		
+		$entry->site_id = 1;
+		$entry->user_id = Auth::id();
 		$entry->title = $request->title;
 		$entry->description = $request->description;
-		$entry->map_link = $request->map_link;
-		$entry->description_language1 = $request->description_language1;
-		$entry->is_template_flag = (isset($request->is_template_flag)) ? 1 : 0;
-		//$entry->uses_template_flag = (isset($request->uses_template_flag)) ? 1 : 0; //sbw
-		$entry->user_id = Auth::id();
+		$entry->description_short = $request->description_short;
 						
 		$entry->save();
 			
@@ -198,7 +208,13 @@ class EntryController extends Controller
 
     public function view(Entry $entry)
     {
-		return view('entries.view', ['entry' => $entry]);
+		$photos = Photo::select()
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+		
+		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
 	}
 
     public function home()
@@ -216,11 +232,7 @@ class EntryController extends Controller
 
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {
-			//dd($entry);
-			// flags come from dev mysql as ints and prod mysql as strings
-			$entry['is_template'] = (intval($entry->is_template_flag) === 1);
-
-			return view('entries.edit', ['entry' => $entry, 'data' => $this->getViewData()]);							
+			return view('entries.edit', ['record' => $entry]);
         }           
         else 
 		{
@@ -234,11 +246,11 @@ class EntryController extends Controller
              return redirect('/');
 
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
-        {
-			//dd($request);
-				
-			$entry->title 					= $request->title;
-			$entry->description 			= $request->description;
+        {				
+			$entry->title 				= $request->title;
+			$entry->description_short	= $request->description_short;
+			$entry->description			= $request->description;
+			
 			$entry->save();
 			
 			return redirect('/entries/view/' . $entry->id); 
@@ -308,7 +320,49 @@ class EntryController extends Controller
 		$data['hashed'] = $hashed;
 
 		return view('entries.hash', $data);
-	}		
+	}
+
+    public function publish(Request $request, Entry $entry)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {
+			return view('entries.publish', ['record' => $entry, 'data' => $this->getViewData()]);							
+        }           
+        else 
+		{
+             return redirect('/');
+		}            	
+    }
+	
+    public function publishupdate(Request $request, Entry $entry)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {			
+			$published = isset($request->published_flag) ? 1 : 0;
+			$entry->published_flag = $published;
+			
+			if ($published === 0) // if it goes back to private, then it has to be approved again
+				$entry->approved_flag = 0;
+			else
+				$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			
+			$entry->view_count = intval($request->view_count);
+			
+			$entry->save();
+			
+			return redirect(route('activity.view', [urlencode($entry->title), $entry->id]));
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

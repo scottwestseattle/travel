@@ -12,6 +12,9 @@
 	$id = (isset($id) ? $id : 0);
 	if ($id > 0)
 		$add_link .= $id;
+	
+	if (!isset($title))
+		$title = '';
 ?>
 
 <div class="container">
@@ -20,7 +23,7 @@
 	@else
 	
 		@if (Auth::user()->user_type >= 1000 && isset($record_id))
-			@component('menu-submenu-activities', ['record_id' => $record_id])
+			@component('menu-submenu-entries', ['record_id' => $record_id])
 			@endcomponent
 		@endif
 				

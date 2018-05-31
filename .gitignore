@@ -3,6 +3,7 @@
 /public/storage
 /public/img/sliders
 /public/img/tours
+/public/img/entries
 /storage/*.key
 /.idea
 /.vagrant

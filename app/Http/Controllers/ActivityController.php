@@ -20,7 +20,8 @@ class ActivityController extends Controller
 		$records = DB::table('activities')
 			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
 			->select('activities.*', 'locations.name as location_name')
-			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC')
+			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC') // put records with missing stuff at the top
+			//->orderByRaw('id ASC')
 			->get();
 			
 		//dd($records);
@@ -418,7 +419,9 @@ class ActivityController extends Controller
 			else
 				$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
+			$activity->parent_id = intval($request->parent_id);
 			$activity->view_count = intval($request->view_count);
+			
 			$activity->save();
 			
 			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));

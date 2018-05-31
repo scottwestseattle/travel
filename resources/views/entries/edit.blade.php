@@ -4,34 +4,31 @@
 
 <div class="container">
 
-			<!-- Sub-menu ------>
-			<div class="" style="font-size:20px;">
-				<table class=""><tr>			
-					<td style="width:40px;"><a href='/entries/index/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>			
-					<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
-				</tr></table>
-			</div>			
-
+	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])
+	@endcomponent	
 
 	<h1>Edit Entry</h1>
 
-	<form method="POST" action="/entries/update/{{ $entry->id }}">
+	<form method="POST" action="/entries/update/{{ $record->id }}">
 		<div class="form-group form-control-big">
 		
 			<div class="entry-title-div">
-				<input type="text" name="title" class="form-control" value="{{ $entry->title }}"  placeholder="Title" />
+				<input type="text" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 			</div>
 			
 	<?php
 		$tags = [];
 	?>
 		
-	@component('control-entry-tags', ['entry' => $entry])
+	@component('control-entry-tags', ['entry' => $record])
 	@endcomponent		
 			
+			<div class="entry-description-div">
+				<textarea name="description_short" class="form-control entry-description-text" placeholder="Highlights" >{{ $record->description_short }}</textarea>
+			</div>
 			
 			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $entry->description }}</textarea>
+				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $record->description }}</textarea>
 			</div>
 
 			<div style="clear:both;">				
@@ -46,4 +43,4 @@
 	
 </div>
 
-@stop
+@endsection

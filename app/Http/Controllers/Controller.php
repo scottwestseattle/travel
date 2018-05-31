@@ -38,6 +38,23 @@ define('SHOW_NON_XS', 'hidden-xs');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
+// -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 	
+define('ENTRY_TYPE_ENTRY', 		1);
+define('ENTRY_TYPE_TOUR', 		2);
+define('ENTRY_TYPE_BLOG', 		3);
+define('ENTRY_TYPE_BLOG_ENTRY', 4);
+define('ENTRY_TYPE_ARTICLE', 	5);
+define('ENTRY_TYPE_NOTE', 		6);
+define('ENTRY_TYPE_OTHER',		7);
+
+// -1=not set, 0=slider, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 
+define('PHOTO_TYPE_NOTSET', 	-1);
+define('PHOTO_TYPE_SLIDER', 	0);
+
+define('PHOTO_SLIDER_FOLDER', 'sliders');
+define('PHOTO_ENTRY_FOLDER', 'entries');
+define('PHOTO_TMP_FOLDER', 'tmp');
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

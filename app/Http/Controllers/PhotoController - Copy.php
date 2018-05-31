@@ -36,7 +36,7 @@ class PhotoController extends Controller
 				$photo['size'] = $size;
 			}
 				
-			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
+			return view('photos.index', ['title' => 'Tour', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
         }           
         else 
 		{
@@ -44,33 +44,33 @@ class PhotoController extends Controller
         }
 	}
 
-	public function entries($parent_id)
-	{			
+	public function entries($id)
+	{		
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$parent_id = intval($parent_id);		 
+		$id = intval($id);
 		
-    	if ($parent_id > 0 && Auth::check())
+    	if ($id > 0 && Auth::check())
         {
-			$subfolder = PHOTO_ENTRY_FOLDER . '/' . $parent_id . '/';			
+			$subfolder = 'entries/' . $id . '/';
 			$path = $this->getPhotosWebPath($subfolder);
 			
 			$photos = Photo::select()
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
-				->where('parent_id', '=', $parent_id)
+				->where('parent_id', '=', $id)
 				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
 			foreach($photos as $photo)
 			{
-				$fullPath = $this->getPhotosFullPath($subfolder) . $photo->filename;
+				$fullPath = $this->getPhotosFullPath('entries/' . $id . '/') . $photo->filename;
 				$size = filesize($fullPath);
 				$photo['size'] = $size;
 			}
 				
-			return view('photos.index', ['id' => $parent_id, 'path' => $path, 'photos' => $photos, 'record_id' => $parent_id]);	
+			return view('photos.index', ['title' => 'Entry', 'photo_type' => 2, 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
         }           
         else 
 		{
@@ -87,7 +87,7 @@ class PhotoController extends Controller
 			->orderByRaw('photos.id DESC')
 			->get();
 				
-		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/' . PHOTO_SLIDER_FOLDER . '/', 'photos' => $photos, 'page_title' => 'Photos']);	
+		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/sliders/', 'photos' => $photos, 'page_title' => 'Photos']);	
 	}
 	
     public function index()
@@ -107,18 +107,18 @@ class PhotoController extends Controller
         }
     }
 		
-    public function add($parent_id = 0)
+    public function add($type_flag, $parent_id)
     {
 		if (!$this->isAdmin())
-			return redirect('/');
+             return redirect('/');
 
     	if (Auth::check())
-        {            
-			return view('photos.add', ['parent_id' => $parent_id]);					
+        {
+			return view('photos.add', ['parent_id' => $parent_id, 'type_flag' => $photo_type]);
         }           
         else 
 		{
-			return redirect('/');
+             return redirect('/');
         }       
 	}
 	
@@ -140,7 +140,7 @@ class PhotoController extends Controller
 				$request->session()->flash('message.content', 'Image to upload must be set using the [Browse] button');		
 				
 				// bad or missing file name
-				return view('photos.add', ['parent_id' => $request->parent_id]);					
+				return view('photos.add', ['parent_id' => $request->parent_id, 'photo_type' => $request->photo_type]);					
 			}
 			
 			//
@@ -157,7 +157,7 @@ class PhotoController extends Controller
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', 'Only JPG images can be uploaded');	
 				
-				return view('photos.add', ['parent_id' => $request->parent_id]);					
+				return view('photos.add', ['parent_id' => $request->parent_id, 'photo_type' => $request->photo_type]);					
 			}
 						
 			//
@@ -189,32 +189,59 @@ class PhotoController extends Controller
 			}				
 				
 			$id = intval($request->parent_id);
+			$photo_type = intval($request->photo_type);
+			$subfolder = '';
 			
-			if ($id === 0) // for now these are sliders
+			switch($photo_type)
 			{
-				// slider photos
-				$path = $this->getPhotosFullPath(PHOTO_SLIDER_FOLDER . '/');
-				
-				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
-				$redirect_error = '/photos/add/0';
+				case PHOTO_TYPE_SLIDER:
+					$subfolder = 'sliders';
+					$redirect = '/photos/sliders';
+					break;
+				case ENTRY_TYPE_ENTRY:
+					$subfolder = 'entries';
+					$redirect = '/photos/sliders';
+					break;
+				case ENTRY_TYPE_TOUR:
+					$subfolder = 'tours';
+					$redirect = '/photos/tours';
+					break;
+				case ENTRY_TYPE_BLOG:
+					$subfolder = 'blogs';
+					$redirect = '/photos/blogs';
+					break;
+				case ENTRY_TYPE_BLOG_ENTRY:
+					$subfolder = 'blogs';
+					$redirect = '/photos/blogs';
+					break;
+				case ENTRY_TYPE_ARTICLE:
+					$subfolder = 'articles';
+					$redirect = '/photos/articles';
+					break;
+				case ENTRY_TYPE_NOTE:
+					$subfolder = 'notes';
+					$redirect = '/photos/notes';
+					break;
+				case ENTRY_TYPE_OTHER:
+					$subfolder = 'other';
+					$redirect = '/photos/other';
+					break;
+				default:
+					break;
 			}
-			else
-			{
-				// tour photos
-				$path = $this->getPhotosFullPath(PHOTO_ENTRY_FOLDER . '/' . $id . '/');
-
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $id;
-				$redirect_error = '/photos/add/' . $id;				
-			}
+			
+			$path = $this->getPhotosFullPath($subfolder . '/');
+			$redirect_error = '/photos/add/' . $id;	
+			dd($path);
 						
 			try 
 			{
-				$tempPath = $path . PHOTO_TMP_FOLDER . '/';
+				$tempPath = $path . 'tmp/';
 				if (!is_dir($tempPath)) 
 				{
-					if (!is_dir($path))
+					if (!is_dir($path)) 
 					{
-						mkdir($path, 0755);
+						mkdir($path, 0755);// make the folder with read/execute for everybody
 					}
 					
 					mkdir($tempPath, 0755);// make the folder with read/execute for everybody
@@ -480,10 +507,7 @@ class PhotoController extends Controller
 
     public function view(Photo $photo)
     {
-		if ($photo->parent_id === 0)
-			$path = '/img/' . PHOTO_SLIDER_FOLDER . '/';
-		else
-			$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+		$path = '/img/sliders/';
 		
 		return view('photos.view', ['photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text]);
 	}
@@ -495,17 +519,7 @@ class PhotoController extends Controller
 		 
     	if ($this->isOwnerOrAdmin($photo->user_id))
         {			
-			$path = '';
-			if (intval($photo->parent_id) === 0)
-			{
-				$path = '/img/' . PHOTO_SLIDER_FOLDER . '/' . $photo->filename;
-			}
-			else
-			{
-				$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/' . $photo->filename;
-			}
-	
-			return view('photos.edit', ['record' => $photo, 'path' => $path]);							
+			return view('photos.edit', ['photo' => $photo, 'data' => $this->getViewData()]);							
         }           
         else 
 		{
@@ -523,13 +537,13 @@ class PhotoController extends Controller
 			$id = intval($request->parent_id);
 			if ($id === 0)
 			{
-				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
-				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER . '/';
+				$path_from = base_path() . '/public/img/sliders/';
+				$redirect = '/photos/sliders/';
 			}
 			else
 			{
-				$path_from = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $id . '/';
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $id;
+				$path_from = base_path() . '/public/img/tours/' . $id . '/';
+				$redirect = '/photos/tours/' . $id;
 			}
 
 			$filename = trim($request->filename);
@@ -611,9 +625,9 @@ class PhotoController extends Controller
         {			
 			$path = '';
 			if ($this->isSlider($photo))
-				$path .= '/img/' . PHOTO_SLIDER_FOLDER . '/';
+				$path .= '/img/sliders/';
 			else
-				$path .= '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+				$path .= '/img/tours/' . $photo->parent_id . '/';
 	
 			//dd($path);
 	
@@ -645,13 +659,13 @@ class PhotoController extends Controller
 			//
 			if ($this->isSlider($photo))
 			{
-				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
-				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
+				$path_from = base_path() . '/public/img/sliders/';
+				$redirect = '/photos/sliders';
 			}
 			else
 			{
-				$path_from = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $request->parent_id . '/';
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $request->parent_id;
+				$path_from = base_path() . '/public/img/tours/' . $request->parent_id . '/';
+				$redirect = '/photos/tours/' . $request->parent_id;
 			}
 			
 			$path_to = $path_from . 'deleted/';

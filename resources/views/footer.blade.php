@@ -95,6 +95,10 @@
 
 <a href="https://www.agoda.com/partners/partnersearch.aspx?cid=1729782&pcs=8" target="_blank"><img src="//sherpa.agoda.com/Badge/GetBadge?badgetype=1&refkey=eQRoFwsbQxjYbmldH%2B6nvQ%3D%3D" /></a>
 
+<div style="margin-top: 20px;">
+<a href="https://www.instagram.com/epictravelguidedotcom/" target="_blank"><img width="100" src="/img/theme1/instagram.png" /></a>
+</div>
+
 						@if (false)
 							<!---------------------------------------------------->
 							<!-- Newsletter Form -->

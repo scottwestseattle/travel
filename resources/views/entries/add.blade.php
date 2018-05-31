@@ -3,9 +3,10 @@
 @section('content')
 
 <div class="container">
-@component('menu-submenu', ['data' => $data])
-	@component('menu-icons-start')@endcomponent
-@endcomponent
+
+	@component('menu-submenu-entries')
+	@endcomponent	
+
 	<h1>Add Entry</h1>
                
 	<form method="POST" action="/entries/create">
@@ -14,6 +15,10 @@
 				<input type="text" name="title" placeholder="Title" class="form-control" />
 			</div>
 
+			<div class="entry-description-div">
+				<textarea name="description_short" class="form-control entry-description-text" placeholder="Highlights"></textarea>	
+			</div>
+			
 			<div class="entry-description-div">
 				<textarea name="description" class="form-control entry-description-text" placeholder="Description"></textarea>	
 			</div>

@@ -3,11 +3,9 @@
 @section('content')
 
 <div class="page-size container">
-	@guest
-	@else
-		@component('menu-submenu-activities', ['record_id' => $record->id, 'record_title' => $record->title])
-		@endcomponent
-	@endguest
+
+	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])
+	@endcomponent
 	
 	<h1>Publish</h1>
 
@@ -31,10 +29,12 @@
 			<label for="approved_flag" class="checkbox-big-label">Approved</label>
 		</div>
 		
+		@if (false)
 		<div class="form-group">
 			<label for="distance">Parent ID:</label>
 			<input type="text" name="parent_id" class="form-control" value="{{ $record->parent_id }}"  />
 		</div>
+		@endif
 
 		<div class="form-group">
 			<label for="distance">View Count:</label>
