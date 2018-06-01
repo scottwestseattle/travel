@@ -31,6 +31,64 @@ Route::get('/home', 'HomeController@index');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// tours is a superclass of entries, uses entries for basic functions
+Route::group(['prefix' => 'tours'], function () {
+
+	// list
+	Route::get('/index', 'TourController@index')->middleware('auth');
+	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
+
+	// view
+	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
+	Route::resource('tour', 'TourController');	
+	
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+	
+	// add/create
+	Route::get('/add','TourController@add')->middleware('auth');
+	Route::post('/create','TourController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{id}','TourController@edit')->middleware('auth');
+	Route::post('/update/{entry}','TourController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}', 'TourController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}', 'TourController@delete')->middleware('auth');
+
+});
+
+Route::group(['prefix' => 'entries'], function () {
+	
+	Route::get('/tours', 'EntryController@tours')->middleware('auth');
+	Route::get('/posts', 'EntryController@posts')->middleware('auth');
+	Route::get('/index', 'EntryController@index')->middleware('auth');
+	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
+	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
+
+	// view
+	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
+	Route::resource('entry', 'EntryController');	
+	
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+	
+	// add/create
+	Route::get('/add','EntryController@add')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
+	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
+});
+
 Route::group(['prefix' => 'locations'], function () 
 {
 	Route::get('/activities/{location?}', 'LocationsController@activities');
@@ -105,42 +163,6 @@ Route::group(['prefix' => 'photos'], function ()
 	// delete / confirm delete
 	Route::get('/confirmdelete/{photo}','PhotoController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{photo}','PhotoController@delete')->middleware('auth');
-});
-
-Route::group(['prefix' => 'entries'], function () {
-	
-	Route::get('/tours', 'EntryController@tours')->middleware('auth');
-	Route::get('/posts', 'EntryController@posts')->middleware('auth');
-	Route::get('/index', 'EntryController@index')->middleware('auth');
-	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
-	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
-
-	// publish
-	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
-	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
-	
-	// add/create
-	Route::get('/add','EntryController@add')->middleware('auth');
-	Route::post('/create','EntryController@create')->middleware('auth');
-
-	// edit/update
-	Route::get('/edit/{entry}','EntryController@edit')->middleware('auth');
-	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
-
-	// delete / confirm delete
-	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');
-	
-	// other gets
-	Route::get('/viewcount/{entry}','EntryController@viewcount')->middleware('auth');
-	Route::get('/view/{entry}','EntryController@view');
-	Route::get('/gen/{entry}','EntryController@gen')->middleware('auth');
-	Route::get('/search/{entry}','EntryController@search')->middleware('auth');
-	Route::get('/gendex/{id?}','EntryController@gendex')->middleware('auth');
-	Route::get('/settemplate/{id}','EntryController@settemplate')->middleware('auth');
-	Route::get('/timer', 'EntryController@timer')->middleware('auth');
-	
-	// other posts
 });
 
 Route::group(['prefix' => 'faqs'], function () {

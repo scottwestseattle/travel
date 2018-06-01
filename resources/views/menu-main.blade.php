@@ -59,7 +59,7 @@
 								<li><a href="/locations/indexadmin">Locations</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/tasks/index">Tasks</a></li>
-								<li><a href="/tags/index">Tags</a></li>
+								<li><a href="/tours/indexadmin">Tours</a></li>
 								<li><a href="/users/">Users</a></li>
 								<li><a href="/visitors/">Visitors</a></li>
 							<?php endif; ?>

@@ -15,20 +15,15 @@
 	
 	if (!isset($title))
 		$title = '';
+	
+	if (!isset($record_id))
+		$record_id = null;
 ?>
 
 <div class="container">
 
-	@guest
-	@else
+	@component('menu-submenu-entries', ['record_id' => $record_id])@endcomponent
 	
-		@if (Auth::user()->user_type >= 1000 && isset($record_id))
-			@component('menu-submenu-entries', ['record_id' => $record_id])
-			@endcomponent
-		@endif
-				
-	@endguest
-		
 	<h1 style="font-size:1.5em;">
 	@guest
 		<span style="margin-left: 5px;">Photos ({{ count($photos) }})</span>
@@ -44,6 +39,17 @@
 			@foreach($photos as $photo)
 			<?php $fullpath = $path . $photo->filename; //dd($fullpath); ?>
 				<tr>
+					<td>
+						<?php
+							$alt_text = $photo->alt_text;
+							if (strlen($photo->location) > 0)
+								$alt_text .= ' - ' . $photo->location;
+						?>					
+						<a href="/photos/view/{{$photo->id}}">
+							<img title="{{ $alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/>
+						</a>
+					</td>
+					
 					<td>
 						<table>
 						
@@ -70,16 +76,6 @@
 							@endguest
 							
 						</table>
-					</td>
-					<td>
-						<?php
-							$alt_text = $photo->alt_text;
-							if (strlen($photo->location) > 0)
-								$alt_text .= ' - ' . $photo->location;
-						?>					
-						<a href="/photos/view/{{$photo->id}}">
-							<img title="{{ $alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/>
-						</a>
 					</td>
 				</tr>
 			@endforeach

@@ -4,12 +4,11 @@
 
 <div class="page-size container">
 
-	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])
-	@endcomponent
+	@component($record->type_flag === ENTRY_TYPE_TOUR ? 'menu-submenu-tours' : 'menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])@endcomponent
 	
 	<h1>Publish</h1>
 
-	<form method="POST" action="/activities/publishupdate/{{ $record->id }}">
+	<form method="POST" action="/entries/publishupdate/{{ $record->id }}">
 
 		<div class="form-group">
 			<h3 name="title" class="">{{$record->title }}</h3>

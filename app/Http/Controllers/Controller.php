@@ -39,6 +39,7 @@ define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
 // -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 	
+define('ENTRY_TYPE_NOTSET', 	-1);
 define('ENTRY_TYPE_ENTRY', 		1);
 define('ENTRY_TYPE_TOUR', 		2);
 define('ENTRY_TYPE_BLOG', 		3);
@@ -65,6 +66,11 @@ class Controller extends BaseController
 	{		
 	}
 
+	protected function getSiteId()
+	{
+		return 1;
+	}
+		
 	protected function getVisitorIp()
 	{
 		$ip = null;

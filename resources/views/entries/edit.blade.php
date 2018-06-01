@@ -12,6 +12,9 @@
 	<form method="POST" action="/entries/update/{{ $record->id }}">
 		<div class="form-group form-control-big">
 		
+			@component('control-entry-types', ['current_type' => $record->type_flag])
+			@endcomponent			
+		
 			<div class="entry-title-div">
 				<input type="text" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 			</div>

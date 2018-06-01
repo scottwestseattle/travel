@@ -22,13 +22,13 @@ class EntryController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
-			->where('user_id', '=', Auth::id())
-			//->where('is_template_flag', '<>', 1)
-			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
+			->where('site_id', $this->getSiteId())
+			->where('type_flag', '<>', ENTRY_TYPE_TOUR)
+			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
 		
-    	return view('entries.index', compact('entries'));
+    	return view('entries.index', ['records' => $entries]);
     }
 
     public function indexadmin()
@@ -37,11 +37,13 @@ class EntryController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
-			->where('user_id', '=', Auth::id())
+			->where('site_id', $this->getSiteId())
+			->where('type_flag', '<>', ENTRY_TYPE_TOUR)
+			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
 		
-    	return view('entries.indexadmin', compact('entries'));
+    	return view('entries.indexadmin', ['records' => $entries]);
     }
 	
     public function tag($tag_id)
@@ -82,13 +84,13 @@ class EntryController extends Controller
              return redirect('/');
 
 		$entries = Entry::select()
+			->where('site_id', '=', $this->getSiteId())
 			->where('user_id', '=', Auth::id())
-			->where('is_template_flag', '=', 1)
+			->where('type_flag', '=', ENTRY_TYPE_TOUR)
 			->orderByRaw('entries.id DESC')
 			->get();
 		
-		return view('entries.index', ['entries' => $entries, 'data' => $this->getViewData(), 'title' => 'Tours']);									
-//    	return view('entries.index', compact('entries'));
+		return view('entries.index', ['records' => $entries]);
     }
 	
     public function add()
@@ -98,7 +100,7 @@ class EntryController extends Controller
 
 			 if (Auth::check())
         {            	
-			return view('entries.add', ['data' => $this->getViewData()]);							
+			return view('entries.add', ['current_type' => ENTRY_TYPE_ARTICLE]);							
         }           
         else 
 		{
@@ -117,6 +119,7 @@ class EntryController extends Controller
 		
 		$entry->site_id = 1;
 		$entry->user_id = Auth::id();
+		$entry->type_flag = $request->type_flag;
 		$entry->title = $request->title;
 		$entry->description = $request->description;
 		$entry->description_short = $request->description_short;
@@ -206,8 +209,14 @@ class EntryController extends Controller
         }            	
     }
 
-    public function view(Entry $entry)
+    public function view($title, $id)
     {
+		$entry = Entry::select()
+			->where('site_id', $this->getSiteId())
+			->where('deleted_flag', '<>', 1)
+			->where('id', $id)
+			->first();
+		
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
@@ -247,6 +256,7 @@ class EntryController extends Controller
 
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {				
+			$entry->type_flag 			= $request->type_flag;	
 			$entry->title 				= $request->title;
 			$entry->description_short	= $request->description_short;
 			$entry->description			= $request->description;
@@ -356,7 +366,7 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			return redirect(route('activity.view', [urlencode($entry->title), $entry->id]));
+			return redirect(route('entry.view', [urlencode($entry->title), $entry->id]));
 		}
 		else
 		{

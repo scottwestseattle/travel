@@ -9,7 +9,7 @@ use DB;
 
 class PhotoController extends Controller
 {
-	public function tours($id)
+	public function tours(Request $request, $id)
 	{		
 		if (!$this->isAdmin())
              return redirect('/');
@@ -31,9 +31,20 @@ class PhotoController extends Controller
 				
 			foreach($photos as $photo)
 			{
+				// get photo size info
 				$fullPath = $this->getPhotosFullPath('tours/' . $id . '/') . $photo->filename;
-				$size = filesize($fullPath);
-				$photo['size'] = $size;
+				try
+				{
+					$size = filesize($fullPath);
+					$photo['size'] = $size;
+				}
+				catch (\Exception $e) 
+				{
+					$request->session()->flash('message.level', 'danger');
+					$request->session()->flash('message.content', $e->getMessage());
+					//return redirect('/activities/indexadmin');
+				}
+
 			}
 				
 			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
