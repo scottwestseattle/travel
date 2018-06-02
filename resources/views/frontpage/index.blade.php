@@ -204,7 +204,7 @@
 			<!---------------------------------------------------->
 			<!-- Locations -->
 			<!---------------------------------------------------->
-			@if (isset($locations))
+			@if (isset($locations) && isset($tours) && $tours->count() > 0)
 			<div style="margin:20px; 0" class="text-center">
 				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
 				<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tours->count()}}</span></button></a>
@@ -228,20 +228,13 @@
 				<!-------------------------------->
 				<!-- this is the non-XS version -->
 				<!-------------------------------->
-				<div class="row Xhidden-xs">
+				<div class="row">
 
+					@if (isset($tours) && $tours->count() > 0)
 					@foreach($tours as $entry)
 										
 						<div class="col-md-4 col-sm-6">
 						
-							<!-- tour image -->
-							<!-- a href="{{$link . 'view/' . $entry->id}}" -->
-							<!-- a href="{{ route('activity.view', [preg_replace('/\+/', '-', urlencode($entry->title)), $entry->id]) }}" -->
-							<?php 
-								//$title = preg_replace('/[^\da-z ]/i', '', $entry->title); // remove all chars except alphanums and space
-								//$title = urlencode($title);
-								//$title = str_replace('+', '-', $title);
-							?>
 							<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">
 								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
 							</a>
@@ -253,6 +246,17 @@
 						</div>
 					
 					@endforeach
+					@else
+						@guest
+						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
+							<a style="font-family: Raleway; color: gray; font-size:1em; text-decoration: none; " href="/login">Log-in to add content for this section</a>
+						</div>
+						@else
+						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
+							<i><a style="font-family: Raleway; font-size:1.1em; text-decoration: none; " href="/tours/add">Click here to add content for this section</a></i>
+						</div>
+						@endguest
+					@endif
 					
 				</div><!-- row -->	
 

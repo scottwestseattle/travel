@@ -151,32 +151,71 @@ class TourController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 			
-		$activity = new Activity();
-		$activity->user_id = Auth::id();
-		$activity->published_flag = isset($request->published_flag) ? 1 : 0;
-		$activity->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$success = false;
 		
-		$activity->title = $request->title;
-		$activity->description = $request->description;
-		$activity->map_link	 = $request->map_link;
-		$activity->info_link = $request->info_link;
+		try {
+			DB::beginTransaction();	
+
+			//
+			// the entry part
+			//
+			$entry = new Entry();
+			$entry->site_id = $this->getSiteId();
+			$entry->user_id = Auth::id();
 			
-		$activity->highlights = $request->highlights;
-		$activity->cost = $request->cost;
-		$activity->parking = $request->parking;
-		$activity->distance = $request->distance;
-		$activity->difficulty = $request->difficulty;
-		$activity->season = $request->season;
-		$activity->wildlife = $request->wildlife;
-		$activity->facilities = $request->facilities;
-		$activity->elevation = $request->elevation;
-		$activity->public_transportation = $request->public_transportation;
-		$activity->trail_type = $request->trail_type;
-		$activity->activity_type = $request->activity_type;
-									
-		$activity->save();
+			$entry->title = trim($request->title);
+			$entry->description = trim($request->description);
+			$entry->description_short = trim($request->description_short);
+			$entry->type_flag = ENTRY_TYPE_TOUR;
 			
-		return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
+			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
+			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			
+			//
+			// the activity part
+			//
+			$activity = new Activity();
+			$activity->user_id = Auth::id();
+			$activity->site_id = $this->getSiteId();
+			
+			$activity->map_link	 = trim($request->map_link);
+			$activity->info_link = trim($request->info_link);
+				
+			$activity->cost = trim($request->cost);
+			$activity->parking = trim($request->parking);
+			$activity->distance = trim($request->distance);
+			$activity->difficulty = trim($request->difficulty);
+			$activity->season = trim($request->season);
+			$activity->wildlife = trim($request->wildlife);
+			$activity->facilities = trim($request->facilities);
+			$activity->elevation = trim($request->elevation);
+			$activity->public_transportation = trim($request->public_transportation);
+			$activity->trail_type = trim($request->trail_type);
+
+			$entry->save();
+				
+			$activity->title = 'parent_id=' . $entry->id;
+			$activity->parent_id = $entry->id;
+			$activity->save();
+			
+			DB::commit();			
+
+			$request->session()->flash('message.content', 'New Record Successfully Added');
+			
+			$success = true;
+		}
+		catch (\Exception $e) 
+		{
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());
+			
+			DB::rollBack();
+		}
+
+		if ($success)
+			return redirect(route('tour.view', [urlencode($entry->title), $entry->id]));
+		else
+			return redirect('/tours/indexadmin');
     }
 	
     public function view($title, $id)
@@ -185,7 +224,7 @@ class TourController extends Controller
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
-			->first();			
+			->first();	
 			
 		$activity = Activity::select()
 			->where('deleted_flag', '<>', 1)
@@ -364,7 +403,7 @@ class TourController extends Controller
 			{
 				$activity = new Activity();
 				$activity->user_id = Auth::id();
-				//$activity->site_id	 = $this->getSiteId();
+				$activity->site_id	 = $this->getSiteId();
 				$activity->parent_id = $entry->id;
 				$activity->title = 'parent_id = ' . $entry->id;
 			}

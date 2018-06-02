@@ -9,7 +9,7 @@
 
 	<h1>Add</h1>
                
-	<form method="POST" action="/activities/create">
+	<form method="POST" action="/tours/create">
 		<div class="form-control-big">	
 			<div class="entry-title-div">
 				<label for="title">Title:</label>
@@ -26,7 +26,8 @@
 				</div>	
 								
 				<label for="highlights">Highlights:</label>
-				<textarea name="highlights" class="form-control entry-description-text" ></textarea>	
+				<textarea name="description_short" class="form-control entry-description-text" ></textarea>
+				
 				<label for="distance">Distance:</label>
 				<input type="text" name="distance" class="form-control" />
 				<label for="difficulty">Difficulty:</label>
