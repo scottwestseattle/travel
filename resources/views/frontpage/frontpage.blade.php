@@ -38,7 +38,7 @@
 }
 </style>
 
-@extends('layouts.home')
+@extends('layouts.frontpage')
 
 @section('content')
 

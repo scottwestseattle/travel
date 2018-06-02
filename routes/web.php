@@ -22,14 +22,23 @@ Route::get('/about', 'HomeController@about');
 Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
-Route::get('/visits', 'HomeController@visits');
-Route::get('/visitors/{sort?}', 'HomeController@visitors');
-Route::get('/admin', 'HomeController@admin');
+Route::get('/visits', 'HomeController@visits')->middleware('auth');;
+Route::get('/visitors/{sort?}', 'HomeController@visitors')->middleware('auth');;
+Route::get('/admin', 'HomeController@admin')->middleware('auth');
 Route::get('/home', 'HomeController@index');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
+
+// this is he new front page to replace the HomeController
+Route::group(['prefix' => 'frontpage'], function () {
+	
+	Route::get('/index', 'FrontPageController@index');
+	Route::get('/visitors/{sort?}', 'FrontPageController@visitors');
+	Route::get('/admin', 'FrontPageController@admin');
+
+});
 
 // tours is a superclass of entries, uses entries for basic functions
 Route::group(['prefix' => 'tours'], function () {

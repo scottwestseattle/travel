@@ -319,6 +319,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EntryController' => __DIR__ . '/../..' . '/app/Http/Controllers/EntryController.php',
         'App\\Http\\Controllers\\FaqsController' => __DIR__ . '/../..' . '/app/Http/Controllers/FaqsController.php',
+        'App\\Http\\Controllers\\FrontPageController' => __DIR__ . '/../..' . '/app/Http/Controllers/FrontPageController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\LocationsController' => __DIR__ . '/../..' . '/app/Http/Controllers/LocationsController.php',
         'App\\Http\\Controllers\\PhotoController' => __DIR__ . '/../..' . '/app/Http/Controllers/PhotoController.php',

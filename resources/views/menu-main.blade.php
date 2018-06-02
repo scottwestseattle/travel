@@ -53,6 +53,7 @@
 							<?php endif; ?>
 							
 							<?php if ($user_type >= 100) : ?>
+								<li><a href="/frontpage/index">Front Page</a></li>
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/activities/indexadmin">Activities</a></li>
 								<li><a href="/entries/index/">Entries</a></li>

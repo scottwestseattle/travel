@@ -1,48 +1,8 @@
-<style>
-.frontpage-box a
-{
-	color: white;
-	text-decoration: none;
-	font-size: 10pt;
-}
 
-.frontpage-box p
-{
-	margin: 0;
-	padding: 0;
-}
-
-.frontpage-box-link
-{
-	display: block; 	
-	height: 220px; 
-	width: 320px; 
-}
-
-.frontpage-box-text
-{
-	margin: 3px 4px;
-	font-weight: bold;
-}
-
-.frontpage-box
-{
-	background-color: #a0a0a0;
-
-	display: block; 
-	float: left; 
-
-	margin: 0;
-	margin-top: 5px;
-	margin-left: 5px;	
-}
-</style>
-
-@extends('layouts.home')
+@extends('layouts.frontpage')
 
 @section('content')
 
-<!-- div style="width:100%; background-color: LightGray; background-image:url('/img/theme1/bg-pattern.png'); " -->
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 
 <!--------------------------------------------------------------------------------------->
@@ -81,12 +41,14 @@
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
-				<!------------------------------------------------------->
-				<!------------------------------------------------------->
-				<!------------------------------------------------------->
 					
 			</div>
 			<div>
+			
+				<!------------------------------------------------------->
+				<!-- This is the slider caption -->
+				<!------------------------------------------------------->
+				
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
 					<div id="slider-text-xs" style="font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
 				</div>
@@ -172,7 +134,7 @@
 	$welcome_msg = 'provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.';
 ?>
 
-<section id="" class="sectionBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+<section id="" class="sectionYellow" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
@@ -192,12 +154,18 @@
 	</div>	
 
 	@if (true)	
+	<!--------------------------------------------------------------------------------------->
+	<!-- The "Join Us" button -->
+	<!--------------------------------------------------------------------------------------->		
 	<div class="row text-center" style="margin-top:40px;">
 		<div class="header">
 			<a href="/register"><button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button></a>
 		</div>		
 	</div>
 
+	<!--------------------------------------------------------------------------------------->
+	<!-- The charming Quote -->
+	<!--------------------------------------------------------------------------------------->		
 	<div class="sectionHeader text-center" style="margin-top:20px;">
 		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</i></h3>
 	</div>
@@ -208,7 +176,7 @@
 </section>
 
 <!--------------------------------------------------------------------------------------->
-<!-- SECTION: Tours - float box format -->
+<!-- SECTION: Tours, Hikes, Things To Do -->
 <!--------------------------------------------------------------------------------------->
 
 <?php
@@ -433,7 +401,7 @@
 <!-- SECTION: Current Location -->
 <!--------------------------------------------------------------------------------------->
 		
-<section class="sectionYellow">
+<section class="sectionBlue">
 <div class="container">	
 
 	<div class="sectionHeader text-center main-font">	
