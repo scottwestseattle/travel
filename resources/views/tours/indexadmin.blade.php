@@ -27,8 +27,8 @@ $header = 'Tours';
 			@foreach($records as $record)
 				<tr>
 					<td style="width:20px;"><a href='/tours/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td style="width:20px;"><a href='/tours/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+					<td style="width:20px;"><a href='/entries/setlocation/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
 					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<?php 
 						$location_name = null;
@@ -65,7 +65,7 @@ $header = 'Tours';
 								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
 							@endif
 							@if (!isset($record->location_id))
-								<a class="" href="/tours/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+								<a class="" href="/entries/setlocation/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
 							@endif
 							@if (strlen($record->map_link) == 0)
 								<a class="" href="/tours/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>

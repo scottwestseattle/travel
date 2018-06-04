@@ -17,7 +17,7 @@ class TourController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 					
-		$records = $this->getTourIndex();
+		$records = $this->getTourIndexAdmin();
 			
 		//dd($records);
 		
@@ -26,98 +26,8 @@ class TourController extends Controller
 
     public function index()
     {
-		$locations = null;
-		$tours = $this->getIndexData($locations);
-
-    	return view('tours.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
-	}		
-
-    public function location($id)
-    {
 		$tours = $this->getTourIndex();
-		
-		$locations = Location::select()
-			->where('location_type', '>=', LOCATION_TYPE_CITY)
-			->orderByRaw('locations.location_type ASC')
-			->get();		
-
-    	return view('tours.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
-	}		
-	
-    public function maps()
-    {
-		$locations = null;
-		$tours = $this->getIndexData($locations);
-
-    	return view('tours.maps', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - Maps']);
-	}		
-	
-    private function getIndexData(&$locations)
-    {
-		$tours = Activity::select()
-			->where('approved_flag', '=', 1)
-			->where('published_flag', '=', 1)
-			->where('deleted_flag', '=', 0)
-			->orderByRaw('id DESC')
-			->get();
-			
-		//
-		// get tour page link and main photo
-		//
-		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
-		$tours_webpath = '/img/tours/';
-		
-		foreach($tours as $entry)
-		{
-			$link = '/view/' . $entry->id;
-			$photo_fullpath = $tours_fullpath . $entry->id . '/';
-			$photo = $photo_fullpath . 'main.jpg';
-			$photoUc = $photo_fullpath . 'Main.jpg';
-										
-			// file_exists must be relative path with no leading '/'
-			if (file_exists($photo) === TRUE)
-			{
-				// to show the photo we need the leading '/'
-				$photo = $tours_webpath . $entry->id . '/main.jpg';
-			}
-			else if (file_exists($photoUc) === TRUE)
-			{
-				// to show the photo we need the leading '/'
-				$photo = $tours_webpath . $entry->id . '/Main.jpg';
-			}
-			else
-			{
-				$photo = '';
-				
-				if (is_dir($photo_fullpath)) // if photo folder exists, get the first photo
-				{
-					$photos = $this->getPhotos('tours/' . $entry->id);
-					if (count($photos) > 0)
-						$photo = $tours_webpath . $entry->id . '/' . $photos[0];
-				}
-				else
-				{																
-					// make the folder with read/execute for everybody
-					mkdir($photo_fullpath, 0755);
-				}								
-										
-				// show the place holder
-				if (strlen($photo) === 0)
-					$photo = $tours_webpath . 'placeholder.jpg';
-								
-				$main_photo = Photo::select()
-				->where('parent_id', '=', $entry->id)
-				->where('main_flag', '=', 1)
-				->where('deleted_flag', '=', 0)
-				->first();
-				
-				if (isset($main_photo))
-					$photo = $tours_webpath . $entry->id . '/' . $main_photo->filename;			
-			}
-			
-			$entry['photo'] = $photo;
-			$entry['link'] = $link;
-		}		
+		$tour_count = isset($tours) ? count($tours) : 0;
 
 		//
 		// get locations so we can show the pills
@@ -128,9 +38,21 @@ class TourController extends Controller
 			->where('popular_flag', 1)
 			->orderByRaw('locations.location_type ASC')
 			->get();
+		//foreach($locations as $l)
+		//	dd($l->entries());
+			
+		$photo_path = '/public/img/entries/';
+		
+    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'photo_path' => $photo_path, 'page_title' => 'Tours, Hikes, Things To Do']);
+	}		
 
-		return $tours;
-    }
+    public function maps()
+    {
+		$locations = null;
+		$tours = $this->getIndexData($locations);
+
+    	return view('tours.maps', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - Maps']);
+	}		
 	
     public function add()
     {
@@ -220,7 +142,7 @@ class TourController extends Controller
     }
 	
     public function view($title, $id)
-    {
+    {		
 		$entry = Entry::select()
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
@@ -235,10 +157,10 @@ class TourController extends Controller
 			$activity = new Activity();
 			
 		$location = array();
-		if (isset($activity))
+		if (isset($entry))
 		{
-			$locations = DB::table('activities')
-				->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
+			$locations = DB::table('entries')
+				->leftJoin('locations as l1', 'entries.location_id', '=', 'l1.id')
 				->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
 				->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
 				->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
@@ -256,7 +178,7 @@ class TourController extends Controller
 					, 'l7.name as loc7', 'l7.id as loc7_id', 'l7.breadcrumb_flag as loc7_breadcrumb_flag'
 					, 'l8.name as loc8', 'l8.id as loc8_id', 'l8.breadcrumb_flag as loc8_breadcrumb_flag'
 					)
-				->where('activities.id', $activity->id)
+				->where('entries.id', $entry->id)
 				->first();
 
 			if (isset($locations->loc1))
@@ -510,149 +432,26 @@ class TourController extends Controller
 		return redirect('/');
     }
 	
-    public function setlocation(Request $request, Activity $activity)
-    {	
-		if (!$this->isAdmin())
-             return redirect('/');
-		 
+    public function location($location_id)
+    {
+		$tours = $this->getTourIndexLocation($location_id);
+		$tour_count = isset($tours) ? count($tours) : 0;
+
 		$locations = Location::select()
+			->where('locations.deleted_flag', 0)
 			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->where('popular_flag', 1)
 			->orderByRaw('locations.location_type ASC')
 			->get();
 
-		$current_location = $activity->locations()->orderByRaw('location_type DESC')->first();
-			
-    	if (Auth::check())
-        {			
-			//dd($request);
-			
-			return view('tours.location', ['record' => $activity, 'locations' => $locations, 'current_location' => $current_location]);							
-        }           
-        else 
-		{
-             return redirect('/');
-		}            	
-    }
+		//foreach($locations as $location)
+		//	dd($location->entries()->count());
+
+    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'photo_path' => '/public/img/entries/', 'page_title' => 'Tours, Hikes, Things To Do']);
+	}			
 	
-    public function locationupdate(Request $request, Activity $activity)
-    {	
-		if (!$this->isAdmin())
-             return redirect('/');
-
-    	if (Auth::check())
-        {									
-			$activity_id = $activity->id;
-			$location_id = intval($request->location_id);
-
-			if ($location_id <= 0)
-			{
-				//
-				// location is being removed
-				//
-				
-				// remove the hasMnay
-				$activity->locations()->detach();
-				
-				// remove the hasOne
-				$activity->location_id = null;
-				$activity->save();
-			}
-			else
-			{
-				// get the new location
-				$location = Location::select()
-					->where('id', '=', $location_id)
-					->first();
-
-				if (isset($location))
-				{
-					//
-					// remove all current locations so they can be replaced
-					//
-					$activity->locations()->detach();
-					
-					//
-					// set the primary has-one location
-					//
-					$activity->location_id = $location_id;
-					$activity->save();
-					
-					//
-					// set the hasmany locations
-					//
-					
-					$locations = DB::table('activities')
-						->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
-						->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
-						->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
-						->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
-						->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
-						->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
-						->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
-						->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
-						->select(
-							  'l1.name as loc1', 'l1.id as loc1_id'
-							, 'l2.name as loc2', 'l2.id as loc2_id'
-							, 'l3.name as loc3', 'l3.id as loc3_id'
-							, 'l4.name as loc4', 'l4.id as loc4_id'
-							, 'l5.name as loc5', 'l5.id as loc5_id'
-							, 'l6.name as loc6', 'l6.id as loc6_id'
-							, 'l7.name as loc7', 'l7.id as loc7_id'
-							, 'l8.name as loc8', 'l8.id as loc8_id'
-						)
-						->where('activities.id', $activity->id)
-						->first();
-					//dd($locations);
-					
-					$this->saveLocations($activity, $locations);
-				}
-			}
-			
-			return redirect(route('activity.view', [urlencode($activity->title), $activity->id]));
-		}
-		else
-		{
-			return redirect('/');
-		}
-    }	
-
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates
 	//////////////////////////////////////////////////////////////////////////////////////////
-
-    private function saveLocations($activity, $locations)
-    {	
-		$this->saveLocation($activity, $locations->loc1_id);
-		$this->saveLocation($activity, $locations->loc2_id);
-		$this->saveLocation($activity, $locations->loc3_id);
-		$this->saveLocation($activity, $locations->loc4_id);
-		$this->saveLocation($activity, $locations->loc5_id);
-		$this->saveLocation($activity, $locations->loc6_id);
-		$this->saveLocation($activity, $locations->loc7_id);
-		$this->saveLocation($activity, $locations->loc8_id);
-	}
-
-    private function saveLocation($activity, $id)
-    {	
-		if (isset($id))
-		{
-			$record = Location::select()
-					->where('id', '=', $id)
-					->first();
-			//dd($record);
-					
-			if (isset($record))
-			{
-				$activity->locations()->save($record);
-			}
-			else
-			{
-				dd('location record not found');
-			}
-		}
-		else
-		{
-			// valid condition because the records don't have all location levels
-		}	
-	}
+	
 }

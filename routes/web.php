@@ -46,7 +46,7 @@ Route::group(['prefix' => 'tours'], function () {
 	// list
 	Route::get('/index', 'TourController@index')->middleware('auth');
 	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
-	Route::get('/location{id}', 'TourController@location');
+	Route::get('/location/{location_id}', 'TourController@location');
 
 	// view
 	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
@@ -86,6 +86,10 @@ Route::group(['prefix' => 'entries'], function () {
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
 	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+	
+	// location
+	Route::get('/setlocation/{entry}','EntryController@setlocation')->middleware('auth');
+	Route::post('/locationupdate/{entry}','EntryController@locationupdate')->middleware('auth');
 	
 	// add/create
 	Route::get('/add','EntryController@add')->middleware('auth');

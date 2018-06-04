@@ -12,6 +12,7 @@ use App\Task;
 use App\Entry;
 use App\Visitor;
 use App\Photo;
+use App\Location;
 use DB;
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
@@ -529,13 +530,11 @@ class Controller extends BaseController
 		return $rc;
 	}
 	
-	protected function getTourIndex()
+	protected function getTourIndexAdmin()
 	{
-		// get the list with the location included
-		$records = DB::select('
-			SELECT entries.id, entries.title, entries.view_count, entries.published_flag, entries.approved_flag,
+		$q = '
+			SELECT entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag,
 				activities.id as activity_id,
-				activities.location_id,
 				activities.map_link,
 				photo_main.filename as photo,
 				count(photos.id) as photo_count
@@ -553,11 +552,65 @@ class Controller extends BaseController
 				entries.id, entries.title, entries.view_count, entries.published_flag, entries.approved_flag,
 				activities.id, photo_main.filename, activities.map_link, activities.location_id
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC
-		' , [ENTRY_TYPE_TOUR]);
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
+	
+	protected function getTourIndex()
+	{
+		$q = '
+			SELECT entries.id, entries.title,
+				photo_main.filename as photo
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
+			WHERE 1=1
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			GROUP BY 
+				entries.id, entries.title, photo_main.filename
+			ORDER BY entries.id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		
+		return $records;
+	}	
 
+	protected function getTourIndexLocation($location_id)
+	{
+		$q = '
+			SELECT entries.id, entries.title,
+				photo_main.filename as photo
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
+			LEFT JOIN locations
+				ON locations.id = entries.location_id
+			WHERE 1=1
+				AND entries.location_id = ?
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			GROUP BY 
+				entries.id, entries.title, photo_main.filename
+			ORDER BY entries.id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
+		
+		return $records;
+	}	
+	
 	protected function isSlider(Photo $photo)
 	{
 		$id = intval($photo->parent_id);
@@ -565,4 +618,48 @@ class Controller extends BaseController
 		return ($id === 0);
 	}
 	
+    protected function saveLocations($entry, $locations)
+    {	
+		if (isset($entry) && isset($locations))
+		{
+			$this->saveLocation($entry, $locations->loc1_id);
+			$this->saveLocation($entry, $locations->loc2_id);
+			$this->saveLocation($entry, $locations->loc3_id);
+			$this->saveLocation($entry, $locations->loc4_id);
+			$this->saveLocation($entry, $locations->loc5_id);
+			$this->saveLocation($entry, $locations->loc6_id);
+			$this->saveLocation($entry, $locations->loc7_id);
+			$this->saveLocation($entry, $locations->loc8_id);
+		}
+	}
+
+    protected function saveLocation($entry, $id)
+    {	
+		$rc = false;
+		
+		if (isset($id))
+		{
+			$record = Location::select()
+					->where('id', '=', $id)
+					->first();
+			//dd($record);
+					
+			if (isset($record))
+			{
+				$entry->locations()->save($record);
+				$rc = true;
+			}
+			else
+			{
+				dd('location record not found');
+			}
+		}
+		else
+		{
+			// valid condition because the records don't have all location levels
+			$rc = true;
+		}
+
+		return $rc;
+	}	
 }

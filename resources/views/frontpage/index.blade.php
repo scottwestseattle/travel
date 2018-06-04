@@ -3,12 +3,6 @@
 
 @section('content')
 
-<?php
-
-$tour_count = isset($tours) ? sizeof($tours) : 0;
-
-?>
-
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 
 <!--------------------------------------------------------------------------------------->
@@ -49,17 +43,17 @@ $tour_count = isset($tours) ? sizeof($tours) : 0;
 				</div>
 					
 			</div>
-			<div>
 			
+			<div class="DarkPurple">
 				<!------------------------------------------------------->
 				<!-- This is the slider caption -->
 				<!------------------------------------------------------->
 				
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
-					<div id="slider-text-xs" style="font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text-xs" style="font-size:.8em; width:100%; font-style:italic;"></div>
 				</div>
 				<div class="hidden-xs" ><!-- all other sizes -->
-					<div id="slider-text" style="background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text" style="width:100%; font-style:italic;"></div>
 				</div>				
 			</div>
 		@endif
@@ -210,18 +204,17 @@ $tour_count = isset($tours) ? sizeof($tours) : 0;
 			<!---------------------------------------------------->
 			<!-- Locations -->
 			<!---------------------------------------------------->
-			@if (isset($locations) && isset($tours) && sizeof($tours) > 0)
+			@if (isset($locations) && $tour_count > 0)
 			<div style="margin:20px; 0" class="text-center">
-				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
-				<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tour_count}}</span></button></a>
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tour_count}}</span></button></a>
 				@foreach($locations as $location)
-				@if ($location->activities()->count() > 0)
-					<a href="/locations/activities/{{$location->id}}">
-						<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
-							<span class="badge badge-light">{{$location->activities()->count()}}</span>
-						</button>
-					</a>
-				@endif
+					@if ($location->entries()->count() > 0)
+						<a href="/tours/location/{{$location->id}}">
+							<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
+								<span class="badge badge-light">{{$location->entries()->count()}}</span>
+							</button>
+						</a>
+					@endif
 				@endforeach
 			</div>			
 			@endif

@@ -26,12 +26,12 @@ foreach($photos as $photo)
 		<div class="publish-pills">
 			<ul class="nav nav-pills">
 				@if ($record->published_flag === 0)
-					<li class="active"><a href="/activities/publish/{{$record->id}}">Private</a></li>
+					<li class="active"><a href="/entries/publish/{{$record->id}}">Private</a></li>
 				@elseif ($record->approved_flag === 0)
-					<li class="active"><a href="/activities/publish/{{$record->id}}">Pending Approval</a></li>
+					<li class="active"><a href="/entries/publish/{{$record->id}}">Pending Approval</a></li>
 				@endif
 				@if (!isset($record->location))
-					<li class="active"><a href="/activities/location/{{$record->id}}">No Location</a></a>
+					<li class="active"><a href="/tours/setlocation/{{$record->id}}">No Location</a></a>
 				@endif
 			</ul>
 		</div>
@@ -45,7 +45,7 @@ foreach($photos as $photo)
 	<div style="margin-top:10px;" class="form-group">
 		@foreach($locations as $location)
 			@if ($location['breadcrumb_flag'] == 1)
-				<span name="" class=""><a href="\locations\activities\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>
+				<span name="" class=""><a href="\tours\location\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>
 			@endif
 		@endforeach
 	</div>		

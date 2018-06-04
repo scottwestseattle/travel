@@ -7,8 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Activity' => $baseDir . '/app/Activity.php',
+    'App\\Base' => $baseDir . '/app/Base.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Entry' => $baseDir . '/app/Entry.php',
+    'App\\EntryLocation' => $baseDir . '/app/EntryLocation.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Faq' => $baseDir . '/app/Faq.php',
     'App\\Http\\Controllers\\ActivityController' => $baseDir . '/app/Http/Controllers/ActivityController.php',
@@ -23,8 +25,10 @@ return array(
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\LocationsController' => $baseDir . '/app/Http/Controllers/LocationsController.php',
     'App\\Http\\Controllers\\PhotoController' => $baseDir . '/app/Http/Controllers/PhotoController.php',
+    'App\\Http\\Controllers\\SiteController' => $baseDir . '/app/Http/Controllers/SiteController.php',
     'App\\Http\\Controllers\\TagsController' => $baseDir . '/app/Http/Controllers/TagsController.php',
     'App\\Http\\Controllers\\TasksController' => $baseDir . '/app/Http/Controllers/TasksController.php',
+    'App\\Http\\Controllers\\TourController' => $baseDir . '/app/Http/Controllers/TourController.php',
     'App\\Http\\Controllers\\UsersController' => $baseDir . '/app/Http/Controllers/UsersController.php',
     'App\\Http\\Controllers\\VisitorController' => $baseDir . '/app/Http/Controllers/VisitorController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',

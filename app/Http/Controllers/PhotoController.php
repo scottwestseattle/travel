@@ -279,7 +279,6 @@ class PhotoController extends Controller
 					}
 					else
 					{
-						dd('here');
 						$request->session()->flash('message.level', 'danger');
 						$request->session()->flash('message.content', 'Resizing of image failed');
 					}
@@ -639,7 +638,7 @@ class PhotoController extends Controller
     }	
 	
     public function confirmdelete(Request $request, Photo $photo)
-    {
+    {		
 		if (!$this->isAdmin())
              return redirect('/');
 	
@@ -651,9 +650,9 @@ class PhotoController extends Controller
 			else
 				$path .= '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
 	
-			//dd($path);
+			dd($path);
 	
-			return view('photos.confirmdelete', ['photo' => $photo, 'path' => $path, 'data' => $this->getViewData()]);							
+			return view('photos.confirmdelete', ['photo' => $photo, 'path' => $path]);							
         }           
         else 
 		{
@@ -662,7 +661,7 @@ class PhotoController extends Controller
     }
 	
     public function delete(Request $request, Photo $photo)
-    {
+    {		
 		$redirect = null;
 		$message = null;
 		$messageLevel = null;

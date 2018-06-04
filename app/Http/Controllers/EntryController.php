@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Entry;
 use App\Photo;
+use App\Location;
 use DB;
 
 define('BODYSTYLE', '<span style="color:green;">');
@@ -404,6 +405,118 @@ class EntryController extends Controller
 		{
 			return redirect('/');
 		}
+    }
+
+    public function setlocation(Entry $entry)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
+		$locations = Location::select()
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->orderByRaw('locations.location_type ASC')
+			->get();
+
+		$current_location = $entry->locations()->orderByRaw('location_type DESC')->first();
+			
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {			
+			return view('entries.location', ['record' => $entry, 'locations' => $locations, 'current_location' => $current_location]);							
+        }           
+        else 
+		{
+             return redirect('/');
+		}            	
+    }
+	
+    public function locationupdate(Request $request, Entry $entry)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check())
+        {									
+			$entry_id = $entry->id;
+			$location_id = intval($request->location_id);
+
+			if ($location_id <= 0)
+			{
+				//
+				// location is being removed
+				//
+				
+				// remove the hasMany
+				$entry->locations()->detach();
+				
+				// remove the hasOne
+				$entry->location_id = null;
+				$entry->save();
+			}
+			else
+			{
+				// get the new location
+				$location = Location::select()
+					->where('id', $location_id)
+					->first();
+
+				if (isset($location))
+				{
+					//
+					// remove all current locations so they can be replaced
+					//
+					$entry->locations()->detach();
+					
+					//
+					// set the primary has-one location
+					//
+					$entry->location_id = $location_id;
+					$entry->save();
+					
+					//
+					// set the hasmany locations
+					//
+					
+					$locations = DB::table('entries')
+						->leftJoin('locations as l1', 'entries.location_id', '=', 'l1.id')
+						->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
+						->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
+						->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
+						->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
+						->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
+						->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
+						->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
+						->select(
+							  'l1.name as loc1', 'l1.id as loc1_id'
+							, 'l2.name as loc2', 'l2.id as loc2_id'
+							, 'l3.name as loc3', 'l3.id as loc3_id'
+							, 'l4.name as loc4', 'l4.id as loc4_id'
+							, 'l5.name as loc5', 'l5.id as loc5_id'
+							, 'l6.name as loc6', 'l6.id as loc6_id'
+							, 'l7.name as loc7', 'l7.id as loc7_id'
+							, 'l8.name as loc8', 'l8.id as loc8_id'
+						)
+						->where('entries.id', $entry->id)
+						->first();
+					//dd($locations);
+					
+					try 
+					{
+						$this->saveLocations($entry, $locations);
+					}
+					catch (\Exception $e) 
+					{
+						$request->session()->flash('message.level', 'danger');
+						$request->session()->flash('message.content', $e->getMessage());
+					}									
+				}
+			}
+			
+			return redirect(route('entry.view', [urlencode($entry->title), $entry->id]));
+		}
+		else
+		{
+			return redirect('/');
+		}
     }	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -565,5 +678,5 @@ class EntryController extends Controller
 		//echo $final;
 		
 		return $final;
-	}	
+	}			
 }

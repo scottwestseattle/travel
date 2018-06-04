@@ -3,15 +3,12 @@
 @section('content')
 
 <div class="page-size container">
-	@guest
-	@else
-		@component('menu-submenu-activities', ['record_id' => $record->id, 'record_title' => $record->title])
-		@endcomponent
-	@endguest
+
+	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])@endcomponent
 	
 	<h1>Set Location</h1>
 
-	<form method="POST" action="/activities/locationupdate/{{ $record->id }}">
+	<form method="POST" action="/entries/locationupdate/{{ $record->id }}">
 
 		<div class="form-group">
 			<h3 name="title" class="">{{$record->title }}</h3>

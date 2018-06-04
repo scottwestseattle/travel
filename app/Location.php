@@ -18,4 +18,13 @@ class Location extends Base
     {
         return $this->belongsToMany('App\Activity')->withTimestamps();
     }
+	
+    //
+    // The entries that belong to the location
+    //
+    public function entries()
+    {
+        return $this->belongsToMany('App\Entry')->withTimestamps();
+    }
+	
 }
