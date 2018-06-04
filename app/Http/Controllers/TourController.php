@@ -32,7 +32,7 @@ class TourController extends Controller
     	return view('tours.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
 	}		
 
-    public function location()
+    public function location($id)
     {
 		$tours = $this->getTourIndex();
 		

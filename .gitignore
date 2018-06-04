@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/img/sliders
+/docs/sliders
 /public/img/tours
 /public/img/entries
 /storage/*.key

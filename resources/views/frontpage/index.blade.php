@@ -140,7 +140,7 @@ $tour_count = isset($tours) ? sizeof($tours) : 0;
 	$welcome_msg = 'provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.';
 ?>
 
-<section id="" class="sectionYellow" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+<section id="" class="purple" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
@@ -280,7 +280,7 @@ $tour_count = isset($tours) ? sizeof($tours) : 0;
 <!--------------------------------------------------------------------------------------->
 <?php if (false) : ?>
 
-<section class="sectionBlue">
+<section class="sectionOrange">
 	<div class="container" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
 			
@@ -368,7 +368,7 @@ $tour_count = isset($tours) ? sizeof($tours) : 0;
 <!-- SECTION: Current Location -->
 <!--------------------------------------------------------------------------------------->
 		
-<section class="sectionBlue">
+<section class="sectionOrange">
 <div class="container">	
 
 	<div class="sectionHeader text-center main-font">	

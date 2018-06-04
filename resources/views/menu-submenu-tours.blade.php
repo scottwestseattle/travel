@@ -11,6 +11,7 @@
 				<td style="width:40px;"><a href='/tours/edit/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td style="width:40px;"><a href='/tours/confirmdelete/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				<td style="width:40px;"><a href='/photos/entries/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+				<td style="width:40px;"><a href='/tours/location/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a></td>
 				<td style="width:40px;"><a href='/entries/publish/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 			@endif
 		</tr></table>
