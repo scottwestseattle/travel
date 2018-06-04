@@ -27,6 +27,7 @@ if (isset($title))
 			<tbody>
 			@foreach($records as $record)
 				<tr>
+					<td style="width:20px;"><a href='/entries/show/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-asterisk"></span></a></td>
 					<td style="width:20px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td>
 						<a href="/entries/view/{{$record->id}}">{{$record->title}}</a>

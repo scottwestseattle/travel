@@ -5,7 +5,7 @@
 			<td style="width:40px; font-size:20px;"><a href='/entries/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			@if (isset($record_id))
-				<td style="width:40px; font-size:20px;"><a href='/entries/view/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
+				<td style="width:40px; font-size:20px;"><a href='/entries/show/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 				<td style="width:40px;"><a href='/entries/edit/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td style="width:40px;"><a href='/entries/confirmdelete/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				<td style="width:40px;"><a href='/photos/entries/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>

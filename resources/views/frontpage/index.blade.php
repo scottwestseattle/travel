@@ -3,6 +3,12 @@
 
 @section('content')
 
+<?php
+
+$tour_count = isset($tours) ? sizeof($tours) : 0;
+
+?>
+
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 
 <!--------------------------------------------------------------------------------------->
@@ -204,10 +210,10 @@
 			<!---------------------------------------------------->
 			<!-- Locations -->
 			<!---------------------------------------------------->
-			@if (isset($locations) && isset($tours) && $tours->count() > 0)
+			@if (isset($locations) && isset($tours) && sizeof($tours) > 0)
 			<div style="margin:20px; 0" class="text-center">
 				<!-- h3 style="margin-bottom:20px;" class="main-font sectionImageBlue">Locations</h3 -->
-				<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tours->count()}}</span></button></a>
+				<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tour_count}}</span></button></a>
 				@foreach($locations as $location)
 				@if ($location->activities()->count() > 0)
 					<a href="/locations/activities/{{$location->id}}">
@@ -230,13 +236,16 @@
 				<!-------------------------------->
 				<div class="row">
 
-					@if (isset($tours) && $tours->count() > 0)
+					@if ($tour_count > 0)
 					@foreach($tours as $entry)
-										
+						<?php
+							$photo = $photoPath . $entry->id . '/' . $entry->photo;
+							//dd($photo);
+						?>
 						<div class="col-md-4 col-sm-6">
 						
-							<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">
-								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo}}'); "></div>
+							<a href="{{ route('tour.view', [urlencode($entry->title), $entry->id]) }}">
+								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
@@ -259,52 +268,6 @@
 					@endif
 					
 				</div><!-- row -->	
-
-				@if (false)
-				<!-- this is the XS size only using table cols -->
-				<div class="hidden-xl hidden-lg hidden-md hidden-sm">
-					<table class="table" style="padding:0; margin:0">
-						<tbody>
-							@foreach($tours as $entry)
-								<tr>
-									<td style="width:150px;">
-										<a href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}"><img src="{{ $entry->photo }}" width="150" /></a>
-									</td>
-									<td>
-										<a style="font-family: Raleway; font-size:.8em;" href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{$entry->title}}</a>
-										
-										@if (false)
-										<?php
-											$tags = "Hike";
-											if (strpos($entry->title, "Water Taxi") === FALSE)
-											{
-												$tags = "Hike, Bike";
-											}
-											else
-											{
-												$tags = "Boat";
-											}
-										?>
-										<div style="font-family: Raleway; color: #1970D3; font-size:.6em; font-weight: bold;">{{ $tags }}</div>
-										@else
-										<div></div>
-										@endif
-										
-										@guest
-										@else
-											<a href='{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}'>
-												<span style="font-size:.8em;" class="glyphCustom glyphicon glyphicon-edit"></span>
-											</a>
-											
-											<div style="font-family: Raleway; color: #1970D3; font-size:.4em; font-weight: bold;"></div>							
-										@endguest
-									</td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div><!-- XS size only -->
-				@endif
 
 			</div>
 						

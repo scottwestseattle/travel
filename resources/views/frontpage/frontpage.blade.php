@@ -242,7 +242,7 @@
 				<a href="/locations/activities/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tours->count()}}</span></button></a>
 				@foreach($locations as $location)
 				@if ($location->activities()->count() > 0)
-					<a href="/locations/activities/{{$location->id}}">
+					<a href="/tours/location/{{$location->id}}">
 						<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
 							<span class="badge badge-light">{{$location->activities()->count()}}</span>
 						</button>

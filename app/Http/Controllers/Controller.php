@@ -11,6 +11,8 @@ use Auth;
 use App\Task;
 use App\Entry;
 use App\Visitor;
+use App\Photo;
+use DB;
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
 define('TOUR_PHOTOS_PATH', '/public/img/tours/');
@@ -447,5 +449,120 @@ class Controller extends BaseController
 		}
 		
 		return $rc;
-	}		
+	}
+
+    protected function getPhotoPath(Photo $photo = null)
+    {
+		if ($photo == null)
+		{
+			// the higher level photo path
+			$path = '/img/' . PHOTO_ENTRY_FOLDER . '/';
+		}
+		else
+		{
+			if ($photo->parent_id === 0)	// slider photo path
+				$path = '/img/' . PHOTO_SLIDER_FOLDER . '/';
+			else 							// entry photo path
+				$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+		}
+		
+		return $path;
+	}
+	
+	protected function deletePhoto(Photo $photo, &$redirect, &$message, &$messageLevel)
+	{
+		$redirect = '/';
+		$message = 'Photo successfully deleted';
+		$messageLevel = 'success';
+		$rc = false;
+		
+		if (!$this->isAdmin())
+             return redirect('/');
+	
+    	if ($this->isOwnerOrAdmin($photo->user_id))
+        {			
+			// 
+			// update the database record
+			//
+			$photo->deleteSafe();
+			//$photo->deleted_flag = 1;
+			//$photo->save();	
+
+			//
+			// move the file to the deleted folder
+			//
+			if ($this->isSlider($photo))
+			{
+				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
+				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
+			}
+			else
+			{
+				$path_from = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id;
+			}
+			
+			$path_to = $path_from . 'deleted/';
+						
+			if (!is_dir($path_to)) 
+			{
+				// make the folder with read/execute for everybody
+				mkdir($path_to, 0755);
+			}
+			
+			$path_from .= $photo->filename;
+			$path_to .= $photo->filename;
+
+			try
+			{
+				rename($path_from, $path_to);
+				
+				$rc = true;
+			}
+			catch (\Exception $e) 
+			{
+				$messageLevel = 'danger';
+				$message = $e->getMessage();				
+			}
+		}
+		
+		return $rc;
+	}
+	
+	protected function getTourIndex()
+	{
+		// get the list with the location included
+		$records = DB::select('
+			SELECT entries.id, entries.title, entries.view_count, entries.published_flag, entries.approved_flag,
+				activities.id as activity_id,
+				activities.location_id,
+				activities.map_link,
+				photo_main.filename as photo,
+				count(photos.id) as photo_count
+			FROM entries
+			LEFT JOIN activities
+				ON activities.parent_id = entries.id
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
+			LEFT JOIN photos
+				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
+			WHERE 1=1
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+			GROUP BY 
+				entries.id, entries.title, entries.view_count, entries.published_flag, entries.approved_flag,
+				activities.id, photo_main.filename, activities.map_link, activities.location_id
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC
+		' , [ENTRY_TYPE_TOUR]);
+		
+		return $records;
+	}
+
+	protected function isSlider(Photo $photo)
+	{
+		$id = intval($photo->parent_id);
+		
+		return ($id === 0);
+	}
+	
 }

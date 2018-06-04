@@ -46,6 +46,7 @@ Route::group(['prefix' => 'tours'], function () {
 	// list
 	Route::get('/index', 'TourController@index')->middleware('auth');
 	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
+	Route::get('/location{id}', 'TourController@location');
 
 	// view
 	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
@@ -78,6 +79,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 
 	// view
+	Route::get('/show/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@show']);
 	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
 	Route::resource('entry', 'EntryController');	
 	
@@ -156,6 +158,7 @@ Route::group(['prefix' => 'photos'], function ()
 {
 	// index
 	Route::get('/index', 'PhotoController@index')->middleware('auth');
+	Route::get('/indexadmin', 'PhotoController@indexadmin')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
 	Route::get('/entries/{id}', 'PhotoController@entries')->middleware('auth');

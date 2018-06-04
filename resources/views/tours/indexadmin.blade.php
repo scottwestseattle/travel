@@ -43,9 +43,12 @@ $header = 'Tours';
 							$location_name = $record->location->name;
 							$location_id = $record->location->id;
 						}
+						
+						$activity_id = isset($record->activity_id) ? $record->activity_id : 'no tour record';
 					?>
 					<td>
-						<a href="{{ route('tour.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}&nbsp;({{$record->id}})</a>
+						<a href="{{ route('tour.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}&nbsp;({{$activity_id}})</a>
+						
 						@if (isset($location_name))
 							&nbsp;(<a href="/locations/tours/{{$location_id}}">{{$location_name}}</a>)
 						@endif
@@ -66,6 +69,17 @@ $header = 'Tours';
 							@endif
 							@if (strlen($record->map_link) == 0)
 								<a class="" href="/tours/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
+							@endif
+							@if (!isset($record->photo))
+								<a class="" href="/photos/entries/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Main Photo</button></a>
+							@endif
+							@if (intval($record->photo_count) < 3)
+								<a class="" href="/photos/entries/{{$record->id}}">
+									<button type="button" class="btn btn-danger btn-alert">Add Photos
+										<span style="margin-left:5px; font-size:.9em; font-weight:bold; background-color: white;" class="badge">{{ $record->photo_count }}
+										</span>
+									</button>
+								</a>
 							@endif
 							</div>
 						@endif

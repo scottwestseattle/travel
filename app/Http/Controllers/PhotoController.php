@@ -117,6 +117,26 @@ class PhotoController extends Controller
              return redirect('/');
         }
     }
+	
+    public function indexadmin()
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		if (Auth::check())
+        {
+			$photos = Photo::select()
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', '>', 0)
+				->get();
+			
+			return view('photos.indexadmin', ['photos' => $photos, 'path' => $this->getPhotoPath()]);	
+        }           
+        else 
+		{
+             return redirect('/');
+        }
+    }
 		
     public function add($parent_id = 0)
     {
@@ -496,13 +516,10 @@ class PhotoController extends Controller
 			
 		return $filename;
 	}
-
+	
     public function view(Photo $photo)
     {
-		if ($photo->parent_id === 0)
-			$path = '/img/' . PHOTO_SLIDER_FOLDER . '/';
-		else
-			$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+		$path = $this->getPhotoPath($photo);
 		
 		return view('photos.view', ['photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text]);
 	}
@@ -646,64 +663,17 @@ class PhotoController extends Controller
 	
     public function delete(Request $request, Photo $photo)
     {
-		if (!$this->isAdmin())
-             return redirect('/');
-		 
-		$redirect = '/';
-	
-    	if ($this->isOwnerOrAdmin($photo->user_id))
-        {			
-			// 
-			// update the database record
-			//
-			$photo->deleted_flag = 1;
-			$photo->save();	
-
-			//
-			// move the file to the deleted folder
-			//
-			if ($this->isSlider($photo))
-			{
-				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
-				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
-			}
-			else
-			{
-				$path_from = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $request->parent_id . '/';
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $request->parent_id;
-			}
-			
-			$path_to = $path_from . 'deleted/';
-						
-			if (!is_dir($path_to)) 
-			{
-				// make the folder with read/execute for everybody
-				mkdir($path_to, 0755);
-			}
-			
-			$path_from .= $photo->filename;
-			$path_to .= $photo->filename;
-
-			try
-			{
-				rename($path_from, $path_to);
-			}
-			catch (\Exception $e) 
-			{
-				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', $e->getMessage());
-			}
-		}
+		$redirect = null;
+		$message = null;
+		$messageLevel = null;
+		
+		$this->deletePhoto($photo, $redirect, $message, $messageLevel);
+		
+		$request->session()->flash('message.level', $messageLevel);
+		$request->session()->flash('message.content', $message);
 		
 		return redirect($redirect);
     }
-
-	protected function isSlider(Photo $photo)
-	{
-		$id = intval($photo->parent_id);
-		
-		return ($id === 0);
-	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

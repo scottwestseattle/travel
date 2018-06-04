@@ -7,7 +7,7 @@
 	@component('menu-submenu-tours', ['record_id' => $record->id, 'record_title' => $record->title])
 	@endcomponent
 
-	<h1>Delete</h1>
+	<h1>Delete Tour</h1>
 
 	<form method="POST" action="/tours/delete/{{ $record->id }}">
 

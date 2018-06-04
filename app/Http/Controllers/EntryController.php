@@ -23,7 +23,7 @@ class EntryController extends Controller
 		
 		$entries = Entry::select()
 			->where('site_id', $this->getSiteId())
-			->where('type_flag', '<>', ENTRY_TYPE_TOUR)
+			//->where('type_flag', '<>', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
@@ -38,10 +38,22 @@ class EntryController extends Controller
 		
 		$entries = Entry::select()
 			->where('site_id', $this->getSiteId())
-			->where('type_flag', '<>', ENTRY_TYPE_TOUR)
+			//->where('type_flag', '<>', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
+			
+		$entries = DB::select('
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at,
+				count(photos.id) as photo_count
+			FROM entries
+			LEFT JOIN photos
+				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
+			WHERE 1=1
+				AND entries.deleted_flag = 0
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
+		' , []);			
 		
     	return view('entries.indexadmin', ['records' => $entries]);
     }
@@ -126,7 +138,7 @@ class EntryController extends Controller
 						
 		$entry->save();
 			
-		return redirect('/entries/view/' . $entry->id);          	
+		return redirect('/entries/show/' . $entry->id);          	
     }
 
     public function upload(Entry $entry)
@@ -226,6 +238,23 @@ class EntryController extends Controller
 		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
 	}
 
+    public function show($id)
+    {
+		$entry = Entry::select()
+			->where('site_id', $this->getSiteId())
+			->where('deleted_flag', 0)
+			->where('id', $id)
+			->first();
+		
+		$photos = Photo::select()
+			->where('deleted_flag', 0)
+			->where('parent_id', $entry->id)
+			->orderByRaw('id ASC')
+			->get();
+		
+		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
+	}
+	
     public function home()
     {
 		if (!$this->isAdmin())
@@ -263,7 +292,7 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			return redirect('/entries/view/' . $entry->id); 
+			return redirect('/entries/show/' . $entry->id); 
 		}
 		else
 		{
@@ -281,7 +310,10 @@ class EntryController extends Controller
 			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
 			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
 			
-			return view('entries.delete', ['entry' => $entry, 'data' => $this->getViewData(), 'referrer' => $_SERVER["HTTP_REFERER"]]);							
+			if ($entry->type_flag === ENTRY_TYPE_TOUR)
+				return view('tours.confirmdelete', ['record' => $entry]);			
+			else
+				return view('entries.delete', ['entry' => $entry]);
         }           
         else 
 		{
@@ -298,7 +330,7 @@ class EntryController extends Controller
         {
 			//dd($entry);
 			
-			$entry->delete();
+			$entry->deleteSafe();
 			
 			return redirect('/entries/index');
 		}

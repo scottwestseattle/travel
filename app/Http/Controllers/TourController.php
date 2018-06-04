@@ -17,18 +17,7 @@ class TourController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 					
-		// get the list with the location included
-		$records = DB::table('entries')
-			->leftJoin('activities', 'activities.parent_id', '=', 'entries.id')
-			->leftJoin('locations', 'activities.location_id', '=', 'locations.id')
-			->select('entries.*', 
-				'activities.map_link', 
-				'activities.location_id',
-				'locations.name as location_name'
-				)
-			->where('type_flag', ENTRY_TYPE_TOUR)
-			->orderByRaw('entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC') // put records with missing stuff at the top
-			->get();
+		$records = $this->getTourIndex();
 			
 		//dd($records);
 		
@@ -43,6 +32,18 @@ class TourController extends Controller
     	return view('tours.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
 	}		
 
+    public function location()
+    {
+		$tours = $this->getTourIndex();
+		
+		$locations = Location::select()
+			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->orderByRaw('locations.location_type ASC')
+			->get();		
+
+    	return view('tours.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
+	}		
+	
     public function maps()
     {
 		$locations = null;
@@ -229,95 +230,101 @@ class TourController extends Controller
 		$activity = Activity::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', $entry->id)
-			->first();			
-			
-		$locations = DB::table('activities')
-			->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
-			->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
-			->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
-			->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
-			->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
-			->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
-			->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
-			->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
-			->select(
-				  'l1.name as loc1', 'l1.id as loc1_id', 'l1.breadcrumb_flag as loc1_breadcrumb_flag'
-				, 'l2.name as loc2', 'l2.id as loc2_id', 'l2.breadcrumb_flag as loc2_breadcrumb_flag'
-				, 'l3.name as loc3', 'l3.id as loc3_id', 'l3.breadcrumb_flag as loc3_breadcrumb_flag'
-				, 'l4.name as loc4', 'l4.id as loc4_id', 'l4.breadcrumb_flag as loc4_breadcrumb_flag'
-				, 'l5.name as loc5', 'l5.id as loc5_id', 'l5.breadcrumb_flag as loc5_breadcrumb_flag'
-				, 'l6.name as loc6', 'l6.id as loc6_id', 'l6.breadcrumb_flag as loc6_breadcrumb_flag'
-				, 'l7.name as loc7', 'l7.id as loc7_id', 'l7.breadcrumb_flag as loc7_breadcrumb_flag'
-				, 'l8.name as loc8', 'l8.id as loc8_id', 'l8.breadcrumb_flag as loc8_breadcrumb_flag'
-				)
-			->where('activities.id', $activity->id)
 			->first();
-
-		$location = array();
-		if (isset($locations->loc1))
-		{
-			$location[0]['name'] = $locations->loc1;
-			$location[0]['id'] = $locations->loc1_id;
-			$location[0]['breadcrumb_flag'] = $locations->loc1_breadcrumb_flag;
-		}
-		if (isset($locations->loc2) && $locations->loc2_breadcrumb_flag == 1)
-		{
-			$location[1]['name'] = $locations->loc2;
-			$location[1]['id'] = $locations->loc2_id;
-			$location[1]['breadcrumb_flag'] = $locations->loc2_breadcrumb_flag;
-		}
-		if (isset($locations->loc3) && $locations->loc3_breadcrumb_flag == 1)
-		{
-			$location[2]['name'] = $locations->loc3;
-			$location[2]['id'] = $locations->loc3_id;
-			$location[2]['breadcrumb_flag'] = $locations->loc3_breadcrumb_flag;
-		}
-		if (isset($locations->loc4) && $locations->loc4_breadcrumb_flag == 1)
-		{
-			$location[3]['name'] = $locations->loc4;
-			$location[3]['id'] = $locations->loc4_id;
-			$location[3]['breadcrumb_flag'] = $locations->loc4_breadcrumb_flag;
-		}
-		if (isset($locations->loc5) && $locations->loc5_breadcrumb_flag == 1)
-		{
-			$location[4]['name'] = $locations->loc5;
-			$location[4]['id'] = $locations->loc5_id;
-			$location[4]['breadcrumb_flag'] = $locations->loc5_breadcrumb_flag;
-		}
-		if (isset($locations->loc6) && $locations->loc6_breadcrumb_flag == 1)
-		{
-			$location[5]['name'] = $locations->loc6;
-			$location[5]['id'] = $locations->loc6_id;
-			$location[5]['breadcrumb_flag'] = $locations->loc6_breadcrumb_flag;
-		}
-		if (isset($locations->loc7) && $locations->loc7_breadcrumb_flag == 1)
-		{
-			$location[6]['name'] = $locations->loc7;
-			$location[6]['id'] = $locations->loc7_id;
-			$location[6]['breadcrumb_flag'] = $locations->loc7_breadcrumb_flag;
-		}
-		if (isset($locations->loc8) && $locations->loc8_breadcrumb_flag == 1)
-		{
-			$location[7]['name'] = $locations->loc8;
-			$location[7]['id'] = $locations->loc8_id;
-			$location[7]['breadcrumb_flag'] = $locations->loc8_breadcrumb_flag;
-		}
-		
-		// this happens if the location structure has been changed, the hasMany table needs to be updated
-		if (count($location) != $activity->locations()->count())
-		{
-			//
-			// remove all current locations so they can be replaced
-			//
-			$activity->locations()->detach();
+		if (!isset($activity))
+			$activity = new Activity();
 			
-			//
-			// save current structure
-			//
-			$this->saveLocations($activity, $locations);
+		$location = array();
+		if (isset($activity))
+		{
+			$locations = DB::table('activities')
+				->leftJoin('locations as l1', 'activities.location_id', '=', 'l1.id')
+				->leftJoin('locations as l2', 'l1.parent_id', '=', 'l2.id')
+				->leftJoin('locations as l3', 'l2.parent_id', '=', 'l3.id')
+				->leftJoin('locations as l4', 'l3.parent_id', '=', 'l4.id')
+				->leftJoin('locations as l5', 'l4.parent_id', '=', 'l5.id')
+				->leftJoin('locations as l6', 'l5.parent_id', '=', 'l6.id')
+				->leftJoin('locations as l7', 'l6.parent_id', '=', 'l7.id')
+				->leftJoin('locations as l8', 'l7.parent_id', '=', 'l8.id')
+				->select(
+					  'l1.name as loc1', 'l1.id as loc1_id', 'l1.breadcrumb_flag as loc1_breadcrumb_flag'
+					, 'l2.name as loc2', 'l2.id as loc2_id', 'l2.breadcrumb_flag as loc2_breadcrumb_flag'
+					, 'l3.name as loc3', 'l3.id as loc3_id', 'l3.breadcrumb_flag as loc3_breadcrumb_flag'
+					, 'l4.name as loc4', 'l4.id as loc4_id', 'l4.breadcrumb_flag as loc4_breadcrumb_flag'
+					, 'l5.name as loc5', 'l5.id as loc5_id', 'l5.breadcrumb_flag as loc5_breadcrumb_flag'
+					, 'l6.name as loc6', 'l6.id as loc6_id', 'l6.breadcrumb_flag as loc6_breadcrumb_flag'
+					, 'l7.name as loc7', 'l7.id as loc7_id', 'l7.breadcrumb_flag as loc7_breadcrumb_flag'
+					, 'l8.name as loc8', 'l8.id as loc8_id', 'l8.breadcrumb_flag as loc8_breadcrumb_flag'
+					)
+				->where('activities.id', $activity->id)
+				->first();
+
+			if (isset($locations->loc1))
+			{
+				$location[0]['name'] = $locations->loc1;
+				$location[0]['id'] = $locations->loc1_id;
+				$location[0]['breadcrumb_flag'] = $locations->loc1_breadcrumb_flag;
+			}
+			if (isset($locations->loc2) && $locations->loc2_breadcrumb_flag == 1)
+			{
+				$location[1]['name'] = $locations->loc2;
+				$location[1]['id'] = $locations->loc2_id;
+				$location[1]['breadcrumb_flag'] = $locations->loc2_breadcrumb_flag;
+			}
+			if (isset($locations->loc3) && $locations->loc3_breadcrumb_flag == 1)
+			{
+				$location[2]['name'] = $locations->loc3;
+				$location[2]['id'] = $locations->loc3_id;
+				$location[2]['breadcrumb_flag'] = $locations->loc3_breadcrumb_flag;
+			}
+			if (isset($locations->loc4) && $locations->loc4_breadcrumb_flag == 1)
+			{
+				$location[3]['name'] = $locations->loc4;
+				$location[3]['id'] = $locations->loc4_id;
+				$location[3]['breadcrumb_flag'] = $locations->loc4_breadcrumb_flag;
+			}
+			if (isset($locations->loc5) && $locations->loc5_breadcrumb_flag == 1)
+			{
+				$location[4]['name'] = $locations->loc5;
+				$location[4]['id'] = $locations->loc5_id;
+				$location[4]['breadcrumb_flag'] = $locations->loc5_breadcrumb_flag;
+			}
+			if (isset($locations->loc6) && $locations->loc6_breadcrumb_flag == 1)
+			{
+				$location[5]['name'] = $locations->loc6;
+				$location[5]['id'] = $locations->loc6_id;
+				$location[5]['breadcrumb_flag'] = $locations->loc6_breadcrumb_flag;
+			}
+			if (isset($locations->loc7) && $locations->loc7_breadcrumb_flag == 1)
+			{
+				$location[6]['name'] = $locations->loc7;
+				$location[6]['id'] = $locations->loc7_id;
+				$location[6]['breadcrumb_flag'] = $locations->loc7_breadcrumb_flag;
+			}
+			if (isset($locations->loc8) && $locations->loc8_breadcrumb_flag == 1)
+			{
+				$location[7]['name'] = $locations->loc8;
+				$location[7]['id'] = $locations->loc8_id;
+				$location[7]['breadcrumb_flag'] = $locations->loc8_breadcrumb_flag;
+			}
+			
+			// this happens if the location structure has been changed, the hasMany table needs to be updated
+			if (count($location) != $activity->locations()->count())
+			{
+				//
+				// remove all current locations so they can be replaced
+				//
+				$activity->locations()->detach();
+				
+				//
+				// save current structure
+				//
+				$this->saveLocations($activity, $locations);
+			}
+		
+			//dd($location);
 		}
 					
-		//dd($location);
 					
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
@@ -407,22 +414,26 @@ class TourController extends Controller
 				$activity->parent_id = $entry->id;
 				$activity->title = 'parent_id = ' . $entry->id;
 			}
-			
-			$activity->map_link	 = $request->map_link;
-			$activity->info_link = $request->info_link;
-			$activity->cost = $request->cost;
-			$activity->parking = $request->parking;
-			$activity->distance = $request->distance;
-			$activity->difficulty = $request->difficulty;
-			$activity->season = $request->season;
-			$activity->wildlife = $request->wildlife;
-			$activity->facilities = $request->facilities;
-			$activity->elevation = $request->elevation;
-			$activity->public_transportation = $request->public_transportation;
-			$activity->trail_type = $request->trail_type;
-			$activity->activity_type = $request->activity_type;
+
+			$isDirty = false;
+			$activity->map_link = $this->copyDirty($activity->map_link, $request->map_link, $isDirty);
+			$activity->info_link = $this->copyDirty($activity->info_link, $request->info_link, $isDirty);
+			$activity->cost = $this->copyDirty($activity->cost, $request->cost, $isDirty);
+			$activity->parking = $this->copyDirty($activity->parking, $request->parking, $isDirty);
+			$activity->distance = $this->copyDirty($activity->distance, $request->distance, $isDirty);
+			$activity->difficulty = $this->copyDirty($activity->difficulty, $request->difficulty, $isDirty);
+			$activity->season = $this->copyDirty($activity->season, $request->season, $isDirty);
+			$activity->wildlife = $this->copyDirty($activity->wildlife, $request->wildlife, $isDirty);
+			$activity->facilities = $this->copyDirty($activity->facilities, $request->facilities, $isDirty);
+			$activity->elevation = $this->copyDirty($activity->elevation, $request->elevation, $isDirty);
+			$activity->public_transportation = $this->copyDirty($activity->public_transportation, $request->public_transportation, $isDirty);
+			$activity->trail_type = $this->copyDirty($activity->trail_type, $request->trail_type, $isDirty);
+			$activity->activity_type = $this->copyDirty($activity->activity_type, $request->activity_type, $isDirty);
 						
-			$activity->save();
+			if ($isDirty)
+			{
+				$activity->save();
+			}
 			
 			return redirect(route('tour.view', [urlencode($entry->title), $entry->id]));
 		}
@@ -431,6 +442,14 @@ class TourController extends Controller
 			return redirect('/');
 		}
     }	
+
+    protected function copyDirty($to, $from, &$isDirty)
+    {	
+		if ($from != $to)
+			$isDirty = true;
+		
+		return $from;
+	}
 	
     public function confirmdelete(Entry $entry)
     {	
@@ -449,14 +468,41 @@ class TourController extends Controller
 		}            	
     }
 	
-    public function delete(Request $request, Activity $entry)
+    public function delete(Request $request, Entry $entry)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {			
-			$entry->delete();
+			$activity = Activity::select()
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', $entry->id)
+				->first();
+				
+			if (isset($activity))
+				$activity->deleteSafe();
+			
+			$photos = Photo::select()
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', '=', $entry->id)
+				->get();
+			foreach($photos as $photo)
+			{
+				$redirect = null;
+				$message = null;
+				$messageLevel = null;
+				
+				$rc = $this->deletePhoto($photo, $redirect, $message, $messageLevel);
+				
+				$request->session()->flash('message.level', $messageLevel);
+				$request->session()->flash('message.content', $message);
+				
+				if (!$rc)
+					break;
+			}
+			
+			$entry->deleteSafe();
 			
 			return redirect('/tours/index');
 		}
@@ -464,7 +510,7 @@ class TourController extends Controller
 		return redirect('/');
     }
 	
-    public function location(Request $request, Activity $activity)
+    public function setlocation(Request $request, Activity $activity)
     {	
 		if (!$this->isAdmin())
              return redirect('/');

@@ -92,7 +92,7 @@ class UsersController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$user->delete();
+		$user->deleteSafe();
 		
     	return redirect($this->redirect); 
     }	

@@ -56,9 +56,10 @@
 								<li><a href="/frontpage/index">Front Page</a></li>
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/activities/indexadmin">Activities</a></li>
-								<li><a href="/entries/index/">Entries</a></li>
+								<li><a href="/entries/indexadmin/">Entries</a></li>
 								<li><a href="/locations/indexadmin">Locations</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
+								<li><a href="/photos/indexadmin">Photos</a></li>
 								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tours/indexadmin">Tours</a></li>
 								<li><a href="/users/">Users</a></li>

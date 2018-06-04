@@ -243,7 +243,7 @@ class LocationsController extends Controller
 		
     	if (Auth::check())
         {			
-			$location->delete();
+			$location->deleteSafe();
 		}
 		
 		return redirect('/locations/indexadmin');

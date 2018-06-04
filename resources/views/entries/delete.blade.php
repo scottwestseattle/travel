@@ -2,11 +2,6 @@
 
 @section('content')
 
-@component('menu-submenu', ['data' => $data])
-	@component('menu-icons-start')@endcomponent
-	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
-@endcomponent
-
 <style>
 
 .form-text {
@@ -37,7 +32,7 @@
 		<hr />
 
 		<div class="form-group">
-			<span name="description_language1" style="font-size:1.3em;">{!! $entry->description_language1 !!}</span>
+			<span name="description_language1" style="font-size:1.3em;">{!! $entry->description_short !!}</span>
 		</div>
 		
 		<hr />
