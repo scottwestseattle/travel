@@ -549,7 +549,7 @@ class Controller extends BaseController
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 			GROUP BY 
-				entries.id, entries.title, entries.view_count, entries.published_flag, entries.approved_flag,
+				entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag,
 				activities.id, photo_main.filename, activities.map_link, activities.location_id
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC
 		';

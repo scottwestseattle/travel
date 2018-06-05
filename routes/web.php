@@ -44,7 +44,7 @@ Route::group(['prefix' => 'frontpage'], function () {
 Route::group(['prefix' => 'tours'], function () {
 
 	// list
-	Route::get('/index', 'TourController@index')->middleware('auth');
+	Route::get('/index', 'TourController@index');
 	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
 	Route::get('/location/{location_id}', 'TourController@location');
 
@@ -72,9 +72,9 @@ Route::group(['prefix' => 'tours'], function () {
 
 Route::group(['prefix' => 'entries'], function () {
 	
+	Route::get('/index', 'EntryController@index');
 	Route::get('/tours', 'EntryController@tours')->middleware('auth');
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
-	Route::get('/index', 'EntryController@index')->middleware('auth');
 	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 

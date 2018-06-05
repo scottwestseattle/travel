@@ -274,7 +274,7 @@ class ActivityController extends Controller
 			//
 			// save current structure
 			//
-			$this->saveLocations($activity, $locations);
+			$this->saveLocationsA($activity, $locations);
 		}
 					
 		//dd($location);
@@ -565,7 +565,7 @@ class ActivityController extends Controller
 						->first();
 					//dd($locations);
 					
-					$this->saveLocations($activity, $locations);
+					$this->saveLocationsA($activity, $locations);
 				}
 			}
 			
@@ -581,19 +581,19 @@ class ActivityController extends Controller
 	// Privates
 	//////////////////////////////////////////////////////////////////////////////////////////
 
-    private function saveLocations($activity, $locations)
+    private function saveLocationsA($activity, $locations)
     {	
-		$this->saveLocation($activity, $locations->loc1_id);
-		$this->saveLocation($activity, $locations->loc2_id);
-		$this->saveLocation($activity, $locations->loc3_id);
-		$this->saveLocation($activity, $locations->loc4_id);
-		$this->saveLocation($activity, $locations->loc5_id);
-		$this->saveLocation($activity, $locations->loc6_id);
-		$this->saveLocation($activity, $locations->loc7_id);
-		$this->saveLocation($activity, $locations->loc8_id);
+		$this->saveLocationA($activity, $locations->loc1_id);
+		$this->saveLocationA($activity, $locations->loc2_id);
+		$this->saveLocationA($activity, $locations->loc3_id);
+		$this->saveLocationA($activity, $locations->loc4_id);
+		$this->saveLocationA($activity, $locations->loc5_id);
+		$this->saveLocationA($activity, $locations->loc6_id);
+		$this->saveLocationA($activity, $locations->loc7_id);
+		$this->saveLocationA($activity, $locations->loc8_id);
 	}
 
-    private function saveLocation($activity, $id)
+    private function saveLocationA($activity, $id)
     {	
 		if (isset($id))
 		{
