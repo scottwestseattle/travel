@@ -650,8 +650,6 @@ class PhotoController extends Controller
 			else
 				$path .= '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
 	
-			dd($path);
-	
 			return view('photos.confirmdelete', ['photo' => $photo, 'path' => $path]);							
         }           
         else 

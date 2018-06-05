@@ -229,8 +229,10 @@
 					@if ($tour_count > 0)
 					@foreach($tours as $entry)
 						<?php
-							$photo = $photoPath . $entry->id . '/' . $entry->photo;
-							//dd($photo);
+							if (isset($entry->photo))
+								$photo = $photoPath . $entry->id . '/' . $entry->photo;
+							else
+								$photo = '/public/img/theme1/entry-placeholder.jpg';
 						?>
 						<div class="col-md-4 col-sm-6">
 						

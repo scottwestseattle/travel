@@ -12,8 +12,7 @@
 	<form method="POST" action="/entries/create">
 		<div class="form-control-big">	
 
-			@component('control-entry-types')
-			@endcomponent	
+			@component('control-entry-types')@endcomponent	
 				
 			<div class="entry-title-div">
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />

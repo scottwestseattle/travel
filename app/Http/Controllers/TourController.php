@@ -26,7 +26,7 @@ class TourController extends Controller
 
     public function index()
     {
-		$showAll = $this->getEntryCount();		
+		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);		
 		$tours = $this->getTourIndex();
 		$tour_count = isset($tours) ? count($tours) : 0;
 		$locations = Location::getPills();
@@ -84,14 +84,17 @@ class TourController extends Controller
 			$entry = new Entry();
 			$entry->site_id = $this->getSiteId();
 			$entry->user_id = Auth::id();
-			
-			$entry->title = trim($request->title);
-			$entry->description = trim($request->description);
-			$entry->description_short = trim($request->description_short);
 			$entry->type_flag = ENTRY_TYPE_TOUR;
-			
 			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
 			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+
+			// user set
+			$entry->title = trim($request->title);
+			$entry->permalink = trim($request->permalink);
+			$entry->description = trim($request->description);
+			$entry->description_short = trim($request->description_short);
+
+			$entry->save();
 			
 			//
 			// the activity part
@@ -113,8 +116,6 @@ class TourController extends Controller
 			$activity->elevation = trim($request->elevation);
 			$activity->public_transportation = trim($request->public_transportation);
 			$activity->trail_type = trim($request->trail_type);
-
-			$entry->save();
 				
 			$activity->title = 'parent_id=' . $entry->id;
 			$activity->parent_id = $entry->id;
@@ -346,9 +347,11 @@ class TourController extends Controller
 
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {
-			$entry->title = $request->title;
-			$entry->description = $request->description;
-			$entry->description_short = $request->description_short;
+			$entry->title = trim($request->title);
+			$entry->permalink = trim($request->permalink);
+			$entry->description = trim($request->description);
+			$entry->description_short = trim($request->description_short);
+			
 			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
 			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
@@ -465,7 +468,7 @@ class TourController extends Controller
 	
     public function location($location_id)
     {
-		$showAll = $this->getEntryCount();
+		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);
 		
 		$tours = $this->getTourIndexLocation($location_id);
 							

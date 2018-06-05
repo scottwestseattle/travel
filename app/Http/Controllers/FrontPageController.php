@@ -32,7 +32,7 @@ class FrontPageController extends Controller
     {
 		$posts = null;
 
-		$showAll = $this->getEntryCount();			
+		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
 		$tour_count = isset($tours) ? count($tours) : 0;

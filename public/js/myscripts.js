@@ -184,7 +184,7 @@ function urlEncode(fromId, toId)
 	var toElem = document.getElementById(toId);
 	if (fromElem && toElem)
 	{
-		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-"));
+		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
 	}
 	else
 	{
