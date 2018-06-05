@@ -177,3 +177,17 @@ function stay()
 	$('#stay').prop('checked', true);	
 	$( "#save" ).click();
 }
+
+function urlEncode(fromId, toId)
+{
+    var fromElem = document.getElementById(fromId);
+	var toElem = document.getElementById(toId);
+	if (fromElem && toElem)
+	{
+		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-"));
+	}
+	else
+	{
+		alert('Error creating permalink');
+	}
+}

@@ -158,7 +158,7 @@ class HomeController extends Controller
     }
 	
     public function admin()
-    {
+    {		
 		//
 		// get activities pending approval
 		//

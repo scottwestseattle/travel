@@ -17,14 +17,14 @@
 Auth::routes();
 
 // public pages
-Route::get('/', 'HomeController@index');
+Route::get('/', 'FrontPageController@index');
 Route::get('/about', 'HomeController@about');
 Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/tours', 'HomeController@tours');
 Route::get('/posts', 'HomeController@posts');
-Route::get('/visits', 'HomeController@visits')->middleware('auth');;
-Route::get('/visitors/{sort?}', 'HomeController@visitors')->middleware('auth');;
-Route::get('/admin', 'HomeController@admin')->middleware('auth');
+Route::get('/visits', 'FrontPageController@visits')->middleware('auth');;
+Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');;
+Route::get('/admin', 'FrontPageController@admin')->middleware('auth');
 Route::get('/home', 'HomeController@index');
 
 // crypt / encrypt
@@ -47,10 +47,6 @@ Route::group(['prefix' => 'tours'], function () {
 	Route::get('/index', 'TourController@index');
 	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
 	Route::get('/location/{location_id}', 'TourController@location');
-
-	// view
-	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
-	Route::resource('tour', 'TourController');	
 	
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
@@ -68,6 +64,11 @@ Route::group(['prefix' => 'tours'], function () {
 	Route::get('/confirmdelete/{entry}', 'TourController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{entry}', 'TourController@delete')->middleware('auth');
 
+	// view
+	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
+	Route::resource('tour', 'TourController');		
+	Route::get('/{permalink}', ['as' => 'tour.permalink', 'uses' => 'TourController@permalink']);
+	Route::get('/{location}/{permalink}', ['as' => 'tour.permalocation', 'uses' => 'TourController@permalocation']);
 });
 
 Route::group(['prefix' => 'entries'], function () {
@@ -77,12 +78,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
 	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
-
-	// view
-	Route::get('/show/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@show']);
-	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
-	Route::resource('entry', 'EntryController');	
-	
+		
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
 	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
@@ -102,6 +98,12 @@ Route::group(['prefix' => 'entries'], function () {
 	// delete / confirm delete
 	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
+	
+	// view
+	Route::get('/show/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@show']);
+	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
+	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
+	Route::resource('entry', 'EntryController');		
 });
 
 Route::group(['prefix' => 'locations'], function () 
@@ -253,5 +255,4 @@ Route::group(['prefix' => 'users'], function () {
 	Route::get('/confirmdelete/{user}','UsersController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{user}','UsersController@delete')->middleware('auth');
 });
-
 

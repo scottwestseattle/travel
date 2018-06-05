@@ -33,7 +33,16 @@ class TourController extends Controller
 			
 		$photo_path = '/public/img/entries/';
 		
-    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'showAll' => $showAll, 'photo_path' => $photo_path, 'page_title' => 'Tours, Hikes, Things To Do']);
+		$vdata = [
+			'tours' => $tours, 
+			'tour_count' => $tour_count, 
+			'locations' => $locations, 
+			'showAll' => $showAll, 
+			'photo_path' => $photo_path, 
+			'page_title' => 'Tours, Hikes, Things To Do'
+		];
+		
+    	return view('tours.index', $vdata);
 	}		
 
     public function maps()
@@ -126,25 +135,57 @@ class TourController extends Controller
 		}
 
 		if ($success)
-			return redirect(route('tour.view', [urlencode($entry->title), $entry->id]));
+			return redirect(route('tour.permalink', [$entry->permalink]));
 		else
 			return redirect('/tours/indexadmin');
     }
+
+    public function permalocation($location, $permalink)
+    {
+		$entry = Entry::select()
+			->where('type_flag', ENTRY_TYPE_TOUR)
+			->where('deleted_flag', '<>', 1)
+			->where('permalink', $permalink)
+			->first();	
+			
+		return $this->handleView($entry);
+	}
+	
+    public function permalink($permalink)
+    {
+		$entry = Entry::select()
+			->where('type_flag', ENTRY_TYPE_TOUR)
+			->where('deleted_flag', '<>', 1)
+			->where('permalink', $permalink)
+			->first();	
+			
+		return $this->handleView($entry);
+	}
 	
     public function view($title, $id)
-    {		
+    {
 		$entry = Entry::select()
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
 			->first();	
 			
+		return $this->handleView($entry);
+	}
+
+    private function handleView($entry)
+    {
+		if (!isset($entry))
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', 'Entry Not Found');
+            return redirect('/tours/index');
+		}
+				
 		$activity = Activity::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', $entry->id)
 			->first();
-		if (!isset($activity))
-			$activity = new Activity();
 			
 		$location = array();
 		if (isset($entry))
@@ -221,17 +262,17 @@ class TourController extends Controller
 			}
 			
 			// this happens if the location structure has been changed, the hasMany table needs to be updated
-			if (count($location) != $activity->locations()->count())
+			if (count($location) != $entry->locations()->count())
 			{
 				//
 				// remove all current locations so they can be replaced
 				//
-				$activity->locations()->detach();
+				$entry->locations()->detach();
 				
 				//
 				// save current structure
 				//
-				$this->saveLocations($activity, $locations);
+				$this->saveLocations($entry, $locations);
 			}
 		
 			//dd($location);
@@ -347,7 +388,7 @@ class TourController extends Controller
 				$activity->save();
 			}
 			
-			return redirect(route('tour.view', [urlencode($entry->title), $entry->id]));
+			return redirect(route('tour.permalink', [$entry->permalink]));
 		}
 		else
 		{
@@ -427,24 +468,10 @@ class TourController extends Controller
 		$showAll = $this->getEntryCount();
 		
 		$tours = $this->getTourIndexLocation($location_id);
-		
-		/* the laravel way to do it (no photo join)
-		$location = Location::select()
-			->where('locations.deleted_flag', 0)
-			->where('id', $location_id)
-			->first();
-		$tours = $location->entries()->get();
-		*/
-		
-		//foreach($tours as $entry)
-		//	dd($entry);
-					
+							
 		$tour_count = isset($tours) ? count($tours) : 0;
 
 		$locations = Location::getPills();
-
-		//foreach($locations as $location)
-		//	dd($location->entries()->count());
 
     	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'showAll' => $showAll, 'photo_path' => '/public/img/entries/', 'page_title' => 'Tours, Hikes, Things To Do']);
 	}			

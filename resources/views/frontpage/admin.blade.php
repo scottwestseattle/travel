@@ -12,11 +12,12 @@
 		<table class="table table-striped">
 			<tbody>
 			@foreach($records as $record)
+				@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($record->location_id) || strlen($record->map_link) == 0 || !isset($record->photo) || intval($record->photo_count) < 3)
 				<tr>
 					<td style="width:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td style="width:20px;"><a href='/photos/tours/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td>
-						<a href="{{ route('activity.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}</a>
+						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}</a>
 													
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="background-color: #4993FD;" class="badge">{{ $record->view_count }}</span>
@@ -24,15 +25,26 @@
 						
 						<div>
 							@if ($record->published_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></li>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
 							@elseif ($record->approved_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
 							@endif
 							@if (!isset($record->location_id))
-								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+								<a class="" href="/entries/setlocation/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
 							@endif
-							@if (strlen($record->map_link) === 0)
-								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
+							@if (strlen($record->map_link) == 0)
+								<a class="" href="/tours/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
+							@endif
+							@if (!isset($record->photo))
+								<a class="" href="/photos/entries/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Main Photo</button></a>
+							@endif
+							@if (intval($record->photo_count) < 3)
+								<a class="" href="/photos/entries/{{$record->id}}">
+									<button type="button" class="btn btn-danger btn-alert">Add Photos
+										<span style="margin-left:5px; font-size:.9em; font-weight:bold; background-color: white;" class="badge">{{ $record->photo_count }}
+										</span>
+									</button>
+								</a>
 							@endif
 						</div>
 					</td>
@@ -40,6 +52,7 @@
 						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
 					</td>
 				</tr>
+				@endif
 			@endforeach
 			</tbody>
 		</table>   	

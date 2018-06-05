@@ -18,7 +18,12 @@
 				<label for="title">Title:</label>
 				<input type="text" name="title" class="form-control" value="{{ $record->title }}"  />
 			</div>
-						
+
+			<div class="entry-title-div">
+				<label for="title">Parent ID:</label>
+				<input type="text" name="parent_id" class="form-control" value="{{ $record->parent_id }}"  />
+			</div>
+			
 			<div class="entry-description-div">
 				<label for="description">Description:</label>
 				<textarea name="description" class="form-control entry-description-text" >{{ $record->description }}</textarea>

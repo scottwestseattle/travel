@@ -18,7 +18,7 @@
 			<div class="clearfix">
 						
 				<!---------------------------------------------------->
-				<!-- Locations -->
+				<!-- show location pills -->
 				<!---------------------------------------------------->
 				@if (isset($locations) && $tour_count > 0)
 				<div style="margin:20px; 0" class="text-center">
@@ -36,7 +36,7 @@
 				@endif
 						
 				<!-------------------------------->
-				<!-- this is the non-XS version -->
+				<!-- show the tours -->
 				<!-------------------------------->
 				<div class="row">
 
@@ -47,13 +47,13 @@
 							<!-- tour main photo -->
 							<?php $photo = $photo_path . $entry->id . '/' . $entry->photo; ?>
 							
-							<a href="{{ route('tour.view', [urlencode($entry->title), $entry->id]) }}">
+							<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
 								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{ $entry->title }}</a>
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('tour.permalink', [$entry->permalink]) }}">{{ $entry->title }}</a>
 							</div>
 							
 						</div>

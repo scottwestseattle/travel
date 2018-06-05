@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])@endcomponent
+	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent
 	
 	<h1>Set Location</h1>
 

@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	@component($record->type_flag === ENTRY_TYPE_TOUR ? 'menu-submenu-tours' : 'menu-submenu-entries', ['record_id' => $record->id, 'record_title' => $record->title])@endcomponent
+	@component($record->type_flag === ENTRY_TYPE_TOUR ? 'menu-submenu-tours' : 'menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent
 	
 	<h1>Publish</h1>
 

@@ -5,7 +5,7 @@
 <div class="page-size container">
 	@guest
 	@else
-		@component('menu-submenu-tours', ['record_id' => $record->id, 'record_title' => $record->title])
+		@component('menu-submenu-tours', ['record_id' => $record->id, 'record_permalink' => $record->permalink])
 		@endcomponent
 	@endguest
 	

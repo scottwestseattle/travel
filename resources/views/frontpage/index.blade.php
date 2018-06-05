@@ -224,9 +224,6 @@
 			<!---------------------------------------------------->
 			<div class="clearfix">
 						
-				<!-------------------------------->
-				<!-- this is the non-XS version -->
-				<!-------------------------------->
 				<div class="row">
 
 					@if ($tour_count > 0)
@@ -237,13 +234,17 @@
 						?>
 						<div class="col-md-4 col-sm-6">
 						
-							<a href="{{ route('tour.view', [urlencode($entry->title), $entry->id]) }}">
-								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
-							</a>
+							@if (isset($entry->location))
+								<a href="{{ route('tour.permalocation', [$entry->location, $entry->permalink]) }}">
+							@else
+								<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
+							@endif
+									<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
+								</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('activity.view', [urlencode($entry->title), $entry->id]) }}">{{ $entry->title }}</a>
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('tour.permalink', [$entry->permalink]) }}">{{ $entry->title }}</a>
 							</div>
 						</div>
 					

@@ -533,7 +533,7 @@ class Controller extends BaseController
 	protected function getTourIndexAdmin()
 	{
 		$q = '
-			SELECT entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag,
+			SELECT entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag, entries.permalink,
 				activities.id as activity_id,
 				activities.map_link,
 				photo_main.filename as photo,
@@ -549,7 +549,7 @@ class Controller extends BaseController
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 			GROUP BY 
-				entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag,
+				entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag, entries.permalink,
 				activities.id, photo_main.filename, activities.map_link, activities.location_id
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC
 		';
@@ -583,7 +583,7 @@ class Controller extends BaseController
 	protected function getTourIndex()
 	{
 		$q = '
-			SELECT entries.id, entries.title,
+			SELECT entries.id, entries.title, entries.permalink,
 				photo_main.filename as photo
 			FROM entries
 			LEFT JOIN photos as photo_main
@@ -594,7 +594,7 @@ class Controller extends BaseController
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 			GROUP BY 
-				entries.id, entries.title, photo_main.filename
+				entries.id, entries.title, photo_main.filename, entries.permalink
 			ORDER BY entries.id DESC
 		';
 		
@@ -604,38 +604,10 @@ class Controller extends BaseController
 		return $records;
 	}	
 
-	protected function getTourIndexLocation2($location_id)
-	{
-		$q = '
-			SELECT entries.id, entries.title,
-				photo_main.filename as photo
-			FROM entries
-			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
-			LEFT JOIN locations
-				ON locations.id = entries.location_id
-			WHERE 1=1
-				AND entries.location_id = ?
-				AND entries.type_flag = ?
-				AND entries.deleted_flag = 0
-				AND entries.published_flag = 1 
-				AND entries.approved_flag = 1
-			GROUP BY 
-				entries.id, entries.title, photo_main.filename
-			ORDER BY entries.id DESC
-		';
-		
-		// get the list with the location included
-		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
-		
-		return $records;
-	}	
-
 	protected function getTourIndexLocation($location_id)
 	{
 		$q = '
-			SELECT entries.id, entries.title,
-				photo_main.filename as photo
+			SELECT entries.id, entries.title, entries.permalink, photo_main.filename as photo
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0			
@@ -647,7 +619,7 @@ class Controller extends BaseController
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 			GROUP BY 
-				entries.id, entries.title, photo_main.filename
+				entries.id, entries.title, entries.permalink, photo_main.filename
 			ORDER BY entries.id DESC
 		';
 		
@@ -709,5 +681,12 @@ class Controller extends BaseController
 
 		return $rc;
 	}
+
+	protected function getReferer($request, $default)
+	{
+		$referer = isset($request) && isset($request->referer) ? $request->referer : $default;
 		
+		return $referer;
+	}
+	
 }

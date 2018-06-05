@@ -30,10 +30,11 @@ class Location extends Base
 			JOIN entries ON entloc.entry_id = entries.id 
 				WHERE 1=1
 				AND locations.deleted_flag = 0
-						AND entries.type_flag = ?
-						AND entries.deleted_flag = 0
-						AND entries.published_flag = 1 
-						AND entries.approved_flag = 1
+				AND locations.popular_flag = 1
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
 			GROUP BY 
 				locations.id, locations.name
 		';

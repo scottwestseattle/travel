@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	@component('menu-submenu-tours', ['record_id' => $record->id, 'record_title' => $record->title])
+	@component('menu-submenu-tours', ['record_id' => $record->id, 'record_permalink' => $record->permalink])
 	@endcomponent
 
 	<h1>Delete Tour</h1>

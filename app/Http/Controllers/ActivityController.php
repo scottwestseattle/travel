@@ -147,6 +147,7 @@ class ActivityController extends Controller
 			
 		$activity = new Activity();
 		
+		$activity->site_id = $this->getSiteId();
 		$activity->title = $request->title;
 		$activity->description = $request->description;
 		$activity->map_link	 = $request->map_link;
@@ -362,6 +363,8 @@ class ActivityController extends Controller
 			$activity->description = $request->description;
 			$activity->map_link	 = $request->map_link;
 			$activity->info_link = $request->info_link;
+			
+			$activity->parent_id = intval($request->parent_id);
 			
 			$activity->highlights = $request->highlights;
 			$activity->cost = $request->cost;

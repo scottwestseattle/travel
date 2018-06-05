@@ -71,11 +71,12 @@
 							<!---------------------------------------------------->
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
-								<li><a href="/frontpage/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
+								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Activities</a></li>
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
 								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
 						

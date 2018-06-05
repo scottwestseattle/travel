@@ -41,7 +41,7 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
-							<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+							<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
 							<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 							<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
@@ -53,7 +53,6 @@
 							<?php endif; ?>
 							
 							<?php if ($user_type >= 100) : ?>
-								<li><a href="/frontpage/index">Front Page</a></li>
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/activities/indexadmin">Activities</a></li>
 								<li><a href="/entries/indexadmin/">Entries</a></li>

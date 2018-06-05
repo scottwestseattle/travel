@@ -5,8 +5,8 @@
 			<td style="width:40px; font-size:20px;"><a href='/tours/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
 			<td style="width:40px;"><a href='/tours/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
 			@if (isset($record_id))
-				@if (isset($record_title))
-				<td style="width:40px; font-size:20px;"><a href='{{ route('tour.view', [urlencode($record_title), $record_id]) }}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
+				@if (isset($record_permalink))
+				<td style="width:40px; font-size:20px;"><a href='{{ route('tour.permalink', [$record_permalink]) }}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 				@endif				
 				<td style="width:40px;"><a href='/tours/edit/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td style="width:40px;"><a href='/tours/confirmdelete/{{$record_id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>

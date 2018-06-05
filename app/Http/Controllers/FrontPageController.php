@@ -103,38 +103,17 @@ class FrontPageController extends Controller
     public function admin()
     {
 		//
-		// get activities pending approval
+		// get records with info missing
 		//
-		// get latest visits
-		$activities = DB::table('activities')
-			->select()
-			->where('published_flag', 0)
-			->orWhere('approved_flag', 0)
-			->orWhere('location_id', null)
-			->orWhere('location_id', 0)
-			->orWhere('map_link', null)
-			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC')
-			->get();
+		$entries = $this->getTourIndexAdmin(/* $pending = */ true);
 			
-		//dd($activities);
-
-		//
 		// get unconfirmed users
-		//
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
 			->get();
 					
-		// get latest visits
-		/* old way with groupby
-		$visitors = DB::table('visitors')
-			->select('title', 'description', 'user_id', DB::raw('count(*) as total'))
-			->groupBy('title', 'description', 'user_id') // ip address
-			->having('user_id', '=', 0)
-			->orderByRaw('total DESC')
-			->get();
-		*/
+		// get latest visitors
 		$visitors = Visitor::select()
 			->where('site_id', 1)
 			->where('deleted_flag', 0)
@@ -144,7 +123,7 @@ class FrontPageController extends Controller
 			
 		$ip = $this->getVisitorIp();
 			
-		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
+		return view('frontpage.admin', ['records' => $entries, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
     }
 	
     public function posts(Entry $entry)

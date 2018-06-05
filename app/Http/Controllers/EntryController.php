@@ -45,18 +45,23 @@ class EntryController extends Controller
 			->get();
 			
 		$entries = DB::select('
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at,
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
 				count(photos.id) as photo_count
 			FROM entries
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			WHERE 1=1
 				AND entries.deleted_flag = 0
-			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
-		' , []);			
+		' , []);
+
+		$vdata = [
+			'records' => $entries,
+			'redirect' => '/entries/indexadmin'
+		];
 		
-    	return view('entries.indexadmin', ['records' => $entries]);
+    	return view('entries.indexadmin', $vdata);
     }
 	
     public function tag($tag_id)
@@ -133,13 +138,15 @@ class EntryController extends Controller
 		$entry->site_id = 1;
 		$entry->user_id = Auth::id();
 		$entry->type_flag = $request->type_flag;
-		$entry->title = $request->title;
-		$entry->description = $request->description;
-		$entry->description_short = $request->description_short;
+		
+		$entry->title 				= trim($request->title);
+		$entry->permalink			= trim($request->permalink);
+		$entry->description_short	= trim($request->description_short);
+		$entry->description			= trim($request->description);
 						
 		$entry->save();
 			
-		return redirect('/entries/show/' . $entry->id);          	
+		return redirect($this->getReferer($request, '/entries/show/' . $entry->id)); 
     }
 
     public function upload(Entry $entry)
@@ -222,6 +229,38 @@ class EntryController extends Controller
         }            	
     }
 
+    public function permalocation($location, $permalink)
+    {
+		dd('function permalocation: ' . $permalink);
+		return $this->permalink($permalink);
+	}
+	
+    public function permalink(Request $request, $permalink)
+    {
+		$permalink = trim($permalink);
+		
+		$entry = Entry::select()
+			->where('site_id', $this->getSiteId())
+			->where('deleted_flag', '<>', 1)
+			->where('permalink', $permalink)
+			->first();
+			
+		if (!isset($entry))
+		{
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Entry Not Found');
+            return redirect('/tours/index');
+		}
+		
+		$photos = Photo::select()
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+		
+		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
+	}
+	
     public function view($title, $id)
     {
 		$entry = Entry::select()
@@ -264,8 +303,8 @@ class EntryController extends Controller
 		return $this->index();
 	}
 	
-    public function edit(Request $request, Entry $entry)
-    {
+    public function edit(Entry $entry)
+    {		
 		if (!$this->isAdmin())
              return redirect('/');
 
@@ -280,20 +319,21 @@ class EntryController extends Controller
     }
 	
     public function update(Request $request, Entry $entry)
-    {	
+    {			
 		if (!$this->isAdmin())
              return redirect('/');
 
     	if (Auth::check() && Auth::user()->id == $entry->user_id)
         {				
-			$entry->type_flag 			= $request->type_flag;	
-			$entry->title 				= $request->title;
-			$entry->description_short	= $request->description_short;
-			$entry->description			= $request->description;
+			$entry->type_flag 			= $request->type_flag;
+			$entry->title 				= trim($request->title);
+			$entry->permalink			= trim($request->permalink);
+			$entry->description_short	= trim($request->description_short);
+			$entry->description			= trim($request->description);
 			
 			$entry->save();
 			
-			return redirect('/entries/show/' . $entry->id); 
+			return redirect($this->getReferer($request, '/entries/indexadmin')); 
 		}
 		else
 		{
@@ -399,7 +439,7 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			return redirect(route('entry.view', [urlencode($entry->title), $entry->id]));
+			return redirect(route('entry.permalink', [$entry->permalink]));
 		}
 		else
 		{
@@ -511,7 +551,7 @@ class EntryController extends Controller
 				}
 			}
 			
-			return redirect(route('entry.view', [urlencode($entry->title), $entry->id]));
+			return redirect(route('entry.permalink', [$entry->permalink]));
 		}
 		else
 		{

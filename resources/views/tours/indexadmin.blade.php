@@ -47,7 +47,7 @@ $header = 'Tours';
 						$activity_id = isset($record->activity_id) ? $record->activity_id : 'no tour record';
 					?>
 					<td>
-						<a href="{{ route('tour.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}&nbsp;({{$activity_id}})</a>
+						<a href="{{ route('tour.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{$activity_id}})</a>
 						
 						@if (isset($location_name))
 							&nbsp;(<a href="/locations/tours/{{$location_id}}">{{$location_name}}</a>)
@@ -57,12 +57,11 @@ $header = 'Tours';
 							<span style="background-color: #4993FD;" class="badge">{{ $record->view_count }}</span>
 						<?php endif; ?>
 						
-						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($record->location_id) || strlen($record->map_link) == 0)
-							<div>
+						<div>
 							@if ($record->published_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></li>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
 							@elseif ($record->approved_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
 							@endif
 							@if (!isset($record->location_id))
 								<a class="" href="/entries/setlocation/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
@@ -81,8 +80,7 @@ $header = 'Tours';
 									</button>
 								</a>
 							@endif
-							</div>
-						@endif
+						</div>
 
 					</td>
 					<td>

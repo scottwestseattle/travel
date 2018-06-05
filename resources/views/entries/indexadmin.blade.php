@@ -69,12 +69,16 @@ function getTypeName($type_flag)
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<td>
-						<a href="{{ route('entry.view', [urlencode($record->title), $record->id]) }}">{{$record->title}}&nbsp;({{getTypeName($record->type_flag) . ', ' . intval($record->photo_count) . ' photo(s)'}})</a>
+						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{getTypeName($record->type_flag) . ', ' . intval($record->photo_count) . ' photo(s)'}})</a>
 						
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
+						@if (strlen($record->permalink) === 0)
+							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+						@endif
+												
 					</td>
 					<td>
 						<a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
