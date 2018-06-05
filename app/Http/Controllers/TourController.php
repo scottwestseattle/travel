@@ -29,7 +29,7 @@ class TourController extends Controller
 		$showAll = $this->getEntryCount();		
 		$tours = $this->getTourIndex();
 		$tour_count = isset($tours) ? count($tours) : 0;
-		$locations = $this->getLocationPills();
+		$locations = Location::getPills();
 			
 		$photo_path = '/public/img/entries/';
 		
@@ -441,7 +441,7 @@ class TourController extends Controller
 					
 		$tour_count = isset($tours) ? count($tours) : 0;
 
-		$locations = $this->getLocationPills();
+		$locations = Location::getPills();
 
 		//foreach($locations as $location)
 		//	dd($location->entries()->count());

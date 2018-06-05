@@ -37,7 +37,7 @@ class FrontPageController extends Controller
 		//dd($tours);
 		$tour_count = isset($tours) ? count($tours) : 0;
 
-		$locations = $this->getLocationPills();
+		$locations = Location::getPills();
 		//foreach($locations as $location)
 			//dd($location);
 
