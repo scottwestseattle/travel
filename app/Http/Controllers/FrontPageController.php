@@ -32,17 +32,14 @@ class FrontPageController extends Controller
     {
 		$posts = null;
 
+		$showAll = $this->getEntryCount();			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
 		$tour_count = isset($tours) ? count($tours) : 0;
-		
 
-		$locations = Location::select()
-			->where('locations.deleted_flag', 0)
-			->where('location_type', '>=', LOCATION_TYPE_CITY)
-			->where('popular_flag', 1)
-			->orderByRaw('locations.location_type ASC')
-			->get();
+		$locations = $this->getLocationPills();
+		//foreach($locations as $location)
+			//dd($location);
 
 		//
 		// get tour page link and main photo
@@ -65,9 +62,8 @@ class FrontPageController extends Controller
 		//
 		$this->saveVisitor();
 		
-		
-		
-    	return view('frontpage.index', ['posts' => $posts, 'tours' => $tours, 'tour_count' => $tour_count, 'sliders' => $sliders, 'locations' => $locations, 'photoPath' => $photosWebPath, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
+    	return view('frontpage.index', ['posts' => $posts, 'tours' => $tours, 'tour_count' => $tour_count, 'sliders' => $sliders, 
+			'locations' => $locations, 'showAll' => $showAll, 'photoPath' => $photosWebPath, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
     }
 
     public function visits()

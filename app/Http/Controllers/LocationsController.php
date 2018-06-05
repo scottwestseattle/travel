@@ -43,6 +43,7 @@ class LocationsController extends Controller
 		}
 		else
 		{
+			// get all
 			$records = Activity::select()
 			->where('approved_flag', '=', 1)
 			->where('published_flag', '=', 1)
@@ -76,25 +77,6 @@ class LocationsController extends Controller
 				//dd($main_photo);
 			}		
 		}
-
-/* attempt to get all info with joins		
-		$tours = DB::table('activities as a')
-			//->leftJoin('photos as p', 'a.id', '=', 'p.parent_id')
-			->leftJoin('activity_location as al', 'al.activity_id', '=', 'a.id')
-			->leftJoin('locations as l', 'al.location_id', '=', 'l.id')
-			->select('a.*', 'al.*', 'l.*'
-			//	, 'p.*'
-			)
-			->where('al.location_id', $location->id)
-			//->where('p.main_flag', '=', 1)
-			//->where('a.approved_flag', '=', 1)
-			//->where('a.published_flag', '=', 1)
-			->where('a.deleted_flag', '=', 0)
-			->orderByRaw('a.id DESC')
-			->get();
-					
-    	return view('activities.index', ['records' => $tours]);	
-*/
 
 		// get locations so we can show the pills
 		$locations = Location::select()

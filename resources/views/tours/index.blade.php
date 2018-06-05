@@ -22,12 +22,12 @@
 				<!---------------------------------------------------->
 				@if (isset($locations) && $tour_count > 0)
 				<div style="margin:20px; 0" class="text-center">
-					<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tour_count}}</span></button></a>
+					<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$showAll}}</span></button></a>
 					@foreach($locations as $location)
-						@if ($location->entries()->count() > 0)
+						@if ($location->count > 0)
 							<a href="/tours/location/{{$location->id}}">
 								<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
-									<span class="badge badge-light">{{$location->entries()->count()}}</span>
+									<span class="badge badge-light">{{$location->count}}</span>
 								</button>
 							</a>
 						@endif

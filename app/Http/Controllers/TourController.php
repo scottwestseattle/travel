@@ -26,24 +26,14 @@ class TourController extends Controller
 
     public function index()
     {
+		$showAll = $this->getEntryCount();		
 		$tours = $this->getTourIndex();
 		$tour_count = isset($tours) ? count($tours) : 0;
-
-		//
-		// get locations so we can show the pills
-		//
-		$locations = Location::select()
-			->where('locations.deleted_flag', '=', 0)
-			->where('location_type', '>=', LOCATION_TYPE_CITY)
-			->where('popular_flag', 1)
-			->orderByRaw('locations.location_type ASC')
-			->get();
-		//foreach($locations as $l)
-		//	dd($l->entries());
+		$locations = $this->getLocationPills();
 			
 		$photo_path = '/public/img/entries/';
 		
-    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'photo_path' => $photo_path, 'page_title' => 'Tours, Hikes, Things To Do']);
+    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'showAll' => $showAll, 'photo_path' => $photo_path, 'page_title' => 'Tours, Hikes, Things To Do']);
 	}		
 
     public function maps()
@@ -434,20 +424,29 @@ class TourController extends Controller
 	
     public function location($location_id)
     {
+		$showAll = $this->getEntryCount();
+		
 		$tours = $this->getTourIndexLocation($location_id);
+		
+		/* the laravel way to do it (no photo join)
+		$location = Location::select()
+			->where('locations.deleted_flag', 0)
+			->where('id', $location_id)
+			->first();
+		$tours = $location->entries()->get();
+		*/
+		
+		//foreach($tours as $entry)
+		//	dd($entry);
+					
 		$tour_count = isset($tours) ? count($tours) : 0;
 
-		$locations = Location::select()
-			->where('locations.deleted_flag', 0)
-			->where('location_type', '>=', LOCATION_TYPE_CITY)
-			->where('popular_flag', 1)
-			->orderByRaw('locations.location_type ASC')
-			->get();
+		$locations = $this->getLocationPills();
 
 		//foreach($locations as $location)
 		//	dd($location->entries()->count());
 
-    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'photo_path' => '/public/img/entries/', 'page_title' => 'Tours, Hikes, Things To Do']);
+    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'showAll' => $showAll, 'photo_path' => '/public/img/entries/', 'page_title' => 'Tours, Hikes, Things To Do']);
 	}			
 	
 	//////////////////////////////////////////////////////////////////////////////////////////

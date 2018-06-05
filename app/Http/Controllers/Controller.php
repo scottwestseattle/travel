@@ -560,6 +560,26 @@ class Controller extends BaseController
 		return $records;
 	}
 	
+	protected function getEntryCount($entry_type = null)
+	{
+		$q = '
+			SELECT count(entries.id) as count
+			FROM entries
+			WHERE 1=1
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+		';
+		
+		if (isset($entry_type))
+			$q .= ' AND entries.type_flag = ' . $entry_type . ' ';
+		
+		// get the list with the location included
+		$record = DB::select($q);
+		
+		return intval($record[0]->count);
+	}	
+	
 	protected function getTourIndex()
 	{
 		$q = '
@@ -584,7 +604,7 @@ class Controller extends BaseController
 		return $records;
 	}	
 
-	protected function getTourIndexLocation($location_id)
+	protected function getTourIndexLocation2($location_id)
 	{
 		$q = '
 			SELECT entries.id, entries.title,
@@ -607,6 +627,33 @@ class Controller extends BaseController
 		
 		// get the list with the location included
 		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
+		
+		return $records;
+	}	
+
+	protected function getTourIndexLocation($location_id)
+	{
+		$q = '
+			SELECT entries.id, entries.title,
+				photo_main.filename as photo
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0			
+			JOIN entry_location entloc ON entries.id = entloc.entry_id
+			JOIN locations ON entloc.location_id = locations.id AND locations.id = ?
+			WHERE 1=1
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			GROUP BY 
+				entries.id, entries.title, photo_main.filename
+			ORDER BY entries.id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
+		//dd($records);
 		
 		return $records;
 	}	
@@ -661,5 +708,44 @@ class Controller extends BaseController
 		}
 
 		return $rc;
+	}
+
+    protected function getLocationPills2()
+    {	
+		$records = Location::select()
+			->where('locations.deleted_flag', 0)
+			//->where('location_type', '>=', LOCATION_TYPE_CITY)
+			//->where('popular_flag', 1)
+			->orderByRaw('locations.location_type ASC')
+			->get();
+		
+		return $records;
+	}
+	
+	// get all locations that have at least one entry record
+	protected function getLocationPills()
+	{
+		$q = '
+			SELECT locations.id, locations.name, count(locations.id) as count
+			FROM locations
+			JOIN entry_location entloc ON locations.id = entloc.location_id
+			JOIN entries ON entloc.entry_id = entries.id 
+				WHERE 1=1
+				AND locations.deleted_flag = 0
+						AND entries.type_flag = ?
+						AND entries.deleted_flag = 0
+						AND entries.published_flag = 1 
+						AND entries.approved_flag = 1
+			GROUP BY 
+				locations.id, locations.name
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		//dd($records);
+		
+		return $records;
 	}	
+	
+	
 }
