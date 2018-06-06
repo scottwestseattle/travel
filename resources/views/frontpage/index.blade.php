@@ -15,16 +15,7 @@
 
 	<section>
 		<div class="slider-center" xonclick="slider_right()">
-		@if (false) 
-			<!------------------------------------------------------->
-			<!-- version that overlaps the top of the slider image -->
-			<!------------------------------------------------------->
-			<div id="slider" style="background-repeat: no-repeat; position:relative;">
-				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
-				<div id="slider-text" style="background-color:black; color:white; position:absolute; top:0px; width:100%; font-style:italic; opacity: 0.7;"></div>
-			</div>
-		@else
-			<div id="slider" style="background-repeat: no-repeat; position: relative;">
+			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				
 				<!------------------------------------------------------->
@@ -48,7 +39,6 @@
 				<!------------------------------------------------------->
 				<!-- This is the slider caption -->
 				<!------------------------------------------------------->
-				
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
 					<div id="slider-text-xs" style="font-size:.8em; width:100%; font-style:italic;"></div>
 				</div>
@@ -56,7 +46,6 @@
 					<div id="slider-text" style="width:100%; font-style:italic;"></div>
 				</div>				
 			</div>
-		@endif
 		</div>
 	</section>
 </div>
@@ -75,6 +64,7 @@
 	var alt = sliders[ix][2];
 	
 	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
+	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
 	document.getElementById("slider-text").innerHTML = loc;
 	document.getElementById("slider-text-xs").innerHTML = loc;
 	document.getElementById("slider").title = alt + ', ' + loc;
