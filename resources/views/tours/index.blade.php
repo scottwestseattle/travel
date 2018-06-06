@@ -47,9 +47,12 @@
 							<!-- tour main photo -->
 							<?php
 							if (isset($entry->photo))
+							{
 								$photo = $photo_path . $entry->id . '/' . $entry->photo;
+								//dd($photo);
+							}
 							else
-								$photo = '/public/img/theme1/entry-placeholder.jpg';
+								$photo = TOUR_PHOTO_PLACEHOLDER;
 							?>
 							
 							<a href="{{ route('tour.permalink', [$entry->permalink]) }}">

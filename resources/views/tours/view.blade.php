@@ -31,7 +31,7 @@ foreach($photos as $photo)
 					<li class="active"><a href="/entries/publish/{{$record->id}}">Pending Approval</a></li>
 				@endif
 				@if (!isset($record->location))
-					<li class="active"><a href="/tours/setlocation/{{$record->id}}">No Location</a></a>
+					<li class="active"><a href="/entries/setlocation/{{$record->id}}">No Location</a></a>
 				@endif
 			</ul>
 		</div>

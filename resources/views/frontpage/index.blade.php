@@ -230,9 +230,13 @@
 					@foreach($tours as $entry)
 						<?php
 							if (isset($entry->photo))
+							{
 								$photo = $photoPath . $entry->id . '/' . $entry->photo;
+							}
 							else
-								$photo = '/public/img/theme1/entry-placeholder.jpg';
+							{
+								$photo = TOUR_PHOTO_PLACEHOLDER;
+							}
 						?>
 						<div class="col-md-4 col-sm-6">
 						

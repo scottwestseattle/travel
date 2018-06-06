@@ -54,6 +54,7 @@ define('ENTRY_TYPE_OTHER',		7);
 // -1=not set, 0=slider, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 
 define('PHOTO_TYPE_NOTSET', 	-1);
 define('PHOTO_TYPE_SLIDER', 	0);
+define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
@@ -688,5 +689,4 @@ class Controller extends BaseController
 		
 		return $referer;
 	}
-	
 }
