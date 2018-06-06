@@ -232,6 +232,7 @@
 							if (isset($entry->photo))
 							{
 								$photo = $photoPath . $entry->id . '/' . $entry->photo;
+								//dd($photo);
 							}
 							else
 							{
