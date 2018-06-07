@@ -24,7 +24,7 @@ class SiteController extends Controller
 			->where('deleted_flag', 0)
 			->get();
 			
-		return view('sites.index', ['records' => $records]);
+		return view($this->prefix . '.index', ['records' => $records]);
     }	
 	
     public function add()
@@ -36,7 +36,7 @@ class SiteController extends Controller
 			'prefix' => $this->prefix,
 		];
 		 
-		return view('sites.add', $vdata);							
+		return view($this->prefix . '.add', $vdata);
 	}
 		
     public function create(Request $request)

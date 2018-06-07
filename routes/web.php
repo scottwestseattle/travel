@@ -32,6 +32,12 @@ Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
 // sites
+Route::group(['prefix' => 'events'], function () {
+	
+	Route::get('/index', 'EventController@index')->middleware('auth');
+});
+
+// sites
 Route::group(['prefix' => 'sites'], function () {
 	
 	Route::get('/index', 'SiteController@index')->middleware('auth');
