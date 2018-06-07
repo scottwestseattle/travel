@@ -310,7 +310,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
         'App\\Base' => __DIR__ . '/../..' . '/app/Base.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Entry' => __DIR__ . '/../..' . '/app/Entry.php',
-        'App\\EntryLocation' => __DIR__ . '/../..' . '/app/EntryLocation.php',
+        'App\\Event' => __DIR__ . '/../..' . '/app/Event.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Faq' => __DIR__ . '/../..' . '/app/Faq.php',
         'App\\Http\\Controllers\\ActivityController' => __DIR__ . '/../..' . '/app/Http/Controllers/ActivityController.php',

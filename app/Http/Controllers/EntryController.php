@@ -23,7 +23,7 @@ class EntryController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
-			->where('site_id', $this->getSiteId())
+			->where('site_id', SITE_ID)
 			//->where('type_flag', '<>', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
@@ -85,7 +85,7 @@ class EntryController extends Controller
              return redirect('/');
 
 		$entries = Entry::select()
-			->where('site_id', '=', $this->getSiteId())
+			->where('site_id', '=', SITE_ID)
 			->where('user_id', '=', Auth::id())
 			->where('type_flag', '=', ENTRY_TYPE_TOUR)
 			->orderByRaw('entries.id DESC')
@@ -118,7 +118,7 @@ class EntryController extends Controller
 			
 		$entry = new Entry();
 		
-		$entry->site_id = 1;
+		$entry->site_id = SITE_ID;
 		$entry->user_id = Auth::id();
 		$entry->type_flag = $request->type_flag;
 		
@@ -223,7 +223,7 @@ class EntryController extends Controller
 		$permalink = trim($permalink);
 		
 		$entry = Entry::select()
-			->where('site_id', $this->getSiteId())
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('permalink', $permalink)
 			->first();
@@ -247,7 +247,7 @@ class EntryController extends Controller
     public function view($title, $id)
     {
 		$entry = Entry::select()
-			->where('site_id', $this->getSiteId())
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
 			->first();
@@ -264,7 +264,7 @@ class EntryController extends Controller
     public function show($id)
     {
 		$entry = Entry::select()
-			->where('site_id', $this->getSiteId())
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->where('id', $id)
 			->first();

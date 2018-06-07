@@ -86,12 +86,12 @@
 				<!------------------------------------------------------->
 					
 			</div>
-			<div>
+			<div class="DarkPurple">
 				<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
-					<div id="slider-text-xs" style="font-size:.8em; background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text-xs" style="font-size:.8em; width:100%; font-style:italic;"></div>
 				</div>
 				<div class="hidden-xs" ><!-- all other sizes -->
-					<div id="slider-text" style="background-color: #1C5290; color:white; width:100%; font-style:italic;"></div>
+					<div id="slider-text" style="width:100%; font-style:italic;"></div>
 				</div>				
 			</div>
 		@endif
@@ -172,7 +172,7 @@
 	$welcome_msg = 'provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.';
 ?>
 
-<section id="" class="sectionBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+<section id="" class="purple" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		

@@ -60,6 +60,43 @@
 	</div>
 	<hr />
 	
+	<div style="height:30px;clear:both;"></div>
+	
+	<h3 style="">Latest Events ({{count($events)}})</h3>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<th>Timestamp</th>
+				<th>Site</th>
+				<th>Type</th>
+				<th>Model</th>
+				<th>Action</th>
+				<th>Title</th>
+			</tr>
+		@foreach($events as $record)
+			<?php
+				$type = '';
+				if ($record->type_flag == 1) $type = 'Info';
+				if ($record->type_flag == 2) $type = 'Warning';
+				if ($record->type_flag == 3) $type = 'Error';
+				if ($record->type_flag == 4) $type = 'Exception';
+				if ($record->type_flag == 5) $type = 'Other';
+			?>
+			
+			<tr>
+				<td>{{$record->created_at}}</td>
+				<td>{{$record->site_id}}</td>
+				<td>{{$type}}</td>
+				<td>{{$record->model_flag}}</td>
+				<td>{{$record->action_flag}}</td>
+				<td>{{$record->title}}</td>
+			</tr>
+		@endforeach
+		</tbody>
+	</table>
+	<a href="/events/index">Show All Events</a>
+	<hr />
+		
 		<div style="height:30px;clear:both;"></div>
 	
 		<h3 style="">New Users ({{count($users)}})</h3>

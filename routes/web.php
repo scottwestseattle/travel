@@ -31,7 +31,27 @@ Route::get('/home', 'HomeController@index');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
-// this is he new front page to replace the HomeController
+// sites
+Route::group(['prefix' => 'sites'], function () {
+	
+	Route::get('/index', 'SiteController@index')->middleware('auth');
+	Route::get('/view/{site}', ['as' => 'entry.view', 'uses' => 'SiteController@view'])->middleware('auth');
+	
+	// add/create
+	Route::get('/add','SiteController@add')->middleware('auth');
+	Route::post('/create','SiteController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{site}','SiteController@edit')->middleware('auth');
+	Route::post('/update/{site}','SiteController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{site}', 'SiteController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{site}', 'SiteController@delete')->middleware('auth');
+	
+});
+
+// this is the new front page to replace the HomeController
 Route::group(['prefix' => 'frontpage'], function () {
 	
 	Route::get('/index', 'FrontPageController@index');

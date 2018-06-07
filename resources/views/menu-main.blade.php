@@ -59,6 +59,7 @@
 								<li><a href="/locations/indexadmin">Locations</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/photos/indexadmin">Photos</a></li>
+								<li><a href="/sites/index">Sites</a></li>
 								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tours/indexadmin">Tours</a></li>
 								<li><a href="/users/">Users</a></li>

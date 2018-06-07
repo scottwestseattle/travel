@@ -10,7 +10,7 @@ return array(
     'App\\Base' => $baseDir . '/app/Base.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Entry' => $baseDir . '/app/Entry.php',
-    'App\\EntryLocation' => $baseDir . '/app/EntryLocation.php',
+    'App\\Event' => $baseDir . '/app/Event.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Faq' => $baseDir . '/app/Faq.php',
     'App\\Http\\Controllers\\ActivityController' => $baseDir . '/app/Http/Controllers/ActivityController.php',

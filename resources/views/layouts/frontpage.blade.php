@@ -16,12 +16,6 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<?php
-		if (!isset($page_title))
-			$page_title = config('app.name', 'Travel Guide');
-		else
-			$page_title = config('app.name', 'Travel Guide') . ' - ' . $page_title;
-	?>
     <title>{{$page_title}}</title>
 	
     <!-- Styles -->
@@ -44,7 +38,7 @@
 </head>
 <body>
     <div id="app" style="min-height: 500px;">
-        <nav class="navbar navbar-default navbar-static-top purple" style="margin-bottom:0px; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default navbar-static-top powerBlue" style="margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main')
 			@endcomponent
         </nav>

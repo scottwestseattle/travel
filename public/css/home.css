@@ -60,6 +60,26 @@
 		margin-bottom: 20px;
 	}
 	
+	.purple {
+		background-color: #6E24D0!important; 
+		color: white;
+	}
+	
+	.DarkPurple {
+		background-color: #390283;
+		color: white;
+	}
+	
+	.powerBlue {
+		background-color: #3F98FD;
+		color: white;
+	}
+
+	.DarkBlue {
+		background-color: #1C5290;
+		color: white;
+	}	
+	
 	.sectionYellow, .sectionBlue, .sectionWhite {
 		padding: 50px 0 40px 0;
 	}

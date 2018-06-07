@@ -82,7 +82,7 @@ class TourController extends Controller
 			// the entry part
 			//
 			$entry = new Entry();
-			$entry->site_id = $this->getSiteId();
+			$entry->site_id = SITE_ID;
 			$entry->user_id = Auth::id();
 			$entry->type_flag = ENTRY_TYPE_TOUR;
 			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
@@ -101,7 +101,7 @@ class TourController extends Controller
 			//
 			$activity = new Activity();
 			$activity->user_id = Auth::id();
-			$activity->site_id = $this->getSiteId();
+			$activity->site_id = SITE_ID;
 			
 			$activity->map_link	 = trim($request->map_link);
 			$activity->info_link = trim($request->info_link);
@@ -366,7 +366,7 @@ class TourController extends Controller
 			{
 				$activity = new Activity();
 				$activity->user_id = Auth::id();
-				$activity->site_id	 = $this->getSiteId();
+				$activity->site_id	 = SITE_ID;
 				$activity->parent_id = $entry->id;
 				$activity->title = 'parent_id = ' . $entry->id;
 			}
@@ -398,14 +398,6 @@ class TourController extends Controller
 			return redirect('/');
 		}
     }	
-
-    protected function copyDirty($to, $from, &$isDirty)
-    {	
-		if ($from != $to)
-			$isDirty = true;
-		
-		return $from;
-	}
 	
     public function confirmdelete(Entry $entry)
     {	

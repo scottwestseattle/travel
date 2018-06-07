@@ -147,7 +147,7 @@ class ActivityController extends Controller
 			
 		$activity = new Activity();
 		
-		$activity->site_id = $this->getSiteId();
+		$activity->site_id = SITE_ID;
 		$activity->title = $request->title;
 		$activity->description = $request->description;
 		$activity->map_link	 = $request->map_link;

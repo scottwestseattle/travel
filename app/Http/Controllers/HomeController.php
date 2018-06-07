@@ -126,7 +126,7 @@ class HomeController extends Controller
     public function visits()
     {			
 		$records = Visitor::select()
-			->where('site_id', 1)
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->latest()
 			->get();
@@ -139,7 +139,7 @@ class HomeController extends Controller
 		if (isset($sort))
 		{
 			$records = Visitor::select()
-				->where('site_id', 1)
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->orderByRaw('updated_at DESC')
 				->get();
@@ -147,7 +147,7 @@ class HomeController extends Controller
 		else
 		{
 			$records = Visitor::select()
-				->where('site_id', 1)
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->latest()
 				->get();
@@ -193,7 +193,7 @@ class HomeController extends Controller
 			->get();
 		*/
 		$visitors = Visitor::select()
-			->where('site_id', 1)
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->latest()
 			->limit(10)

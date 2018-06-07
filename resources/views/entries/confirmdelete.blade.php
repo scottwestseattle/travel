@@ -2,13 +2,6 @@
 
 @section('content')
 
-@component('menu-submenu')
-	@component('menu-icons-start')@endcomponent
-	@component('menu-icons-links', ['data' => (isset($data) ? $data : null)])@endcomponent	
-	@component('control-search')@endcomponent	
-	@component('control-templates-dropdown', ['templates' => $templates])@endcomponent	
-@endcomponent
-
 <div class="container">
 	<h1>Delete Entry</h1>
 

@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use App\Entry;
 use App\Activity;
 use App\User;
 use App\Photo;
 use App\Location;
 use App\Visitor;
-use DB;
+use App\Site;
+use App\Event;
 
 define("LONGNAME", "Hike, Bike, Boat");
 
@@ -32,6 +34,27 @@ class FrontPageController extends Controller
     {
 		$posts = null;
 
+		// set up the site info
+		$welcome = 'Welcome to ' . config('app.name', 'Travel');
+		$welcome2 = 'Travel is our Business!!';
+		$page_title = 'Travel Information';
+		$page_title = config('app.name', 'Travel Guide');
+		
+		$site = Site::select()->first();
+		if (isset($site))
+		{
+			if (isset($site->main_section_text))
+				$welcome = $site->main_section_text;
+			
+			if (isset($site->main_section_subtext))
+				$welcome2 = $site->main_section_subtext;
+			
+			if (isset($site->site_title))
+				$page_title .= ' - ' . $site->site_title;
+		}
+		
+		//dd($site);
+		
 		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
@@ -62,14 +85,27 @@ class FrontPageController extends Controller
 		//
 		$this->saveVisitor();
 		
-    	return view('frontpage.index', ['posts' => $posts, 'tours' => $tours, 'tour_count' => $tour_count, 'sliders' => $sliders, 
-			'locations' => $locations, 'showAll' => $showAll, 'photoPath' => $photosWebPath, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
+		$vdata = [
+			'welcome' => $welcome,
+			'welcome2' => $welcome2,
+			'page_title' => $page_title,
+			'site' => $site,
+			'posts' => $posts, 
+			'tours' => $tours, 
+			'tour_count' => $tour_count, 
+			'sliders' => $sliders, 
+			'locations' => $locations, 
+			'showAll' => $showAll, 
+			'photoPath' => $photosWebPath, 
+		];
+		
+    	return view('frontpage.index', $vdata);
     }
 
     public function visits()
     {			
 		$records = Visitor::select()
-			->where('site_id', 1)
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->latest()
 			->get();
@@ -82,7 +118,7 @@ class FrontPageController extends Controller
 		if (isset($sort))
 		{
 			$records = Visitor::select()
-				->where('site_id', 1)
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->orderByRaw('updated_at DESC')
 				->get();
@@ -90,7 +126,7 @@ class FrontPageController extends Controller
 		else
 		{
 			$records = Visitor::select()
-				->where('site_id', 1)
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->latest()
 				->get();
@@ -103,17 +139,26 @@ class FrontPageController extends Controller
     public function admin()
     {
 		//
+		// get latest events
+		//
+		$events = Event::get(10);
+		
+		//
 		// get records with info missing
 		//
 		$entries = $this->getTourIndexAdmin(/* $pending = */ true);
 			
+		//
 		// get unconfirmed users
+		//
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
 			->get();
 					
+		//
 		// get latest visitors
+		//
 		$visitors = Visitor::select()
 			->where('site_id', 1)
 			->where('deleted_flag', 0)
@@ -123,7 +168,16 @@ class FrontPageController extends Controller
 			
 		$ip = $this->getVisitorIp();
 			
-		return view('frontpage.admin', ['records' => $entries, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
+		$vdata = [
+			'events' => $events,
+			'records' => $entries, 
+			'users' => $users, 
+			'visitors' => $visitors, 
+			'ip' => $ip, 
+			'new_visitor' => $this->isNewVisitor()
+		];
+			
+		return view('frontpage.admin', $vdata);
     }
 	
     public function posts(Entry $entry)

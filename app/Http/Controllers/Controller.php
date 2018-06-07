@@ -15,6 +15,8 @@ use App\Photo;
 use App\Location;
 use DB;
 
+define('SITE_ID', 1);	// the site ID for this web site, from the Sites table
+
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
 define('TOUR_PHOTOS_PATH', '/public/img/tours/');
 define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
@@ -60,6 +62,30 @@ define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
 define('PHOTO_TMP_FOLDER', 'tmp');
 
+// event logger info
+define('LOG_TYPE_INFO', 1);
+define('LOG_TYPE_WARNING', 2);
+define('LOG_TYPE_ERROR', 3);
+define('LOG_TYPE_EXCEPTION', 4);
+define('LOG_TYPE_OTHER', 99);
+	
+define('LOG_MODEL_SITES', 'sites');
+define('LOG_MODEL_USERS', 'users');
+define('LOG_MODEL_ENTRIES', 'entries');
+define('LOG_MODEL_PHOTOS', 'photos');
+define('LOG_MODEL_TOURS', 'tours');
+define('LOG_MODEL_LOCATIONS', 'locations');
+define('LOG_MODEL_OTHER', 'other');
+	
+define('LOG_ACTION_ACCESS', 'access');
+define('LOG_ACTION_ADD', 'add');
+define('LOG_ACTION_EDIT', 'edit');
+define('LOG_ACTION_DELETE', 'delete');
+define('LOG_ACTION_MOVE', 'move');
+define('LOG_ACTION_UPLOAD', 'upload');
+define('LOG_ACTION_MKDIR', 'mkdir');
+define('LOG_ACTION_OTHER', 'other');
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -68,11 +94,6 @@ class Controller extends BaseController
 	
 	public function __construct ()
 	{		
-	}
-
-	protected function getSiteId()
-	{
-		return 1;
 	}
 		
 	protected function getVisitorIp()
@@ -136,7 +157,7 @@ class Controller extends BaseController
 		}
 		
 		$visitor->visit_count++;			
-		$visitor->site_id = 1;
+		$visitor->site_id = SITE_ID;
 		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
 		$visitor->user_agent = $this->trunc($userAgent, VISITOR_MAX_LENGTH);
 		$visitor->referrer = $this->trunc($referrer, VISITOR_MAX_LENGTH);
@@ -689,4 +710,50 @@ class Controller extends BaseController
 		
 		return $referer;
 	}
+	
+    protected function copyDirty($to, $from, &$isDirty, &$updates = null)
+    {	
+		$from = $this->trimNull($from);
+		$to = $this->trimNull($to);
+		
+		if ($from != $to)
+		{
+			$isDirty = true;
+			
+			if (!isset($updates) || strlen($updates) == 0)
+				$updates = '';
+
+			$updates .= '|';
+				
+			if (strlen($to) == 0)
+				$updates .= '(empty)';
+			else
+				$updates .= $to;
+
+			$updates .= '|';
+				
+			if (strlen($from) == 0)
+				$updates .= '(empty)';
+			else
+				$updates .= $from;
+			
+			$updates .= '|  ';
+		}
+		
+		return $from;
+	}	
+	
+	protected function trimNull($text)
+	{
+		if (isset($text))
+		{
+			$text = trim($text);
+			
+			if (strlen($text) === 0)
+				$text = null;
+		}
+		
+		return $text;
+	}
+	
 }

@@ -35,7 +35,7 @@
 					
 			</div>
 			
-			<div class="DarkPurple">
+			<div class="DarkBlue">
 				<!------------------------------------------------------->
 				<!-- This is the slider caption -->
 				<!------------------------------------------------------->
@@ -118,23 +118,18 @@
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
-<!--------------------------------------------------------------------------------------->
-
-<?php 
-	$welcome_msg = 'provides inspiring travel experiences that bring people further into the discovery of cultures, places, and people all around the world. Our goal is to positively impact perspectives, promote conscious travel, create global citizens, and celebrate the beauty of our world.';
-?>
-
-<section id="" class="purple" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+<!--------------------------------------------------------------------------------------->	
+<section id="" class="powerBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
 		<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 			<!-- xs only -->
-			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{ config('app.name', 'Travel') . '&nbsp;' . $welcome_msg }} </h3>
+			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{$welcome}} </h3>
 		</div>
 		<div class="hidden-xs" >
 			<!-- all other sizes -->
-			<h3 class="welcome-text main-font">{{ config('app.name', 'Travel') . '&nbsp;' . $welcome_msg }} </h3>
+			<h3 class="welcome-text main-font">{{ $welcome }} </h3>
 		</div>
 		
 		<div style="margin-top:40px;">
@@ -157,7 +152,7 @@
 	<!-- The charming Quote -->
 	<!--------------------------------------------------------------------------------------->		
 	<div class="sectionHeader text-center" style="margin-top:20px;">
-		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>Sail away from the safe harbor. Catch the trade winds in your sails. Explore. Dream. Discover.<br/>— Mark Twain</i></h3>
+		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>{{$welcome2}}</i></h3>
 	</div>
 
 	@endif
