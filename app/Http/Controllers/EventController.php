@@ -9,15 +9,28 @@ class EventController extends Controller
 {
 	private $prefix = 'events';
 	
-    public function index()
+    public function index($type_flag = null)
     {
+		$type_flag = intval($type_flag);
+		
 		if (!$this->isSuperAdmin())
              return redirect('/');
 
-		$records = Event::select()
-			->where('deleted_flag', 0)
-			->orderByRaw('id DESC')
-			->get();
+		if ($type_flag > 0)
+		{
+			$records = Event::select()
+				->where('deleted_flag', 0)
+				->where('type_flag', $type_flag)
+				->orderByRaw('id DESC')
+				->get();
+		}
+		else
+		{
+			$records = Event::select()
+				->where('deleted_flag', 0)
+				->orderByRaw('id DESC')
+				->get();
+		}
 			
 		$vdata = [
 			'records' => $records

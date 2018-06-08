@@ -31,10 +31,18 @@ Route::get('/home', 'HomeController@index');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// blogs
+Route::group(['prefix' => 'blogs'], function () 
+{	
+	Route::get('/show/{id}', 'BlogController@show');
+	Route::get('/index', 'BlogController@index');
+	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');
+});
+
 // sites
 Route::group(['prefix' => 'events'], function () {
 	
-	Route::get('/index', 'EventController@index')->middleware('auth');
+	Route::get('/index/{type_flag?}', 'EventController@index')->middleware('auth');
 });
 
 // sites

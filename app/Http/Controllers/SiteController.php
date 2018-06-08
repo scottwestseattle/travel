@@ -116,7 +116,7 @@ class SiteController extends Controller
 			}
 			catch (\Exception $e) 
 			{
-				Event::logException(LOG_MODEL_SITES, LOG_ACTION_ADD, 'site_name = ' . $record->site_name, null, $e->getMessage());
+				Event::logException(LOG_MODEL_SITES, LOG_ACTION_EDIT, 'site_name = ' . $record->site_name, null, $e->getMessage());
 				
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());		

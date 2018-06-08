@@ -32,7 +32,7 @@ class Event extends Model
 		Event::add(LOG_TYPE_INFO, $model, LOG_ACTION_ADD, $title, $description, $record_id);
 	}
 
-    static public function logEdit($model, $title, $record_id, $changes)
+    static public function logEdit($model, $title, $record_id, $changes = null)
 	{
 		Event::add(LOG_TYPE_INFO, $model, LOG_ACTION_EDIT, $title, null, $record_id, null, $changes);
 	}

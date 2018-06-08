@@ -48,9 +48,10 @@ class Entry extends Base
 		return $records;
 	}
 
+	// get all entries except tours
 	static public function getEntries()
 	{
-		$records = DB::select('
+		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
 				count(photos.id) as photo_count
 			FROM entries
@@ -61,8 +62,38 @@ class Entry extends Base
 			AND entries.type_flag <> ?
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
-		' , [ENTRY_TYPE_TOUR]);
+		';
+				
+		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
+	
+	// get all entries for specified type
+	static public function getEntriesByType($type_flag, $approved_flag = true)
+	{
+		$q = '
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
+				count(photos.id) as photo_count
+			FROM entries
+			LEFT JOIN photos
+				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
+			WHERE 1=1
+			AND entries.deleted_flag = 0
+		';
+		
+		if ($approved_flag)
+			$q .= ' AND (entries.published_flag = 1 AND entries.approved_flag) ';
+		
+		$q .= '
+			AND entries.type_flag = ?
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
+		';
+				
+		$records = DB::select($q, [$type_flag]);
+		
+		return $records;
+	}
+	
 }

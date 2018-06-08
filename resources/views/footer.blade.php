@@ -73,6 +73,7 @@
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
 								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Activities</a></li>
+								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Blogs</a></li>
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>

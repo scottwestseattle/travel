@@ -17,17 +17,17 @@
 			@component('control-entry-types', ['current_type' => $record->type_flag])
 			@endcomponent			
 		
-			<div class="entry-title-div">
-				<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
-			</div>
+			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 
+			<input type="text" id="display_date" name="display_date" class="form-control" value="{{ $record->display_date }}"  placeholder="Display Date: YYYY-MM-DD" />
+			
 			<div class="entry-title-div">
-				<a href='#' onclick="javascript:urlEncode('title', 'permalink')";>
+				<a href='#' onclick="javascript:urlEncodeWithDate('title', 'display_date', 'permalink')";>
 					<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
 				</a>						
 				<input type="text" id="permalink" name="permalink" class="form-control" value="{{ $record->permalink }}"  placeholder="Permalink" />
 			</div>
-
+			
 			<div style="clear:both;">				
 				<div class="">
 					<button type="submit" name="update" class="btn btn-primary">Save</button>

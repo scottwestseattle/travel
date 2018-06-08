@@ -5,6 +5,8 @@
 <?php 
 $main_photo = null;
 $regular_photos = 0;
+if (isset($photos))
+{
 foreach($photos as $photo)
 {
 	if ($photo->main_flag === 1)
@@ -12,6 +14,9 @@ foreach($photos as $photo)
 	else
 		$regular_photos++;
 }
+}
+else
+	$photos = null;
 ?>
 
 <div class="page-size container">
@@ -36,25 +41,7 @@ foreach($photos as $photo)
 	@endguest
 		
 	<div class="form-group">
-	
-		<div style="margin-top: 10px;">
-			<ul class="nav nav-pills">
-				@if (isset($prev))
-					<li class="active"><a href="/entries/show/{{$prev->id}}">Previous Entry</a></li>
-				@endif
-				@if (isset($record->parent_id))
-					<li class="active"><a href="/blogs/show/{{$record->parent_id}}">Back to Blog</a></li>
-				@endif
-				@if (isset($next))
-					<li class="active"><a href="/entries/show/{{$next->id}}">Next Entry</a></li>
-				@endif			
-			</ul>		
-		</div>
-		
 		<h1 name="title" class="">{{$record->title }}</h1>
-		@if (isset($record->display_date))
-		<p style="font-weight: bold;"><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
-		@endif
 	</div>
 	
 	<?php 
@@ -133,20 +120,29 @@ foreach($photos as $photo)
 
 	@endif
 	
-		<div style="margin-top: 10px;">
-			<ul class="nav nav-pills">
-				@if (isset($prev))
-					<li class="active"><a href="/entries/show/{{$prev->id}}">Previous Entry</a></li>
-				@endif
-				@if (isset($record->parent_id))
-					<li class="active"><a href="/blogs/show/{{$record->parent_id}}">Back to Blog</a></li>
-				@endif
-				@if (isset($next))
-					<li class="active"><a href="/entries/show/{{$next->id}}">Next Entry</a></li>
-				@endif			
-			</ul>		
-		</div>
-	
+		<!---------------------------------->
+		<!-- The Blog Entry list          -->
+		<!---------------------------------->
+		<table class="table table-striped">
+			<tbody>
+			@foreach($records as $record)
+				<tr>
+					<td>
+						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
+						
+						<?php if (intval($record->view_count) > 0) : ?>
+							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
+						<?php endif; ?>
+						
+						@if (strlen($record->permalink) === 0)
+							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+						@endif
+												
+					</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>	
 	
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">

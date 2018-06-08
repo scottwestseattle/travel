@@ -30,5 +30,6 @@ $color = '#5CB85C'; // green
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+ALTER TABLE `entries` ADD `display_date` DATE NULL AFTER `deleted_flag`;
 
 

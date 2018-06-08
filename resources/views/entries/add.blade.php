@@ -18,8 +18,10 @@
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />
 			</div>
 			
+			<input type="text" id="display_date" name="display_date" class="form-control" placeholder="Display Date: YYYY-MM-DD" />
+			
 			<div class="entry-title-div">
-				<a href='#' onclick="javascript:urlEncode('title', 'permalink')";>
+				<a href='#' onclick="javascript:urlEncodeWithDate('title', 'display_date', 'permalink')";>
 					<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
 				</a>						
 				<input type="text" id="permalink" name="permalink" class="form-control"  placeholder="Permalink" />

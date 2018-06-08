@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use Auth;
 use App\Entry;
+use App\Event;
 use App\Photo;
 use App\Location;
-use DB;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -126,7 +127,8 @@ class EntryController extends Controller
 		$entry->permalink			= trim($request->permalink);
 		$entry->description_short	= trim($request->description_short);
 		$entry->description			= trim($request->description);
-						
+		$entry->display_date		= $request->display_date;
+
 		$entry->save();
 			
 		return redirect($this->getReferer($request, '/entries/show/' . $entry->id)); 
@@ -220,28 +222,57 @@ class EntryController extends Controller
 	
     public function permalink(Request $request, $permalink)
     {
+		$next = null;
+		$prev = null;
+		
 		$permalink = trim($permalink);
 		
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
+			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
-			
+						
 		if (!isset($entry))
 		{
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', 'Entry Not Found');
-            return redirect('/tours/index');
+			$request->session()->flash('message.content', 'Permalink Entry Not Found: ' . $permalink);
+            return redirect('/entries/index');
 		}
 		
+		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+		{
+			$next = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', '>', $entry->display_date)
+				->orderByRaw('display_date ASC')
+				->first();
+
+			$prev = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', '<', $entry->display_date)
+				->orderByRaw('display_date DESC')
+				->first();
+		}
+			
 		$photos = Photo::select()
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
+			
+		$vdata = [
+			'record' => $entry, 
+			'next' => $next,
+			'prev' => $prev,
+			'photos' => $photos,
+		];
 		
-		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
+		return view('entries.view', $vdata);
 	}
 	
     public function view($title, $id)
@@ -263,19 +294,48 @@ class EntryController extends Controller
 
     public function show($id)
     {
+		$next = null;
+		$prev = null;
+		
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->where('id', $id)
 			->first();
-		
+			
+		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+		{
+			$next = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', '>', $entry->display_date)
+				->orderByRaw('display_date ASC')
+				->first();
+
+			$prev = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', '<', $entry->display_date)
+				->orderByRaw('display_date DESC')
+				->first();
+		}
+			
 		$photos = Photo::select()
 			->where('deleted_flag', 0)
 			->where('parent_id', $entry->id)
 			->orderByRaw('id ASC')
 			->get();
+			
+		$vdata = [
+			'record' => $entry, 
+			'next' => $next,
+			'prev' => $prev,
+			'photos' => $photos,
+		];			
 		
-		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
+		return view('entries.view', $vdata);
 	}
 	
     public function home()
@@ -302,20 +362,39 @@ class EntryController extends Controller
     }
 	
     public function update(Request $request, Entry $entry)
-    {			
+    {
+		$record = $entry;
+		
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
+    	if (Auth::check() && Auth::user()->id == $record->user_id)
         {				
-			$entry->type_flag 			= $request->type_flag;
-			$entry->title 				= trim($request->title);
-			$entry->permalink			= trim($request->permalink);
-			$entry->description_short	= trim($request->description_short);
-			$entry->description			= trim($request->description);
+			$record->type_flag 			= $request->type_flag;
+			$record->title 				= trim($request->title);
+			$record->permalink			= trim($request->permalink);
+			$record->description_short	= trim($request->description_short);
+			$record->description		= trim($request->description);
+			$record->display_date		= $request->display_date;
 			
-			$entry->save();
-			
+			try
+			{
+				$record->save();
+
+				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id);			
+				
+				$request->session()->flash('message.level', 'success');
+				$request->session()->flash('message.content', 'Entry has been updated');
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_EDIT, $this->getTextOrShowEmpty($record->title), null, $e->getMessage());
+				
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());		
+			}			
+
+			//dd($request->referer);
 			return redirect($this->getReferer($request, '/entries/indexadmin')); 
 		}
 		else
@@ -390,17 +469,10 @@ class EntryController extends Controller
 
     public function publish(Request $request, Entry $entry)
     {	
-		if (!$this->isAdmin())
+    	if (!$this->isOwnerOrAdmin($entry->user_id))
              return redirect('/');
 
-    	if ($this->isOwnerOrAdmin($entry->user_id))
-        {
-			return view('entries.publish', ['record' => $entry, 'data' => $this->getViewData()]);							
-        }           
-        else 
-		{
-             return redirect('/');
-		}            	
+		return view('entries.publish', ['record' => $entry]);
     }
 	
     public function publishupdate(Request $request, Entry $entry)
@@ -418,6 +490,7 @@ class EntryController extends Controller
 			else
 				$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
+			$entry->parent_id = $request->parent_id;
 			$entry->view_count = intval($request->view_count);
 			
 			$entry->save();

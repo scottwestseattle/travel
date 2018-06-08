@@ -28,7 +28,7 @@
 			<label for="approved_flag" class="checkbox-big-label">Approved</label>
 		</div>
 		
-		@if (false)
+		@if ($record->type_flag === ENTRY_TYPE_BLOG_ENTRY)
 		<div class="form-group">
 			<label for="distance">Parent ID:</label>
 			<input type="text" name="parent_id" class="form-control" value="{{ $record->parent_id }}"  />

@@ -191,3 +191,19 @@ function urlEncode(fromId, toId)
 		alert('Error creating permalink');
 	}
 }
+
+function urlEncodeWithDate(fromId, fromDateId, toId)
+{	
+    var fromElem = document.getElementById(fromId);
+    var fromDateElem = document.getElementById(fromDateId);
+	var toElem = document.getElementById(toId);
+	if (fromElem && fromDateElem && toElem)
+	{
+		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
+		toElem.value += "-" + fromDateElem.value;
+	}
+	else
+	{
+		alert('Error creating permalink');
+	}
+}

@@ -54,15 +54,11 @@
 							
 							<?php if ($user_type >= 100) : ?>
 								<li><a href="/admin">Admin</a></li>
-								<li><a href="/activities/indexadmin">Activities</a></li>
+								<li><a href="/blogs/indexadmin">Blogs</a></li>
 								<li><a href="/entries/indexadmin/">Entries</a></li>
-								<li><a href="/locations/indexadmin">Locations</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/photos/indexadmin">Photos</a></li>
-								<li><a href="/sites/index">Sites</a></li>
-								<li><a href="/tasks/index">Tasks</a></li>
 								<li><a href="/tours/indexadmin">Tours</a></li>
-								<li><a href="/users/">Users</a></li>
 								<li><a href="/visitors/">Visitors</a></li>
 							<?php endif; ?>
 														
@@ -74,7 +70,11 @@
                                 <ul class="dropdown-menu">
 								
 									<?php if (Auth::check()) : ?>
+										<li><a href="/activities/indexadmin">Activities</a></li>
+										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/users/">Settings ({{$user_type_name}})</a></li>
+										<li><a href="/sites/index">Sites</a></li>
+										<li><a href="/tasks/index">Tasks</a></li>
 									<?php endif; ?>
 
                                     <li>

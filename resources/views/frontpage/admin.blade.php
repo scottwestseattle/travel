@@ -94,7 +94,7 @@
 		@endforeach
 		</tbody>
 	</table>
-	<a href="/events/index">Show All Events</a>
+	<a href="/events/index/">Show All Events</a>
 	<hr />
 		
 		<div style="height:30px;clear:both;"></div>

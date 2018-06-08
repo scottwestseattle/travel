@@ -755,5 +755,22 @@ class Controller extends BaseController
 		
 		return $text;
 	}
+
+	protected function getTextOrShowEmpty($text)
+	{
+		$r = '(empty)';
+		
+		if (isset($text))
+		{
+			$text = trim($text);
+			
+			if (strlen($text) === 0)
+				$text = null;
+			else
+				$r = $text;
+		}
+		
+		return $r;
+	}
 	
 }

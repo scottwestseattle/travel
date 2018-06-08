@@ -308,6 +308,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
     public static $classMap = array (
         'App\\Activity' => __DIR__ . '/../..' . '/app/Activity.php',
         'App\\Base' => __DIR__ . '/../..' . '/app/Base.php',
+        'App\\Blog' => __DIR__ . '/../..' . '/app/Blog.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Entry' => __DIR__ . '/../..' . '/app/Entry.php',
         'App\\Event' => __DIR__ . '/../..' . '/app/Event.php',
@@ -320,6 +321,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
         'App\\Http\\Controllers\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ResetPasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\EntryController' => __DIR__ . '/../..' . '/app/Http/Controllers/EntryController.php',
+        'App\\Http\\Controllers\\EventController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventController.php',
         'App\\Http\\Controllers\\FaqsController' => __DIR__ . '/../..' . '/app/Http/Controllers/FaqsController.php',
         'App\\Http\\Controllers\\FrontPageController' => __DIR__ . '/../..' . '/app/Http/Controllers/FrontPageController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
