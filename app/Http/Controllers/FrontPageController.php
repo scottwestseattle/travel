@@ -39,8 +39,16 @@ class FrontPageController extends Controller
 		$welcome2 = 'Travel is our Business!!';
 		$page_title = 'Travel Information';
 		$page_title = config('app.name', 'Travel Guide');
+		$site = null;
+		try 
+		{
+			$site = Site::select()->first();
+		}
+		catch (\Exception $e)
+		{
+			//todo: add error handling, no site table or records
+		}
 		
-		$site = Site::select()->first();
 		if (isset($site))
 		{
 			if (isset($site->main_section_text))
