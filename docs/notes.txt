@@ -30,6 +30,10 @@ $color = '#5CB85C'; // green
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+DB Changes
+
 ALTER TABLE `entries` ADD `display_date` DATE NULL AFTER `deleted_flag`;
+ALTER TABLE `events` ADD `ip_address` VARCHAR(50) NULL AFTER `user_id`;
+ALTER TABLE `entries` ADD UNIQUE(`permalink`);
 
 

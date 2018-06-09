@@ -57,6 +57,7 @@ class Event extends Model
     {		
 		$record = new Event();
 		
+		$record->ip_address		= Event::getVisitorIp();
 		$record->site_id 		= SITE_ID;
 		$record->user_id 		= Auth::id();
 			
@@ -73,5 +74,25 @@ class Event extends Model
 						
 		$record->save();
     }
+	
+	static public function getVisitorIp()
+	{
+		$ip = null;
+		
+		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		else
+		{
+			$ip = $_SERVER["REMOTE_ADDR"];
+		}	
+		
+		return $ip;
+	}
 	
 }

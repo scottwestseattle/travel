@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Entry;
+use App\Event;
 use App\Activity;
 use App\User;
 use App\Photo;
@@ -199,7 +200,7 @@ class HomeController extends Controller
 			->limit(10)
 			->get();
 			
-		$ip = $this->getVisitorIp();
+		$ip = Event::getVisitorIp();
 			
 		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
     }

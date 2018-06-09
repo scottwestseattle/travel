@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Auth;
 use App\Task;
 use App\Entry;
+use App\Event;
 use App\Visitor;
 use App\Photo;
 use App\Location;
@@ -68,7 +69,8 @@ define('ENTRY_TYPE_BLOG', 		3);
 define('ENTRY_TYPE_BLOG_ENTRY', 4);
 define('ENTRY_TYPE_ARTICLE', 	5);
 define('ENTRY_TYPE_NOTE', 		6);
-define('ENTRY_TYPE_OTHER',		7);
+define('ENTRY_TYPE_SECTION',	7);
+define('ENTRY_TYPE_OTHER',		99);
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -90,6 +92,7 @@ define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
 define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_DELETE', 'delete');
+define('LOG_ACTION_VIEW', 'view');
 define('LOG_ACTION_MOVE', 'move');
 define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
@@ -115,33 +118,13 @@ class Controller extends BaseController
 	public function __construct ()
 	{		
 	}
-		
-	protected function getVisitorIp()
-	{
-		$ip = null;
-		
-		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
-		{
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
-		{
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		else
-		{
-			$ip = $_SERVER["REMOTE_ADDR"];
-		}	
-		
-		return $ip;
-	}
 	
 	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
 	{
 		//
 		// get visitor info
 		//
-		$ip = $this->getVisitorIp();
+		$ip = Event::getVisitorIp();
 						
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
@@ -197,7 +180,7 @@ class Controller extends BaseController
 	
 	protected function isNewVisitor()
 	{
-		$ip = $this->getVisitorIp();
+		$ip = Event::getVisitorIp();
 		
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)
@@ -763,6 +746,7 @@ class Controller extends BaseController
 		return $from;
 	}	
 	
+	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
 	protected function trimNull($text)
 	{
 		if (isset($text))
@@ -793,11 +777,25 @@ class Controller extends BaseController
 		return $r;
 	}
 	
-	function getTypeName($type_flag)
-	{
-		$name = '';
+    public function createPermalink($title, $date)
+    {		
+		$ret = null;
 		
+		if (isset($title))
+		{
+			$ret = $title;
+		}
 		
-		return $name;
-	}	
+		if (isset($date))
+		{
+			$ret .= '-' . $date;
+		}
+		
+		$ret = preg_replace('/[^\da-z ]/i', ' ', $ret); // remove all non-alphanums
+		$ret = str_replace(" ", "-", $ret);				// replace spaces with dashes
+		$ret = strtolower($ret);						// make all lc
+				
+		return $ret;
+	}
+	
 }

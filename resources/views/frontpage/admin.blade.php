@@ -63,6 +63,7 @@
 	<div style="height:30px;clear:both;"></div>
 	
 	<h3 style="">Latest Events ({{count($events)}})</h3>
+	@component('menu-submenu-events-filter')@endcomponent	
 	<table class="table table-striped">
 		<tbody>
 			<tr>

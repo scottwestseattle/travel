@@ -103,7 +103,7 @@ class EntryController extends Controller
 
 		return view('entries.add');							
 	}
-
+	
     public function create(Request $request)
     {		
 		if (!$this->isAdmin())
@@ -119,94 +119,35 @@ class EntryController extends Controller
 
 		$entry->parent_id 			= $request->parent_id;		
 		$entry->title 				= $this->trimNull($request->title);
-		$entry->permalink			= $this->trimNull($request->permalink);
 		$entry->description_short	= $this->trimNull($request->description_short);
 		$entry->description			= $this->trimNull($request->description);
 		$entry->display_date		= $request->display_date;
 
-		$entry->save();
-			
-		return redirect($this->getReferer($request, '/entries/show/' . $entry->id)); 
-    }
-
-    public function upload(Entry $entry)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-			 
-    	if (Auth::check())
-        {            
-			//todo $categories = Category::lists('title', 'id');
-	
-			return view('entries.upload', ['entry' => $entry, 'data' => $this->getViewData()]);
-        }           
-        else 
+		$entry->permalink			= $this->trimNull($request->permalink);
+		if (!isset($entry->permalink))
+			$entry->permalink = $this->createPermalink($entry->title, $entry->display_date);
+		
+		try
 		{
-             return redirect('/');
-        }       
-	}
-	
-    public function store(Request $request, Entry $entry)
-    {		
-		if (!$this->isAdmin())
-             return redirect('/');
+			$entry->save();
 
-			 if (Auth::check())
-        {            
-			//dd($request->file('image'));
+			$msg = 'Entry has been added';
+			Event::logAdd(LOG_MODEL_ENTRIES, $msg . ': ' . $entry->title, $entry->description, $entry->id);
 				
-			//
-			// get file to upload
-			//
-			$file = $request->file('image');
-			if (!isset($file))
-			{
-				// bad or missing file name
-				return view('entries.upload', ['entry' => $entry, 'data' => $this->getViewData()]);	
-			}
-			
-			//
-			// get and check file extension
-			//
-			$ext = strtolower($file->getClientOriginalExtension());
-			if (isset($ext) && $ext === 'jpg')
-			{
-			}
-			else
-			{
-				// bad or missing extension
-				return view('entries.upload', ['entry' => $entry, 'data' => $this->getViewData()]);					
-			}
-						
-			//
-			// get and check new file name
-			//
-			$name = trim($request->name);
-			if (isset($name) && strlen($name) > 0)
-			{
-				$name = preg_replace('/[^\da-z ]/i', ' ', $name); // remove all non-alphanums
-				$name = str_replace(" ", "-", $name);			// replace spaces with dashes
-			}
-			else
-			{
-				// no file name given so name it with timestamp
-				$name = date("Ymd-His");
-			}
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', $msg);
 
-			$name .= '.' . $ext;
-							
-			$path = base_path() . TOUR_PHOTOS_PATH . $entry->id;
-			
-			//dd($name);
-			
-			$request->file('image')->move($path, $name);
-						
-			return redirect('/entries/view/' . $entry->id);
-        }           
-        else 
+			return redirect($this->getReferer($request, '/entries/show/' . $entry->id)); 
+		}
+		catch (\Exception $e) 
 		{
-             return redirect('/');
-        }            	
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_ADD, $this->getTextOrShowEmpty($entry->title), null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+
+			return redirect($this->getReferer($request, '/entries/indexadmin/'));
+		}						
     }
 
     public function permalocation($location, $permalink)
@@ -230,8 +171,13 @@ class EntryController extends Controller
 						
 		if (!isset($entry))
 		{
+			$msg = 'Permalink Entry Not Found: ' . $permalink;
+			
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', 'Permalink Entry Not Found: ' . $permalink);
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
             return redirect('/entries/index');
 		}
 		
@@ -242,6 +188,7 @@ class EntryController extends Controller
 				->where('deleted_flag', 0)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
 				->where('display_date', '>', $entry->display_date)
+				->where('parent_id', $entry->parent_id)
 				->orderByRaw('display_date ASC')
 				->first();
 
@@ -250,6 +197,7 @@ class EntryController extends Controller
 				->where('deleted_flag', 0)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
 				->where('display_date', '<', $entry->display_date)
+				->where('parent_id', $entry->parent_id)
 				->orderByRaw('display_date DESC')
 				->first();
 		}
@@ -366,11 +314,12 @@ class EntryController extends Controller
     	if (Auth::check() && Auth::user()->id == $record->user_id)
         {				
 			$record->type_flag 			= $request->type_flag;
-			$record->title 				= trim($request->title);
-			$record->permalink			= trim($request->permalink);
-			$record->description_short	= trim($request->description_short);
-			$record->description		= trim($request->description);
-			$record->display_date		= $request->display_date;
+			
+			$record->title 				= $this->trimNull($request->title);
+			$record->permalink			= $this->trimNull($request->permalink);
+			$record->description_short	= $this->trimNull($request->description_short);
+			$record->description		= $this->trimNull($request->description);
+			$record->display_date		= $this->trimNull($request->display_date;
 			
 			try
 			{

@@ -142,7 +142,7 @@ foreach($photos as $photo)
 	
 		<div style="margin-top: 30px;">
 			@if (isset($prev))
-				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn"><span style="width:30px; font-size: 18px" class="glyphBlogNav glyphicon glyphicon-circle-arrow-left"></span></button></button></a>
+				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn"><span style="background-color:#f0f0f0; color: #aaa;	width:30px; font-size: 18px" class="glyphicon glyphicon-circle-arrow-left"></span></button></button></a>
 			@endif
 			@if (false && isset($record->parent_id))
 				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn"><span style="font-size: 18px" class="glyphBlogNav glyphicon glyphicon-circle-arrow-up"></span></button></a>

@@ -174,7 +174,7 @@ class FrontPageController extends Controller
 			->limit(10)
 			->get();
 			
-		$ip = $this->getVisitorIp();
+		$ip = Event::getVisitorIp();
 			
 		$vdata = [
 			'events' => $events,
