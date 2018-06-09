@@ -90,15 +90,27 @@ class PhotoController extends Controller
 	}
 	
 	public function sliders()
-	{		
-		$photos = Photo::select()
-			->where('parent_id', '=', 0)
-			//->whereNull('parent_id')
-			->where('deleted_flag', 0)
-			->orderByRaw('photos.id DESC')
-			->get();
+	{			
+		$q = '
+			SELECT id, filename, alt_text, location, main_flag
+				, CONCAT(alt_text, " - ", location) as photo_title
+				, CONCAT("' . PHOTO_SLIDER_PATH . '") as path
+			FROM photos
+			WHERE 1=1
+				AND deleted_flag = 0
+				AND (parent_id is null OR parent_id = 0)
+			ORDER BY id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q);
+		
+		$vdata = [
+			'title' => 'Slider', 
+			'photos' => $records, 
+		];
 				
-		return view('photos.index', ['title' => 'Slider', 'photo_type' => 1, 'path' => '/img/' . PHOTO_SLIDER_FOLDER . '/', 'photos' => $photos, 'page_title' => 'Photos']);	
+		return view('photos.sliders', $vdata);	
 	}
 	
     public function index()

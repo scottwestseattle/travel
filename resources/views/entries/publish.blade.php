@@ -28,11 +28,13 @@
 			<label for="approved_flag" class="checkbox-big-label">Approved</label>
 		</div>
 		
-		@if ($record->type_flag === ENTRY_TYPE_BLOG_ENTRY)
-		<div class="form-group">
-			<label for="distance">Parent ID:</label>
-			<input type="text" name="parent_id" class="form-control" value="{{ $record->parent_id }}"  />
-		</div>
+		@if ($record->type_flag === ENTRY_TYPE_BLOG_ENTRY && !isset($record->parent_id))
+			<div class="form-group">
+				<label for="distance">Parent ID:</label>
+				<input type="text" name="parent_id" class="form-control"  />
+			</div>
+		@else
+			<input type="hidden" name="parent_id" value="{{$record->parent_id}}">			
 		@endif
 
 		<div class="form-group">

@@ -42,7 +42,7 @@ class Event extends Model
 		Event::add(LOG_TYPE_INFO, $model, LOG_ACTION_DELETE, $title, null, $record_id);
 	}
 	
-    static public function logError($model, $action, $title, $description, $record_id, $error)
+    static public function logError($model, $action, $title, $description = null, $record_id = null, $error = null)
     {		
 		Event::add(LOG_TYPE_ERROR, $model, $action, $title, $description, $record_id, $error);
 	}

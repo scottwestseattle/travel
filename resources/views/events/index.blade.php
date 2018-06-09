@@ -58,6 +58,12 @@
 								@endforeach
 							</div>
 						@endif
+						@if (isset($record->title))
+							<div style="padding:0px 5px 10px 5px;">{{$record->title}}</div>
+						@endif
+						@if (isset($record->updates))
+							<div style="padding:0px 5px 10px 5px;">{{$record->updates}}</div>
+						@endif
 						@if (isset($record->error))
 							<div style="padding:0px 5px 10px 5px;">{{$record->error}}</div>
 						@endif

@@ -55,7 +55,7 @@
 							<?php if ($user_type >= 100) : ?>
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/blogs/indexadmin">Blogs</a></li>
-								<li><a href="/entries/indexadmin/">Entries</a></li>
+								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/photos/indexadmin">Photos</a></li>
 								<li><a href="/tours/indexadmin">Tours</a></li>

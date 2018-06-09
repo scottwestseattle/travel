@@ -6,18 +6,55 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Entry;
+use App\Photo;
+use App\Event;
 
 class BlogController extends Controller
 {
 	private $prefix = 'blogs';
 
+    public function addpost(Request $request, $id)
+    {
+		$idsave = $id;
+		$id = intval($id);
+		
+		if (!$this->isAdmin())
+			return redirect('/');
+		
+		$record = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('id', $id)
+			->where('type_flag', ENTRY_TYPE_BLOG)
+			->first();
+			
+		if (!isset($record))
+		{
+			$msg = 'Add Post: Blog Not Found For ID: ' . $idsave;
+			Event::logError(LOG_MODEL_BLOGS, LOG_ACTION_ADD, /* title = */ $msg, null, /* record_id = */ $id);
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+            return redirect('/blogs/indexadmin');
+		}
+	
+		$vdata = [
+			'title' => $record->title,
+			'type_flag' => ENTRY_TYPE_BLOG_ENTRY,
+			'parent_id' => $record->id,
+		];
+		
+		return view('entries.add', $vdata);							
+	}
+	
     public function index()
-    {				
-		$records = Entry::getEntriesByType(ENTRY_TYPE_BLOG);
-
+    {		
+		$records = Entry::getBlogIndex();
+		
 		$vdata = [
 			'records' => $records,
-			'redirect' => '/' . $this->prefix . '/index'
+			'redirect' => '/' . $this->prefix . '/index',
 		];
 
     	return view($this->prefix . '.index', $vdata);
@@ -40,6 +77,8 @@ class BlogController extends Controller
 	
     public function show($id)
     {
+		$id = intval($id);
+		
 		$record = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
@@ -55,9 +94,16 @@ class BlogController extends Controller
 			->orderByRaw('display_date ASC')
 			->get();
 			
+		$photos = Photo::select()
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $record->id)
+			->orderByRaw('created_at ASC')
+			->get();
+
 		$vdata = [
 			'record' => $record, 
 			'records' => $records, 
+			'photos' => $photos,
 		];
 		
 		return view($this->prefix . '.view', $vdata);

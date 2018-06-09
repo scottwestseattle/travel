@@ -37,23 +37,26 @@ foreach($photos as $photo)
 		
 	<div class="form-group">
 	
+		<!------------------------------------>
+		<!-- Top Navigation Buttons -->
+		<!------------------------------------>
+		
 		<div style="margin-top: 10px;">
-			<ul class="nav nav-pills">
-				@if (isset($prev))
-					<li class="active"><a href="/entries/show/{{$prev->id}}">Previous Entry</a></li>
-				@endif
-				@if (isset($record->parent_id))
-					<li class="active"><a href="/blogs/show/{{$record->parent_id}}">Back to Blog</a></li>
-				@endif
-				@if (isset($next))
-					<li class="active"><a href="/entries/show/{{$next->id}}">Next Entry</a></li>
-				@endif			
+			@if (isset($prev))
+				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
+			@endif
+			@if (isset($record->parent_id))
+				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">Back to Blog<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
+			@endif
+			@if (isset($next))
+				<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
+			@endif			
 			</ul>		
 		</div>
 		
 		<h1 name="title" class="">{{$record->title }}</h1>
 		@if (isset($record->display_date))
-		<p style="font-weight: bold;"><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
+			<p style="font-weight: bold;"><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
 		@endif
 	</div>
 	
@@ -132,18 +135,21 @@ foreach($photos as $photo)
 	</div>
 
 	@endif
+
+		<!------------------------------------>
+		<!-- Bottom Navigation Buttons -->
+		<!------------------------------------>
 	
-		<div style="margin-top: 10px;">
-			<ul class="nav nav-pills">
-				@if (isset($prev))
-					<li class="active"><a href="/entries/show/{{$prev->id}}">Previous Entry</a></li>
-				@endif
-				@if (isset($record->parent_id))
-					<li class="active"><a href="/blogs/show/{{$record->parent_id}}">Back to Blog</a></li>
-				@endif
-				@if (isset($next))
-					<li class="active"><a href="/entries/show/{{$next->id}}">Next Entry</a></li>
-				@endif			
+		<div style="margin-top: 30px;">
+			@if (isset($prev))
+				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn"><span style="width:30px; font-size: 18px" class="glyphBlogNav glyphicon glyphicon-circle-arrow-left"></span></button></button></a>
+			@endif
+			@if (false && isset($record->parent_id))
+				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn"><span style="font-size: 18px" class="glyphBlogNav glyphicon glyphicon-circle-arrow-up"></span></button></a>
+			@endif
+			@if (isset($next))
+				<a href="/entries/show/{{$next->id}}"><button type="button" class="btn"><span style="width:30px; font-size: 18px" class="glyphBlogNav glyphicon glyphicon-circle-arrow-right"></span></button></a>
+			@endif			
 			</ul>		
 		</div>
 	

@@ -18,10 +18,25 @@ use DB;
 define('SITE_ID', 1);	// the site ID for this web site, from the Sites table
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
+
+// photos
 define('TOUR_PHOTOS_PATH', '/public/img/tours/');
 define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
 define('PHOTOS_FULL_PATH', '/public/img/');
 define('PHOTOS_WEB_PATH', '/img/');
+
+// -1=not set, 0=slider, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 
+define('PHOTO_TYPE_NOTSET', 	-1);
+define('PHOTO_TYPE_SLIDER', 	0);
+define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
+
+define('PHOTO_SLIDER_FOLDER', 'sliders');
+define('PHOTO_ENTRY_FOLDER', 'entries');
+define('PHOTO_TMP_FOLDER', 'tmp');
+define('PHOTO_ENTRY_PATH', '/img/entries/');
+define('PHOTO_SLIDER_PATH', '/img/sliders/');
+
+// users
 define('EXT_JPG', '.jpg');
 define('USER_UNCONFIRMED', 0);		// user unconfirmed
 define('USER_CONFIRMED', 10);		// user confirmed
@@ -30,6 +45,7 @@ define('USER_EDITOR', 30);			// content editor
 define('USER_SITE_ADMIN', 100);		// user site admin
 define('USER_SUPER_ADMIN', 1000);	// user super admin
 
+// locations
 define('LOCATION_TYPE_PLANET', 0);
 define('LOCATION_TYPE_CONTINENT', 100);
 define('LOCATION_TYPE_SUBCONTINENT', 200);
@@ -43,6 +59,7 @@ define('SHOW_NON_XS', 'hidden-xs');
 define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
+// entries
 // -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 	
 define('ENTRY_TYPE_NOTSET', 	-1);
 define('ENTRY_TYPE_ENTRY', 		1);
@@ -52,15 +69,6 @@ define('ENTRY_TYPE_BLOG_ENTRY', 4);
 define('ENTRY_TYPE_ARTICLE', 	5);
 define('ENTRY_TYPE_NOTE', 		6);
 define('ENTRY_TYPE_OTHER',		7);
-
-// -1=not set, 0=slider, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 
-define('PHOTO_TYPE_NOTSET', 	-1);
-define('PHOTO_TYPE_SLIDER', 	0);
-define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
-
-define('PHOTO_SLIDER_FOLDER', 'sliders');
-define('PHOTO_ENTRY_FOLDER', 'entries');
-define('PHOTO_TMP_FOLDER', 'tmp');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -76,6 +84,7 @@ define('LOG_MODEL_PHOTOS', 'photos');
 define('LOG_MODEL_TOURS', 'tours');
 define('LOG_MODEL_LOCATIONS', 'locations');
 define('LOG_MODEL_OTHER', 'other');
+define('LOG_MODEL_BLOGS', 'blogs');
 	
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
@@ -91,6 +100,17 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 	private $viewData = [];
+	
+	public $typeNames = [
+		ENTRY_TYPE_NOTSET => 'Not Set',
+		ENTRY_TYPE_ENTRY => 'Entry',
+		ENTRY_TYPE_TOUR => 'Tour/Hike',
+		ENTRY_TYPE_BLOG => 'Blog',
+		ENTRY_TYPE_BLOG_ENTRY => 'Blog Entry',
+		ENTRY_TYPE_ARTICLE => 'Article',
+		ENTRY_TYPE_NOTE => 'Note',
+		ENTRY_TYPE_OTHER => 'Other',
+	];
 	
 	public function __construct ()
 	{		
@@ -773,4 +793,11 @@ class Controller extends BaseController
 		return $r;
 	}
 	
+	function getTypeName($type_flag)
+	{
+		$name = '';
+		
+		
+		return $name;
+	}	
 }

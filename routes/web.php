@@ -37,6 +37,10 @@ Route::group(['prefix' => 'blogs'], function ()
 	Route::get('/show/{id}', 'BlogController@show');
 	Route::get('/index', 'BlogController@index');
 	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');
+	
+	// add/create
+	Route::get('/addpost/{id}', 'BlogController@addpost')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
 });
 
 // sites
@@ -110,7 +114,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/index', 'EntryController@index');
 	Route::get('/tours', 'EntryController@tours')->middleware('auth');
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
-	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
+	Route::get('/indexadmin/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 		
 	// publish

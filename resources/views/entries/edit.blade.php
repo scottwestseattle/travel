@@ -35,7 +35,7 @@
 			</div>
 			
 			<div class="entry-description-div">
-				<textarea name="description" class="form-control entry-description-text" placeholder="Description" >{{ $record->description }}</textarea>
+				<textarea name="description" rows="12" class="form-control" placeholder="Description" >{{ $record->description }}</textarea>
 			</div>
 
 			<div class="entry-description-div">

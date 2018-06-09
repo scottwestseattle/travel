@@ -53,9 +53,7 @@ else
 		$base_folder = 'img/entries/';
 		$photo_folder = $base_folder . $record->id . '/';
 		$photo = $photo_folder . 'main.jpg';
-			
-		//dd(getcwd());
-					
+							
 		if (file_exists($photo) === FALSE)
 		{
 			$photo = '/img/theme1/placeholder.jpg';
@@ -66,6 +64,12 @@ else
 			$photo = '/' . $photo;
 			$photo_found = true;
 		}
+		
+		if ($record->type_flag == ENTRY_TYPE_BLOG)
+		{
+			//$width = '500px';
+		}
+
 		
 		// map size
 		$mapWidth = 500;
@@ -120,6 +124,13 @@ else
 
 	@endif
 	
+	<div style="margin:20px 0">
+		
+		<h3>
+			<span class="middle" style="margin: 0 10px 0 0;">Blog Posts ({{ count($records) }})</span>
+			<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-action">Add New Post</button></a>				
+		</h3>
+	
 		<!---------------------------------->
 		<!-- The Blog Entry list          -->
 		<!---------------------------------->
@@ -142,7 +153,8 @@ else
 				</tr>
 			@endforeach
 			</tbody>
-		</table>	
+		</table>
+	</div>
 	
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">

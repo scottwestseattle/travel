@@ -49,7 +49,7 @@ class Entry extends Base
 	}
 
 	// get all entries except tours
-	static public function getEntries()
+	static public function getEntries($approved_flag = false)
 	{
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
@@ -61,7 +61,7 @@ class Entry extends Base
 			AND entries.deleted_flag = 0
 			AND entries.type_flag <> ?
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
 		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
@@ -72,6 +72,9 @@ class Entry extends Base
 	// get all entries for specified type
 	static public function getEntriesByType($type_flag, $approved_flag = true)
 	{
+		if (!isset($type_flag))
+			return(Entry::getEntries($approved_flag));
+		
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
 				count(photos.id) as photo_count
@@ -88,7 +91,7 @@ class Entry extends Base
 		$q .= '
 			AND entries.type_flag = ?
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
 		$records = DB::select($q, [$type_flag]);
@@ -96,4 +99,30 @@ class Entry extends Base
 		return $records;
 	}
 	
+	static public function getBlogIndex()
+	{
+		$q = '
+			SELECT entries.id, entries.title, entries.description, entries.permalink
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
+			WHERE 1=1
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			GROUP BY 
+				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path
+			ORDER BY entries.id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [ENTRY_TYPE_BLOG]);
+		
+		return $records;
+	}
+
 }

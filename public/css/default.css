@@ -11,6 +11,34 @@ a .btn-alert {
 	font-weight:bold;
 }
 
+a .btn-action, a:hover .btn-action {
+	background-color:#5CB85C;
+	color: white;	
+	margin:5px 3px 0 0; 
+	padding:5px; 
+	font-size:.5em;	
+	font-weight:bold;
+}
+
+a .btn-blog-nav, 
+a:hover .btn-blog-nav {
+	background-color:#5CB85C;
+	color: white;	
+	margin:5px 3px 0 0; 
+	padding:5px; 
+	font-size:1em;	
+	font-weight:bold;
+}
+
+.glyphBlogNav {
+	background-color:#f0f0f0;
+	color: #aaa;	
+}
+
+.middle {
+	vertical-align: middle!important;
+}
+
 .label-danger a:link {
 	background-color:red;
 	color: white;

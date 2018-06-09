@@ -10,44 +10,6 @@ if (isset($title))
 	$header = $title;
 }
 
-function getTypeName($type_flag)
-{
-	$name = '';
-	
-	switch($type_flag)
-	{
-		case ENTRY_TYPE_NOTSET:
-			$name = 'Not Set';
-			break;
-		case ENTRY_TYPE_ENTRY:
-			$name = 'Entry';
-			break;
-		case ENTRY_TYPE_TOUR:
-			$name = 'Tour/Hike';
-			break;
-		case ENTRY_TYPE_BLOG:
-			$name = 'Blog';
-			break;
-		case ENTRY_TYPE_BLOG_ENTRY:
-			$name = 'Blog Entry';
-			break;
-		case ENTRY_TYPE_ARTICLE:
-			$name = 'Article';
-			break;
-		case ENTRY_TYPE_NOTE:
-			$name = 'Note';
-			break;
-		case ENTRY_TYPE_OTHER:
-			$name = 'Other';
-			break;
-		default:
-			$name = 'Not found';
-			break;
-	}
-	
-	return $name;
-}
-
 ?>
 
 <div class="page-size container">
@@ -59,7 +21,22 @@ function getTypeName($type_flag)
 		</tr></table>
 	</div>			
 
+		<!-- -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other -->
+		<div style="margin:15px 0;">
+			<a style="margin-right:10px;" href="/entries/indexadmin">Show All</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_ARTICLE}}">Articles</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG}}">Blogs</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG_ENTRY}}">Blog Enties</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}">Entries</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_NOTE}}">Notes</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_TOUR}}">Tours</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_OTHER}}">Other</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_NOTSET}}">Not Set</a>
+		</div>
+	
+	
 	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($records) }})</h1>
+	
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
@@ -69,7 +46,7 @@ function getTypeName($type_flag)
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<td>
-						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{getTypeName($record->type_flag) . ', ' . intval($record->photo_count) . ' photo(s)'}})</a>
+						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{$typeNames[$record->type_flag] . ', ' . intval($record->photo_count) . ' photos'}})</a>
 						
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>

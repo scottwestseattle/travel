@@ -33,16 +33,17 @@ class EntryController extends Controller
     	return view('entries.index', ['records' => $entries]);
     }
 
-    public function indexadmin()
+    public function indexadmin($type_flag = null)
     {		
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$entries = Entry::getEntries();
+		$entries = Entry::getEntriesByType($type_flag, /* approved = */ false);
 
 		$vdata = [
 			'records' => $entries,
-			'redirect' => '/entries/indexadmin'
+			'redirect' => '/entries/indexadmin',
+			'typeNames' => $this->typeNames,
 		];
 		
     	return view('entries.indexadmin', $vdata);
@@ -100,14 +101,7 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-			 if (Auth::check())
-        {            	
-			return view('entries.add', ['current_type' => ENTRY_TYPE_ARTICLE]);							
-        }           
-        else 
-		{
-             return redirect('/');
-        }       
+		return view('entries.add');							
 	}
 
     public function create(Request $request)
@@ -122,11 +116,12 @@ class EntryController extends Controller
 		$entry->site_id = SITE_ID;
 		$entry->user_id = Auth::id();
 		$entry->type_flag = $request->type_flag;
-		
-		$entry->title 				= trim($request->title);
-		$entry->permalink			= trim($request->permalink);
-		$entry->description_short	= trim($request->description_short);
-		$entry->description			= trim($request->description);
+
+		$entry->parent_id 			= $request->parent_id;		
+		$entry->title 				= $this->trimNull($request->title);
+		$entry->permalink			= $this->trimNull($request->permalink);
+		$entry->description_short	= $this->trimNull($request->description_short);
+		$entry->description			= $this->trimNull($request->description);
 		$entry->display_date		= $request->display_date;
 
 		$entry->save();
