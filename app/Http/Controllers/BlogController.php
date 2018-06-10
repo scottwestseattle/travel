@@ -52,10 +52,10 @@ class BlogController extends Controller
     {		
 		$records = Entry::getBlogIndex();
 		
-		$vdata = [
+		$vdata = $this->getViewData([
 			'records' => $records,
 			'redirect' => '/' . $this->prefix . '/index',
-		];
+		]);
 
     	return view($this->prefix . '.index', $vdata);
     }
@@ -95,6 +95,7 @@ class BlogController extends Controller
 			->get();
 			
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $record->id)
 			->orderByRaw('created_at ASC')

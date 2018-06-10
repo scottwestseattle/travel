@@ -23,6 +23,7 @@ class PhotoController extends Controller
 			
 			//old way, folder based: $photos = $this->getPhotos($subfolder, EXT_JPG);
 			$photos = Photo::select()
+				->where('site_id', SITE_ID)
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $id)
@@ -68,6 +69,7 @@ class PhotoController extends Controller
 			$path = $this->getPhotosWebPath($subfolder);
 			
 			$photos = Photo::select()
+				->where('site_id', SITE_ID)
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $parent_id)
@@ -98,18 +100,19 @@ class PhotoController extends Controller
 			FROM photos
 			WHERE 1=1
 				AND deleted_flag = 0
+				AND site_id = ?
 				AND (parent_id is null OR parent_id = 0)
 			ORDER BY id DESC
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q);
+		$records = DB::select($q, [SITE_ID]);
 		
-		$vdata = [
+		$vdata = $this->getViewData([
 			'title' => 'Slider', 
-			'photos' => $records, 
-		];
-				
+			'photos' => $records, 		
+		]);
+						
 		return view('photos.sliders', $vdata);	
 	}
 	
@@ -138,6 +141,7 @@ class PhotoController extends Controller
 		if (Auth::check())
         {
 			$photos = Photo::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '>', 0)
 				->get();
@@ -532,7 +536,11 @@ class PhotoController extends Controller
     {
 		$path = $this->getPhotoPath($photo);
 		
-		return view('photos.view', ['photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text]);
+		$vdata = $this->getViewData([
+			'photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text
+		]);		
+		
+		return view('photos.view', $vdata);
 	}
 	
     public function edit(Request $request, Photo $photo)

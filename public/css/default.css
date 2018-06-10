@@ -30,10 +30,18 @@ a:hover .btn-blog-nav {
 	font-weight:bold;
 }
 
-.glyphBlogNav {
+.glyph-nav-bottom {
 	background-color:#f0f0f0;
 	color: #aaa;	
+	
+	width:30px; 
+	font-size: 18px;
 }
+
+.btn-nav-bottom {
+	background-color:#f0f0f0; 
+	color: #aaa;
+}	
 
 .middle {
 	vertical-align: middle!important;

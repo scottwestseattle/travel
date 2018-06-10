@@ -17,7 +17,12 @@ class LocationsController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('locations.index', ['records' => $locations, 'page_title' => 'Locations']);
+		$vdata = $this->getViewData([
+			'records' => $locations, 'page_title' => 'Locations'
+		]);
+		
+		
+    	return view('locations.index', $vdata);
     }
 
     public function indexadmin()
@@ -45,11 +50,12 @@ class LocationsController extends Controller
 		{
 			// get all
 			$records = Activity::select()
-			->where('approved_flag', '=', 1)
-			->where('published_flag', '=', 1)
-			->where('deleted_flag', '=', 0)
-			->orderByRaw('id DESC')
-			->get();
+				->where('site_id', SITE_ID)
+				->where('approved_flag', '=', 1)
+				->where('published_flag', '=', 1)
+				->where('deleted_flag', '=', 0)
+				->orderByRaw('id DESC')
+				->get();
 		}
 		
 		foreach($records as $record)
@@ -87,7 +93,11 @@ class LocationsController extends Controller
 			->orderByRaw('locations.location_type ASC')
 			->get();
 		
-    	return view('activities.index', ['records' => $records, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do' . $location_name]);
+		$vdata = $this->getViewData([
+			'records' => $records, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do' . $location_name
+		]);
+		
+    	return view('activities.index', $vdata);
     }
 	
    public function view(Location $location)
@@ -102,8 +112,12 @@ class LocationsController extends Controller
 			
 		$activities = null;
 		$location = $this->getLocation($location->id, $activities);			
+
+		$vdata = $this->getViewData([
+			'record' => $location, 'activities' => $activities
+		]);		
 			
-		return view('locations.view', ['record' => $location, 'activities' => $activities]);
+		return view('locations.view', $vdata);
 	}
 	
     public function add()

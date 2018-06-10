@@ -19,7 +19,7 @@
 			@if (isset($type_flag))
 				<input type="hidden" name="type_flag" value="{{$type_flag}}">
 			@else
-				@component('control-entry-types')@endcomponent	
+				@component('control-entry-types', ['entryTypes' => $entryTypes])@endcomponent	
 			@endif
 				
 			@if (isset($parent_id))

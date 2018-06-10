@@ -34,7 +34,11 @@ class ActivityController extends Controller
 		$locations = null;
 		$tours = $this->getIndexData($locations);
 
-    	return view('activities.index', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All']);
+		$vdata = $this->getViewData([
+			'records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - All'
+		]);
+		
+    	return view('activities.index', $vdata);
 	}		
 
     public function maps()
@@ -42,12 +46,17 @@ class ActivityController extends Controller
 		$locations = null;
 		$tours = $this->getIndexData($locations);
 
-    	return view('activities.maps', ['records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - Maps']);
+		$vdata = $this->getViewData([
+			'records' => $tours, 'locations' => $locations, 'page_title' => 'Tours, Hikes, Things To Do - Maps'
+		]);
+		
+    	return view('activities.maps', $vdata);
 	}		
 	
     private function getIndexData(&$locations)
     {
 		$tours = Activity::select()
+			->where('site_id', SITE_ID)
 			->where('approved_flag', '=', 1)
 			->where('published_flag', '=', 1)
 			->where('deleted_flag', '=', 0)
@@ -99,10 +108,11 @@ class ActivityController extends Controller
 					$photo = $tours_webpath . 'placeholder.jpg';
 								
 				$main_photo = Photo::select()
-				->where('parent_id', '=', $entry->id)
-				->where('main_flag', '=', 1)
-				->where('deleted_flag', '=', 0)
-				->first();
+					->where('site_id', SITE_ID)
+					->where('parent_id', '=', $entry->id)
+					->where('main_flag', '=', 1)
+					->where('deleted_flag', '=', 0)
+					->first();
 				
 				if (isset($main_photo))
 					$photo = $tours_webpath . $entry->id . '/' . $main_photo->filename;			
@@ -179,6 +189,7 @@ class ActivityController extends Controller
     public function view($title, $id)
     {
 		$activity = Activity::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('id', '=', $id)
 			->first();
@@ -281,6 +292,7 @@ class ActivityController extends Controller
 		//dd($location);
 					
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('created_at ASC')
@@ -325,6 +337,7 @@ class ActivityController extends Controller
     public function viewOrig(Activity $activity)
     {
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('photos.id DESC')

@@ -41,11 +41,19 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
-							<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
-							<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
-							<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
-							<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
-                            <li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
+								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
+							@endif	
+							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
                             <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
                         @else
 							<?php if (false && $user_type >= 1000) : ?>

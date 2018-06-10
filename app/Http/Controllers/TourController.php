@@ -21,7 +21,11 @@ class TourController extends Controller
 			
 		//dd($records);
 		
-    	return view('tours.indexadmin', ['records' => $records]);
+		$vdata = $this->getViewData([
+			'records' => $records,
+		]);
+		
+    	return view('tours.indexadmin', $vdata);
     }
 
     public function index()
@@ -33,14 +37,14 @@ class TourController extends Controller
 			
 		$photo_path = '/public/img/entries/';
 		
-		$vdata = [
+		$vdata = $this->getViewData([
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
 			'locations' => $locations, 
 			'showAll' => $showAll, 
 			'photo_path' => $photo_path, 
-			'page_title' => 'Tours, Hikes, Things To Do'
-		];
+			'page_title' => 'Tours, Hikes, Things To Do',
+		]);
 		
     	return view('tours.index', $vdata);
 	}		
@@ -144,6 +148,7 @@ class TourController extends Controller
     public function permalocation($location, $permalink)
     {
 		$entry = Entry::select()
+			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('permalink', $permalink)
@@ -155,6 +160,7 @@ class TourController extends Controller
     public function permalink($permalink)
     {
 		$entry = Entry::select()
+			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('permalink', $permalink)
@@ -166,6 +172,7 @@ class TourController extends Controller
     public function view($title, $id)
     {
 		$entry = Entry::select()
+			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
@@ -184,6 +191,7 @@ class TourController extends Controller
 		}
 				
 		$activity = Activity::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', $entry->id)
 			->first();
@@ -281,6 +289,7 @@ class TourController extends Controller
 					
 					
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
@@ -295,13 +304,27 @@ class TourController extends Controller
 		
 		$entry->description = nl2br($entry->description);
 		$entry->description = $this->formatLinks($entry->description);		
+
+		$vdata = $this->getViewData([
 		
-		return view('tours.view', ['record' => $entry, 'activity' => $activity, 'locations' => array_reverse($location), 'data' => $this->getViewData(), 'photos' => $photos, 'page_title' => $entry->title]);
+		]);
+		
+		$vdata = $this->getViewData([
+			'record' => $entry, 
+			'activity' => $activity, 
+			'locations' => array_reverse($location), 
+			'data' => $this->getViewData(), 
+			'photos' => $photos, 
+			'page_title' => $entry->title,
+		]);
+		
+		return view('tours.view', $vdata);
 	}
 	
     public function viewOrig(Activity $activity)
     {
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('photos.id DESC')
@@ -327,6 +350,7 @@ class TourController extends Controller
 				'activities.distance', 'activities.difficulty', 'activities.elevation', 'activities.trail_type'
 				)
 			->where('type_flag', ENTRY_TYPE_TOUR)
+			->where('site_id', SITE_ID)
 			->where('entries.id', $id)
 			->first();		
 		
@@ -358,6 +382,7 @@ class TourController extends Controller
 			$entry->save();
 			
 			$activity = Activity::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', $entry->id)
 				->first();
@@ -391,7 +416,11 @@ class TourController extends Controller
 				$activity->save();
 			}
 			
-			return redirect(route('tour.permalink', [$entry->permalink]));
+			$vdata = $this->getViewData([
+				$entry->permalink,
+			]);
+			
+			return redirect(route('tour.permalink'));
 		}
 		else
 		{
@@ -408,7 +437,11 @@ class TourController extends Controller
         {
 			$entry->description = nl2br(trim($entry->description));
 			
-			return view('tours.confirmdelete', ['record' => $entry]);
+			$vdata = $this->getViewData([
+				'record' => $entry,
+			]);
+			
+			return view('tours.confirmdelete', $vdata);
         }           
         else 
 		{
@@ -424,6 +457,7 @@ class TourController extends Controller
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {			
 			$activity = Activity::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', $entry->id)
 				->first();
@@ -432,6 +466,7 @@ class TourController extends Controller
 				$activity->deleteSafe();
 			
 			$photos = Photo::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $entry->id)
 				->get();
@@ -468,7 +503,16 @@ class TourController extends Controller
 
 		$locations = Location::getPills();
 
-    	return view('tours.index', ['tours' => $tours, 'tour_count' => $tour_count, 'locations' => $locations, 'showAll' => $showAll, 'photo_path' => '/public/img/entries/', 'page_title' => 'Tours, Hikes, Things To Do']);
+		$vdata = $this->getViewData([
+			'tours' => $tours, 
+			'tour_count' => $tour_count, 
+			'locations' => $locations, 
+			'showAll' => $showAll, 
+			'photo_path' => '/public/img/entries/', 
+			'page_title' => 'Tours, Hikes, Things To Do'
+		]);
+		
+    	return view('tours.index', $vdata);
 	}			
 	
 	//////////////////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,20 @@ $color = '#5CB85C'; // green
 DB Changes
 
 ALTER TABLE `entries` ADD `display_date` DATE NULL AFTER `deleted_flag`;
+
 ALTER TABLE `events` ADD `ip_address` VARCHAR(50) NULL AFTER `user_id`;
+
 ALTER TABLE `entries` ADD UNIQUE(`permalink`);
+
+ALTER TABLE `photos` ADD `site_id` INT NOT NULL AFTER `id`;
+
+ALTER TABLE `sites` ADD `instagram_link` VARCHAR(100) NULL AFTER `main_section_subtext`, ADD `facebook_link` VARCHAR(100) NULL AFTER `instagram_link`, ADD `twitter_link` VARCHAR(100) NULL AFTER `facebook_link`, ADD `other_link` VARCHAR(100) NULL AFTER `twitter_link`;
+
+UPDATE photos SET site_id = 1 WHERE 1=1;
+
+
+
+
+
 
 

@@ -75,8 +75,11 @@ else // not logged in
 <body style="margin:0; padding:0;">
     <div id="app" style="min-height:500px; ">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; ">
-			@component('menu-main')
-			@endcomponent
+			@if (isset($sections) && isset($site))
+				@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
+			@else
+				@component('menu-main')@endcomponent
+			@endif
         </nav>
 
 @if(session()->has('message.level'))
@@ -89,7 +92,11 @@ else // not logged in
 		
     </div>
 	
-	@component('footer')@endcomponent
+	@if (isset($sections) && isset($site))
+		@component('footer', ['sections' => $sections, 'site' => $site])@endcomponent			
+	@else
+		@component('footer')@endcomponent			
+	@endif
 	
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

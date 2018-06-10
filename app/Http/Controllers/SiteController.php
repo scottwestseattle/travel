@@ -50,12 +50,13 @@ class SiteController extends Controller
 		
 		$record->user_id = Auth::id();
 				
-		$record->site_name			= $this->trimNull($request->site_name);
-		$record->site_url			= $this->trimNull($request->site_url);
-		$record->site_title			= $this->trimNull($request->site_title);
-		$record->main_section_text	= $this->trimNull($request->main_section_text);
-		$record->main_section_subtext = $this->trimNull($request->main_section_subtext);
-						
+		$record->site_name				= $this->trimNull($request->site_name);
+		$record->site_url				= $this->trimNull($request->site_url);
+		$record->site_title				= $this->trimNull($request->site_title);
+		$record->main_section_text		= $this->trimNull($request->main_section_text);
+		$record->main_section_subtext 	= $this->trimNull($request->main_section_subtext);
+		$record->instagram_link 		= $this->trimNull($request->instagram_link);
+
 		try
 		{
 			$record->save();
@@ -102,6 +103,7 @@ class SiteController extends Controller
 		$record->site_title = $this->copyDirty($record->site_title, $request->site_title, $isDirty, $changes);
 		$record->main_section_text = $this->copyDirty($record->main_section_text, $request->main_section_text, $isDirty, $changes);
 		$record->main_section_subtext = $this->copyDirty($record->main_section_subtext, $request->main_section_subtext, $isDirty, $changes);
+		$record->instagram_link = $this->copyDirty($record->instagram_link, $request->instagram_link, $isDirty, $changes);
 						
 		if ($isDirty)
 		{						

@@ -3,16 +3,27 @@
 
 @section('content')
 
-<div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
-
+<?php
+function showSection($id, $array)
+{
+	return (array_key_exists($id, $array));
+}
+?>
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
 <!--------------------------------------------------------------------------------------->
 
 	<!--------------------------------------------------------------------------------------->
-	<!-- Big random photo header section -->
+	<!-- Sliders -->
 	<!--------------------------------------------------------------------------------------->
 
+@if (showSection(SECTION_SLIDERS, $sections))
+	
+@if ($sliders->count() > 0)
+<div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
+@else
+<div style="width:100%; background-color: gray; background-position: cover; background-image:url('/img/theme1/bg-pattern.png'); " >
+@endif
 	<section>
 		<div class="slider-center" xonclick="slider_right()">
 			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
@@ -116,9 +127,13 @@
 	}
 </script>
 
+@endif	
+
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->	
+@if (showSection(SECTION_WELCOME, $sections))
 <section id="" class="powerBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
@@ -138,7 +153,6 @@
 	
 	</div>	
 
-	@if (true)	
 	<!--------------------------------------------------------------------------------------->
 	<!-- The "Join Us" button -->
 	<!--------------------------------------------------------------------------------------->		
@@ -154,15 +168,16 @@
 	<div class="sectionHeader text-center" style="margin-top:20px;">
 		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>{{$welcome2}}</i></h3>
 	</div>
-
-	@endif
 	
 </div>
 </section>
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Tours, Hikes, Things To Do -->
 <!--------------------------------------------------------------------------------------->
+
+@if (showSection(SECTION_TOURS, $sections))
 
 <?php
 	$h = 200;
@@ -260,12 +275,12 @@
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>									
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Latest Posts -->
 <!--------------------------------------------------------------------------------------->
-<?php if (false) : ?>
-
+@if (false && showSection(SECTION_BLOGS, $sections))
 <section class="sectionOrange">
 	<div class="container" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
@@ -325,8 +340,7 @@
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>
-
-<?php endif; ?>
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Contact -->
@@ -354,6 +368,7 @@
 <!-- SECTION: Current Location -->
 <!--------------------------------------------------------------------------------------->
 		
+@if (showSection(SECTION_CURRENT_LOCATION, $sections))
 <section class="sectionOrange">
 <div class="container">	
 
@@ -368,7 +383,9 @@
 	
 </div>
 </section>
+@endif
 
+@if (showSection(SECTION_AFFILIATES, $sections))
 <section class="sectionWhite">
 <div class="container">	
 	<div class="sectionHeader text-center main-font">	
@@ -409,5 +426,6 @@
 	</div>
 </div>
 </section>
+@endif
 
 @endsection

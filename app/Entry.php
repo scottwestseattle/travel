@@ -37,12 +37,13 @@ class Entry extends Base
 			SELECT *
 			FROM entries
 			WHERE 1=1
+			AND entries.site_id = ?
 			AND entries.type_flag = ?
 			AND entries.deleted_flag = 0
 			AND (entries.published_flag = 0 OR entries.approved_flag = 0 OR entries.location_id = null)
 		';
 		
-		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
 		//dd($records);
 		
 		return $records;
@@ -58,13 +59,14 @@ class Entry extends Base
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			WHERE 1=1
+			AND entries.site_id = ?
 			AND entries.deleted_flag = 0
 			AND entries.type_flag <> ?
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
-		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
@@ -82,19 +84,20 @@ class Entry extends Base
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			WHERE 1=1
+			AND entries.site_id = ?
 			AND entries.deleted_flag = 0
+			AND entries.type_flag = ?
 		';
 		
 		if ($approved_flag)
 			$q .= ' AND (entries.published_flag = 1 AND entries.approved_flag) ';
 		
 		$q .= '
-			AND entries.type_flag = ?
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				
-		$records = DB::select($q, [$type_flag]);
+		$records = DB::select($q, [SITE_ID, $type_flag]);
 		
 		return $records;
 	}
@@ -108,8 +111,9 @@ class Entry extends Base
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
 			WHERE 1=1
+				AND entries.site_id = ?
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
@@ -120,7 +124,7 @@ class Entry extends Base
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [ENTRY_TYPE_BLOG]);
+		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG]);
 		
 		return $records;
 	}

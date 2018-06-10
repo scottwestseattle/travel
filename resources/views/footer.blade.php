@@ -28,6 +28,8 @@
 
 						<div style="margin:15px 0px 25px 0px" class="col-md-3">
 
+@if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
+						
 <ins class="bookingaff" data-aid="1535308" data-target_aid="1535306" data-prod="banner" data-width="200" data-height="200" data-banner_id="67896" data-lang="en-US">
     <!-- Anything inside will go away once widget is loaded. -->
     <a href="//www.booking.com?aid=1535306">Booking.com</a>
@@ -42,26 +44,8 @@
       })(document, 'script', '//aff.bstatic.com/static/affiliate_base/js/flexiproduct.js');
 </script>
 
-						@if (false)
-							<!---------------------------------------------------->
-							<!-- Latest kb's -->
-							<!---------------------------------------------------->
-							<h4 class="letter-spacing-1">FAQ</h4>
-							<ul class="footer-posts list-unstyled">
-								<?php if (isset($kbase) && $kbase != null) : ?>
-								<?php $cnt = 1; foreach($kbase as $rec) : ?>
-								<?php if ($rec['category']['nickname'] == 'faq'): ?>
-								<?php if ($cnt++ > 3) break; ?>
-									<li>
-										<?php echo $this->html->link($rec['title'], '/kbase/faq/faq'); ?>
-										<!-- small>29 June 2015</small -->
-									</li>
-								<?php endif; ?>
-								<?php endforeach; ?>
-								<?php endif; ?>
-							</ul>
+@endif
 
-						@endif
 						</div>
 
 						<div class="col-md-2">
@@ -72,12 +56,24 @@
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Activities</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Blogs</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+							@endif
+							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
 								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
 						
@@ -93,60 +89,16 @@
 
 						<div style="margin-top:15px;" class="col-md-4">
 
+						@if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
+						
 <a href="https://www.agoda.com/partners/partnersearch.aspx?cid=1729782&pcs=8" target="_blank"><img src="//sherpa.agoda.com/Badge/GetBadge?badgetype=1&refkey=eQRoFwsbQxjYbmldH%2B6nvQ%3D%3D" /></a>
 
-<div style="margin-top: 20px;">
-<a href="https://www.instagram.com/epictravelguidedotcom/" target="_blank"><img width="100" src="/img/theme1/instagram.png" /></a>
-</div>
+						@endif
 
-						@if (false)
-							<!---------------------------------------------------->
-							<!-- Newsletter Form -->
-							<!---------------------------------------------------->
-							<h4 class="letter-spacing-1">HAVE QUESTIONS?</h4>
-							<p>Enter your email address and we will contact you.</p>
-
-							<form class="validate" action="/contacts/add/" method="post" data-success="Request sent, thank you!" data-toastr-position="bottom-right">
-								<div class="input-group">
-									<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-									<input type="email" id="email" name="email" class="form-control required" placeholder="Enter your email address">
-									<span class="input-group-btn">
-										<button class="btn btn-success" type="submit">Send</button>
-									</span>
-								</div>
-							</form>
-							<!-- /Newsletter Form -->
-
-							<!-- Social Icons >
-							<div class="margin-top-20">
-								<a href="#" class="social-icon social-icon-border social-facebook pull-left" data-toggle="tooltip" data-placement="top" title="Facebook">
-
-									<i class="icon-facebook"></i>
-									<i class="icon-facebook"></i>
-								</a>
-
-								<a href="#" class="social-icon social-icon-border social-twitter pull-left" data-toggle="tooltip" data-placement="top" title="Twitter">
-									<i class="icon-twitter"></i>
-									<i class="icon-twitter"></i>
-								</a>
-
-								<a href="#" class="social-icon social-icon-border social-gplus pull-left" data-toggle="tooltip" data-placement="top" title="Google plus">
-									<i class="icon-gplus"></i>
-									<i class="icon-gplus"></i>
-								</a>
-
-								<a href="#" class="social-icon social-icon-border social-linkedin pull-left" data-toggle="tooltip" data-placement="top" title="Linkedin">
-									<i class="icon-linkedin"></i>
-									<i class="icon-linkedin"></i>
-								</a>
-
-								<a href="#" class="social-icon social-icon-border social-rss pull-left" data-toggle="tooltip" data-placement="top" title="Rss">
-									<i class="icon-rss"></i>
-									<i class="icon-rss"></i>
-								</a>
-					
+						@if (isset($site) && isset($site->instagram_link))
+							<div style="margin-top: 20px;">
+								<a href="https://www.instagram.com/epictravelguidedotcom/" target="_blank"><img width="100" src="/img/theme1/instagram.png" /></a>
 							</div>
-							<!-- /Social Icons -->
 						@endif
 
 						</div>

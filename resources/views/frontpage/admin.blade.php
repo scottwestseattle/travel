@@ -7,6 +7,8 @@
 	
 	@if (Auth::check())
 		
+	<h3>Site ID: {{SITE_ID}}, My IP:&nbsp;{{$ip}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</h3>
+	
 	<div xstyle="border: 1px solid gray">
 		<h3>Pending Activities ({{ count($records) }})</h3>
 		<table class="table table-striped">
@@ -121,7 +123,6 @@
 		
 		<div style="height:30px;clear:both;"></div>
 		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
-		<p>My IP:&nbsp;{{$ip}}, New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</p>
 		<p><a href="/visitors">Show All Visits</a></p>
 		<table class="table table-striped">
 			<tbody>

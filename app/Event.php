@@ -14,6 +14,7 @@ class Event extends Model
 			SELECT *
 			FROM events
 			WHERE 1=1
+			AND site_id = ?
 			AND deleted_flag = 0
 			ORDER BY id DESC 
 		';
@@ -21,7 +22,7 @@ class Event extends Model
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';
 		
-		$records = DB::select($q);
+		$records = DB::select($q, [SITE_ID]);
 		
 		return $records;		
 	}

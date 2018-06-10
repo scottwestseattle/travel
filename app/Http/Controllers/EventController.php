@@ -19,6 +19,7 @@ class EventController extends Controller
 		if ($type_flag > 0)
 		{
 			$records = Event::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('type_flag', $type_flag)
 				->orderByRaw('id DESC')
@@ -27,6 +28,7 @@ class EventController extends Controller
 		else
 		{
 			$records = Event::select()
+				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->orderByRaw('id DESC')
 				->get();

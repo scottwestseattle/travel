@@ -43,7 +43,7 @@ class EntryController extends Controller
 		$vdata = [
 			'records' => $entries,
 			'redirect' => '/entries/indexadmin',
-			'typeNames' => $this->typeNames,
+			'entryTypes' => Controller::getEntryTypes(),
 		];
 		
     	return view('entries.indexadmin', $vdata);
@@ -55,6 +55,7 @@ class EntryController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
+			->where('site_id', SITE_ID)
 			->where('user_id', '=', Auth::id())
 			//->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
@@ -70,6 +71,7 @@ class EntryController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
+			->where('site_id', SITE_ID)
 			->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
@@ -101,7 +103,11 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		return view('entries.add');							
+		$vdata = [
+			'entryTypes' => $this->getEntryTypes(),
+		];
+		
+		return view('entries.add', $vdata);
 	}
 	
     public function create(Request $request)
@@ -203,6 +209,7 @@ class EntryController extends Controller
 		}
 			
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
@@ -227,6 +234,7 @@ class EntryController extends Controller
 			->first();
 		
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
@@ -266,6 +274,7 @@ class EntryController extends Controller
 		}
 			
 		$photos = Photo::select()
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->where('parent_id', $entry->id)
 			->orderByRaw('id ASC')
@@ -293,15 +302,13 @@ class EntryController extends Controller
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-
-    	if (Auth::check() && Auth::user()->id == $entry->user_id)
-        {
-			return view('entries.edit', ['record' => $entry]);
-        }           
-        else 
-		{
-             return redirect('/');
-		}            	
+		 
+		$vdata = [
+			'record' => $entry,
+			'entryTypes' => Controller::getEntryTypes(),
+		];
+		
+		return view('entries.edit', $vdata);
     }
 	
     public function update(Request $request, Entry $entry)
@@ -319,7 +326,7 @@ class EntryController extends Controller
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description_short	= $this->trimNull($request->description_short);
 			$record->description		= $this->trimNull($request->description);
-			$record->display_date		= $this->trimNull($request->display_date;
+			$record->display_date		= $this->trimNull($request->display_date);
 			
 			try
 			{
@@ -607,70 +614,6 @@ class EntryController extends Controller
 	
 		return $text;
 	}		
-	
-	private function merge_entry(Entry $entry)
-    {
-		if (intval($entry->is_template_flag) === 0)
-		{				
-			// get the template
-			$template = $this->getDefaultTemplate();
-				
-			if ($template !== null)
-			{	
-				$descriptionCopy = $this->merge($template->description, $entry->description);		
-				$descriptionCopy2 = $this->merge($template->description_language1, $entry->description_language1);
-					
-				$entry->description = $this->merge($template->description, $entry->description, /* style = */ true);			
-				$entry->description_language1 = $this->merge($template->description_language1, $entry->description_language1, /* style = */ true);
-				//dd($entry->description);
-
-				$data = compact('entry');
-				$data['description_copy'] = $descriptionCopy;
-				$data['description_copy2'] = $descriptionCopy2;					
-				//dd($data);
-				
-				return $data;
-			}
-			else
-			{
-			}
-		}
-		else
-		{
-		}	
-			
-		$entry->description = nl2br($entry->description);
-		$entry->description_language1 = nl2br($entry->description_language1);
-					
-		$data = compact('entry');
-		$data['description_copy'] = $entry->description;
-		$data['description_copy2'] = $entry->description_language1;
-		
-		return $data;
-	}
-
-	private function getDefaultTemplate()
-	{
-		$template_id = intval(Auth::user()->template_id);
-				
-		if ($template_id === 0) // default template not set, use first template
-		{
-			$entry = Entry::select()
-				->where('user_id', '=', Auth::id())
-				->where('is_template_flag', '=', 1)
-				->first();
-		}
-		else // get user's default template
-		{
-			$entry = Entry::select()
-				->where('user_id', '=', Auth::id())
-				->where('is_template_flag', '=', 1)
-				->where('id', '=',  $template_id)
-				->first();
-		}
-		
-		return $entry;
-	}
 
     private function getHash($text) 
 	{

@@ -7,16 +7,18 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use Auth;
-use App\Task;
 use App\Entry;
 use App\Event;
-use App\Visitor;
-use App\Photo;
 use App\Location;
+use App\Photo;
+use App\Site;
+use App\Task;
+use App\Visitor;
+use Auth;
 use DB;
 
-define('SITE_ID', 1);	// the site ID for this web site, from the Sites table
+define('SITE_ID', intval(env('SITE_ID')));
+define('ERROR_REDIRECT_PAGE', '/error');
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template
 
@@ -72,6 +74,15 @@ define('ENTRY_TYPE_NOTE', 		6);
 define('ENTRY_TYPE_SECTION',	7);
 define('ENTRY_TYPE_OTHER',		99);
 
+// sections
+define('SECTION_SLIDERS', 'section-sliders');
+define('SECTION_WELCOME', 'section-welcome');
+define('SECTION_TOURS', 'section-tours');
+define('SECTION_BLOGS', 'section-blogs');
+define('SECTION_GALLERY', 'section-gallery');
+define('SECTION_CURRENT_LOCATION', 'section-current-location');
+define('SECTION_AFFILIATES', 'section-affiliates');
+
 // event logger info
 define('LOG_TYPE_INFO', 1);
 define('LOG_TYPE_WARNING', 2);
@@ -79,20 +90,22 @@ define('LOG_TYPE_ERROR', 3);
 define('LOG_TYPE_EXCEPTION', 4);
 define('LOG_TYPE_OTHER', 99);
 	
-define('LOG_MODEL_SITES', 'sites');
-define('LOG_MODEL_USERS', 'users');
+define('LOG_MODEL_BLOGS', 'blogs');
 define('LOG_MODEL_ENTRIES', 'entries');
-define('LOG_MODEL_PHOTOS', 'photos');
-define('LOG_MODEL_TOURS', 'tours');
 define('LOG_MODEL_LOCATIONS', 'locations');
 define('LOG_MODEL_OTHER', 'other');
-define('LOG_MODEL_BLOGS', 'blogs');
+define('LOG_MODEL_PHOTOS', 'photos');
+define('LOG_MODEL_SECTIONS', 'sections');
+define('LOG_MODEL_SITES', 'sites');
+define('LOG_MODEL_TOURS', 'tours');
+define('LOG_MODEL_USERS', 'users');
 	
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
 define('LOG_ACTION_EDIT', 'edit');
 define('LOG_ACTION_DELETE', 'delete');
 define('LOG_ACTION_VIEW', 'view');
+define('LOG_ACTION_SELECT', 'select');
 define('LOG_ACTION_MOVE', 'move');
 define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
@@ -104,7 +117,7 @@ class Controller extends BaseController
 
 	private $viewData = [];
 	
-	public $typeNames = [
+	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
 		ENTRY_TYPE_ENTRY => 'Entry',
 		ENTRY_TYPE_TOUR => 'Tour/Hike',
@@ -112,13 +125,19 @@ class Controller extends BaseController
 		ENTRY_TYPE_BLOG_ENTRY => 'Blog Entry',
 		ENTRY_TYPE_ARTICLE => 'Article',
 		ENTRY_TYPE_NOTE => 'Note',
+		ENTRY_TYPE_SECTION => 'Section',
 		ENTRY_TYPE_OTHER => 'Other',
 	];
-	
+		
 	public function __construct ()
-	{		
+	{
 	}
 	
+	static public function getEntryTypes()
+	{		
+		return Controller::$entryTypes;
+	}
+		
 	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
 	{
 		//
@@ -184,6 +203,7 @@ class Controller extends BaseController
 		
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->first();
 
@@ -226,13 +246,13 @@ class Controller extends BaseController
 		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
 	}	
 	
-	protected function getViewData()
-	{
-		$taskCount = Task::select()
-			->where('user_id', '=', Auth::id())
-			->count();
-
-		$this->viewData['taskCount'] = $taskCount;
+	protected function getViewData($vdata = null)
+	{			
+		$this->viewData = isset($vdata) ? $vdata : [];
+		
+		// add-on the mandatory parts
+		$this->viewData['sections'] = Controller::getSections();
+		$this->viewData['site'] = Controller::getSite();
 		
 		return $this->viewData;
 	}
@@ -571,6 +591,7 @@ class Controller extends BaseController
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			WHERE 1=1
+				AND entries.site_id = ? 
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 			GROUP BY 
@@ -580,7 +601,7 @@ class Controller extends BaseController
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}
@@ -591,16 +612,17 @@ class Controller extends BaseController
 			SELECT count(entries.id) as count
 			FROM entries
 			WHERE 1=1
+				AND entries.site_id = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 		';
 		
 		if (isset($entry_type))
-			$q .= ' AND entries.type_flag = ' . $entry_type . ' ';
+			$q .= ' AND entries.type_flag = ? ';
 		
 		// get the list with the location included
-		$record = DB::select($q);
+		$record = DB::select($q, [SITE_ID, $entry_type]);
 		
 		return intval($record[0]->count);
 	}	
@@ -614,6 +636,7 @@ class Controller extends BaseController
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
 			WHERE 1=1
+				AND entries.site_id = ?
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
@@ -624,7 +647,7 @@ class Controller extends BaseController
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}	
@@ -639,6 +662,7 @@ class Controller extends BaseController
 			JOIN entry_location entloc ON entries.id = entloc.entry_id
 			JOIN locations ON entloc.location_id = locations.id AND locations.id = ?
 			WHERE 1=1
+				AND entries.site_id = ?
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
@@ -649,7 +673,7 @@ class Controller extends BaseController
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [$location_id, SITE_ID, ENTRY_TYPE_TOUR]);
 		//dd($records);
 		
 		return $records;
@@ -798,4 +822,70 @@ class Controller extends BaseController
 		return $ret;
 	}
 	
+    protected function getSite()
+    {		
+		$site = null;
+		
+		try 
+		{
+			$site = Site::select()
+				->where('id', SITE_ID)
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error loading Front Page Sites';
+			
+			Event::logException(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+		
+		if (!isset($site))
+		{
+			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID;
+			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+		}
+		
+		return $site;
+	}		
+	
+    protected function getSections()
+    {		
+		$sections = null;
+		
+		try 
+		{
+			$sections = Entry::select()
+				->where('type_flag', ENTRY_TYPE_SECTION)
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->get();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error loading Front Page Sections';
+			
+			Event::logException(LOG_MODEL_SECTIONS, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+		
+		if (isset($sections))
+		{
+			$sectionArray = [];
+			foreach($sections as $section)
+			{
+				$sectionArray[$section->title] = true;
+			}
+			
+			$sections = $sectionArray;
+		}
+		else
+		{
+			$msg = 'Front Page: No Sections Found';
+			Event::logError(LOG_MODEL_SECTIONS, LOG_ACTION_SELECT, $msg);
+		}			
+		
+		return $sections;
+	}
 }

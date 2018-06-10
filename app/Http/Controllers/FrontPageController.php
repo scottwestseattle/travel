@@ -30,39 +30,34 @@ class FrontPageController extends Controller
     /**
      * This is the front page
      */
-    public function index()
+    public function index(Request $request)
     {
 		$posts = null;
 
+		//
 		// set up the site info
+		//
 		$welcome = 'Welcome to ' . config('app.name', 'Travel');
 		$welcome2 = 'Travel is our Business!!';
 		$page_title = 'Travel Information';
 		$page_title = config('app.name', 'Travel Guide');
-		$site = null;
-		try 
-		{
-			$site = Site::select()->first();
-		}
-		catch (\Exception $e)
-		{
-			//todo: add error handling, no site table or records
-		}
 		
-		if (isset($site))
-		{
-			if (isset($site->main_section_text))
-				$welcome = $site->main_section_text;
+		$site = Controller::getSite();
+		
+		if (isset($site->main_section_text))
+			$welcome = $site->main_section_text;
 			
-			if (isset($site->main_section_subtext))
-				$welcome2 = $site->main_section_subtext;
+		if (isset($site->main_section_subtext))
+			$welcome2 = $site->main_section_subtext;
 			
-			if (isset($site->site_title))
-				$page_title .= ' - ' . $site->site_title;
-		}
+		if (isset($site->site_title))
+			$page_title .= ' - ' . $site->site_title;
 		
-		//dd($site);
-		
+		//
+		// Set up the sections
+		//
+		$sections = Controller::getSections();
+			
 		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
@@ -82,11 +77,11 @@ class FrontPageController extends Controller
 		// get the sliders
 		//
 		$sliders = Photo::select()
-		->where('parent_id', '=', 0)
-		//->whereNull('parent_id')
-		->where('deleted_flag', '=', 0)
-		->orderByRaw('id ASC')
-		->get();
+			->where('site_id', SITE_ID)
+			->where('parent_id', '=', 0)
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id ASC')
+			->get();
 		
 		//
 		// save visitor stats
@@ -105,6 +100,7 @@ class FrontPageController extends Controller
 			'locations' => $locations, 
 			'showAll' => $showAll, 
 			'photoPath' => $photosWebPath, 
+			'sections' => $sections,
 		];
 		
     	return view('frontpage.index', $vdata);
@@ -168,7 +164,7 @@ class FrontPageController extends Controller
 		// get latest visitors
 		//
 		$visitors = Visitor::select()
-			->where('site_id', 1)
+			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->latest()
 			->limit(10)
@@ -191,6 +187,7 @@ class FrontPageController extends Controller
     public function posts(Entry $entry)
     {
 		$entries = Entry::select()
+			->where('site_id', SITE_ID)
 			//->where('user_id', '=', Auth::id())
 			->where('is_template_flag', '<>', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
@@ -203,7 +200,7 @@ class FrontPageController extends Controller
     public function tours(Entry $entry)
     {
 		$entries = Entry::select()
-			//->where('user_id', '=', Auth::id())
+			->where('site_id', SITE_ID)
 			->where('is_template_flag', '=', 1)
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
 			->orderByRaw('entries.id DESC')
@@ -217,6 +214,15 @@ class FrontPageController extends Controller
      */
     public function about()
     {
-        return view('about');
+        return view('frontpage.about');
     }
+	
+    /**
+     * Error page
+     */
+    public function error()
+    {
+        return view('frontpage.error');
+    }
+	
 }

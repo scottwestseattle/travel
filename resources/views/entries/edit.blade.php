@@ -14,7 +14,7 @@
 		
 			<input type="hidden" name="referer" value={{$_SERVER["HTTP_REFERER"]}} />
 		
-			@component('control-entry-types', ['current_type' => $record->type_flag])
+			@component('control-entry-types', ['current_type' => $record->type_flag, 'entryTypes' => $entryTypes])
 			@endcomponent			
 		
 			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />

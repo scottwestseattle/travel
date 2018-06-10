@@ -39,15 +39,14 @@
 <body>
     <div id="app" style="min-height: 500px;">
         <nav class="navbar navbar-default navbar-static-top powerBlue" style="margin-bottom:0px; border-width: 0 0 0px;"> 
-			@component('menu-main')
-			@endcomponent
+			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
         </nav>
 
         @yield('content')
 		
     </div>
 
-	@component('footer')@endcomponent			
+	@component('footer', ['sections' => $sections, 'site' => $site])@endcomponent			
 		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
