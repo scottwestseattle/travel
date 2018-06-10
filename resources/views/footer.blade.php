@@ -17,7 +17,7 @@
 				<!---------------------------------------------------->
 				<address>
 					<ul class="FooterListButton list-unstyled">
-						<li class="address"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>EpicTravelGuide.com<br></li>
+						<li class="address"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>{{isset($site) ? $site->site_url : ''}}<br></li>
 						<li class="phone"><button id='phoneButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-earphone"></span>Show Phone Number</button></li>
 						<li class="email"><button id='emailButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>Show Email Address</button></li>
 					</ul>
@@ -97,7 +97,7 @@
 
 						@if (isset($site) && isset($site->instagram_link))
 							<div style="margin-top: 20px;">
-								<a href="https://www.instagram.com/epictravelguidedotcom/" target="_blank"><img width="100" src="/img/theme1/instagram.png" /></a>
+								<a href="{{$site->instagram_link}}" target="_blank"><img width="100" src="/img/theme1/instagram.png" /></a>
 							</div>
 						@endif
 
@@ -129,11 +129,12 @@ $(document).ready(function() {
 
 $('#phoneButton').click(function() { 
 	$('#phoneButton').remove();
-	$('.phone').append('<span>+1 800 210 2618</span>');
+	$('.phone').append('<span>{{isset($site) ? $site->telephone : ''}}</span>');
 });
+
 $('#emailButton').click(function() { 
 	$('#emailButton').remove();
-	$('.email').append('<span>info&#64;epictravelguide&#46;com</span>');
+	$('.email').append('<span>{{isset($site) ? $site->email : ''}}</span>');
 });
 
 });

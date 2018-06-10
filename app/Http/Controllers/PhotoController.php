@@ -91,7 +91,7 @@ class PhotoController extends Controller
 				'id' => $parent_id, 'path' => $path, 'photos' => $photos, 'record_id' => $parent_id			
 			]);				
 				
-			return view('photos.index', $vdata)
+			return view('photos.index', $vdata);
         }           
         else 
 		{
@@ -331,6 +331,7 @@ class PhotoController extends Controller
 								
 				// add the photo record
 				$photo = new Photo();
+				$photo->site_id = SITE_ID;
 				$photo->filename = $filename;
 				$photo->alt_text = $alt_text;
 				$photo->location = trim($request->location);
@@ -561,7 +562,9 @@ class PhotoController extends Controller
 		$path = $this->getPhotoPath($photo);
 		
 		$vdata = $this->getViewData([
-			'photo' => $photo, 'path' => $path, 'page_title' => 'Photos - ' . $photo->alt_text
+			'photo' => $photo, 
+			'path' => $path, 
+			'page_title' => 'Photos - ' . $photo->alt_text
 		]);		
 		
 		return view('photos.view', $vdata);
@@ -583,8 +586,13 @@ class PhotoController extends Controller
 			{
 				$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/' . $photo->filename;
 			}
-	
-			return view('photos.edit', ['record' => $photo, 'path' => $path]);							
+
+			$vdata = $this->getViewData([
+				'record' => $photo, 
+				'path' => $path,
+			]);		
+			
+			return view('photos.edit', $vdata);
         }           
         else 
 		{

@@ -346,7 +346,7 @@ class TourController extends Controller
 				'activities.distance', 'activities.difficulty', 'activities.elevation', 'activities.trail_type'
 				)
 			->where('type_flag', ENTRY_TYPE_TOUR)
-			->where('site_id', SITE_ID)
+			->where('entries.site_id', SITE_ID)
 			->where('entries.id', $id)
 			->first();		
 		
@@ -411,12 +411,8 @@ class TourController extends Controller
 			{
 				$activity->save();
 			}
-			
-			$vdata = $this->getViewData([
-				$entry->permalink,
-			]);
-			
-			return redirect(route('tour.permalink'));
+						
+			return redirect(route('tour.permalink', [$entry->permalink]));
 		}
 		else
 		{

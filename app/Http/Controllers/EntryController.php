@@ -29,8 +29,12 @@ class EntryController extends Controller
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
-		
-    	return view('entries.index', ['records' => $entries]);
+			
+		$vdata = $this->getViewData([
+			'records' => $entries,
+		]);
+			
+    	return view('entries.index', $vdata);
     }
 
     public function indexadmin($type_flag = null)
@@ -40,11 +44,11 @@ class EntryController extends Controller
 		
 		$entries = Entry::getEntriesByType($type_flag, /* approved = */ false);
 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'records' => $entries,
 			'redirect' => '/entries/indexadmin',
 			'entryTypes' => Controller::getEntryTypes(),
-		];
+		]);
 		
     	return view('entries.indexadmin', $vdata);
     }
@@ -95,7 +99,11 @@ class EntryController extends Controller
 			->orderByRaw('entries.id DESC')
 			->get();
 		
-		return view('entries.index', ['records' => $entries]);
+		$vdata = $this->getViewData([
+			'records' => $entries,
+		]);
+		
+		return view('entries.index', $vdata);
     }
 	
     public function add()
@@ -103,9 +111,9 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
-		];
+		]);
 		
 		return view('entries.add', $vdata);
 	}
@@ -215,12 +223,12 @@ class EntryController extends Controller
 			->orderByRaw('created_at ASC')
 			->get();
 			
-		$vdata = [
+		$vdata = $this->getViewData([
 			'record' => $entry, 
 			'next' => $next,
 			'prev' => $prev,
 			'photos' => $photos,
-		];
+		]);
 		
 		return view('entries.view', $vdata);
 	}
@@ -280,12 +288,12 @@ class EntryController extends Controller
 			->orderByRaw('id ASC')
 			->get();
 			
-		$vdata = [
+		$vdata = $this->getViewData([
 			'record' => $entry, 
 			'next' => $next,
 			'prev' => $prev,
 			'photos' => $photos,
-		];			
+		]);
 		
 		return view('entries.view', $vdata);
 	}
@@ -303,10 +311,10 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
-		];
+		]);
 		
 		return view('entries.edit', $vdata);
     }

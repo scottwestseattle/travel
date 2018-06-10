@@ -46,6 +46,10 @@ UPDATE photos SET site_id = 1 WHERE 1=1;
 
 UPDATE activities SET site_id = 1 WHERE 1=1;
 
+ALTER TABLE `entries` drop index `permalink`;
+
+ALTER TABLE `events` CHANGE `description` `description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
 
 
 
