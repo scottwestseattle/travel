@@ -24,7 +24,11 @@ class SiteController extends Controller
 			->where('deleted_flag', 0)
 			->get();
 			
-		return view($this->prefix . '.index', ['records' => $records]);
+		$vdata = $this->getViewData([
+			'records' => $records,
+		]);
+			
+		return view($this->prefix . '.index', $vdata);
     }	
 	
     public function add()
@@ -32,9 +36,9 @@ class SiteController extends Controller
 		if (!$this->isSuperAdmin())
              return redirect('/');
 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'prefix' => $this->prefix,
-		];
+		]);
 		 
 		return view($this->prefix . '.add', $vdata);
 	}
@@ -80,11 +84,11 @@ class SiteController extends Controller
     {
 		if (!$this->isSuperAdmin())
              return redirect('/');
-		 
-		$vdata = [
+			
+		$vdata = $this->getViewData([
 			'prefix' => $this->prefix,
 			'record' => $site,
-		];
+		]);		
 		 
 		return view($this->prefix . '.edit', $vdata);
     }
@@ -133,10 +137,10 @@ class SiteController extends Controller
 		if (!$this->isSuperAdmin())
              return redirect('/');
 		 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'prefix' => $this->prefix,
 			'record' => $site,
-		];
+		]);				
 		 
 		return view($this->prefix . '.view', $vdata);
     }
@@ -146,10 +150,10 @@ class SiteController extends Controller
 		if (!$this->isSuperAdmin())
              return redirect('/');
 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'prefix' => $this->prefix,
 			'record' => $site,
-		];
+		]);				
 		 
 		return view($this->prefix . '.confirmdelete', $vdata);
     }

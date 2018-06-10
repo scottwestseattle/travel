@@ -48,7 +48,11 @@ class PhotoController extends Controller
 
 			}
 				
-			return view('photos.index', ['title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id]);	
+			$vdata = $this->getViewData([
+				'title' => 'Tour', 'id' => $id, 'path' => $path, 'photos' => $photos, 'record_id' => $id
+			]);
+				
+			return view('photos.index', $vdata);
         }           
         else 
 		{
@@ -83,7 +87,11 @@ class PhotoController extends Controller
 				$photo['size'] = $size;
 			}
 				
-			return view('photos.index', ['id' => $parent_id, 'path' => $path, 'photos' => $photos, 'record_id' => $parent_id]);	
+			$vdata = $this->getViewData([
+				'id' => $parent_id, 'path' => $path, 'photos' => $photos, 'record_id' => $parent_id			
+			]);				
+				
+			return view('photos.index', $vdata)
         }           
         else 
 		{
@@ -125,7 +133,11 @@ class PhotoController extends Controller
         {
 			$photos = [];
 			
-			return view('photos.index', ['photos' => $photos, 'data' => $this->getViewData()]);	
+			$vdata = $this->getViewData([
+				'photos' => $photos,
+			]);
+			
+			return view('photos.index', $vdata);	
         }           
         else 
 		{
@@ -146,7 +158,12 @@ class PhotoController extends Controller
 				->where('parent_id', '>', 0)
 				->get();
 			
-			return view('photos.indexadmin', ['photos' => $photos, 'path' => $this->getPhotoPath()]);	
+			$vdata = $this->getViewData([
+				'photos' => $photos,
+				'path' => $this->getPhotoPath(),
+			]);
+			
+			return view('photos.indexadmin', $vdata);
         }           
         else 
 		{
@@ -161,7 +178,11 @@ class PhotoController extends Controller
 
     	if (Auth::check())
         {            
-			return view('photos.add', ['parent_id' => $parent_id]);					
+			$vdata = $this->getViewData([
+				'parent_id' => $parent_id,
+			]);
+			
+			return view('photos.add', $vdata);
         }           
         else 
 		{
@@ -186,8 +207,11 @@ class PhotoController extends Controller
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', 'Image to upload must be set using the [Browse] button');		
 				
-				// bad or missing file name
-				return view('photos.add', ['parent_id' => $request->parent_id]);					
+				$vdata = $this->getViewData([
+					'parent_id' => $request->parent_id,
+				]);
+
+				return view('photos.add', $vdata);
 			}
 			
 			//
@@ -670,7 +694,11 @@ class PhotoController extends Controller
 			else
 				$path .= '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
 	
-			return view('photos.confirmdelete', ['photo' => $photo, 'path' => $path]);							
+			$vdata = $this->getViewData([
+				'photo' => $photo, 'path' => $path,
+			]);
+	
+			return view('photos.confirmdelete', $vdata);
         }           
         else 
 		{

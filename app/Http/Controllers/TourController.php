@@ -162,10 +162,10 @@ class TourController extends Controller
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
-			->where('deleted_flag', '<>', 1)
+			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();	
-			
+					
 		return $this->handleView($entry);
 	}
 	
@@ -174,7 +174,7 @@ class TourController extends Controller
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
-			->where('deleted_flag', '<>', 1)
+			->where('deleted_flag', 0)
 			->where('id', $id)
 			->first();	
 			
@@ -195,7 +195,7 @@ class TourController extends Controller
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', $entry->id)
 			->first();
-			
+					
 		$location = array();
 		if (isset($entry))
 		{
@@ -304,10 +304,6 @@ class TourController extends Controller
 		
 		$entry->description = nl2br($entry->description);
 		$entry->description = $this->formatLinks($entry->description);		
-
-		$vdata = $this->getViewData([
-		
-		]);
 		
 		$vdata = $this->getViewData([
 			'record' => $entry, 

@@ -104,6 +104,7 @@ foreach($photos as $photo)
 	</div>
 	@endif
 	
+	@if (isset($activity))
 	<div style="clear:both;">
 		<div class="row">
 			@if (strlen($activity->distance) > 0)
@@ -153,6 +154,7 @@ foreach($photos as $photo)
 					
 		</div><!-- row -->	
 	</div>
+	@endif
 					
 	<div class="entry-div" style="margin-top:20px;width:100%;">
 		<div class="entry" style="width:100%;">
@@ -160,8 +162,11 @@ foreach($photos as $photo)
 		</div>
 	</div>
 
+		
 	<div class="amenities">
-
+		
+	@if (isset($activity))
+		
 	@if (!empty(trim($activity->info_link)))
 		<div class="entry-div">
 			<div class="entry amenity-item">
@@ -247,6 +252,8 @@ foreach($photos as $photo)
 				<h3>PHOTOS</h3>
 			</div>
 		</div>
+	@endif
+	
 	@endif
 	
 	</div><!-- class="amenities" -->
