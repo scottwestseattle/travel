@@ -39,11 +39,11 @@ class BlogController extends Controller
             return redirect('/blogs/indexadmin');
 		}
 	
-		$vdata = [
+		$vdata = $this->getViewData([
 			'title' => $record->title,
 			'type_flag' => ENTRY_TYPE_BLOG_ENTRY,
 			'parent_id' => $record->id,
-		];
+		]);
 		
 		return view('entries.add', $vdata);							
 	}
@@ -67,46 +67,76 @@ class BlogController extends Controller
 		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_BLOG, /* approved = */ false);
 
-		$vdata = [
+		$vdata = $this->getViewData([
 			'records' => $records,
 			'redirect' => '/' . $this->prefix . '/indexadmin'
-		];
+		]);
 		
     	return view($this->prefix . '.indexadmin', $vdata);
     }
 	
-    public function show($id)
+    public function show(Request $request, $id)
     {
 		$id = intval($id);
 		
-		$record = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('id', $id)
-			->where('type_flag', ENTRY_TYPE_BLOG)
-			->first();
-
-		$records = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('parent_id', $id)
-			->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-			->orderByRaw('display_date ASC')
-			->get();
+		try
+		{
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG)
+				->first();
+				
+			if (!isset($record))
+			{
+				$msg = "Error Viewing Blog ID: $id, record not found";
 			
-		$photos = Photo::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
-			->where('parent_id', '=', $record->id)
-			->orderByRaw('created_at ASC')
-			->get();
+				Event::logError(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg);
+					
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+				
+				return redirect('/error');
+			}				
 
-		$vdata = [
-			'record' => $record, 
-			'records' => $records, 
-			'photos' => $photos,
-		];
+			$records = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('parent_id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->orderByRaw('display_date ASC')
+				->get();
+				
+			$photos = Photo::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', '=', $record->id)
+				->orderByRaw('created_at ASC')
+				->get();		
+				
+			$vdata = $this->getViewData([
+				'record' => $record, 
+				'records' => $records, 
+				'photos' => $photos,
+			]);
+				
+			return view($this->prefix . '.view', $vdata);				
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Error Viewing Blog ID ' . $id;
+			Event::logException(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg . ': ' . $e->getMessage());		
+			
+			return redirect('/error');			
+		}								
 		
-		return view($this->prefix . '.view', $vdata);
 	}
 }

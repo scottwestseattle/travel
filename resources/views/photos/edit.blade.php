@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 
 	@component('menu-submenu-photos', ['record_id' => $record->id])
 	@endcomponent	

@@ -20,7 +20,7 @@
 		$record_id = null;
 ?>
 
-<div class="container">
+<div class="container page-size">
 
 	@component('menu-submenu-entries', ['record_id' => $record_id])@endcomponent
 	

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 	<h1>Delete {{ (intval($photo->parent_id) === 0 ? 'Slider ' : '') }}Photo</h1>
 
 	<form method="POST" action="/photos/delete/{{ $photo->id }}">

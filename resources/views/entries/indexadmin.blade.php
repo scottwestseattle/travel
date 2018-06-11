@@ -26,7 +26,7 @@ if (isset($title))
 			<a style="margin-right:10px;" href="/entries/indexadmin">Show All</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_ARTICLE}}">Articles</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG}}">Blogs</a>
-			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG_ENTRY}}">Blog Enties</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG_ENTRY}}">Blog Entries</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}">Entries</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_NOTE}}">Notes</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_SECTION}}">Sections</a>
@@ -48,6 +48,12 @@ if (isset($title))
 					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{$entryTypes[$record->type_flag] . ', ' . intval($record->photo_count) . ' photos'}})</a>
+
+						@if ($record->published_flag === 0)
+							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+						@elseif ($record->approved_flag === 0)
+							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
+						@endif
 						
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 	<h1>Locations</h1>
 	
 			<div style="margin:20px; 0" class="text-center">

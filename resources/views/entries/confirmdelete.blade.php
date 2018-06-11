@@ -2,13 +2,16 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
+
+	@component('menu-submenu-entries', ['record_id' => $entry->id, 'record_permalink' => $entry->permalink])@endcomponent	
+
 	<h1>Delete Entry</h1>
 
 	<form method="POST" action="/entries/delete/{{ $entry->id }}">
 
 		<div class="form-group">
-			<span name="title" class="">{{$entry->title }}</span>
+			<h3 name="title" class="">{{$entry->title }}</h3>
 		</div>
 
 		<div class="form-group">

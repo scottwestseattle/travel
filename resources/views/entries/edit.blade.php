@@ -2,10 +2,9 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 
-	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])
-	@endcomponent	
+	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent	
 
 	<h1>Edit Entry</h1>
 

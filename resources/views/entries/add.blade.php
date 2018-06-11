@@ -2,10 +2,9 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 
-	@component('menu-submenu-entries')
-	@endcomponent	
+	@component('menu-submenu-entries')@endcomponent	
 
 	@if (isset($title))
 		<h3>{{$title}}</h3>

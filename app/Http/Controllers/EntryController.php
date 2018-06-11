@@ -65,8 +65,12 @@ class EntryController extends Controller
 			//->orderByRaw('is_template_flag, entries.view_count DESC, entries.title')
 			->orderByRaw('entries.id DESC')
 			->get();
-		
-    	return view('entries.index', compact('entries'));
+
+		$vdata = $this->getViewData([
+			'entries' => $entries,
+		]);
+			
+    	return view('entries.index', $vdata);
     }
 
     public function posts()
@@ -83,8 +87,13 @@ class EntryController extends Controller
 			->get();
 			
 		//dd($entries);
+		$vdata = $this->getViewData([
+			'entries' => $entries, 
+			'data' => $this->getViewData(), 
+			'title' => 'Posts',
+		]);
 		
-		return view('entries.index', ['entries' => $entries, 'data' => $this->getViewData(), 'title' => 'Posts']);
+		return view('entries.index', $vdata);
     }
 	
     public function tours()
@@ -200,6 +209,8 @@ class EntryController extends Controller
 			$next = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
 				->where('display_date', '>', $entry->display_date)
 				->where('parent_id', $entry->parent_id)
@@ -209,6 +220,8 @@ class EntryController extends Controller
 			$prev = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
 				->where('display_date', '<', $entry->display_date)
 				->where('parent_id', $entry->parent_id)
@@ -248,7 +261,12 @@ class EntryController extends Controller
 			->orderByRaw('created_at ASC')
 			->get();
 		
-		return view('entries.view', ['record' => $entry, 'photos' => $photos]);
+		$vdata = $this->getViewData([
+			'record' => $entry, 
+			'photos' => $photos,
+		]);
+		
+		return view('entries.view', $vdata);
 	}
 
     public function show($id)
@@ -336,6 +354,8 @@ class EntryController extends Controller
 			$record->description		= $this->trimNull($request->description);
 			$record->display_date		= $this->trimNull($request->display_date);
 			
+			$record->approved_flag = 0;
+			
 			try
 			{
 				$record->save();
@@ -369,13 +389,24 @@ class EntryController extends Controller
 	
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {
-			$entry->description = nl2br($this->fixEmpty(trim($entry->description), EMPTYBODY));
-			$entry->description_language1 = nl2br($this->fixEmpty(trim($entry->description_language1), EMPTYBODY));
+			$entry->description = nl2br(trim($entry->description));
 			
 			if ($entry->type_flag === ENTRY_TYPE_TOUR)
-				return view('tours.confirmdelete', ['record' => $entry]);			
+			{
+				$vdata = $this->getViewData([
+					'record' => $entry,
+				]);
+
+				return view('tours.confirmdelete', $vdata);
+			}
 			else
-				return view('entries.delete', ['entry' => $entry]);
+			{
+				$vdata = $this->getViewData([
+					'entry' => $entry,
+				]);
+				
+				return view('entries.confirmdelete', $vdata);
+			}
         }           
         else 
 		{
@@ -431,7 +462,11 @@ class EntryController extends Controller
     	if (!$this->isOwnerOrAdmin($entry->user_id))
              return redirect('/');
 
-		return view('entries.publish', ['record' => $entry]);
+		$vdata = $this->getViewData([
+			'record' => $entry,
+		]);
+		
+		return view('entries.publish', $vdata);
     }
 	
     public function publishupdate(Request $request, Entry $entry)
@@ -476,7 +511,13 @@ class EntryController extends Controller
 			
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {			
-			return view('entries.location', ['record' => $entry, 'locations' => $locations, 'current_location' => $current_location]);							
+			$vdata = $this->getViewData([
+				'record' => $entry, 
+				'locations' => $locations, 
+				'current_location' => $current_location,
+			]);
+	
+			return view('entries.location', $vdata);
         }           
         else 
 		{

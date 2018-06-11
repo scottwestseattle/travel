@@ -26,7 +26,7 @@ else
 	
 		@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent
 		
-		@if (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id)
+		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 		<div class="publish-pills">
 			<ul class="nav nav-pills">
 				@if ($record->published_flag === 0)

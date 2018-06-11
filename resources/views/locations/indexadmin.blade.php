@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="container">
+<div class="container page-size">
 	@if (Auth::check())
 		<h1>Locations</h1>
 		<a href="/locations/add" class="btn btn-primary">Add</a>

@@ -44,6 +44,15 @@
 	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
+
+	<!-- Google AdSense Activator -------------------------------->
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+	  (adsbygoogle = window.adsbygoogle || []).push({
+		google_ad_client: "ca-pub-3301644572924270",
+		enable_page_level_ads: true
+	  });
+	</script>	
 	
 </head>
 
