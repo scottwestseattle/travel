@@ -99,6 +99,7 @@ define('LOG_MODEL_SECTIONS', 'sections');
 define('LOG_MODEL_SITES', 'sites');
 define('LOG_MODEL_TOURS', 'tours');
 define('LOG_MODEL_USERS', 'users');
+define('LOG_MODEL_TEMPLATES', 'templates');
 	
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
@@ -801,7 +802,7 @@ class Controller extends BaseController
 		return $r;
 	}
 	
-    public function createPermalink($title, $date)
+    public function createPermalink($title, $date = null)
     {		
 		$ret = null;
 		
@@ -818,7 +819,8 @@ class Controller extends BaseController
 		$ret = preg_replace('/[^\da-z ]/i', ' ', $ret); // remove all non-alphanums
 		$ret = str_replace(" ", "-", $ret);				// replace spaces with dashes
 		$ret = strtolower($ret);						// make all lc
-				
+		$ret = $this->trimNull($ret);					// trim it or null it
+		
 		return $ret;
 	}
 	

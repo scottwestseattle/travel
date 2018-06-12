@@ -32,16 +32,49 @@ Route::get('/error', 'FrontPageController@error');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+
+// templates
+Route::group(['prefix' => 'templates'], function () {
+	
+	Route::get('/index', 'TemplateController@index');
+	Route::get('/indexadmin', 'TemplateController@indexadmin')->middleware('auth');
+	Route::get('/view/{template}', ['as' => 'template.view', 'uses' => 'TemplateController@view']);
+	
+	// add/create
+	Route::get('/add','TemplateController@add')->middleware('auth');
+	Route::post('/create','TemplateController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{template}','TemplateController@edit')->middleware('auth');
+	Route::post('/update/{template}','TemplateController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{template}', 'TemplateController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{template}', 'TemplateController@delete')->middleware('auth');
+	
+	// publish
+	Route::get('/publish/{template}', 'TemplateController@publish')->middleware('auth');
+	Route::post('/publishupdate/{template}', 'TemplateController@publishupdate')->middleware('auth');	
+
+	// permalink has to go at the bottom of the filter or it will catch everything
+	Route::get('/{permalink}', ['as' => 'template.permalink', 'uses' => 'TemplateController@permalink']);	
+});
+
 // blogs
 Route::group(['prefix' => 'blogs'], function () 
 {	
 	Route::get('/show/{id}', 'BlogController@show');
+	Route::get('/view/{id}', 'BlogController@view');
 	Route::get('/index', 'BlogController@index');
 	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');
 	
-	// add/create
+	// add post /create post
 	Route::get('/addpost/{id}', 'BlogController@addpost')->middleware('auth');
-	Route::post('/create','EntryController@create')->middleware('auth');
+	Route::post('/create', 'EntryController@create')->middleware('auth');
+
+	// edit post / update post
+	Route::get('/editpost/{id}', 'BlogController@addpost')->middleware('auth');
+	Route::post('/updatepost', 'BlogController@create')->middleware('auth');
 });
 
 // sites

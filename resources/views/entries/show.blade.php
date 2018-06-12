@@ -22,16 +22,10 @@ foreach($photos as $photo)
 		@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])
 		@endcomponent
 		
-		@if (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id)
-		<div class="publish-pills">
-			<ul class="nav nav-pills">
-				@if ($record->published_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">Private</a></li>
-				@elseif ($record->approved_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">Pending Approval</a></li>
-				@endif
-			</ul>
-		</div>
+		@if ($record->published_flag === 0)
+			<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+		@elseif ($record->approved_flag === 0)
+			<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
 		@endif
 				
 	@endguest

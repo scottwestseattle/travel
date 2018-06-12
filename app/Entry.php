@@ -129,4 +129,31 @@ class Entry extends Base
 		return $records;
 	}
 
+	static public function getBlogEntriesIndexAdmin($pending = false)
+	{
+		$q = '
+			SELECT entries.id, entries.title, entries.description, entries.permalink, entries.published_flag, entries.approved_flag 
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+			WHERE 1=1
+				AND entries.site_id = ?
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND (entries.published_flag = ? 
+					OR entries.approved_flag = ?) 
+			GROUP BY 
+				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path, entries.published_flag, entries.approved_flag 
+			ORDER BY entries.id DESC
+		';
+		
+		// get the list with the location included
+		$pending = $pending ? 0 : 1; // flip pending true to 0
+		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, $pending, $pending]);
+		
+		return $records;
+	}	
 }

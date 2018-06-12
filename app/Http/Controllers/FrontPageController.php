@@ -145,10 +145,15 @@ class FrontPageController extends Controller
 		//
 		// get latest events
 		//
-		$events = Event::get(10);
+		$events = Event::get(5);
+
+		//
+		// get blog entries which need action
+		//
+		$posts = Entry::getBlogEntriesIndexAdmin(/* $pending = */ true);
 		
 		//
-		// get records with info missing
+		// get tours which need more info
 		//
 		$entries = $this->getTourIndexAdmin(/* $pending = */ true);
 			
@@ -172,14 +177,15 @@ class FrontPageController extends Controller
 			
 		$ip = Event::getVisitorIp();
 			
-		$vdata = [
+		$vdata = $this->getViewData([
+			'posts' => $posts,
 			'events' => $events,
 			'records' => $entries, 
 			'users' => $users, 
 			'visitors' => $visitors, 
 			'ip' => $ip, 
 			'new_visitor' => $this->isNewVisitor()
-		];
+		]);
 			
 		return view('frontpage.admin', $vdata);
     }

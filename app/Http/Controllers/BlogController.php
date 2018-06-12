@@ -139,4 +139,121 @@ class BlogController extends Controller
 		}								
 		
 	}
+	
+    public function view(Request $request, $id)
+    {
+		$id = intval($id);
+		
+		try
+		{
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG)
+				->first();
+				
+			if (!isset($record))
+			{
+				$msg = "Error Viewing Blog ID: $id, record not found";
+			
+				Event::logError(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg);
+					
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+				
+				return redirect('/error');
+			}				
+
+			$records = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('parent_id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->orderByRaw('display_date ASC')
+				->get();
+				
+			$photos = Photo::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', '<>', 1)
+				->where('parent_id', '=', $record->id)
+				->orderByRaw('created_at ASC')
+				->get();		
+				
+			$vdata = $this->getViewData([
+				'record' => $record, 
+				'records' => $records, 
+				'photos' => $photos,
+			]);
+				
+			return view($this->prefix . '.view', $vdata);				
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Error Viewing Blog ID ' . $id;
+			Event::logException(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg . ': ' . $e->getMessage());		
+			
+			return redirect('/error');			
+		}								
+	}	
+	
+    public function editpost(Entry $entry)
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		 
+		$vdata = $this->getViewData([
+			'record' => $entry,
+		]);
+		
+		return view('entries.edit', $vdata);
+    }
+	
+    public function updatepost(Request $request, Entry $entry)
+    {
+		$record = $entry;
+		
+		if (!$this->isAdmin())
+             return redirect('/');
+
+    	if (Auth::check() && Auth::user()->id == $record->user_id)
+        {				
+			$record->type_flag 			= $request->type_flag;
+			
+			$record->title 				= $this->trimNull($request->title);
+			$record->permalink			= $this->trimNull($request->permalink);
+			$record->description		= $this->trimNull($request->description);
+			$record->display_date		= $this->trimNull($request->display_date);
+			
+			$record->approved_flag = 0;
+			
+			try
+			{
+				$record->save();
+
+				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id);			
+				
+				$request->session()->flash('message.level', 'success');
+				$request->session()->flash('message.content', 'Entry has been updated');
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_EDIT, $this->getTextOrShowEmpty($record->title), null, $e->getMessage());
+				
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());		
+			}			
+
+			//dd($request->referer);
+			return redirect($this->getReferer($request, '/entries/indexadmin')); 
+		}
+		else
+		{
+			return redirect('/');
+		}
+    }	
+		
 }
