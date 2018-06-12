@@ -137,6 +137,8 @@ class Entry extends Base
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
 			FROM entries
+			JOIN entries as blogs
+				ON blogs.id = entries.parent_id AND blogs.site_id = ? AND (blogs.published_flag = 1 AND blogs.approved_flag = 1)
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
 			WHERE 1=1
@@ -152,7 +154,7 @@ class Entry extends Base
 		
 		// get the list with the location included
 		$pending = $pending ? 0 : 1; // flip pending true to 0
-		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, $pending, $pending]);
+		$records = DB::select($q, [SITE_ID, SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, $pending, $pending]);
 		
 		return $records;
 	}	

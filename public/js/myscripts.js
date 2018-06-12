@@ -207,3 +207,56 @@ function urlEncodeWithDate(fromId, fromDateId, toId)
 		alert('Error creating permalink');
 	}
 }
+
+function popup(id, filename, title)
+{	
+	var popupDiv = document.getElementById("myModal");
+	popupDiv.style.display = "block";
+	
+	var popupImg = document.getElementById("popupImg");
+	popupImg.src = "/img/entries/" + id + "/" + filename;
+	popupImg.title = title;
+	
+	var popupImgTitle = document.getElementById("popupImgTitle");
+	popupImgTitle.innerHTML = title;
+}
+
+function nextPhoto(found)
+{	
+	var popupImg = null;
+	var photos = document.getElementsByClassName("popupPhotos");
+	var popupImg = document.getElementById("popupImg");
+	var popupImgTitle = document.getElementById("popupImgTitle");
+
+	for(var i = 0; i < photos.length; i++)
+	{
+		if (found)
+		{
+			popupImg.src = photos.item(i).src;
+			popupImg.title = photos.item(i).title;
+			popupImgTitle.innerHTML = popupImg.title;
+			return;
+		}
+
+		// if it's the current photo and then set the found flag to stop at the 
+		// next photo at the top of the next iterartion
+		var count = i + 1; // if it's the last item don't consider it found so we can wrap to the first item
+		if (count < photos.length && popupImg.src == photos.item(i).src)
+		{
+			found = true;
+		}
+	}	
+	
+	if (!found)
+	{
+		// show the first photo
+		nextPhoto(true);
+	}
+}
+
+function popdown()
+{	
+	var popupDiv = document.getElementById("myModal");
+	popupDiv.style.display = "none";
+}
+

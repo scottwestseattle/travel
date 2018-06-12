@@ -124,11 +124,23 @@ foreach($photos as $photo)
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
+				<?php 
+					$title = $photo->filename;  // just in case the others are empty
+					
+					if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
+						$title = $photo->alt_text;
+					
+					if (isset($photo->location) && strlen($photo->location) > 0)
+						$title .= ', ' . $photo->location;
+				?>
+
 				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
-					<img class="popupPhotos" style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 				</span>
 				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
-					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}')"><img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" /></span>
+					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', '{{$title}}')">
+						<img class="popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+					</span>
 				</span>									
 			@endif
 		@endforeach	
@@ -153,13 +165,14 @@ foreach($photos as $photo)
 			</ul>		
 		</div>
 	
-	
+@if (count($photos))
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
 
 	<div  style="cursor:pointer;" class="modal-content">
 		<span onclick="popdown()" id="modalSpan" class="close-popup">&times;</span>
 		<img id="popupImg" style="max-width:900px;" width="100%" src="" />
+		<div id="popupImgTitle"></div>
 	</div>
 
 </div>
@@ -172,52 +185,6 @@ var modal = document.getElementById('myModal');
 // Get the <span> element that closes the modal
 var span = document.getElementById("modalSpan");
 
-function popup(id, filename)
-{
-	//alert(filename);
-	
-	var popupDiv = document.getElementById("myModal");
-	popupDiv.style.display = "block";
-	
-	var popupImg = document.getElementById("popupImg");
-	popupImg.src = "/img/entries/" + id + "/" + filename;
-}
-
-function nextPhoto(found)
-{	
-	var popupImg = null;
-	var photos = document.getElementsByClassName("popupPhotos");
-	var popupImg = document.getElementById("popupImg");
-	for(var i = 0; i < photos.length; i++)
-	{
-		if (found)
-		{
-			popupImg.src = photos.item(i).src;
-			return;
-		}
-
-		// if it's the current photo and then set the found flag to stop at the 
-		// next photo at the top of the next iterartion
-		var count = i + 1; // if it's the last item don't consider it found so we can wrap to the first item
-		if (count < photos.length && popupImg.src == photos.item(i).src)
-		{
-			found = true;
-		}
-	}	
-	
-	if (!found)
-	{
-		// show the first photo
-		nextPhoto(true);
-	}
-}
-
-function popdown()
-{	
-	var popupDiv = document.getElementById("myModal");
-	popupDiv.style.display = "none";
-}
-
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
 	alert(2);
@@ -225,5 +192,6 @@ span.onclick = function() {
 }
 
 </script>		
+@endif
 
 @endsection
