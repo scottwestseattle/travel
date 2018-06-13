@@ -150,6 +150,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/posts', 'EntryController@posts')->middleware('auth');
 	Route::get('/indexadmin/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
+	Route::get('/show/{id}', 'EntryController@show');
 		
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
@@ -171,8 +172,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');	
 	
-	// view
-	Route::get('/show/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@show']);
+	// permalink catch alls
 	Route::get('/view/{title}/{id}', ['as' => 'entry.view', 'uses' => 'EntryController@view']);
 	Route::get('/{permalink}', ['as' => 'entry.permalink', 'uses' => 'EntryController@permalink']);
 	Route::resource('entry', 'EntryController');		

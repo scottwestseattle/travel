@@ -224,9 +224,10 @@ function showSection($id, $array)
 			<!---------------------------------------------------->
 			<div class="clearfix">
 						
-				<div class="row">
+				<div id="tourParentDiv" class="row">
 
 					@if ($tour_count > 0)
+					<?php $count = 0; ?>
 					@foreach($tours as $entry)
 						<?php
 							if (isset($entry->photo))
@@ -239,7 +240,7 @@ function showSection($id, $array)
 								$photo = TOUR_PHOTO_PLACEHOLDER;
 							}
 						?>
-						<div class="col-md-4 col-sm-6">
+						<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
 						
 							@if (isset($entry->location))
 								<a href="{{ route('tour.permalocation', [$entry->location, $entry->permalink]) }}">
@@ -253,6 +254,7 @@ function showSection($id, $array)
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
 								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('tour.permalink', [$entry->permalink]) }}">{{ $entry->title }}</a>
 							</div>
+							
 						</div>
 					
 					@endforeach
@@ -269,6 +271,7 @@ function showSection($id, $array)
 					@endif
 					
 				</div><!-- row -->	
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$showAll}}</span></button></a>
 
 			</div>
 						

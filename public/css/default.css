@@ -20,10 +20,13 @@ a .btn-action, a:hover .btn-action {
 	font-weight:bold;
 }
 
-a .btn-blog-nav, 
-a:hover .btn-blog-nav {
+.btn-blog-nav {
 	background-color:#5CB85C;
 	color: white;	
+}	
+
+a .btn-blog-nav, 
+a:hover .btn-blog-nav {
 	margin:5px 3px 0 0; 
 	padding:5px; 
 	font-size:1em;	

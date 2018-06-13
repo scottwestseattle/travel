@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+define('SITE_ID', intval(env('SITE_ID')));
+
 use App\Entry;
 use App\Event;
 use App\Location;
@@ -17,7 +19,6 @@ use App\Visitor;
 use Auth;
 use DB;
 
-define('SITE_ID', intval(env('SITE_ID')));
 define('ERROR_REDIRECT_PAGE', '/error');
 
 define('BODY_PLACEHODER', '[[body]]'); // tag that gets replaced with the body of the template

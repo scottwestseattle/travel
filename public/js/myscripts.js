@@ -260,3 +260,16 @@ function popdown()
 	popupDiv.style.display = "none";
 }
 
+function showAllRows(tableId, showAllButtonId)
+{	
+	var showAllButton = document.getElementById(showAllButtonId);
+	showAllButton.style.display = "none";
+	
+	var rows = document.getElementById(tableId).rows;
+
+	for(var i = 0; i < rows.length; i++)
+	{
+		rows[i].style.display = "block";
+		//alert(rows[i].style.display);
+	}		
+}

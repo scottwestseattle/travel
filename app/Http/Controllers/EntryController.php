@@ -206,27 +206,19 @@ class EntryController extends Controller
 		
 		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 		{
-			$next = Entry::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->where('display_date', '>', $entry->display_date)
-				->where('parent_id', $entry->parent_id)
-				->orderByRaw('display_date ASC')
-				->first();
-
-			$prev = Entry::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->where('display_date', '<', $entry->display_date)
-				->where('parent_id', $entry->parent_id)
-				->orderByRaw('display_date DESC')
-				->first();
+			if (isset($entry->display_date))
+			{
+				$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
+				$prev = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id, /* next = */ false);
+			}
+			else
+			{
+				$msg = 'Missing Display Date to view record: ' . $entry->id;
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+			}
 		}
 			
 		$photos = Photo::select()
@@ -269,49 +261,57 @@ class EntryController extends Controller
 		return view('entries.view', $vdata);
 	}
 
-    public function show($id)
-    {
+    public function show(Request $request, $id)
+    {		
 		$next = null;
 		$prev = null;
 		
-		$entry = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('id', $id)
-			->first();
-			
-		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+		try 
 		{
-			$next = Entry::select()
+			$entry = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->where('display_date', '>', $entry->display_date)
-				->orderByRaw('display_date ASC')
+				->where('id', $id)
 				->first();
-
-			$prev = Entry::select()
+							
+			if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+			{						
+				if (isset($entry->display_date))
+				{
+					$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
+					$prev = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id, /* next = */ false);
+				}
+				else
+				{
+					$msg = 'Missing Display Date to show record: ' . $entry->id;
+					Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+					$request->session()->flash('message.level', 'danger');
+					$request->session()->flash('message.content', $msg);
+				}
+			}
+			
+			$photos = Photo::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->where('display_date', '<', $entry->display_date)
-				->orderByRaw('display_date DESC')
-				->first();
+				->where('parent_id', $entry->id)
+				->orderByRaw('id ASC')
+				->get();
+				
+			$vdata = $this->getViewData([
+				'record' => $entry, 
+				'next' => $next,
+				'prev' => $prev,
+				'photos' => $photos,
+			]);
 		}
-			
-		$photos = Photo::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('parent_id', $entry->id)
-			->orderByRaw('id ASC')
-			->get();
-			
-		$vdata = $this->getViewData([
-			'record' => $entry, 
-			'next' => $next,
-			'prev' => $prev,
-			'photos' => $photos,
-		]);
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_SELECT, $this->getTextOrShowEmpty($record->title), null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}			
 		
 		return view('entries.view', $vdata);
 	}

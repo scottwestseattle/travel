@@ -130,10 +130,11 @@ else
 		<!---------------------------------->
 		<!-- The Blog Entry list          -->
 		<!---------------------------------->
-		<table class="table table-striped">
+		<table id="blogEntryTable" class="table table-striped">
 			<tbody>
+			<?php $count = 0; ?>
 			@foreach($records as $record)
-				<tr>
+				<tr style="display:{{$count++ < 10 ? 'default' : 'none'}};">
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
 						
@@ -141,15 +142,22 @@ else
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
-						@if (strlen($record->permalink) === 0)
+						@if (!isset($record->permalink) || strlen($record->permalink) === 0)
 							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
 						@endif
-												
 					</td>
 				</tr>
 			@endforeach
 			</tbody>
 		</table>
+
+		<!-- the Show All button -->
+		<span id="showAllButton" style="cursor:pointer;" onclick="showAllRows('blogEntryTable', 'showAllButton')">
+			<button style="margin-bottom:10px;" type="button" class="btn btn-blog-nav">Show All Posts&nbsp;
+				<span style="background-color: white; color: #5CB85C;" class="badge">{{count($records)}}</span>
+			</button>
+		</span>
+		
 	</div>
 	
 <!-- photo view popup -->

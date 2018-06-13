@@ -80,7 +80,7 @@ class BlogController extends Controller
 		$id = intval($id);
 		
 		try
-		{
+		{			
 			$record = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
@@ -89,7 +89,8 @@ class BlogController extends Controller
 				->where('id', $id)
 				->where('type_flag', ENTRY_TYPE_BLOG)
 				->first();
-				
+			
+			
 			if (!isset($record))
 			{
 				$msg = "Error Viewing Blog ID: $id, record not found";
