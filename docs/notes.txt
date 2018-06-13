@@ -50,6 +50,9 @@ ALTER TABLE `entries` drop index `permalink`;
 
 ALTER TABLE `events` CHANGE `description` `description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
+ALTER TABLE `sites` ADD `current_location_title` VARCHAR(100) NULL AFTER `sections-show-articles`;
+ALTER TABLE `sites` ADD `current_location` VARCHAR(100) NULL AFTER `current_location_title`;
+ALTER TABLE `sites` ADD `previous_location_title` VARCHAR(100) NULL AFTER `current_location_photo`;
 
 
 

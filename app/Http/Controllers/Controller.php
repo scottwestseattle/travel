@@ -838,11 +838,14 @@ class Controller extends BaseController
 		catch (\Exception $e)
 		{
 			$msg = 'Error loading Front Page Sites';
-			
 			Event::logException(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 		}
 		
-		if (!isset($site))
+		if (isset($site))
+		{
+			// massage data?
+		}
+		else
 		{
 			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID;
 			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
@@ -850,6 +853,14 @@ class Controller extends BaseController
 		
 		return $site;
 	}		
+
+    static protected function fixLinks($link)
+    {		
+		$link = str_replace('[iframe', '<iframe', $link);
+		$link = str_replace('[/iframe', '</iframe', $link);
+		
+		return $link;
+	}
 	
     protected function getSections()
     {		

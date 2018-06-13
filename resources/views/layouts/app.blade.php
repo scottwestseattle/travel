@@ -45,6 +45,7 @@
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 
+	@if (SITE_ID == 1)
 	<!-- Google AdSense Activator -------------------------------->
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
@@ -53,6 +54,7 @@
 		enable_page_level_ads: true
 	  });
 	</script>	
+	@endif
 	
 </head>
 

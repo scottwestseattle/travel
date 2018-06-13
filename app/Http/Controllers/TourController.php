@@ -35,7 +35,7 @@ class TourController extends Controller
 		$tour_count = isset($tours) ? count($tours) : 0;
 		$locations = Location::getPills();
 			
-		$photo_path = '/public/img/entries/';
+		$photo_path = '/img/entries/';
 		
 		$vdata = $this->getViewData([
 			'tours' => $tours, 
@@ -45,7 +45,7 @@ class TourController extends Controller
 			'photo_path' => $photo_path, 
 			'page_title' => 'Tours, Hikes, Things To Do',
 		]);
-		
+				
     	return view('tours.index', $vdata);
 	}		
 
