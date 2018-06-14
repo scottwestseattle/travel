@@ -4,9 +4,16 @@
 @section('content')
 
 <?php
-function showSection($id, $array)
+function getSection($id, $array)
 {
-	return (array_key_exists($id, $array));
+	$section = null;
+	
+	if (array_key_exists($id, $array))
+	{
+		$section = $array[$id];
+	}
+	
+	return $section;
 }
 ?>
 <!--------------------------------------------------------------------------------------->
@@ -17,7 +24,7 @@ function showSection($id, $array)
 	<!-- Sliders -->
 	<!--------------------------------------------------------------------------------------->
 
-@if (showSection(SECTION_SLIDERS, $sections))
+@if (getSection(SECTION_SLIDERS, $sections) != null)
 	
 @if ($sliders->count() > 0)
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
@@ -133,18 +140,18 @@ function showSection($id, $array)
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->	
-@if (showSection(SECTION_WELCOME, $sections))
+@if (($section = getSection(SECTION_WELCOME, $sections)) != null)
 <section id="" class="powerBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
 		<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 			<!-- xs only -->
-			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{$welcome}} </h3>
+			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{$section->description}} </h3>
 		</div>
 		<div class="hidden-xs" >
 			<!-- all other sizes -->
-			<h3 class="welcome-text main-font">{{ $welcome }} </h3>
+			<h3 class="welcome-text main-font">{{ $section->description }} </h3>
 		</div>
 		
 		<div style="margin-top:40px;">
@@ -166,7 +173,7 @@ function showSection($id, $array)
 	<!-- The charming Quote -->
 	<!--------------------------------------------------------------------------------------->		
 	<div class="sectionHeader text-center" style="margin-top:20px;">
-		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>{{$welcome2}}</i></h3>
+		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>{{$section->description_short}}</i></h3>
 	</div>
 	
 </div>
@@ -177,7 +184,7 @@ function showSection($id, $array)
 <!-- SECTION: Tours, Hikes, Things To Do -->
 <!--------------------------------------------------------------------------------------->
 
-@if (showSection(SECTION_TOURS, $sections))
+@if (($section = getSection(SECTION_TOURS, $sections)) != null)
 
 <?php
 	$h = 200;
@@ -195,10 +202,10 @@ function showSection($id, $array)
 			<div class="sectionHeader hidden-xs">	
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
 				<!-- div><img src="/img/round-mountain.png" /></div -->
-				<h1 style="" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h1>
+				<h1 style="" class="main-font sectionImageBlue">{{$section->title}}</h1>
 			</div>		
 			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">	
-				<h3 style="margin:0; padding:0;" class="main-font sectionImageBlue">Tours, Hikes, Things To Do</h3>
+				<h3 style="margin:0; padding:0;" class="main-font sectionImageBlue">{{$section->title}}</h3>
 			</div>		
 
 			<!---------------------------------------------------->
@@ -281,9 +288,9 @@ function showSection($id, $array)
 @endif
 
 <!--------------------------------------------------------------------------------------->
-<!-- SECTION: Latest Posts -->
+<!-- SECTION: Blogs -->
 <!--------------------------------------------------------------------------------------->
-@if (false && showSection(SECTION_BLOGS, $sections))
+@if (false && getSection(SECTION_BLOGS, $sections) != null)
 <section class="sectionOrange">
 	<div class="container" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
@@ -371,7 +378,7 @@ function showSection($id, $array)
 <!-- SECTION: Current Location -->
 <!--------------------------------------------------------------------------------------->
 		
-@if (showSection(SECTION_CURRENT_LOCATION, $sections))
+@if (($section = getSection(SECTION_CURRENT_LOCATION, $sections)) != null)
 <section class="sectionOrange">
 <div class="container">	
 
@@ -379,8 +386,8 @@ function showSection($id, $array)
 	
 		<div class="" style="font-size: 6em;"><span class="glyphicon glyphicon-globe"></span></div>
 		
-		@if (isset($site->current_location_title))
-			<h1>{{$site->current_location_title}}</h1>
+		@if (isset($section->title))
+			<h1>{{$section->title}}</h1>
 		@else
 			<h1>Current Location:</h1>
 		@endif
@@ -415,13 +422,13 @@ function showSection($id, $array)
 </section>
 @endif
 
-@if (showSection(SECTION_AFFILIATES, $sections))
+@if (($section = getSection(SECTION_AFFILIATES, $sections)) != null)
 <section class="sectionWhite">
 <div class="container">	
 	<div class="sectionHeader text-center main-font">	
 	
 		<!-- div class="" style="font-size: 4em; margin-bottom:20px;"><span class="glyphicon glyphicon-bed"></span></div -->
-		<h1>Affiliate Partners</h1>
+		<h1>{{$section->title}}</h1>
 		<!-- h1>Affiliate Partners</h1 -->	
 		
 		<!-- AGODA AFFILIATE -->

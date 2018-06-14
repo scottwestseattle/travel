@@ -884,12 +884,13 @@ class Controller extends BaseController
 			Event::logException(LOG_MODEL_SECTIONS, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 		}
 		
+		// put the sections in a named array for key access
 		if (isset($sections))
 		{
 			$sectionArray = [];
 			foreach($sections as $section)
 			{
-				$sectionArray[$section->title] = true;
+				$sectionArray[$section->permalink] = $section;
 			}
 			
 			$sections = $sectionArray;

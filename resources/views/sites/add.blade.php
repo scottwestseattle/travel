@@ -20,16 +20,7 @@
 
 			<label for="site_name">Site Title (Title shown in browser tab hover):</label>
 			<input type="text" name="site_title" class="form-control" />
-
-			<label for="main_section_text">Main Section Text:</label>
-			<textarea name="main_section_text" class="form-control"></textarea>
-
-			<label for="main_section_subtext">Main Section Sub-Text:</label>
-			<textarea name="main_section_subtext" class="form-control"></textarea>
-			
-			<!-- label for="instagram_link">Instagram Link:</label>
-			<input type="text" name="instagram_link" class="form-control" / -->
-			
+						
 			<div style="margin:20px 0;">
 				<button type="submit" name="update" class="btn btn-primary">Add</button>
 			</div>	

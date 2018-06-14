@@ -11,10 +11,6 @@
 	<p>{{$record->site_url }}</p>	
 
 	<p>{{$record->site_title }}</p>
-
-	<p>{{$record->main_section_text }}</p>
-
-	<p>{{$record->main_section_subtext }}</p>
 	
 </div>
 @endsection

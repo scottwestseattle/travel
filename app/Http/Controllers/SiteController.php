@@ -57,8 +57,6 @@ class SiteController extends Controller
 		$record->site_name				= $this->trimNull($request->site_name);
 		$record->site_url				= $this->trimNull($request->site_url);
 		$record->site_title				= $this->trimNull($request->site_title);
-		$record->main_section_text		= $this->trimNull($request->main_section_text);
-		$record->main_section_subtext 	= $this->trimNull($request->main_section_subtext);
 		$record->instagram_link 		= $this->trimNull($request->instagram_link);
 
 		try
@@ -105,13 +103,10 @@ class SiteController extends Controller
 		$record->site_name = $this->copyDirty($record->site_name, $request->site_name, $isDirty, $changes);
 		$record->site_url = $this->copyDirty($record->site_url, $request->site_url, $isDirty, $changes);
 		$record->site_title = $this->copyDirty($record->site_title, $request->site_title, $isDirty, $changes);
-		$record->main_section_text = $this->copyDirty($record->main_section_text, $request->main_section_text, $isDirty, $changes);
-		$record->main_section_subtext = $this->copyDirty($record->main_section_subtext, $request->main_section_subtext, $isDirty, $changes);
 		$record->email = $this->copyDirty($record->email, $request->email, $isDirty, $changes);
 		$record->telephone = $this->copyDirty($record->telephone, $request->telephone, $isDirty, $changes);
 		$record->instagram_link = $this->copyDirty($record->instagram_link, $request->instagram_link, $isDirty, $changes);
 		$record->current_location = $this->copyDirty($record->current_location, $request->current_location, $isDirty, $changes);
-		$record->current_location_title = $this->copyDirty($record->current_location_title, $request->current_location_title, $isDirty, $changes);
 		$record->current_location_map_link = $this->copyDirty($record->current_location_map_link, $request->current_location_map_link, $isDirty, $changes);
 		$record->current_location_photo = $this->copyDirty($record->current_location_photo, $request->current_location_photo, $isDirty, $changes);
 		$record->previous_location_title = $this->copyDirty($record->previous_location_title, $request->previous_location_title, $isDirty, $changes);

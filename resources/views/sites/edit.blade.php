@@ -21,12 +21,6 @@
 		<label for="site_title">Site Title (Title shown in browser tab hover):</label>
 		<input type="text" name="site_title" class="form-control" value="{{$record->site_title}}"></input>	
 
-		<label for="main_section_text">Main Section Text:</label>
-		<textarea name="main_section_text" class="form-control">{{$record->main_section_text}}</textarea>
-
-		<label for="main_section_subtext">Main Section Sub-Text:</label>
-		<textarea name="main_section_subtext" class="form-control">{{$record->main_section_subtext}}</textarea>	
-
 		<label for="email">Email:</label>
 		<input type="text" name="email" class="form-control" value="{{$record->email}}" />
 
@@ -35,9 +29,6 @@
 		
 		<label for="instagram_link">Instagram Link:</label>
 		<input type="text" name="instagram_link" class="form-control" value="{{$record->instagram_link}}" />
-
-		<label for="current_location_title">Current Location Title:</label>
-		<input type="text" name="current_location_title" class="form-control" value="{{$record->current_location_title}}" />
 
 		<label for="current_location">Current Location:</label>
 		<input type="text" name="current_location" class="form-control" value="{{$record->current_location}}" />

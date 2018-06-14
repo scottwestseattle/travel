@@ -37,18 +37,9 @@ class FrontPageController extends Controller
 		//
 		// set up the site info
 		//
-		$welcome = 'Welcome to ' . config('app.name', 'Travel');
-		$welcome2 = 'Travel is our Business!!';
-		$page_title = 'Travel Information';
 		$page_title = config('app.name', 'Travel Guide');
 		
 		$site = Controller::getSite();
-		
-		if (isset($site->main_section_text))
-			$welcome = $site->main_section_text;
-			
-		if (isset($site->main_section_subtext))
-			$welcome2 = $site->main_section_subtext;
 			
 		if (isset($site->site_title))
 			$page_title .= ' - ' . $site->site_title;
@@ -58,6 +49,9 @@ class FrontPageController extends Controller
 		//
 		$sections = Controller::getSections();
 			
+		//
+		// get tour info
+		//
 		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
@@ -89,8 +83,6 @@ class FrontPageController extends Controller
 		$this->saveVisitor();
 		
 		$vdata = [
-			'welcome' => $welcome,
-			'welcome2' => $welcome2,
 			'page_title' => $page_title,
 			'site' => $site,
 			'posts' => $posts, 
