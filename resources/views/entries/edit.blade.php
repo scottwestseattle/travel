@@ -11,8 +11,8 @@
 	<form method="POST" action="/entries/update/{{ $record->id }}">
 		<div class="form-group form-control-big">
 		
-			<input type="hidden" name="referer" value={{$_SERVER["HTTP_REFERER"]}} />
-		
+			<input type="hidden" name="referer" value={{array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER["HTTP_REFERER"] : ''}} />
+
 			@component('control-entry-types', ['current_type' => $record->type_flag, 'entryTypes' => $entryTypes])
 			@endcomponent			
 		

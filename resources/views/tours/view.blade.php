@@ -186,7 +186,7 @@ foreach($photos as $photo)
 					<iframe id="xttd-map" src="{{ $activity->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
 				</div>
 				
-				<p><a target="_blank" href="{{$activity->map_link}}">Open in Google Maps to Navigate</a></p>
+				<p><a target="_blank" href="{{$activity->map_link}}">Open Map to Navigate</a></p>
 				
 			</div>
 		</div>

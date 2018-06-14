@@ -11,7 +11,7 @@
 	<form method="POST" action="/blogs/updatepost/{{ $record->id }}">
 		<div class="form-group form-control-big">
 		
-			<input type="hidden" name="referer" value={{$_SERVER["HTTP_REFERER"]}} />
+			<input type="hidden" name="referer" value={{array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER["HTTP_REFERER"] : ''}} />
 		
 			@component('components.control-dropdown-blogs')@endcomponent			
 		

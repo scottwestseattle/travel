@@ -534,6 +534,7 @@ class PhotoController extends Controller
 			//
 			// a new file name has been provided, fix it up
 			//
+			$filename = str_replace('.jpg', '', strtolower($filename));
 			$filename = preg_replace('/[^\da-z ]/i', ' ', $filename);	// replace all non-alphanums with space
 			$filename = ucwords($filename);								// cap each word in name
 			$alt_text = $filename;										// use this as the default alt_text
@@ -608,7 +609,7 @@ class PhotoController extends Controller
     	if ($this->isOwnerOrAdmin($photo->user_id))
         {
 			$id = intval($request->parent_id);
-			if ($id === 0)
+			if ($this->isSlider($photo))
 			{
 				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
 				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER . '/';
