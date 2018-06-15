@@ -170,7 +170,7 @@ $sectionCount = 0;
 		</div>
 		
 		<div style="margin-top:40px;">
-			<img style="max-width:70%;" src="/img/theme1/epic-logo-pyramids-lg.png" />
+			<img style="max-width:70%;" src="/img/theme1/logo-main.png" />
 		</div>
 	
 	</div>	
