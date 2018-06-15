@@ -60,13 +60,18 @@
 		margin-bottom: 20px;
 	}
 	
-	.sectionOrange, .sectionYellow, .sectionBlue, .sectionWhite {
+	.sectionOrange, .sectionYellow, .sectionBlue, .sectionWhite, .sectionGreen {
 		padding: 50px 0 40px 0;
 	}
 
 	.sectionWhite {
 		background-color: white;
 		color: #3F98FD;
+	}
+
+	.sectionGreen {
+		background-color: #5CB85C;
+		color: white;
 	}
 		
 	.purple {

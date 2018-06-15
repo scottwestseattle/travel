@@ -44,13 +44,14 @@
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
 							@endif
+							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
 							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 							@endif
-							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 							@endif	
 							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>

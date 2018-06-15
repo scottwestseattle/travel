@@ -76,13 +76,14 @@ define('ENTRY_TYPE_SECTION',	7);
 define('ENTRY_TYPE_OTHER',		99);
 
 // sections
-define('SECTION_SLIDERS', 'section-sliders');
-define('SECTION_WELCOME', 'section-welcome');
-define('SECTION_TOURS', 'section-tours');
-define('SECTION_BLOGS', 'section-blogs');
-define('SECTION_GALLERY', 'section-gallery');
-define('SECTION_CURRENT_LOCATION', 'section-current-location');
 define('SECTION_AFFILIATES', 'section-affiliates');
+define('SECTION_ARTICLES', 'section-articles');
+define('SECTION_BLOGS', 'section-blogs');
+define('SECTION_CURRENT_LOCATION', 'section-current-location');
+define('SECTION_GALLERY', 'section-gallery');
+define('SECTION_SLIDERS', 'section-sliders');
+define('SECTION_TOURS', 'section-tours');
+define('SECTION_WELCOME', 'section-welcome');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);

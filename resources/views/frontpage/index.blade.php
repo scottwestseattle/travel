@@ -4,6 +4,7 @@
 @section('content')
 
 <?php
+
 function getSection($id, $array)
 {
 	$section = null;
@@ -15,6 +16,19 @@ function getSection($id, $array)
 	
 	return $section;
 }
+
+$colors = [
+'sectionWhite',
+'powerBlue',
+'sectionWhite',
+'sectionGreen',
+'sectionWhite',
+'sectionOrange',
+'sectionWhite'
+];
+
+$sectionCount = 0;
+
 ?>
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
@@ -27,6 +41,7 @@ function getSection($id, $array)
 @if (getSection(SECTION_SLIDERS, $sections) != null)
 	
 @if ($sliders->count() > 0)
+<?php $sectionCount++; ?>
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 @else
 <div style="width:100%; background-color: gray; background-position: cover; background-image:url('/img/theme1/bg-pattern.png'); " >
@@ -141,7 +156,7 @@ function getSection($id, $array)
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->	
 @if (($section = getSection(SECTION_WELCOME, $sections)) != null)
-<section id="" class="powerBlue" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+<section id="" class="{{$colors[$sectionCount++]}}" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
@@ -194,7 +209,7 @@ function getSection($id, $array)
 	$link = '/activities/';
 ?>
 
-<section id="" class="sectionWhite" style="" >
+<section id="" class="{{$colors[$sectionCount++]}}" style="" >
 	<div class="container">	
 		<div class="text-center">			
 			
@@ -290,31 +305,55 @@ function getSection($id, $array)
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Blogs -->
 <!--------------------------------------------------------------------------------------->
-@if (false && getSection(SECTION_BLOGS, $sections) != null)
-<section class="sectionOrange">
+@if (($section = getSection(SECTION_BLOGS, $sections)) != null)
+<section class="{{$colors[$sectionCount++]}}">
 	<div class="container" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
-			
-			<!-- div class="hidden-xl hidden-lg hidden-md hidden-sm" style="max-width: 700px; margin: auto;">
-				<form action="/users/register">
-					<button class="textWhite formControlSpace20 btn btn-submit btn-lg bgBlue"><span class="glyphicon glyphicon-hand-right"></span>&nbsp;Join Us Now</button>
-				</form>
-			</div -->				
-			
-			<div class="sectionImage sectionImageBlue"><span class="sectionImageWhite glyphicon glyphicon-edit"></span></div>
-			
-			<h1 style="margin-bottom: 30px;" class="xfont-open-sans-300">
-				Latest Posts
-			</h1>
-			
-			<div class="clearfix">
-				
-				<div class="row">
-				
-					<?php $count = 0; ?>
-					@foreach($posts as $entry)
 						
-						<div class='frontpage-box' >
+			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
+							
+			<div class="row clearfix">
+				
+				<?php $count = 0; ?>
+				@foreach($blogs as $record)
+						
+					<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
+						
+						<a href="/blogs/view/{{$record->id}}">
+							<div style="min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+						</a>
+							
+						<!-- tour title -->
+						<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
+							<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="/blogs/view/{{$record->id}}">{{ $record->title }}</a>
+						</div>
+							
+						</div>						
+				@endforeach
+					
+			</div><!-- row -->									
+		</div><!-- text-center -->
+	</div><!-- container -->
+</section>
+@endif
+
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: Articles -->
+<!--------------------------------------------------------------------------------------->
+@if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
+<section class="{{$colors[$sectionCount++]}}">
+	<div class="container" style="max-width:1440px;">	
+		<div class="sectionHeader text-center">			
+						
+			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
+
+			<div class="row clearfix">
+				
+				<?php $count = 0; ?>
+				@foreach($articles as $record)
+						
+					<div class='frontpage-box' >
 
 							<!-- BACKGROUND PHOTO LINK -->
 							
@@ -326,7 +365,7 @@ function getSection($id, $array)
 								$photo = '/img/theme1/image' . $count . '.jpg';
 							?>
 							
-							<a href="/view/{{$entry->id}}" class="frontpage-box-link" style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" ></a>
+							<a href="/entries/{{$record->permalink}}" class="frontpage-box-link" style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" ></a>
 
 							<!-- HEADER NAME/TITLE LINK ------------------------------------------ -->
 							
@@ -334,19 +373,16 @@ function getSection($id, $array)
 							
 								<!-- CAPTION/TITLE ------------------------------------------ -->
 								<p>		
-									<a style="font-family: Raleway; font-size:.9em;" href="/view/{{$entry->id}}">{{ $entry->title }}</a>
+									<a style="font-family: Raleway; font-size:.9em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 								</p>	
 								
 							</div>
 								
-						</div>
+					</div>
 						
 					@endforeach
 					
-				</div><!-- row -->			
-
-			</div>
-						
+				</div><!-- row -->									
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>
@@ -379,12 +415,12 @@ function getSection($id, $array)
 <!--------------------------------------------------------------------------------------->
 		
 @if (($section = getSection(SECTION_CURRENT_LOCATION, $sections)) != null)
-<section class="sectionOrange">
+<section class="{{$colors[$sectionCount++]}}">
 <div class="container">	
 
 	<div class="sectionHeader text-center main-font">	
 	
-		<div class="" style="font-size: 6em;"><span class="glyphicon glyphicon-globe"></span></div>
+		<div class="" style="font-size: 4em;"><span class="glyphicon glyphicon-globe"></span></div>
 		
 		@if (isset($section->title))
 			<h1>{{$section->title}}</h1>
@@ -423,9 +459,9 @@ function getSection($id, $array)
 @endif
 
 @if (($section = getSection(SECTION_AFFILIATES, $sections)) != null)
-<section class="sectionWhite">
+<section class="{{$colors[$sectionCount++]}}">
 <div class="container">	
-	<div class="sectionHeader text-center main-font">	
+	<div style="margin-top: 0px;" class="sectionHeader text-center main-font">	
 	
 		<!-- div class="" style="font-size: 4em; margin-bottom:20px;"><span class="glyphicon glyphicon-bed"></span></div -->
 		<h1>{{$section->title}}</h1>

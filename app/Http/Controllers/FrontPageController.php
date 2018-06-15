@@ -78,6 +78,16 @@ class FrontPageController extends Controller
 			->get();
 		
 		//
+		// get the blogs
+		//
+		$blogs = Entry::getBlogIndex();
+
+		//
+		// get the articles
+		//
+		$articles = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE);
+		
+		//
 		// save visitor stats
 		//
 		$this->saveVisitor();
@@ -85,7 +95,7 @@ class FrontPageController extends Controller
 		$vdata = [
 			'page_title' => $page_title,
 			'site' => $site,
-			'posts' => $posts, 
+			'blogs' => $blogs, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
 			'sliders' => $sliders, 
@@ -93,6 +103,7 @@ class FrontPageController extends Controller
 			'showAll' => $showAll, 
 			'photoPath' => $photosWebPath, 
 			'sections' => $sections,
+			'articles' => $articles,
 		];
 		
     	return view('frontpage.index', $vdata);

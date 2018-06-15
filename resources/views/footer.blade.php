@@ -59,8 +59,8 @@
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Activities</a></li>
 							@endif
-							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Blogs</a></li>
+							@if (true || isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
+								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
@@ -72,7 +72,7 @@
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>Tours/Hikes</a></li>
 							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
 								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
