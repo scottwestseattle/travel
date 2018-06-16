@@ -134,6 +134,7 @@ class Controller extends BaseController
 		
 	public function __construct ()
 	{
+		//dd(SITE_ID);
 	}
 	
 	static public function getEntryTypes()

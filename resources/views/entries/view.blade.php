@@ -152,17 +152,22 @@ foreach($photos as $photo)
 		<!-- Bottom Navigation Buttons -->
 		<!------------------------------------>
 	
-		<div style="margin-top: 30px;">
+		<div class="trim-text " style="max-width:100%; margin-top: 30px;">
 			@if (isset($prev))
-				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span></button></button></a>
-			@endif
-			@if (false && isset($record->parent_id))
-				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-up"></span></button></a>
+				<div class="" style="float:left; margin: 0 5px 5px 0;" >
+					<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span>{{$prev->title}}</button></a>
+				</div>
 			@endif
 			@if (isset($next))
-				<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
+				<div style="float:left;">
+				<span class="{{SHOW_NON_XS}}">
+					<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-nav-bottom">{{$next->title}}<span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
+				</span>
+				<span class="{{SHOW_XS_ONLY}}">
+					<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span>{{$next->title}}</button></a>
+				</span>
+				</div>
 			@endif			
-			</ul>		
 		</div>
 	
 @if (count($photos))

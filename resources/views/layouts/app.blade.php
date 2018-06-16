@@ -36,7 +36,7 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
 		
 	<!-- google fonts
 	font-family: 'Raleway', sans-serif;
@@ -45,7 +45,7 @@
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 
-	@if (SITE_ID == 1)
+	@if (defined('SITE_ID') && SITE_ID == 1)
 	<!-- Google AdSense Activator -------------------------------->
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>

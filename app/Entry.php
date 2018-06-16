@@ -109,9 +109,12 @@ class Entry extends Base
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+				, count(posts.id) as post_count 
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+			LEFT JOIN entries as posts
+				ON posts.parent_id = entries.id AND posts.deleted_flag = 0 AND posts.published_flag = 1 AND posts.approved_flag = 1
 			WHERE 1=1
 				AND entries.site_id = ?
 				AND entries.type_flag = ?
@@ -128,6 +131,37 @@ class Entry extends Base
 		
 		return $records;
 	}
+	
+	static public function getLatestBlogPosts($limit)
+	{
+		$q = '
+			SELECT entries.id, entries.title, entries.description, entries.permalink, entries.display_date
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+				, blogs.title as blog_title, blogs.id as blog_id
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+			JOIN entries as blogs
+				ON blogs.id = entries.parent_id AND blogs.deleted_flag = 0 AND blogs.published_flag = 1 AND blogs.approved_flag = 1
+			WHERE 1=1
+				AND entries.site_id = ?
+				AND entries.type_flag = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			GROUP BY 
+				entries.id, entries.title, entries.description, entries.permalink, entries.display_date, photo, photo_title, photo_path, blog_title, blog_id
+			ORDER BY entries.id DESC 
+			LIMIT ?
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, intval($limit)]);
+		
+		return $records;
+	}	
 
 	static public function getBlogEntriesIndexAdmin($pending = false)
 	{

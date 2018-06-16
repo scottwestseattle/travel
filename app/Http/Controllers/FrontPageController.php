@@ -52,7 +52,6 @@ class FrontPageController extends Controller
 		//
 		// get tour info
 		//
-		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);			
 		$tours = $this->getTourIndex(/* approved = */ true);
 		//dd($tours);
 		$tour_count = isset($tours) ? count($tours) : 0;
@@ -78,9 +77,10 @@ class FrontPageController extends Controller
 			->get();
 		
 		//
-		// get the blogs
+		// get the latest blog posts
 		//
-		$blogs = Entry::getBlogIndex();
+		$posts = Entry::getLatestBlogPosts(3);
+		//dd($posts);
 
 		//
 		// get the articles
@@ -95,12 +95,13 @@ class FrontPageController extends Controller
 		$vdata = [
 			'page_title' => $page_title,
 			'site' => $site,
-			'blogs' => $blogs, 
+			'posts' => $posts, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
 			'sliders' => $sliders, 
 			'locations' => $locations, 
-			'showAll' => $showAll, 
+			'tourCount' => $this->getEntryCount(ENTRY_TYPE_TOUR), 
+			'blogCount' => $this->getEntryCount(ENTRY_TYPE_BLOG),
 			'photoPath' => $photosWebPath, 
 			'sections' => $sections,
 			'articles' => $articles,

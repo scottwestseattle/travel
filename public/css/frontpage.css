@@ -65,8 +65,8 @@
 	}
 
 	.sectionWhite {
-		background-color: LightGray;
-		background-image: url('/img/theme1/pattern-tiles.jpg');				
+		background-color: #F4F4F4;
+		background-image: url('/img/theme1/bg-pattern-white.png');				
 		background-size: cover;
 		background-position: center;		
 		color: #3F98FD;
@@ -74,7 +74,6 @@
 
 	.sectionGreen {
 		background-color: #5CB85C;
-		background-image: url('/img/theme1/pattern-tiles.png');				
 		color: white;
 	}
 		

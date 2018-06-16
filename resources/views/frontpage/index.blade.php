@@ -228,7 +228,7 @@ $sectionCount = 0;
 			<!---------------------------------------------------->
 			@if (isset($locations) && $tour_count > 0)
 			<div style="margin:20px; 0" class="text-center">
-				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$showAll}}</span></button></a>
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
 				@foreach($locations as $location)
 					@if ($location->count > 0)
 						<a href="/tours/location/{{$location->id}}">
@@ -293,7 +293,8 @@ $sectionCount = 0;
 					@endif
 					
 				</div><!-- row -->	
-				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$showAll}}</span></button></a>
+				
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Tours&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
 
 			</div>
 						
@@ -305,38 +306,49 @@ $sectionCount = 0;
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Blogs -->
 <!--------------------------------------------------------------------------------------->
-@if (($section = getSection(SECTION_BLOGS, $sections)) != null)
+@if (($section = getSection(SECTION_BLOGS, $sections)) != null && isset($posts))
 <section class="{{$colors[$sectionCount++]}}">
-	<div class="container" style="max-width:1440px;">	
-		<div class="sectionHeader text-center">			
-						
+	<div class="container main-font" style="max-width:1440px;">	
+	
+		<!-- section header text -->
+		<div class="sectionHeader text-center">
 			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
-							
-			<div class="row clearfix">
+		</div>
+
+		<div class="row" style="margin-bottom:10px;">
 				
-				<?php $count = 0; ?>
-				@foreach($blogs as $record)
-						
-					<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
-						
-						<a href="/blogs/view/{{$record->id}}">
-							<div style="min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
-						</a>
+			@foreach($posts as $record)
+			<div style="max-width: 400px; padding:10px; border: 1px dashed LightGray;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+				<div style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
+				
+					<!-- blog photo -->
+					<a href="/entries/{{$record->permalink}}">
+						<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
+						<div style="min-width:200px; min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+					</a>							
 							
-						<!-- tour title -->
-						<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-							<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="/blogs/view/{{$record->id}}">{{ $record->title }}</a>
-						</div>
-							
-						</div>						
-				@endforeach
+					<!-- blog text -->
+					<div class="" style="padding:10px;">
+						<p><a href="/blogs/show/{{$record->blog_id}}" style="color:green; text-decoration:none;">{{$record->blog_title}}</a></p>
+						
+						<a style="font-family: 'Volkhov', serif; color: black; font-size:1.4em; font-weight:bold; text-decoration: none; " href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
+						
+						<p style="color: gray; font-size:.9em;">{{date_format(date_create($record->display_date), "l, F d, Y")}}</p>
+					</div>
 					
-			</div><!-- row -->									
-		</div><!-- text-center -->
+				</div><!-- inner col div -->
+			</div><!-- outer col div -->
+			@endforeach		
+
+			<div class="text-center">
+				<a href="/blogs/index/" style=""><button style="margin-top:20px;" type="button" class="btn btn-info">Show All Blogs&nbsp;<span class="badge badge-light">{{$blogCount}}</span></button></a>			
+			</div>
+
+		</div><!-- row -->									
+					
 	</div><!-- container -->
 </section>
 @endif
-
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Articles -->
