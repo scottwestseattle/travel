@@ -274,12 +274,11 @@ foreach($photos as $photo)
 						$title .= ', ' . $photo->location;
 				?>
 						
-				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
-					<img style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/{{$subfolder}}/{{$record->id}}/{{$photo->filename}}" />
+				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', '{{$title}}')">
+					<img class="{{SHOW_XS_ONLY}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 				</span>
-				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
-					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', '{{$title}}')"><img class="popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/{{$subfolder}}/{{$record->id}}/{{$photo->filename}}" /></span>
-				</span>									
+				
 			@endif
 		@endforeach	
 	</div>

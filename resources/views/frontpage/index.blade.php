@@ -170,7 +170,7 @@ $sectionCount = 0;
 		</div>
 		
 		<div style="margin-top:40px;">
-			<img style="max-height:250px;" src="/img/theme1/logo-main.png" />
+			<img style="width:95%; max-width:400px;" src="/img/theme1/logo-main.png" />
 		</div>
 	
 	</div>	
@@ -318,8 +318,8 @@ $sectionCount = 0;
 		<div class="row" style="margin-bottom:10px;">
 				
 			@foreach($posts as $record)
-			<div style="max-width: 400px; padding:10px; border: 1px dashed LightGray;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-				<div style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
+			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+				<div class="drop-box" style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
 				
 					<!-- blog photo -->
 					<a href="/entries/{{$record->permalink}}">

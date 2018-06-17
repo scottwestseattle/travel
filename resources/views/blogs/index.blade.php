@@ -9,9 +9,8 @@
 		<div class="row" style="margin-bottom:10px;">
 				
 			@foreach($records as $record)
-			<div style="max-width: 400px; padding:10px; border: 1px dashed LightGray;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-				<div style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
-				
+			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
+				<div class="drop-box" style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
 					<!-- blog photo -->
 					<a href="/blogs/show/{{$record->id}}">
 						<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
@@ -21,7 +20,7 @@
 					<!-- blog text -->
 					<div class="" style="padding:10px;">	
 
-						<p><a href="/blogs/show/{{$record->id}}" style="color:green; text-decoration:none;">Posts: {{$record->post_count}}</a></p>
+						<p><a href="/blogs/show/{{$record->id}}" style="color:green; text-decoration:none;">{{$record->post_count}} posts</a></p>
 					
 						<a style="font-family: 'Volkhov', serif; color: black; font-size:1.4em; font-weight:bold; text-decoration: none; " href="/blogs/show/{{$record->id}}">{{ $record->title }}</a>						
 						

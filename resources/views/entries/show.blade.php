@@ -98,12 +98,21 @@ foreach($photos as $photo)
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
-				<span class="{{SHOW_XS_ONLY}}"><!-- xs only -->
-					<img class="popupPhotos" style="width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+				
+				<?php 
+					$title = $photo->filename;  // just in case the others are empty
+					
+					if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
+						$title = $photo->alt_text;
+					
+					if (isset($photo->location) && strlen($photo->location) > 0)
+						$title .= ', ' . $photo->location;
+				?>			
+			
+				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', '{{$title}}')">
+					<img class="{{SHOW_XS_ONLY}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 				</span>
-				<span class="{{SHOW_NON_XS}}" ><!-- all other sizes -->
-					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}')"><img style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$photo->alt_text}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" /></span>
-				</span>									
 			@endif
 		@endforeach	
 	</div>
