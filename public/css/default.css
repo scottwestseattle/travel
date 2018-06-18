@@ -11,6 +11,16 @@ a .btn-alert {
 	font-weight:bold;
 }
 
+a .btn-attention {
+	background-color:yellow;
+	color: gray;	
+	margin:5px 3px 0 0; 
+	padding:5px; 
+	font-size:.7em;	
+	font-weight:bold;
+	border: 1px LightGray solid;
+}
+
 a .btn-action, a:hover .btn-action {
 	background-color:#5CB85C;
 	color: white;	

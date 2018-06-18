@@ -13,8 +13,11 @@
 				<div class="drop-box" style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
 					<!-- blog photo -->
 					<a href="/blogs/show/{{$record->id}}">
-						<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
-						<div style="min-width:200px; min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+						@if (!isset($record->photo))
+							<div style="min-width:200px; min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{TOUR_PHOTO_PLACEHOLDER}}'); "></div>
+						@else
+							<div style="min-width:200px; min-height:220px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+						@endif
 					</a>							
 							
 					<!-- blog text -->

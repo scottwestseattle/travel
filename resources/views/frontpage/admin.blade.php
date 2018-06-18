@@ -113,10 +113,9 @@
 								<a class="" href="/photos/entries/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Main Photo</button></a>
 							@endif
 							@if (intval($record->photo_count) < 3)
-								<a class="" href="/photos/entries/{{$record->id}}">
-									<button type="button" class="btn btn-danger btn-alert">Add Photos
-										<span style="margin-left:5px; font-size:.9em; font-weight:bold; background-color: white;" class="badge">{{ $record->photo_count }}
-										</span>
+								<a class="" style="" href="/photos/entries/{{$record->id}}">
+									<button type="button" class="btn btn-danger btn-attention">Add Photos
+										<span style="margin-left:5px; font-size:.9em; font-weight:bold; color: gray;" class="badge">{{ $record->photo_count }}</span>
 									</button>
 								</a>
 							@endif
