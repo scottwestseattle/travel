@@ -3,12 +3,24 @@
 @section('content')
 
 <!--------------------------------------------------------------------------------------->
-<!-- SECTION: Welcome -->
+<!-- About Page -->
 <!--------------------------------------------------------------------------------------->
 
-<div class="container" style="background-color:red;">	
+<div class="container page-size main-font" style="">	
 
-	<span>This is the about page</span>
+	<h1>About</h1>
+	
+	@if (isset($record))
+	<div class="entry-div" style="margin-top:30px;">
+		<div class="entry" style="">
+			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
+		</div>
+	</div>
+	
+	<div class="text-center" style="margin-top:50px;">
+		<img style="max-width:300px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
+	</div>
+	@endif
 		
 </div>
 

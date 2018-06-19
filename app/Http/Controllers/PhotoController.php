@@ -73,7 +73,7 @@ class PhotoController extends Controller
 			$path = $this->getPhotosWebPath($subfolder);
 			
 			$photos = Photo::select()
-				->where('site_id', SITE_ID)
+				//->where('site_id', SITE_ID)
 				->where('user_id', '=', Auth::id())
 				->where('deleted_flag', '<>', 1)
 				->where('parent_id', '=', $parent_id)

@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-define('SITE_ID', intval(env('SITE_ID')));
+define('SITE_ID', 2); //intval(env('SITE_ID')));
 
 use App\Entry;
 use App\Event;
@@ -609,29 +609,8 @@ class Controller extends BaseController
 		
 		return $records;
 	}
-	
-	protected function getEntryCount($entry_type = null)
-	{
-		$q = '
-			SELECT count(entries.id) as count
-			FROM entries
-			WHERE 1=1
-				AND entries.site_id = ?
-				AND entries.deleted_flag = 0
-				AND entries.published_flag = 1 
-				AND entries.approved_flag = 1
-		';
 		
-		if (isset($entry_type))
-			$q .= ' AND entries.type_flag = ? ';
-		
-		// get the list with the location included
-		$record = DB::select($q, [SITE_ID, $entry_type]);
-		
-		return intval($record[0]->count);
-	}	
-	
-	protected function getTourIndex()
+	protected function getTourIndex($allSites = false)
 	{
 		$q = '
 			SELECT entries.id, entries.title, entries.permalink,
@@ -639,8 +618,12 @@ class Controller extends BaseController
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0
-			WHERE 1=1
-				AND entries.site_id = ?
+			WHERE 1=1 ';
+			
+		if (!$allSites)
+			$q .= ' AND entries.site_id = ' . SITE_ID . ' ';
+		
+		$q .= '
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
@@ -651,12 +634,12 @@ class Controller extends BaseController
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
 		
 		return $records;
 	}	
 
-	protected function getTourIndexLocation($location_id)
+	protected function getTourIndexLocation($location_id, $allSites)
 	{
 		$q = '
 			SELECT entries.id, entries.title, entries.permalink, photo_main.filename as photo
@@ -665,9 +648,12 @@ class Controller extends BaseController
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0			
 			JOIN entry_location entloc ON entries.id = entloc.entry_id
 			JOIN locations ON entloc.location_id = locations.id AND locations.id = ?
-			WHERE 1=1
-				AND entries.site_id = ?
-				AND entries.type_flag = ?
+			WHERE 1=1 ';
+			
+		if (!$allSites)
+			$q .= ' AND entries.site_id = ' . SITE_ID . ' ';
+		
+		$q .= '	AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
@@ -677,7 +663,7 @@ class Controller extends BaseController
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [$location_id, SITE_ID, ENTRY_TYPE_TOUR]);
+		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
 		//dd($records);
 		
 		return $records;

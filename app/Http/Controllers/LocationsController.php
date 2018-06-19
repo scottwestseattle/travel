@@ -50,7 +50,7 @@ class LocationsController extends Controller
 		{
 			// get all
 			$records = Activity::select()
-				->where('site_id', SITE_ID)
+				//->where('site_id', SITE_ID)
 				->where('approved_flag', '=', 1)
 				->where('published_flag', '=', 1)
 				->where('deleted_flag', '=', 0)

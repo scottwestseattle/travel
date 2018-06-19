@@ -52,13 +52,11 @@ class FrontPageController extends Controller
 		//
 		// get tour info
 		//
-		$tours = $this->getTourIndex(/* approved = */ true);
-		//dd($tours);
+		$tours = $this->getTourIndex(/* $allSites = */ true);
+
 		$tour_count = isset($tours) ? count($tours) : 0;
 
 		$locations = Location::getPills();
-		//foreach($locations as $location)
-			//dd($location);
 
 		//
 		// get tour page link and main photo
@@ -100,8 +98,8 @@ class FrontPageController extends Controller
 			'tour_count' => $tour_count, 
 			'sliders' => $sliders, 
 			'locations' => $locations, 
-			'tourCount' => $this->getEntryCount(ENTRY_TYPE_TOUR), 
-			'blogCount' => $this->getEntryCount(ENTRY_TYPE_BLOG),
+			'tourCount' => Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true), 
+			'blogCount' => Entry::getEntryCount(ENTRY_TYPE_BLOG, /* $allSites = */ false),
 			'photoPath' => $photosWebPath, 
 			'sections' => $sections,
 			'articles' => $articles,
@@ -224,7 +222,13 @@ class FrontPageController extends Controller
      */
     public function about()
     {
-        return view('frontpage.about');
+		$entry = Entry::getAboutPage();
+		
+		$vdata = $this->getViewData([
+			'record' => count($entry) > 0 ? $entry[0] : null,
+		]);
+		
+        return view('frontpage.about', $vdata);
     }
 	
     /**

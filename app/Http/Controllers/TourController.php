@@ -30,8 +30,8 @@ class TourController extends Controller
 
     public function index()
     {
-		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);		
-		$tours = $this->getTourIndex();
+		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);		
+		$tours = $this->getTourIndex(/* $allSites = */ true);
 		$tour_count = isset($tours) ? count($tours) : 0;
 		$locations = Location::getPills();
 			
@@ -148,19 +148,19 @@ class TourController extends Controller
     public function permalocation($location, $permalink)
     {
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', '<>', 1)
 			->where('permalink', $permalink)
 			->first();	
-			
+						
 		return $this->handleView($entry);
 	}
 	
     public function permalink($permalink)
     {
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
@@ -191,7 +191,7 @@ class TourController extends Controller
 		}
 				
 		$activity = Activity::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', $entry->id)
 			->first();
@@ -289,7 +289,7 @@ class TourController extends Controller
 					
 					
 		$photos = Photo::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
@@ -487,9 +487,9 @@ class TourController extends Controller
 	
     public function location($location_id)
     {
-		$showAll = $this->getEntryCount(ENTRY_TYPE_TOUR);
+		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);
 		
-		$tours = $this->getTourIndexLocation($location_id);
+		$tours = $this->getTourIndexLocation($location_id, /* $allSites = */ true);
 							
 		$tour_count = isset($tours) ? count($tours) : 0;
 

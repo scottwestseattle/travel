@@ -56,13 +56,14 @@
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
-							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/activities/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Activities</a></li>
-							@endif
-							@if (true || isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
+							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>Tours/Hikes</a></li>
+							@endif
+							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+								<!-- this still uses Activities instead of tours -->
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
@@ -71,18 +72,17 @@
 							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							@endif
-							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>Tours/Hikes</a></li>
-							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
 								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
 						
-								<li id="debug-tag-xl"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Extra Large</a></li>
-								<li id="debug-tag-lg"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Large</a></li>
-								<li id="debug-tag-md"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Medium</a></li>
-								<li id="debug-tag-sm"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Small</a></li>
-								<li id="debug-tag-xs"><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-fullscreen"></span>Extra Small</a></li>
-
+							@if (true)
+								<li id="debug-tag-xl"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (XL)</a></li>
+								<li id="debug-tag-lg"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (L)</a></li>
+								<li id="debug-tag-md"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (M)</a></li>
+								<li id="debug-tag-sm"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (S)</a></li>
+								<li id="debug-tag-xs"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (XS)</a></li>
+							@endif
+							
 							</ul>
 
 						</div>

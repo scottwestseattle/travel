@@ -20,8 +20,6 @@ Auth::routes();
 Route::get('/', 'FrontPageController@index');
 Route::get('/about', 'FrontPageController@about');
 Route::get('/view/{entry}', 'HomeController@view');
-Route::get('/tours', 'HomeController@tours');
-Route::get('/posts', 'HomeController@posts');
 Route::get('/visits', 'FrontPageController@visits')->middleware('auth');;
 Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');;
 Route::get('/admin', 'FrontPageController@admin')->middleware('auth');

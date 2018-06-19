@@ -265,6 +265,7 @@ class EntryController extends Controller
     {		
 		$next = null;
 		$prev = null;
+		$photos = null;
 		
 		try 
 		{
@@ -273,8 +274,16 @@ class EntryController extends Controller
 				->where('deleted_flag', 0)
 				->where('id', $id)
 				->first();
-							
-			if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+				
+			if (!isset($entry))
+			{
+				$msg = 'Record not found, ID: ' . $entry->id;
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+			}
+			else if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 			{						
 				if (isset($entry->display_date))
 				{
@@ -289,15 +298,15 @@ class EntryController extends Controller
 					$request->session()->flash('message.level', 'danger');
 					$request->session()->flash('message.content', $msg);
 				}
-			}
-			
-			$photos = Photo::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('parent_id', $entry->id)
-				->orderByRaw('id ASC')
-				->get();
 				
+				$photos = Photo::select()
+					//->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('parent_id', $entry->id)
+					->orderByRaw('id ASC')
+					->get();
+			}
+							
 			$vdata = $this->getViewData([
 				'record' => $entry, 
 				'next' => $next,
@@ -307,7 +316,7 @@ class EntryController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_SELECT, $this->getTextOrShowEmpty($record->title), null, $e->getMessage());
+			Event::logException(LOG_MODEL_ENTRIES, LOG_ACTION_SELECT, $this->getTextOrShowEmpty(isset($entry) ? $entry->title : 'record not found'), null, $e->getMessage());
 				
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		

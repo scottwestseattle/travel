@@ -208,4 +208,51 @@ class Entry extends Base
 
 		return $record;
 	}
+	
+	static public function getAboutPage()
+	{
+		$q = '
+			SELECT entries.id, entries.title, entries.description, entries.permalink, entries.published_flag, entries.approved_flag 
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+			WHERE 1=1
+				AND entries.site_id = ?
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1
+				AND entries.approved_flag = 1
+				AND entries.title = \'page-about\' 
+			GROUP BY 
+				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path, entries.published_flag, entries.approved_flag 
+			LIMIT 1
+		';
+		
+		$record = DB::select($q, [SITE_ID, SITE_ID]);
+		
+		return $record;
+	}
+	
+	protected function getEntryCount($entry_type, $allSites)
+	{
+		$q = '
+			SELECT count(entries.id) as count
+			FROM entries
+			WHERE 1=1
+				AND entries.deleted_flag = 0
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+				AND entries.type_flag = ?
+		';
+		
+		$q .= $allSites ? '' : ' AND entries.site_id = ' . SITE_ID . ' ';
+		
+		// get the list with the location included
+		$record = DB::select($q, [$entry_type]);
+		
+		return intval($record[0]->count);
+	}	
+	
 }
