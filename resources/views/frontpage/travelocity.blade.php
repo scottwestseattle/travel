@@ -168,8 +168,8 @@
                           {{$record['outTimeArrive1']}}
                                                   </td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="35%" valign="top">
-                          {{$record['outCityFrom1']}}<br>
-                          {{$record['outCityTo1']}}
+                          {{$record['outAirportFrom1']}}<br>
+                          {{$record['outAirportTo1']}}
                         </td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="5%" valign="top">
                                                     <img style="margin-right: 5px;width:40px;" alt="KLM Royal Dutch Airlines" src="/img/ticket/{{$record['outLogo1']}}">
@@ -203,8 +203,8 @@
 					{{$record['outTimeArrive2']}}
 				</td>
 				<td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="35%" valign="top">
-					{{$record['outCityFrom2']}}<br>
-					{{$record['outCityTo2']}}
+					{{$record['outAirportFrom2']}}<br>
+					{{$record['outAirportTo2']}}
 				</td>
 				<td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="5%" valign="top">
 					<img style="margin-right:5px;width:40px;" alt="KLM Royal Dutch Airlines" src="/img/ticket/{{$record['outLogo2']}}">
@@ -264,8 +264,8 @@
 							  {{$record['returnTimeArrive1']}}
 						</td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="35%" valign="top">
-							{{$record['returnCityFrom1']}}<br>
-							{{$record['returnCityTo1']}}
+							{{$record['returnAirportFrom1']}}<br>
+							{{$record['returnAirportTo1']}}
                         </td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="5%" valign="top">
                                                     <img alt="KLM Royal Dutch Airlines" style="margin-right:5px;width:40px;" src="/img/ticket/{{$record['returnLogo1']}}">
@@ -295,8 +295,8 @@
 							  {{$record['returnTimeArrive2']}}
 						</td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="35%" valign="top">
-							{{$record['returnCityFrom2']}}<br>
-							{{$record['returnCityTo2']}}
+							{{$record['returnAirportFrom2']}}<br>
+							{{$record['returnAirportTo2']}}
                         </td>
                         <td style="font-size: 12px; padding-top: 10px; font-family: Arial, Helvetica, sans-serif; color: rgb(51, 51, 51);" width="5%" valign="top">
                                                     <img alt="KLM Royal Dutch Airlines" style="margin-right:5px;width:40px;" src="/img/ticket/{{$record['returnLogo2']}}">

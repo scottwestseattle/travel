@@ -428,7 +428,7 @@ $LAB
 
 
                 
-                <img itemprop="image" src="https://www.expedia.com/_dms/email/logo.png?locale=en_US&siteid=1"  border="0" alt="Expedia.com"  />
+                <img itemprop="image" src="/img/ticket/logo.png"  border="0" alt="Expedia.com"  />
 
 									    </a>
                             </div>
@@ -682,54 +682,71 @@ Departure
 		Total travel time:&nbsp;{{$record['outTimeDuration1']}}
 	</td>
 </tr>
+
+<!---------------------------------------------------------------------------->
+<!------ Outbound Flight ----------------------------------------------------->
+<!---------------------------------------------------------------------------->
+	
 <tr>
-<td style="margin:0 !important; padding:0 !important; vertical-align:top !important; background-color:red;" align="left" colspan="2" width="100%">
-    <table style="" border="0" cellpadding="0" cellspacing="0" width="100%">
-		<tr id="automation-label-flight-segment-0" class="first">
-			<td  align="left"  rowspan="5" width="11%" style="padding-left: 20px;vertical-align: middle;">
-				<img width="25" src="/img/ticket/{{$record['outLogo1']}}" alt="custom air icon"/>
-			</td>
-			<td align="left"  width="30%" style="font-size: 12px;padding-left: 10px; padding-top: 10px;">{{$record['outAirportFrom1']}}</td>
-			<td align="left"  width="29%" style="font-size: 12px;padding-left: 10px; padding-top: 10px;">{{$record['outAirportTo1']}}</td>
-			<br/>
-		</tr>
-		<tr>
-			<td align="left"  width="29%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
-					{{$record['outTimeDepart1']}}
-			</td>
-			<td align="left"  width="29%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
-					{{$record['outTimeArrive1']}}
-						<div style="font-weight:normal;">
-						</div>
-			</td>
-			<td align="right"  width="31%" style="font-size: 12px;padding-right: 10px; padding-top: 10px;text-align: right;">
-				  {{$record['outTimeDuration1']}}
-			</td>
-		</tr>
-		<tr>
-			<td align="left"  colspan="3" style="font-size: 12px;padding-left: 10px;">
-			{{$record['outAirline1']}},&nbsp;{{$record['outFlight1']}}
-			</td>
-		</tr>
-		<tr>
-			<td align="left"  colspan="3" style="font-size: 12px;padding-left: 10px; ">
-				Economy / Coach
-				(L)
-						| MAIN CABIN
-					<span>
-						| Seat
-					</span>
-					<strong>
-						24A
-					</strong>
-					   <span>
-						 | Confirm or change seats with the airline*
-					   </span>
-			</td>
-		</tr>
-    </table>
-</td>
+<td align="left"  colspan="2" width="100%">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+
+    <tr id="automation-label-flight-segment-0" class="first">
+    <td  align="left"  rowspan="5" width="11%" style="padding-left: 20px;vertical-align: middle;">
+            <img width="25" src="/img/ticket/{{$record['outLogo1']}}" alt="custom air icon"/>
+    </td>
+
 </tr>
+<tr>
+    <td align="left"  width="33%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
+        {{$record['outAirportFrom1']}}
+		<br />
+		{{$record['outTimeDepart1']}}
+    </td>
+    <td align="left"  width="33%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
+        {{$record['outAirportTo1']}}
+		<br />
+		{{$record['outTimeArrive1']}}
+    </td>
+    <td align="right"  width="33%" style="font-size: 12px;padding-right: 10px; padding-top: 10px;text-align: right;">
+		{{$record['outTimeDuration1']}}
+    </td>
+
+</tr>
+
+    <tr>
+        <td align="left"  colspan="3" style="font-size: 12px;padding-left: 10px;">
+        {{$record['outAirline1']}},&nbsp;{{$record['outFlight1']}}
+        </td>
+    </tr>
+    <tr>
+        <td align="left"  colspan="3" style="font-size: 12px;padding-left: 10px; ">
+            Economy / Coach
+            (U)
+                    | MAIN CABIN
+                <span>
+                    | Seat
+                </span>
+                <strong>
+                    24A
+                </strong>
+                   <span>
+                     | Confirm or change seats with the airline*
+                   </span>
+        </td>
+    </tr>
+
+    </table>
+	</td>
+</tr>
+
+
+<!---------------------------------------------------------------------------->
+<!------ Return Flight ----------------------------------------------------->
+<!---------------------------------------------------------------------------->
+
+
 <tr id="automation-label-flight-leg-1" bgcolor="#D6EEF2">
     <td id="departure-date-1" align="left"  valign="top" width="50%" style="padding:10px 5px 10px 10px;font-family:arial;font-size:12px; ">
         <strong>
@@ -741,8 +758,9 @@ Return        	<span id="stop-automation-label-1" class="flight-detail-service-h
         <td align="left" valign="top" width="50%" style="text-align:right;padding:10px 10px 10px 5px;font-family:arial;font-size:12px;color: #999;">
 Total travel time:&nbsp;{{$record['returnTimeDuration1']}}
         </td>
-
 </tr>
+
+
 <tr>
 <td align="left"  colspan="2" width="100%">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -755,16 +773,17 @@ Total travel time:&nbsp;{{$record['returnTimeDuration1']}}
 
 </tr>
 <tr>
-    <td align="left"  width="29%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
-        {{$record['returnCityFrom1']}}&nbsp;
-            {{$record['returnTimeDepart1']}}
+    <td align="left"  width="33%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
+        {{$record['returnAirportFrom1']}}
+		<br/>
+		{{$record['returnTimeDepart1']}}
     </td>
-    <td align="left"  width="32%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
-        {{$record['returnCityTo1']}}&nbsp;
-            {{$record['returnTimeArrive1']}}
-            &nbsp;
+    <td align="left"  width="33%" style="font-size: 12px;padding-left: 10px; vertical-align:top; font-weight: bold;">
+        {{$record['returnAirportTo1']}}
+		<br/>
+		{{$record['returnTimeArrive1']}}
     </td>
-    <td align="right"  width="31%" style="font-size: 12px;padding-right: 10px; padding-top: 10px;text-align: right;">
+    <td align="right"  width="33%" style="font-size: 12px;padding-right: 10px; padding-top: 10px;text-align: right;">
           {{$record['returnTimeDuration1']}}
     </td>
 
@@ -991,7 +1010,7 @@ For this trip                        </p>
                         <div height="40px" width="102px" class="logo-rewards" style="vertical-align: top; display: block; margin-top: 10px;">
 
 
-<img itemprop="image" alt="Expedia.com" src="https://www.expedia.com/_dms/loyalty/rewards/logo/logo.svg?locale=en_US&siteid=1" onerror="this.src=this.src.replace('.svg?','.png?');this.onerror='';" border="0" /><!— DMSTagLib -->                        </div>
+<img itemprop="image" alt="Expedia.com" src="/img/ticket/logo.svg" onerror="this.src=this.src.replace('.svg?','.png?');this.onerror='';" border="0" /><!— DMSTagLib -->                        </div>
                 </td>
             </tr>
             <tr>
