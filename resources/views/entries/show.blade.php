@@ -5,12 +5,15 @@
 <?php 
 $main_photo = null;
 $regular_photos = 0;
-foreach($photos as $photo)
+if (isset($photos))
 {
-	if ($photo->main_flag === 1)
-		$main_photo = $photo;
-	else
-		$regular_photos++;
+	foreach($photos as $photo)
+	{
+		if ($photo->main_flag === 1)
+			$main_photo = $photo;
+		else
+			$regular_photos++;
+	}
 }
 ?>
 

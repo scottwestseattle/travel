@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-define('SITE_ID', 2); //intval(env('SITE_ID')));
+define('SITE_ID', intval(env('SITE_ID')));
 
 use App\Entry;
 use App\Event;
@@ -857,13 +857,7 @@ class Controller extends BaseController
 		
 		try 
 		{
-			$sections = Entry::select()
-				->where('type_flag', ENTRY_TYPE_SECTION)
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->get();
+			$sections = Entry::getEntriesByType(ENTRY_TYPE_SECTION);
 		}
 		catch (\Exception $e)
 		{

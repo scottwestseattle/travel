@@ -78,9 +78,14 @@ class Entry extends Base
 			return(Entry::getEntries($approved_flag));
 		
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink,
-				count(photos.id) as photo_count
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink 
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+				, count(photos.id) as photo_count				
 			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
 			WHERE 1=1
@@ -90,10 +95,11 @@ class Entry extends Base
 		';
 		
 		if ($approved_flag)
-			$q .= ' AND (entries.published_flag = 1 AND entries.approved_flag) ';
+			$q .= ' AND entries.published_flag = 1 AND entries.approved_flag = 1 ';
 		
 		$q .= '
-			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink
+				, photo, photo_title, photo_path
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
 		';
 				

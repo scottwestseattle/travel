@@ -5,6 +5,7 @@
 <?php 
 $main_photo = null;
 $regular_photos = 0;
+if (isset($photos))
 foreach($photos as $photo)
 {
 	if ($photo->main_flag === 1)

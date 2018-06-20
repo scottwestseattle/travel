@@ -29,15 +29,9 @@
 		
 		<label for="instagram_link">Instagram Link:</label>
 		<input type="text" name="instagram_link" class="form-control" value="{{$record->instagram_link}}" />
-
-		<label for="current_location">Current Location:</label>
-		<input type="text" name="current_location" class="form-control" value="{{$record->current_location}}" />
 		
 		<label for="current_location_map_link">Current Location Map Link (without the iframe):</label>
 		<input type="text" name="current_location_map_link" class="form-control" value="{{$record->current_location_map_link}}" />
-
-		<label for="current_location_photo">Current Location Photo (if no map available):</label>
-		<input type="text" name="current_location_photo" class="form-control" value="{{$record->current_location_photo}}" />
 
 		<label for="previous_location_title">Previous Location Title:</label>
 		<input type="text" name="previous_location_title" class="form-control" value="{{$record->previous_location_title}}" />

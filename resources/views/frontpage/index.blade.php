@@ -444,10 +444,12 @@ $sectionCount = 0;
 			<h1>{{$site->current_location}}</h1>
 		@endif
 		
+		<?php //dd($section); ?>
+		
 		@if (isset($site->current_location_map_link))
 			<iframe src="{{$site->current_location_map_link}}" width="90%" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
-		@elseif (isset($site->current_location_photo))
-			<img src="/img/theme1/{{$site->current_location_photo}}" width="100%" style="max-width:700px" />
+		@elseif (isset($section->photo))
+			<img src="{{$section->photo_path}}/{{$section->photo}}" title="{{$section->photo_title}}" width="100%" style="max-width:700px" />
 		@endif
 
 		@if (isset($site->previous_location_list))

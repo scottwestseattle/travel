@@ -238,5 +238,93 @@ class FrontPageController extends Controller
     {
         return view('frontpage.error');
     }
+
+    /**
+     * Ticket page
+     */
+    public function ticket()
+    {
+		$record = [
+		
+			//
+			// OUTBOUND FLIGHT
+			//
+			
+			'outDate' => 'Mon, Aug 20, 2018',			
+			
+			// OUTBOUND LEG 1
+			
+			'outTimeDepart1' => '2:30 pm',
+			'outTimeArrive1' => '3:35 pm',	
+			'outTimeDuration1' => '2h 5m, Nonstop',	
+			'outCityFrom1' => 'Hong Kong Intl. (HKG)',
+			'outCityTo1' => 'Noi Bai Intl. (HAN)',
+			'outAirline1' => 'Vietnam Airlines',
+			'outLogo1' => 'vietair.svg',
+			'outFlight1' => 'Flight 593',
+			'outOperatedBy1' => 'Operated by Delta Airlines',
+			
+			// OUTBOUND LEG 2
+
+			'outLeg2' => false,
+			'outTimeDepart2' => '2:30 pm',
+			'outTimeArrive2' => '3:35 pm',	
+			'outTimeDuration2' => '2 hrs 18 mins',	
+			'outCityFrom2' => 'Atl Hartsfield-Jackson, USA (ATL)',
+			'outCityTo2' => 'Oklahoma City, OK USA (OKC) ',
+			'outAirline2' => 'KLM Royal Dutch Airlines',
+			'outLogo2' => 'klm.gif',
+			'outFlight2' => 'Flight XXXX',
+			'outOperatedBy2' => 'Operated by Delta Airlines',
+			
+			//
+			// RETURN FLIGHT
+			//
+			
+			'returnDate' => 'Thu, Sep 13, 2018',
+			
+			// RETURN LEG 1
+			
+			'returnTimeDepart1' => '10:25 am',
+			'returnTimeArrive1' => '1:30 pm',	
+			'returnTimeDuration1' => '2h 5m, Nonstop',	
+			'returnCityFrom1' => 'Noi Bai Intl. (HAN)',
+			'returnCityTo1' => 'Hong Kong Intl. (HKG)',
+			'returnAirline1' => 'Vietnam Airlines',
+			'returnLogo1' => 'vietair.svg',
+			'returnFlight1' => 'Flight 592',
+			'returnOperatedBy1' => '',
+			
+			
+			// RETURN LEG 2
+			
+			'returnLeg2' => false,
+			'returnTimeDepart2' => '10:25 am',
+			'returnTimeArrive2' => '1:30 pm',	
+			'returnTimeDuration2' => '2 hrs 5 mins, Nonstop',	
+			'returnCityFrom2' => 'Noi Bai Intl. (HAN)',
+			'returnCityTo2' => 'Hong Kong Intl. (HKG)',
+			'returnAirline2' => 'Vietnam Airlines',
+			'returnLogo2' => 'vietair.svg',
+			'returnFlight2' => 'Flight XXXX',
+			'returnOperatedBy2' => 'Operated by Delta Connection',
+
+
+			
+			//
+			// PRICES
+			//
+			
+			'priceTotal' => '$242.50',
+			'priceFlight' => '$183.00',
+			'priceTaxes' => '$59.50',
+		];
+		
+		$vdata = $this->getViewData([
+			'record' => $record
+		]);
+		
+        return view('frontpage.ticket', $vdata);
+    }
 	
 }

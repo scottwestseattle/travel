@@ -9,7 +9,10 @@
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
 			<li>Site: {{$site->site_name}}</li>
 			<li>My IP:&nbsp;{{$ip}}</li>
-			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}</li>
+			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
+				&nbsp;&nbsp;<a href="/ticket">Ticket</a>
+				&nbsp;&nbsp;<a href="/hash">Hash</a>				
+			</li>
 		</ul>
 	</div>
 	
