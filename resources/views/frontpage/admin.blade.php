@@ -10,7 +10,8 @@
 			<li>Site: {{$site->site_name}}</li>
 			<li>My IP:&nbsp;{{$ip}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
-				&nbsp;&nbsp;<a href="/ticket">Ticket</a>
+				&nbsp;&nbsp;<a href="/expedia">Expedia</a>
+				&nbsp;&nbsp;<a href="/travelocity">Travelocity</a>
 				&nbsp;&nbsp;<a href="/hash">Hash</a>				
 			</li>
 		</ul>

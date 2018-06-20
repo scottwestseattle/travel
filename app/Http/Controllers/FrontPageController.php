@@ -239,14 +239,30 @@ class FrontPageController extends Controller
         return view('frontpage.error');
     }
 
-    /**
-     * Ticket page
-     */
-    public function ticket()
+    public function travelocity()
+    {		
+		$vdata = $this->getViewData([
+			'record' => $this->getTicket(),
+		]);
+		
+        return view('frontpage.travelocity', $vdata);
+    }
+	
+    public function expedia()
+    {
+		$vdata = $this->getViewData([
+			'record' => $this->getTicket(),
+		]);
+		
+        return view('frontpage.expedia', $vdata);
+	}
+
+    private function getTicket()
     {
 		$record = [
 		
-			//
+		
+			// {{$record['']}}
 			// OUTBOUND FLIGHT
 			//
 			
@@ -257,8 +273,10 @@ class FrontPageController extends Controller
 			'outTimeDepart1' => '2:30 pm',
 			'outTimeArrive1' => '3:35 pm',	
 			'outTimeDuration1' => '2h 5m, Nonstop',	
-			'outCityFrom1' => 'Hong Kong Intl. (HKG)',
-			'outCityTo1' => 'Noi Bai Intl. (HAN)',
+			'outAirportFrom1' => 'Hong Kong Intl. (HKG)',
+			'outAirportTo1' => 'Noi Bai Intl. (HAN)',
+			'outCityFrom1' => 'Hong Kong (HKG)',
+			'outCityTo1' => 'Hanoi (HAN)',
 			'outAirline1' => 'Vietnam Airlines',
 			'outLogo1' => 'vietair.svg',
 			'outFlight1' => 'Flight 593',
@@ -270,8 +288,10 @@ class FrontPageController extends Controller
 			'outTimeDepart2' => '2:30 pm',
 			'outTimeArrive2' => '3:35 pm',	
 			'outTimeDuration2' => '2 hrs 18 mins',	
-			'outCityFrom2' => 'Atl Hartsfield-Jackson, USA (ATL)',
-			'outCityTo2' => 'Oklahoma City, OK USA (OKC) ',
+			'outAirportFrom2' => 'Atl Hartsfield-Jackson, USA (ATL)',
+			'outAirportTo2' => 'Oklahoma City, OK USA (OKC) ',
+			'outCityFrom2' => 'Atllanta (ATL)',
+			'outCityTo2' => 'Oklahoma City (OKC) ',
 			'outAirline2' => 'KLM Royal Dutch Airlines',
 			'outLogo2' => 'klm.gif',
 			'outFlight2' => 'Flight XXXX',
@@ -320,11 +340,6 @@ class FrontPageController extends Controller
 			'priceTaxes' => '$59.50',
 		];
 		
-		$vdata = $this->getViewData([
-			'record' => $record
-		]);
-		
-        return view('frontpage.ticket', $vdata);
-    }
-	
+		return $record;
+	}
 }

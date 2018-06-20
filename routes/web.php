@@ -25,7 +25,8 @@ Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('aut
 Route::get('/admin', 'FrontPageController@admin')->middleware('auth');
 Route::get('/home', 'HomeController@index');
 Route::get('/error', 'FrontPageController@error');
-Route::get('/ticket', 'FrontPageController@ticket');
+Route::get('/travelocity', 'FrontPageController@travelocity');
+Route::get('/expedia', 'FrontPageController@expedia');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
