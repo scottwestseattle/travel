@@ -10,7 +10,7 @@
 
 	<form method="POST" action="/{{$prefix}}/delete/{{ $record->id }}">
 			   
-		<h3 name="title" class="">{{$record->title }}</h3>
+		<h3 name="title" class="">{{$record->name }}</h3>
 
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>

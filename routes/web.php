@@ -32,6 +32,25 @@ Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// Accounts
+Route::group(['prefix' => 'accounts'], function () {
+	
+	Route::get('/index', 'AccountController@index');
+	Route::get('/indexadmin', 'AccountController@indexadmin')->middleware('auth');
+	Route::get('/view/{account}', ['as' => 'account.view', 'uses' => 'AccountController@view']);
+	
+	// add/create
+	Route::get('/add','AccountController@add')->middleware('auth');
+	Route::post('/create','AccountController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{account}','AccountController@edit')->middleware('auth');
+	Route::post('/update/{account}','AccountController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{account}', 'AccountController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{account}', 'AccountController@delete')->middleware('auth');	
+});
 
 // templates
 Route::group(['prefix' => 'templates'], function () {

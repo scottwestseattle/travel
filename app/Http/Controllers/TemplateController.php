@@ -11,10 +11,15 @@ use App\Template;
 
 define('PREFIX', 'templates');
 define('LOG_MODEL', 'templates');
+define('TITLE', 'Template');
 
 class TemplateController extends Controller
-{
-	private $prefix = 'templates';
+{	
+	public function __construct ()
+	{
+		$this->prefix = PREFIX;
+		$this->title = TITLE;
+	}
 	
     public function index(Request $request)
     {
@@ -34,7 +39,7 @@ class TemplateController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Template List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . ' List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -63,7 +68,7 @@ class TemplateController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Template List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -114,7 +119,6 @@ class TemplateController extends Controller
              return redirect('/');
 
 		$vdata = $this->getViewData([
-			'prefix' => PREFIX,
 		]);
 		 
 		return view(PREFIX . '.add', $vdata);
@@ -145,7 +149,7 @@ class TemplateController extends Controller
 			Event::logAdd(LOG_MODEL, $record->title, $record->site_url, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'Template has been added');
+			$request->session()->flash('message.content', $this->title . ' has been added');
 		}
 		catch (\Exception $e) 
 		{
@@ -164,7 +168,6 @@ class TemplateController extends Controller
              return redirect('/');
 			
 		$vdata = $this->getViewData([
-			'prefix' => PREFIX,
 			'record' => $template,
 		]);		
 		 
@@ -185,8 +188,12 @@ class TemplateController extends Controller
 		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->permalink = $this->copyDirty($record->permalink, $request->permalink, $isDirty, $changes);
 		
-		$record->published_flag = 0;
-		$record->approved_flag = 0;
+		// example of getting value from radio controls
+		//$v = isset($request->radio_sample) ? intval($request->radio_sample) : 0;		
+		//$record->radio_sample = $this->copyDirty($record->radio_sample, $v, $isDirty, $changes);		
+		
+		$v = isset($request->published_flag) ? 1 : 0;
+		$record->published_flag = $v;
 						
 		if ($isDirty)
 		{						
@@ -197,7 +204,7 @@ class TemplateController extends Controller
 				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
 				
 				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', 'Template has been updated');
+				$request->session()->flash('message.content', $this->title . ' has been updated');
 			}
 			catch (\Exception $e) 
 			{
@@ -206,9 +213,14 @@ class TemplateController extends Controller
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());		
 			}				
-		}	
+		}
+		else
+		{
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
+		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/index/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/indexupdate/')); 
 	}
 	
 	public function view(Template $template)
@@ -217,7 +229,6 @@ class TemplateController extends Controller
              return redirect('/');
 		 
 		$vdata = $this->getViewData([
-			'prefix' => PREFIX,
 			'record' => $template,
 		]);				
 		 
@@ -230,7 +241,6 @@ class TemplateController extends Controller
              return redirect('/');
 
 		$vdata = $this->getViewData([
-			'prefix' => PREFIX,
 			'record' => $template,
 		]);				
 		 
@@ -250,7 +260,7 @@ class TemplateController extends Controller
 			Event::logDelete(LOG_MODEL, $record->title, $record->id);					
 			
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'Template has been deleted');
+			$request->session()->flash('message.content', $this->title . ' has been deleted');
 		}
 		catch (\Exception $e) 
 		{
@@ -272,7 +282,7 @@ class TemplateController extends Controller
 			'record' => $template,
 		]);
 		
-		return view('templates.publish', $vdata);
+		return view(PREFIX . '.publish', $vdata);
     }
 	
     public function publishupdate(Request $request, Template $template)
@@ -292,7 +302,21 @@ class TemplateController extends Controller
 			else
 				$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
-			$record->save();
+			try
+			{
+				$record->save();
+				Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved status updated');			
+				
+				$request->session()->flash('message.level', 'success');
+				$request->session()->flash('message.content', $this->title . ' status has been updated');
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
+
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());		
+			}				
 			
 			//return redirect(route(PREFIX . '.permalink', [$record->permalink]));
 			return redirect('/' . PREFIX . '/indexadmin');

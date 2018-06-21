@@ -118,6 +118,8 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+	protected $prefix = 'prefix';
+	protected $title = 'Title';
 	private $viewData = [];
 	
 	static private $entryTypes = [
@@ -134,7 +136,6 @@ class Controller extends BaseController
 		
 	public function __construct ()
 	{
-		//dd(SITE_ID);
 	}
 	
 	static public function getEntryTypes()
@@ -257,6 +258,9 @@ class Controller extends BaseController
 		// add-on the mandatory parts
 		$this->viewData['sections'] = Controller::getSections();
 		$this->viewData['site'] = Controller::getSite();
+		$this->viewData['prefix'] = $this->prefix;
+		$this->viewData['title'] = $this->title;
+		$this->viewData['titlePlural'] = ucwords($this->prefix);
 		
 		return $this->viewData;
 	}

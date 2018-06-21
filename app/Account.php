@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 
-class Template extends Base
+class Account extends Base
 {
     public function user()
     {

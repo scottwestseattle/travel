@@ -72,6 +72,17 @@
 								<li><a href="/tours/indexadmin">Tours</a></li>
 								<li><a href="/templates/indexadmin">Templates</a></li>
 								<li><a href="/visitors/">Visitors</a></li>
+								
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">Cash <span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a href="/accounts/indexadmin">Accounts</a></li>
+										<li><a href="/transactions/indexadmin">Transactions</a></li>
+										<li><a href="/categories/indexadmin">Categories</a></li>
+										<li><a href="/expenses/indexadmin">Expenses</a></li>
+									</ul>
+								</li>								
+								
 							<?php endif; ?>
 														
                             <li class="dropdown">

@@ -6,9 +6,11 @@
 
 	@component('templates.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
                
-	<h3 name="title" class="">{{$record->title }}</h3>
+	<h1 name="name" class="">{{$record->name }}</h1>
 
-	<p>{{$record->description }}</p>	
+	<h3>Starting Balance: {{$record->starting_balance}}</h3>
+	<h3>Account Type: {{$record->account_type_flag}}</h3>
+	<h3>Hidden: {{$record->hidden_flag}}</h3>	
 	
 </div>
 @endsection

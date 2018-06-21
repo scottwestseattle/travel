@@ -1,12 +1,12 @@
-@extends('layouts.app')
+@extends('layouts.theme1')
 
 @section('content')
 
 <div class="page-size container">
 	
-	@component('menu-submenu-templates')@endcomponent
+	@component('templates.menu-submenu', ['prefix' => $prefix])@endcomponent
 	
-	<h1>Templates ({{count($records)}})</h1>
+	<h1>{{$titlePlural}} ({{count($records)}})</h1>
 
 	<table class="table">
 		<thead>
@@ -19,8 +19,8 @@
 		@if (isset($records))
 			@foreach($records as $record)
 			<tr>					
-				<td><a href="/templates/view/{{$record->id}}">{{$record->title}}</a></td>
-				<td><a href="/templates/view/{{$record->id}}">{{$record->permalink}}</a></td>
+				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a></td>
+				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->permalink}}</a></td>
 			</tr>
 			@endforeach
 		@endif

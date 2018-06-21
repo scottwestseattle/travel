@@ -389,6 +389,8 @@ a:hover .btn-blog-nav {
 	  .form-control-big input[type="text"]
 	, .form-control-big input[type="email"]
 	, .form-control-big input[type="password"] 
+	, .form-control-big input[type="radio"] 
+	, .form-control-big input[type="checkbox"] 
 	{
 		font-size: 1.5em;
 		padding: 5px 5px 5px 10px;

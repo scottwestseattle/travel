@@ -306,6 +306,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
     );
 
     public static $classMap = array (
+        'App\\Account' => __DIR__ . '/../..' . '/app/Account.php',
         'App\\Activity' => __DIR__ . '/../..' . '/app/Activity.php',
         'App\\Base' => __DIR__ . '/../..' . '/app/Base.php',
         'App\\Blog' => __DIR__ . '/../..' . '/app/Blog.php',
@@ -331,6 +332,7 @@ class ComposerStaticInit8c32402227c7453397146e67f1b326c6
         'App\\Http\\Controllers\\SiteController' => __DIR__ . '/../..' . '/app/Http/Controllers/SiteController.php',
         'App\\Http\\Controllers\\TagsController' => __DIR__ . '/../..' . '/app/Http/Controllers/TagsController.php',
         'App\\Http\\Controllers\\TasksController' => __DIR__ . '/../..' . '/app/Http/Controllers/TasksController.php',
+        'App\\Http\\Controllers\\TemplateController' => __DIR__ . '/../..' . '/app/Http/Controllers/TemplateController.php',
         'App\\Http\\Controllers\\TourController' => __DIR__ . '/../..' . '/app/Http/Controllers/TourController.php',
         'App\\Http\\Controllers\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsersController.php',
         'App\\Http\\Controllers\\VisitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitorController.php',

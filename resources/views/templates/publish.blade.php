@@ -1,30 +1,28 @@
-@extends('layouts.app')
+@extends('layouts.theme1')
 
 @section('content')
 
 <div class="page-size container">
 
-	@component('menu-submenu-templates', ['record' => $record])@endcomponent
-	
-	<h1>Publish</h1>
+	@component('templates.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
 
-	<form method="POST" action="/templates/publishupdate/{{ $record->id }}">
+	<h1>Publish {{$title}}</h1>
 
-		<div class="form-group">
-			<h3 name="title" class="">{{$record->title }}</h3>
-		</div>
+	<form method="POST" action="/{{$prefix}}/publishupdate/{{ $record->id }}">
+
+		<h3 name="title" class="">{{$record->title }}</h3>
 				
 		<div class="form-group">
-			<input type="checkbox" name="published_flag" id="published_flag" class="" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="published_flag" class="checkbox-big-label">Published</label>
+			<input type="checkbox" name="published_flag" id="published_flag" class="form-control-inline" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
+			<label for="published_flag" class="checkbox-label">Published</label>
 		</div>
 
 		<div class="form-group">
-			<input type="checkbox" name="approved_flag" id="approved_flag" class="" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
-			<label for="approved_flag" class="checkbox-big-label">Approved</label>
+			<input type="checkbox" name="approved_flag" id="approved_flag" class="form-control-inline" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
+			<label for="approved_flag" class="checkbox-label">Approved</label>
 		</div>
 		
-		<div class="form-group">
+		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">Update</button>
 		</div>
 	{{ csrf_field() }}
