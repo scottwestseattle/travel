@@ -149,7 +149,6 @@ class AccountController extends Controller
 		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes);
 		$record->starting_balance = $this->copyDirty($record->starting_balance, $request->starting_balance, $isDirty, $changes);
 		
-		//dd($request);
 		$v = isset($request->account_type_flag) ? intval($request->account_type_flag) : 0;		
 		$record->account_type_flag = $this->copyDirty($record->account_type_flag, $v, $isDirty, $changes);
 

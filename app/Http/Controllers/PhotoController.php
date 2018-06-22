@@ -45,7 +45,6 @@ class PhotoController extends Controller
 					$request->session()->flash('message.content', $e->getMessage());
 					//return redirect('/activities/indexadmin');
 				}
-
 			}
 				
 			$vdata = $this->getViewData([
@@ -80,11 +79,21 @@ class PhotoController extends Controller
 				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
+			if (false)
 			foreach($photos as $photo)
 			{
 				$fullPath = $this->getPhotosFullPath($subfolder) . $photo->filename;
-				$size = filesize($fullPath);
-				$photo['size'] = $size;
+				
+				try
+				{
+					$size = filesize($fullPath);
+					$photo['size'] = $size;
+				}
+				catch (\Exception $e) 
+				{
+					$request->session()->flash('message.level', 'danger');
+					$request->session()->flash('message.content', $e->getMessage());
+				}
 			}
 				
 			$vdata = $this->getViewData([

@@ -14,11 +14,11 @@ class CreateAccountsTable extends Migration
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
-            $table->increments('id');
-			
-			$table->string('name', 100);
+            $table->increments('id');			
 			$table->unsignedInteger('user_id');
 			$table->unsignedInteger('parent_id')->nullable();
+			
+			$table->string('name', 100);
 			$table->string('notes', 255)->nullable();
 			$table->string('password_hint', 20)->nullable();
 			$table->tinyInteger('account_type_flag');
@@ -26,8 +26,8 @@ class CreateAccountsTable extends Migration
 			$table->decimal('balance', 10, 2)->nullable()->default(0.0);
 			$table->decimal('starting_balance', 10, 2)->nullable()->default(0.0);
 			$table->tinyInteger('hidden_flag')->nullable()->default(0);
-			$table->tinyInteger('deleted_flag')->nullable()->default(0);
 			
+			$table->tinyInteger('deleted_flag')->nullable()->default(0);
             $table->timestamps();
         });
     }

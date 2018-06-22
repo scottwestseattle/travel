@@ -13,7 +13,7 @@ define('<input type="hidden" name="referer" value={{$_SERVER["HTTP_REFERER"]}} /
 
 class SiteController extends Controller
 {
-	private $prefix = 'sites';
+	protected $prefix = 'sites';
 	
     public function index()
     {

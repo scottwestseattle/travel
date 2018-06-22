@@ -11,7 +11,7 @@ use App\Event;
 
 class BlogController extends Controller
 {
-	private $prefix = 'blogs';
+	protected $prefix = 'blogs';
 
     public function addpost(Request $request, $id)
     {

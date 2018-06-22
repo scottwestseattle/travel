@@ -7,7 +7,7 @@ use App\Event;
 
 class EventController extends Controller
 {
-	private $prefix = 'events';
+	protected $prefix = 'events';
 	
     public function index($type_flag = null)
     {
