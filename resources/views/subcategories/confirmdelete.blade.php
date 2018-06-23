@@ -16,9 +16,7 @@
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>
 		</div>		
 	
-		<p>{{$record->permalink }}</p>
-
-		<p>{{$record->descrption }}</p>
+		<p>{{$record->notes }}</p>
 		
 		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>

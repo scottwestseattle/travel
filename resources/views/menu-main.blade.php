@@ -79,6 +79,7 @@
 										<li><a href="/accounts/indexadmin">Accounts</a></li>
 										<li><a href="/transactions/indexadmin">Transactions</a></li>
 										<li><a href="/categories/indexadmin">Categories</a></li>
+										<li><a href="/subcategories/indexadmin">Subcategories</a></li>
 										<li><a href="/expenses/indexadmin">Expenses</a></li>
 									</ul>
 								</li>								

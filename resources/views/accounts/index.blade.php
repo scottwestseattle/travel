@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 	
-	@component('templates.menu-submenu', ['prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 	
 	<h1>{{$titlePlural}} ({{count($records)}})</h1>
 

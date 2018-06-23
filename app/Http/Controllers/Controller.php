@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 define('SITE_ID', intval(env('SITE_ID')));
 
+use DB;
+use Auth;
 use App\Entry;
 use App\Event;
 use App\Location;
@@ -16,8 +18,8 @@ use App\Photo;
 use App\Site;
 use App\Task;
 use App\Visitor;
-use Auth;
-use DB;
+use App\Category;
+use App\Account;
 
 define('ERROR_REDIRECT_PAGE', '/error');
 
@@ -889,4 +891,38 @@ class Controller extends BaseController
 		
 		return $sections;
 	}
+	
+    public function getCategories($action)
+    {
+		$error = '';
+		$records = Category::getArray($error);
+		
+		if (count($records) == 0)
+			Event::logError(LOG_MODEL, $action, 'Error Getting Category List', null, null, $error);
+		
+		return $records;
+	}
+
+    public function getSubcategories($action)
+    {
+		$error = '';
+		$records = Category::getArray($error, /* subcategories = */ true);
+		
+		if (count($records) == 0)
+			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List', null, null, $error);
+		
+		return $records;
+	}
+	
+    public function getAccounts($action)
+    {
+		$error = '';
+		$records = Account::getArray($error);
+		
+		if (count($records) == 0)
+			Event::logError(LOG_MODEL, $action, 'Error Creating Account List', null, null, $error);
+
+		return $records;
+	}
+		
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Base extends Model
 {
@@ -10,5 +11,5 @@ class Base extends Model
     {
 		$this->deleted_flag = 1;
 		$this->save();
-    }	
+    }		
 }

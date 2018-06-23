@@ -4,7 +4,7 @@
 
 <div class="container">
 
-	@component('templates.menu-submenu', ['prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 
 	<h1>Add {{$title}}</h1>
                

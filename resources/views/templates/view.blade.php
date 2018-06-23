@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-	@component('templates.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
                
 	<h3 name="title" class="">{{$record->title }}</h3>
 

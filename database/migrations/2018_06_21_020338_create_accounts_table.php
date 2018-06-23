@@ -26,6 +26,7 @@ class CreateAccountsTable extends Migration
 			$table->decimal('balance', 10, 2)->nullable()->default(0.0);
 			$table->decimal('starting_balance', 10, 2)->nullable()->default(0.0);
 			$table->tinyInteger('hidden_flag')->nullable()->default(0);
+			$table->tinyInteger('closed_flag')->nullable()->default(0);
 			
 			$table->tinyInteger('deleted_flag')->nullable()->default(0);
             $table->timestamps();

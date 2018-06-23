@@ -32,6 +32,66 @@ Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// Subcategories
+Route::group(['prefix' => 'subcategories'], function () {
+	
+	Route::get('/index', 'SubcategoryController@index');
+	Route::get('/indexadmin', 'SubcategoryController@indexadmin')->middleware('auth');
+	Route::get('/view/{subcategory}', ['as' => 'account.view', 'uses' => 'SubcategoryController@view']);
+	
+	// add/create
+	Route::get('/add','SubcategoryController@add')->middleware('auth');
+	Route::post('/create','SubcategoryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{subcategory}','SubcategoryController@edit')->middleware('auth');
+	Route::post('/update/{subcategory}','SubcategoryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{subcategory}', 'SubcategoryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{subcategory}', 'SubcategoryController@delete')->middleware('auth');	
+});
+
+// Categories
+Route::group(['prefix' => 'categories'], function () {
+	
+	Route::get('/index', 'CategoryController@index');
+	Route::get('/indexadmin', 'CategoryController@indexadmin')->middleware('auth');
+	Route::get('/view/{category}', ['as' => 'account.view', 'uses' => 'CategoryController@view']);
+	
+	// add/create
+	Route::get('/add','CategoryController@add')->middleware('auth');
+	Route::post('/create','CategoryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{category}','CategoryController@edit')->middleware('auth');
+	Route::post('/update/{category}','CategoryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{category}', 'CategoryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{category}', 'CategoryController@delete')->middleware('auth');	
+});
+
+// Transactions
+Route::group(['prefix' => 'transactions'], function () {
+	
+	Route::get('/index', 'TransactionController@index');
+	Route::get('/indexadmin/{subcategory_id?}', 'TransactionController@indexadmin')->middleware('auth');
+	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
+	
+	// add/create
+	Route::get('/add','TransactionController@add')->middleware('auth');
+	Route::post('/create','TransactionController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{transaction}','TransactionController@edit')->middleware('auth');
+	Route::post('/update/{transaction}','TransactionController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{transaction}', 'TransactionController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{transaction}', 'TransactionController@delete')->middleware('auth');	
+});
+
 // Accounts
 Route::group(['prefix' => 'accounts'], function () {
 	

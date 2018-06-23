@@ -9,7 +9,7 @@
 	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
 	@component('menu-icons-links', ['data' => (isset($data) ? $data : null)])@endcomponent	
 	@component('control-search', ['command' => '/entries/search/', 'placeholder' => 'Search Templates'])@endcomponent
-	@component('control-templates-dropdown', ['templates' => $templates])@endcomponent	
+	@component('control-templates-dropdown', [$prefix . '' => $templates])@endcomponent	
 @endcomponent
 
 <div style="margin-top: 20px;" class="container">

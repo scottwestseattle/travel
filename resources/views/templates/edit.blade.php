@@ -4,7 +4,7 @@
 
 <div class="container">
 
-	@component('templates.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
 
 	<h1>Edit {{$title}}</h1>
 

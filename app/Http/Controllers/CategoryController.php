@@ -7,13 +7,13 @@ use App\User;
 use App\Event;
 use DB;
 use Auth;
-use App\Account;
+use App\Category;
 
-define('PREFIX', 'accounts');
-define('LOG_MODEL', 'accounts');
-define('TITLE', 'Account');
+define('PREFIX', 'categories');
+define('LOG_MODEL', 'categories');
+define('TITLE', 'Category');
 
-class AccountController extends Controller
+class CategoryController extends Controller
 {	
 	public function __construct ()
 	{
@@ -30,11 +30,10 @@ class AccountController extends Controller
 		
 		try
 		{
-			$records = Account::select()
+			$records = Category::select()
+				->where('parent_id', null)
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
-				//->where('account_type_flag', 1)
-				//->where('hidden_flag', 0)
 				->get();
 		}
 		catch (\Exception $e) 
@@ -61,9 +60,11 @@ class AccountController extends Controller
 		
 		try
 		{
-			$records = Account::select()
+			$records = Category::select()
+				->where('parent_id', null)
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
+				->orderByRaw('name ASC')
 				->get();		
 		}
 		catch (\Exception $e) 
@@ -80,7 +81,7 @@ class AccountController extends Controller
 			
 		return view(PREFIX . '.indexadmin', $vdata);
     }
-	
+		
     public function add()
     {
 		if (!$this->isAdmin())
@@ -99,18 +100,16 @@ class AccountController extends Controller
            
 			//dd($request);
 			
-		$record = new Account();
+		$record = new Category();
 		
 		$record->user_id = Auth::id();
-				
-		$record->name				= $this->trimNull($request->name);
-		$record->starting_balance	= $this->trimNull($request->starting_balance);
-		$record->account_type_flag	= isset($request->account_type_flag) ? $request->account_type_flag : 0;		
+		$record->name	= $this->trimNull($request->name);
+		$record->notes	= $this->trimNull($request->notes);
 		
 		try
 		{
 			$record->save();
-			Event::logAdd(LOG_MODEL, $record->name, $record->site_url, $record->id);
+			Event::logAdd(LOG_MODEL, $record->name, $record->notes, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
 			$request->session()->flash('message.content', $this->title . ' has been added');
@@ -126,21 +125,21 @@ class AccountController extends Controller
 		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
     }
 
-	public function edit(Account $account)
+	public function edit(Category $category)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 			
 		$vdata = $this->getViewData([
-			'record' => $account,
+			'record' => $category,
 		]);		
 		 
 		return view(PREFIX . '.edit', $vdata);
     }
 		
-    public function update(Request $request, Account $account)
+    public function update(Request $request, Category $category)
     {
-		$record = $account;
+		$record = $category;
 		
 		if (!$this->isAdmin())
              return redirect('/');
@@ -148,15 +147,9 @@ class AccountController extends Controller
 		$isDirty = false;
 		$changes = '';
 		
-		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes);
-		$record->starting_balance = $this->copyDirty($record->starting_balance, $request->starting_balance, $isDirty, $changes);
-		
-		$v = isset($request->account_type_flag) ? intval($request->account_type_flag) : 0;		
-		$record->account_type_flag = $this->copyDirty($record->account_type_flag, $v, $isDirty, $changes);
-
-		$v = isset($request->hidden_flag) ? 1 : 0;		
-		$record->hidden_flag = $this->copyDirty($record->hidden_flag, $v, $isDirty, $changes);
-		
+		$record->name = $this->copyDirty($record->name, $request->title, $isDirty, $changes);
+		$record->notes = $this->copyDirty($record->notes, $request->notes, $isDirty, $changes);
+										
 		if ($isDirty)
 		{						
 			try
@@ -182,36 +175,36 @@ class AccountController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/indexupdate/')); 
 	}
 	
-	public function view(Account $account)
+	public function view(Category $category)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 		 
 		$vdata = $this->getViewData([
-			'record' => $account,
+			'record' => $category,
 		]);				
 		 
 		return view(PREFIX . '.view', $vdata);
     }
 	
-    public function confirmdelete(Account $account)
+    public function confirmdelete(Category $category)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 
 		$vdata = $this->getViewData([
-			'record' => $account,
+			'record' => $category,
 		]);				
 		 
 		return view(PREFIX . '.confirmdelete', $vdata);
     }
 	
-    public function delete(Request $request, Account $account)
+    public function delete(Request $request, Category $category)
     {	
-		$record = $account;
+		$record = $category;
 		
 		if (!$this->isAdmin())
              return redirect('/');

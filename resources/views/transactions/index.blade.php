@@ -11,16 +11,16 @@
 	<table class="table">
 		<thead>
 			<tr>
-				<th>Title</th>
-				<th>Permalink</th>
+				<th>Description</th>
+				<th>Notes</th>
 			</tr>
 		</thead>
 		<tbody>
 		@if (isset($records))
 			@foreach($records as $record)
 			<tr>					
-				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a></td>
-				<td>{{$record->permalink}}</td>
+				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
+				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->notes}}</a></td>
 			</tr>
 			@endforeach
 		@endif

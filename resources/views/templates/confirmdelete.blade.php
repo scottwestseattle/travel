@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@component('templates.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
 	
 	<h1>Delete {{$title}}</h1>
 
