@@ -27,6 +27,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/error', 'FrontPageController@error');
 Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
+Route::get('/email/check', 'EmailController@check');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
@@ -37,19 +38,19 @@ Route::group(['prefix' => 'subcategories'], function () {
 	
 	Route::get('/index', 'SubcategoryController@index');
 	Route::get('/indexadmin', 'SubcategoryController@indexadmin')->middleware('auth');
-	Route::get('/view/{subcategory}', ['as' => 'account.view', 'uses' => 'SubcategoryController@view']);
+	Route::get('/view/{category}', ['as' => 'account.view', 'uses' => 'SubcategoryController@view']);
 	
 	// add/create
 	Route::get('/add','SubcategoryController@add')->middleware('auth');
 	Route::post('/create','SubcategoryController@create')->middleware('auth');
 
 	// edit/update
-	Route::get('/edit/{subcategory}','SubcategoryController@edit')->middleware('auth');
-	Route::post('/update/{subcategory}','SubcategoryController@update')->middleware('auth');
+	Route::get('/edit/{category}','SubcategoryController@edit')->middleware('auth');
+	Route::post('/update/{category}','SubcategoryController@update')->middleware('auth');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/{subcategory}', 'SubcategoryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{subcategory}', 'SubcategoryController@delete')->middleware('auth');	
+	Route::get('/confirmdelete/{category}', 'SubcategoryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{category}', 'SubcategoryController@delete')->middleware('auth');	
 });
 
 // Categories
@@ -78,6 +79,10 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/index', 'TransactionController@index');
 	Route::get('/indexadmin/{subcategory_id?}', 'TransactionController@indexadmin')->middleware('auth');
 	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
+
+	// filter
+	Route::get('/filter','TransactionController@filter')->middleware('auth');
+	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	
 	// add/create
 	Route::get('/add','TransactionController@add')->middleware('auth');

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
+use DateTime;
 define('SITE_ID', intval(env('SITE_ID')));
 
 use DB;
@@ -925,4 +925,183 @@ class Controller extends BaseController
 		return $records;
 	}
 		
+    static protected function getDateControlDates()
+    {
+		$months = [
+			1 => 'January',
+			2 => 'February',
+			3 => 'March',
+			4 => 'April',
+			5 => 'May',
+			6 => 'June',
+			7 => 'July',
+			8 => 'August',
+			9 => 'September',
+			10 => 'October',
+			11 => 'November',
+			12 => 'December',
+		];		
+
+		$days = [];
+		for ($i = 1; $i <= 31; $i++)
+			$days[$i] = $i;
+
+		$years = [];		
+		for ($i = 2014; $i <= 2022; $i++)
+			$years[$i] = $i;		
+			
+		$dates = [
+			'months' => $months,
+			'years' => $years,
+			'days' => $days,
+		];
+
+		return $dates;
+	}
+	
+    static protected function getFilter($request, $today = false)
+    {
+		$filter = Controller::getDateFilter($request, $today);
+	
+		$filter['account_id'] = false;
+		$filter['category_id'] = false;
+		$filter['subcategory_id'] = false;
+		$filter['search'] = false;
+		$filter['unreconciled_flag'] = false;
+		
+		if (isset($request->account_id))
+		{
+			$id = intval($request->account_id);
+			if ($id > 0)
+				$filter['account_id'] = $id;
+		}
+		
+		if (isset($request->category_id))
+		{
+			$id = intval($request->category_id);
+			if ($id > 0)
+				$filter['category_id'] = $id;
+		}
+		
+		if (isset($request->subcategory_id))
+		{
+			$id = intval($request->subcategory_id);
+			if ($id > 0)
+				$filter['subcategory_id'] = $id;
+		}
+
+		if (isset($request->search))
+		{
+			if (strlen($request->search) > 0)
+				$filter['search'] = $request->search;
+		}
+
+		if (isset($request->unreconciled_flag))
+		{
+			$filter['unreconciled_flag'] = $request->unreconciled_flag;
+		}
+		
+		return $filter;
+	}
+	
+    static protected function getDateFilter($request = false, $today = false)
+    {
+		$dates = [];
+		
+		$dates['selected_month'] = false;
+		$dates['selected_day'] = false;
+		$dates['selected_year'] = false;
+		
+		$month = 0;
+		$year = 0;
+		$day = 0;
+		
+		if (isset($request) && (isset($request->day) || isset($request->month) || isset($request->year)))
+		{
+			// date filter is on, use it
+			if (isset($request->month))
+				if (($month = intval($request->month)) > 0)
+					$dates['selected_month'] = $month;
+			
+			if (isset($request->day))
+				if (($day = intval($request->day)) > 0)
+					$dates['selected_day'] = $day;
+			
+			if (isset($request->year))
+				if (($year = intval($request->year)) > 0)
+					$dates['selected_year'] = $year;
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = $today ? intval(date("d")) : false;
+						
+			// if nothing is set use current month
+			$dates['selected_day'] = $day;
+			$dates['selected_month'] = $month;
+			$dates['selected_year'] = $year;
+		}
+		
+		//
+		// put together the search dates
+		//
+		
+		// set month range
+		$fromMonth = 1;
+		$toMonth = 12;
+		if ($month > 0)
+		{
+			$fromMonth = $month;
+			$toMonth = $month;
+		}	
+
+		// set year range
+		$fromYear = 2010;
+		$toYear = 2050;
+		if ($year > 0)
+		{
+			$fromYear = $year;
+			$toYear = $year;
+		}
+		else
+		{
+			// if month set without the year, default to current year
+			if ($month > 0)
+			{
+				$fromYear = intval(date("Y"));
+				$toYear = $fromYear;
+			}
+		}
+	
+		$fromDay = 1;
+		$toDate = "$toYear-$toMonth-01";
+		$toDay = intval(date('t', strtotime($toDate)));
+		
+		if ($day > 0)
+		{
+			$fromDay = $day;
+			$toDay = $day;
+		}
+		
+		$dates['from_date'] = '' . $fromYear . '-' . $fromMonth . '-' . $fromDay;
+		$dates['to_date'] = '' . $toYear . '-' . $toMonth . '-' . $toDay;
+		
+		//dd($dates);
+		
+		return $dates;
+	}
+
+    static protected function getDateControlSelectedDate($date)
+    {
+		$date = DateTime::createFromFormat('Y-m-d', $date);
+		
+		$parts = [
+			'selected_day' => intval($date->format('d')),
+			'selected_month' => intval($date->format('m')),
+			'selected_year' => intval($date->format('Y')),
+		];
+		
+		return $parts;
+	}
 }

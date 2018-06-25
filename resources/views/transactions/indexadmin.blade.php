@@ -19,6 +19,8 @@
 				<td>{{$record->transaction_date}}</td>
 				<td>{{$record->amount}}</td>
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
+				<td>{{$record->notes}}</td>
+				<td>{{$record->vendor_memo}}</td>
 				<td><a href="/{{$prefix}}/view/{{$record->parent_id}}">{{$record->account}}</a></td>
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/indexadmin/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
 

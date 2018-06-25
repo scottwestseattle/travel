@@ -9,9 +9,8 @@
 	<h1>Add {{$title}}</h1>
                
 	<form method="POST" action="/{{$prefix}}/create">
-							
-		<label for="transaction_date" class="control-label">Date (yyyy-mm-dd):</label>
-		<input type="text" name="transaction_date" class="form-control" />
+									
+		@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 		
 		<label for="description" class="control-label">Description:</label>
 		<input type="text" name="description" class="form-control" />

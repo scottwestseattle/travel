@@ -35,6 +35,7 @@ class AccountController extends Controller
 				->where('deleted_flag', 0)
 				//->where('account_type_flag', 1)
 				//->where('hidden_flag', 0)
+				->orderByRaw('name')
 				->get();
 		}
 		catch (\Exception $e) 
@@ -64,6 +65,7 @@ class AccountController extends Controller
 			$records = Account::select()
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
+				->orderByRaw('name')
 				->get();		
 		}
 		catch (\Exception $e) 

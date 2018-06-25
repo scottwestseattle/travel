@@ -8,13 +8,17 @@ truncate transactions;
 
 delete FROM `accounts` WHERE user_id <> 12;
 delete FROM `categories` WHERE user_id <> 12;
-update categories set user_id = 1;
+
 update accounts set user_id = 1;
+update categories set user_id = 1;
 
 delete FROM `transactions` WHERE user_id <> 12;
 update transactions set user_id = 1;
+
+Add Transfer / Transder and make sure it is id 201
 update transactions set subcategory_id = 201 where subcategory_id = 0 and category_id = 9;
-update transactions set subcategory_id = subcategory_id + 100 where subcategory_id < 201 and parent_id <> null
+update transactions set subcategory_id = subcategory_id + 100 where subcategory_id < 201 and parent_id is not null
+update transactions set vendor_memo = notes
 
 -- --------------------------------------------------------
 

@@ -16,7 +16,8 @@
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>
 		</div>		
 	
-		<p>{{$record->notes }}</p>
+		<p>{{$record->transaction_date }}</p>
+		<p>{{$record->amount }}</p>
 		
 		<div class="submit-button">
 			<button type="submit" class="btn btn-primary">Confirm Delete</button>

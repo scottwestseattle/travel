@@ -10,6 +10,8 @@
 
 	<form method="POST" action="/{{$prefix}}/update/{{$record->id}}">
 
+		@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+	
 		<label for="description" class="control-label">Description:</label>
 		<input type="text" name="description" class="form-control" value="{{$record->description}}"></input>
 					
@@ -37,6 +39,9 @@
 			
 			<label for="notes" class="control-label">Notes:</label>
 			<input type="text" name="notes" class="form-control" value="{{$record->notes}}" />
+			
+			<label for="vendor_memo" class="control-label">Vendor Memo:</label>
+			<input type="text" name="vendor_memo" class="form-control" value="{{$record->vendor_memo}}" />
 		</div>
 			
 			
