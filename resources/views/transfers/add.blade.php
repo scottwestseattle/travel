@@ -27,13 +27,7 @@
 			
 			<label for="notes" class="control-label">Notes:</label>
 			<input type="text" name="notes" class="form-control" value="{{$record->notes}}" />
-		</div>
-			
-			
-		<div class="form-group">
-			<input type="checkbox" name="reconciled_flag" id="reconciled_flag" class="form-control-inline" value="{{$record->reconciled_flag }}" checked />
-			<label for="reconciled_flag" class="checkbox-label">Reconciled</label>
-		</div>		
+		</div>	
 			
 		<div class="submit-button">
 			<button type="submit" name="add" class="btn btn-primary">Transfer</button>

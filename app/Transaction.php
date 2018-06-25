@@ -78,7 +78,7 @@ class Transaction extends Base
     static public function getFilter($filter)
     {		
 		$q = '
-			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes, trx.reconciled_flag
+			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes, trx.reconciled_flag, trx.transfer_id
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 

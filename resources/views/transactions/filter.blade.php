@@ -44,30 +44,35 @@
 				<?php $skip_id = 0; ?>
 				
 				@foreach($records as $record)
-				@if (false && $skip_id == $record->id && isset($record->transfer_account))
-					@continue
-				@endif
-				<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
-				<tr>
-					<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
-					<td style="color:{{$color}};">{{$record->transaction_date}}</td>
-					<td style="color:{{$color}};">{{$record->amount}}</td>
-					
-					@if (isset($record->transfer_account))
-						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}} ({{$record->transfer_account}})</a></td>
-						<?php $skip_id = $record->id - 1; ?>
-					@else
-						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
+					@if ($skip_id == $record->id)
+						<?php $skip_id = 0; ?>
+						@continue
 					@endif
-					
-					<td style="color:{{$color}};">{{$record->notes}}</td>
-					<td style="color:{{$color}};">{{$record->vendor_memo}}</td>
-					<td><a href="/{{$prefix}}/view/{{$record->parent_id}}">{{$record->account}}</a></td>
-					<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/indexadmin/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
+					<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
+					<tr>
+						<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+						<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
+						<td style="color:{{$color}};">{{$record->transaction_date}}</td>
+						<td style="color:{{$color}};">{{$record->amount}}</td>
+						
+						@if (isset($record->transfer_id))
+							@if ($record->amount > 0)
+								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->transfer_account}} to {{$record->account}}</a></td>
+							@else
+								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->account}} to {{$record->transfer_account}}</a></td>
+							@endif
+							<?php $skip_id = $record->transfer_id; ?>
+						@else
+							<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
+						@endif
+						
+						<td style="color:{{$color}};">{{$record->notes}}</td>
+						<td style="color:{{$color}};">{{$record->vendor_memo}}</td>
+						<td><a href="/{{$prefix}}/view/{{$record->parent_id}}">{{$record->account}}</a></td>
+						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/indexadmin/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
 
-					<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-				</tr>
+						<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					</tr>
 				@endforeach
 			@endif
 			</tbody>

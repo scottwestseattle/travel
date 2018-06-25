@@ -51,7 +51,11 @@
 				<td>{{$record->type_flag}}</td>
 			</tr>
 			<tr>
-				<td>Transaction ID:</td>
+				<td>Transfer ID:</td>
+				<td>{{$record->transfer_id}}</td>
+			</tr>
+			<tr>
+				<td>Transfer Account ID:</td>
 				<td>{{$record->transfer_account_id}}</td>
 			</tr>
 			<tr>

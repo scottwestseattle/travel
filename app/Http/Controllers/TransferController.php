@@ -94,11 +94,11 @@ class TransferController extends Controller
 		$recordFrom = new Transaction();		
 		$recordFrom->transaction_date	= $this->trimNull($filter['from_date']);
 		$recordFrom->user_id = Auth::id();	
-		$recordFrom->description		= 'Transfer TEST';
+		$recordFrom->description		= 'Transfer';
 		$recordFrom->notes				= $this->trimNull($request->notes);	
 		$recordFrom->category_id		= $category->id;
 		$recordFrom->subcategory_id		= $subcategory->id;
-		$recordFrom->reconciled_flag 	= 0;
+		$recordFrom->reconciled_flag 	= 1;
 		$recordFrom->parent_id	= intval($request->parent_id_from);
 		$recordFrom->type_flag = 1;			
 		$recordFrom->amount = $this->copyDirty(abs($recordFrom->amount), abs(floatval($request->amount)), $isDirty, $changes);
@@ -118,11 +118,23 @@ class TransferController extends Controller
 		$recordTo->type_flag 		= 2;
 		$recordTo->amount 			= -$recordFrom->amount;
 		$recordTo->transfer_account_id = $recordFrom->parent_id;
-		
+				
 		try
 		{
+			DB::beginTransaction();	
+			
 			$recordFrom->save();
 			$recordTo->save();
+			
+			// set the transfer_id to the id of the transferFrom transaction record
+			$recordFrom->transfer_id = $recordTo->id;
+			$recordFrom->save();
+			
+			// save the transferTo record
+			$recordTo->transfer_id	= $recordFrom->id;
+			$recordTo->save();
+			
+			DB::commit();			
 			
 			Event::logAdd(LOG_MODEL, $recordFrom->description, $recordFrom->amount, $recordFrom->id);
 			
@@ -131,7 +143,9 @@ class TransferController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $recordFrom->description, null, $e->getMessage());
+			DB::rollBack();
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'description = ' . $recordFrom->description, null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
