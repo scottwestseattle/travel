@@ -33,6 +33,27 @@ Route::get('/email/check', 'EmailController@check');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// Transfers
+Route::group(['prefix' => 'transfers'], function () {
+	
+	Route::get('/index', 'TransferController@index');
+	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'TransferController@view']);
+	
+	// add/create/copy
+	Route::get('/copy/{transaction}','TransferController@copy')->middleware('auth');
+	Route::get('/add/{account}','TransferController@add')->middleware('auth');
+	Route::post('/create','TransferController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{transaction}','TransferController@edit')->middleware('auth');
+	Route::post('/update/{transaction}','TransferController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{transaction}', 'TransferController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{transaction}', 'TransferController@delete')->middleware('auth');	
+});
+
+
 // Subcategories
 Route::group(['prefix' => 'subcategories'], function () {
 	
@@ -84,8 +105,10 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/filter','TransactionController@filter')->middleware('auth');
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	
-	// add/create
+	// add/create/copy/transfer
 	Route::get('/copy/{transaction}','TransactionController@copy')->middleware('auth');
+	Route::get('/transfer/{account}','TransactionController@transfer')->middleware('auth');
+	Route::post('/transfercreate','TransactionController@transfercreate')->middleware('auth');
 	Route::get('/add','TransactionController@add')->middleware('auth');
 	Route::post('/create','TransactionController@create')->middleware('auth');
 

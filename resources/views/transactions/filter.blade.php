@@ -44,7 +44,7 @@
 				<?php $skip_id = 0; ?>
 				
 				@foreach($records as $record)
-				@if ($skip_id == $record->id && isset($record->transfer_account))
+				@if (false && $skip_id == $record->id && isset($record->transfer_account))
 					@continue
 				@endif
 				<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>

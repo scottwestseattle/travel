@@ -12,48 +12,19 @@ use App\Account;
 use App\Category;
 use DateTime;
 
-define('PREFIX', 'transactions');
-define('LOG_MODEL', 'transactions');
-define('TITLE', 'Transaction');
-define('TRX_LIMIT', 10);
+define('PREFIX', 'transfers');
+define('LOG_MODEL', 'transfers');
+define('TITLE', 'Transfer');
 
-class TransactionController extends Controller
+class TransferController extends Controller
 {	
 	public function __construct ()
 	{
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
-	}
-	
+	}	
+
     public function index(Request $request)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-			
-		$records = null;
-		
-		try
-		{
-			$records = Transaction::select()
-				->where('deleted_flag', 0)
-				->get();
-		}
-		catch (\Exception $e) 
-		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . ' List', null, $e->getMessage());
-
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());		
-		}	
-			
-		$vdata = $this->getViewData([
-			'records' => $records,
-		]);
-			
-		return view(PREFIX . '.index', $vdata);
-    }	
-
-    public function indexadmin(Request $request)
     {
 		if (!$this->isAdmin())
              return redirect('/');
@@ -78,74 +49,96 @@ class TransactionController extends Controller
 			'total' => $total,
 		]);
 			
-		return view(PREFIX . '.indexadmin', $vdata);
+		return view(PREFIX . '.index', $vdata);
     }
 	
-    public function add(Request $request)
-    {
+    public function add(Request $request, Account $account)
+    {		
 		if (!$this->isAdmin())
              return redirect('/');
-
+		
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
-		$categories = Controller::getCategories(LOG_ACTION_ADD);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
 		
 		$vdata = $this->getViewData([
+			'record' => $account,
 			'accounts' => $accounts,
-			'categories' => $categories,
-			'subcategories' => $subcategories,
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
 		]);
 		 
 		return view(PREFIX . '.add', $vdata);
-	}
+	}	
 
 	public function create(Request $request)
     {		
 		if (!$this->isAdmin())
-             return redirect('/');
-           			
-		$record = new Transaction();
+            return redirect('/');
 		
-		$filter = Controller::getFilter($request);
-		$record->transaction_date	= $this->trimNull($filter['from_date']);
-		
-		$record->user_id = Auth::id();	
-		$record->description		= $this->trimNull($request->description);
-		$record->notes				= $this->trimNull($request->notes);
-		$record->parent_id			= intval($request->parent_id);
-		$record->category_id		= intval($request->category_id);
-		$record->subcategory_id		= intval($request->subcategory_id);
-		$record->amount				= floatval($request->amount);
+		$category = Category::select()
+			->whereNull('parent_id')
+			->where('user_id', Auth::id())
+			->where('deleted_flag', 0)
+			->where('name', 'Transfer')
+			->first();
 
-		$v = isset($request->type_flag) ? $request->type_flag : 0;
-		$record->type_flag = $v;
+		$subcategory = Category::select()
+			->whereNotNull('parent_id')
+			->where('user_id', Auth::id())
+			->where('deleted_flag', 0)
+			->where('name', 'Transfer')
+			->first();
+						
+		$filter = Controller::getFilter($request);
 		
-		$v = isset($request->reconciled_flag) ? 1 : 0;
-		$record->reconciled_flag = $v;
-			
-		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
-		$record->amount = ($record->type_flag == 1) ? -$record->amount : $record->amount; // if it's a debit, make it negative
+		// from transaction
+		$recordFrom = new Transaction();		
+		$recordFrom->transaction_date	= $this->trimNull($filter['from_date']);
+		$recordFrom->user_id = Auth::id();	
+		$recordFrom->description		= 'Transfer TEST';
+		$recordFrom->notes				= $this->trimNull($request->notes);	
+		$recordFrom->category_id		= $category->id;
+		$recordFrom->subcategory_id		= $subcategory->id;
+		$recordFrom->reconciled_flag 	= 0;
+		$recordFrom->parent_id	= intval($request->parent_id_from);
+		$recordFrom->type_flag = 1;			
+		$recordFrom->amount = $this->copyDirty(abs($recordFrom->amount), abs(floatval($request->amount)), $isDirty, $changes);
+		$recordFrom->amount = ($recordFrom->type_flag == 1) ? -$recordFrom->amount : $recordFrom->amount; // if it's a debit, make it negative
+		$recordFrom->transfer_account_id = intval($request->parent_id_to);
+		
+		// to transaction
+		$recordTo = new Transaction();
+		$recordTo->transaction_date	= $recordFrom->transaction_date;
+		$recordTo->user_id 			= $recordFrom->user_id;
+		$recordTo->description		= $recordFrom->description;
+		$recordTo->notes			= $recordFrom->notes;
+		$recordTo->category_id		= $recordFrom->category_id;
+		$recordTo->subcategory_id	= $recordFrom->subcategory_id;
+		$recordTo->reconciled_flag 	= $recordFrom->reconciled_flag;
+		$recordTo->parent_id		= $recordFrom->transfer_account_id;
+		$recordTo->type_flag 		= 2;
+		$recordTo->amount 			= -$recordFrom->amount;
+		$recordTo->transfer_account_id = $recordFrom->parent_id;
 		
 		try
 		{
-			$record->save();
-			Event::logAdd(LOG_MODEL, $record->description, $record->amount, $record->id);
+			$recordFrom->save();
+			$recordTo->save();
+			
+			Event::logAdd(LOG_MODEL, $recordFrom->description, $recordFrom->amount, $recordFrom->id);
 			
 			$request->session()->flash('message.level', 'success');
 			$request->session()->flash('message.content', $this->title . ' has been added');
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->description, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $recordFrom->description, null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 		
-		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 		
-	}
+		return redirect('/transactions/filter'); 
+	}		
 	
 	public function edit(Transaction $transaction)
     {
@@ -282,47 +275,6 @@ class TransactionController extends Controller
 		return redirect('/' . PREFIX . '/filter/');
     }	
 	
-    public function filter(Request $request)
-    {	
-		if (!$this->isAdmin())
-             return redirect('/');
-		 
-		$filter = Controller::getFilter($request);		
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
-		$categories = Controller::getCategories(LOG_ACTION_ADD);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
-	 
-		$records = null;
-		$total = 0.0;
-		try
-		{
-			$records = Transaction::getFilter($filter);
-			$totals = Transaction::getTotal($records);
-		}
-		catch (\Exception $e) 
-		{
-			//dd($records);
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
-
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());
-		
-			return redirect('/error');
-		}	
-						
-		$vdata = $this->getViewData([
-			'records' => $records,
-			'totals' => $totals,
-			'accounts' => $accounts,
-			'categories' => $categories,
-			'subcategories' => $subcategories,			
-			'dates' => Controller::getDateControlDates(),
-			'filter' => $filter,
-		]);
-							
-		return view(PREFIX . '.filter', $vdata);
-    }	
-	
     public function copy(Request $request, Transaction $transaction)
     {
 		$record = $transaction;
@@ -346,4 +298,5 @@ class TransactionController extends Controller
 		 
 		return view(PREFIX . '.copy', $vdata);
 	}	
+
 }
