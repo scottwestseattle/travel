@@ -85,6 +85,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	
 	// add/create
+	Route::get('/copy/{transaction}','TransactionController@copy')->middleware('auth');
 	Route::get('/add','TransactionController@add')->middleware('auth');
 	Route::post('/create','TransactionController@create')->middleware('auth');
 

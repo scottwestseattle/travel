@@ -100,8 +100,32 @@ class TransactionController extends Controller
 		 
 		return view(PREFIX . '.add', $vdata);
 	}
+
+    public function copy(Request $request, Transaction $transaction)
+    {
+		$record = $transaction;
 		
-    public function create(Request $request)
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
+		$categories = Controller::getCategories(LOG_ACTION_ADD);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
+		$transaction->amount = abs($transaction->amount);
+		
+		$vdata = $this->getViewData([
+			'record' => $record,
+			'accounts' => $accounts,
+			'categories' => $categories,
+			'subcategories' => $subcategories,
+			'dates' => Controller::getDateControlDates(),
+			'filter' => Controller::getFilter($request, /* today = */ true),
+		]);
+		 
+		return view(PREFIX . '.copy', $vdata);
+	}	
+
+	public function create(Request $request)
     {		
 		if (!$this->isAdmin())
              return redirect('/');

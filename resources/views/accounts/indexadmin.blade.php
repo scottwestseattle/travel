@@ -26,7 +26,7 @@
 		@if (isset($records))
 			@foreach($records as $record)
 			<tr>
-				<td class="glyphCol"><a href='/{{$prefix}}/transfer/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-transfer"></span></a></td>
+				<td class="glyphCol"><a href='/transactions/transfer/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-transfer"></span></a></td>
 				<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td class="glyphCol"><a href='/{{$prefix}}/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 				

@@ -50,6 +50,7 @@
 				<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
 				<tr>
 					<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
 					<td style="color:{{$color}};">{{$record->transaction_date}}</td>
 					<td style="color:{{$color}};">{{$record->amount}}</td>
 					
