@@ -2,10 +2,15 @@
 @if (isset($prompt))
 <label for="{{$field_name}}">{{$prompt}}</label>
 @endif
-<select name="{{$field_name}}" id="{{$field_name}}">
+@if (isset($onchange))
+<select name="{{$field_name}}" id="{{$field_name}}"  onchange="{{$onchange}}">
+@else
+<select name="{{$field_name}}" id="{{$field_name}}" >
+@endif
 	@if (isset($empty))
 	<option value="0">({{$empty}})</option>	
 	@endif
+	
 	@foreach ($options as $key => $value)
 		@if (isset($selected_option) && $key == $selected_option)
 			<option value="{{$key}}" selected>{{$value}}</option>

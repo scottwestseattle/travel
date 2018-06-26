@@ -15,15 +15,15 @@
 		<label for="description" class="control-label">Description:</label>
 		<input type="text" name="description" class="form-control" />
 
-		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'selected_option' => null])@endcomponent	
+		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'empty' => 'Select', 'selected_option' => null])@endcomponent	
 		
-		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'category_id', 'options' => $categories, 'selected_option' => null])@endcomponent				
+		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'category_id', 'options' => $categories, 'empty' => 'Select', 'selected_option' => null, 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
 
-		@component('control-dropdown-menu', ['prompt' => 'Subcategory:', 'field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => null])@endcomponent				
+		@component('control-dropdown-menu', ['prompt' => 'Subcategory:', 'field_name' => 'subcategory_id', 'options' => $subcategories, 'empty' => 'Select', 'selected_option' => null])@endcomponent				
 
 		<div class="form-group">
 			<div class="radio-group-item">
-				<input type="radio" name="type_flag" value="1" class="form-control-inline">
+				<input type="radio" name="type_flag" value="1" class="form-control-inline" checked="check">
 				<label for="type_flag" class="radio-label">Debit</label>
 			</div>
 			
@@ -42,7 +42,7 @@
 		</div>
 
 		<div class="form-group">
-			<input type="checkbox" name="reconciled_flag" id="reconciled_flag" class="form-control-inline" />
+			<input type="checkbox" name="reconciled_flag" id="reconciled_flag" class="form-control-inline" checked="check" />
 			<label for="reconciled_flag" class="checkbox-label">Reconciled</label>
 		</div>
 		
@@ -51,7 +51,7 @@
 		</div>
 						
 		{{ csrf_field() }}
-
+	
 	</form>
 
 </div>

@@ -17,7 +17,7 @@
 					
 		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'selected_option' => $record->parent_id])@endcomponent	
 		
-		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'category_id', 'options' => $categories, 'selected_option' => $record->category_id])@endcomponent				
+		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'category_id', 'options' => $categories, 'selected_option' => $record->category_id, 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
 
 		@component('control-dropdown-menu', ['prompt' => 'Subcategory:', 'field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => $record->subcategory_id])@endcomponent									
 					

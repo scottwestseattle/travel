@@ -228,4 +228,17 @@ class CategoryController extends Controller
 		return redirect('/' . PREFIX . '/index');
     }	
 	
+    public function subcategories(Request $request, $category_id)
+    {
+		$records = Category::getSubcategoryOptions($category_id);
+
+		//dd($records);
+		
+		$vdata = $this->getViewData([
+			'records' => $records,
+		]);				
+		
+		return view(PREFIX . '.subcategories', $vdata);
+	}
+	
 }

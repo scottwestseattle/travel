@@ -1,101 +1,3 @@
-function loadPage(url) 
-{
-	//alert(url);
-	
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			//alert('call response: ' + this.responseText);
-		}
-	};
-	
-	xhttp.open("GET", url, true);
-	xhttp.send();
-}
-
-function loadTag() 
-{
-	var ix = $('#tags').find(":selected").index();
-	var href = '/entries/';
-	if (ix == 0)
-	{
-	}
-	else
-	{
-		var sel = $('#tags').find(":selected").text();	
-		href = "/entries/tagged/" + sel.toLowerCase();
-	}
-
-	window.location.href = href;
-}
-
-function clearText(id)
-{
-	$(id).val('');
-	$(id).focus();
-}
-
-function flip(from, to, useText = true)
-{
-	if (useText)
-	{
-		var one = $(from).text();
-		var two = $(to).text();
-
-		$(from).text(two);
-		$(to).text(one);
-	}
-	else
-	{
-		var one = $(from).val();
-		var two = $(to).val();
-
-		$(from).val(two);
-		$(to).val(one);
-	}	
-}
-
-function copyFromTo(from, to)
-{
-	var f = $(from).html();
-	var t = $(to).val();
-
-	//f = f.replace(/<\/?[^>]+(>|$)/g, "");	
-	
-	//alert(f.replace("br", "sbw"));
-	f = f.replace(/<br>/g, "\r\n");
-	f = f.replace(/<br\/>/g, "\r\n");
-	f = f.replace(/<font>/g, "");
-	f = f.replace(/<\/font>/g, "");
-	f = f.replace(/<p>/g, "");
-	f = f.replace(/<p\/>/g, "\r\n");
-	
-	//alert(f);
-	//var lines = $(from).text().split('\n');
-	//for(var i = 0; i < lines.length; i++){
-	//	alert(i + ": " + lines[i]);
-	//}
-	//alert("from: " + f + ", to: " + t);
-	
-	//$(to).val(t.trim() + f.trim());
-	$(to).val(f.trim());
-}
-
-function copyFromToInput(from, trx, to)
-{
-	var f = $(from).val();
-	$(trx).text(f.trim());
-	//copyFromTo(trx, to);
-}
-
-function copyToClipboardAndCount(idFlash, id, countUrl)
-{
-	//alert(countUrl);
-	
-	clipboardCopy(idFlash, id);
-	
-	loadPage(countUrl);
-}
 
 function clipboardCopy(idFlash, id)
 {
@@ -139,42 +41,8 @@ function clipboardCopy(idFlash, id)
 	}
 }
 
-function copyToClipboard(text) {
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-  }
-  
-function selectText(id){
-    var sel, range;
-    var el = document.getElementById(id); //get element id
-    if (window.getSelection && document.createRange) { //Browser compatibility
-      sel = window.getSelection();
-      if(sel.toString() == ''){ //no text selection
-         window.setTimeout(function(){
-            range = document.createRange(); //range object
-            range.selectNodeContents(el); //sets Range
-            sel.removeAllRanges(); //remove all ranges from selection
-            sel.addRange(range);//add Range to a Selection.
-        },1);
-      }
-    }else if (document.selection) { //older ie
-        sel = document.selection.createRange();
-        if(sel.text == ''){ //no text selection
-            range = document.body.createTextRange();//Creates TextRange object
-            range.moveToElementText(el);//sets Range
-            range.select(); //make selection.
-        }
-    }
-}  
-  
 function save()
 {
-
-	$( "#save" ).click();
-}
-
-function stay()
-{
-	$('#stay').prop('checked', true);	
 	$( "#save" ).click();
 }
 
@@ -272,4 +140,50 @@ function showAllRows(tableId, showAllButtonId)
 		rows[i].style.display = "block";
 		//alert(rows[i].style.display);
 	}		
+}
+
+function onCategoryChange(id)
+{	
+	var xhttp = new XMLHttpRequest();
+	var url = '/categories/subcategories/' + id;
+	
+	xhttp.onreadystatechange = function() 
+	{
+		//alert(this.status);
+		
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+		else if (this.status == 404)
+		{
+			alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			/*
+			alert(
+				'call response: ' + this.responseText +
+				', length: ' + this.responseText.length 
+				+ ', char: ' + this.responseText.charCodeAt(0) 
+				+ ' ' + this.responseText.charCodeAt(1)
+			);
+			*/
+
+			//
+			// results
+			//
+			//alert(this.requestText);
+				
+			// get the select element
+			var s = document.getElementById("subcategory_id");
+			
+			// replace the option list
+			s.innerHTML = this.responseText;
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
 }

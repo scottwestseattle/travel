@@ -77,6 +77,7 @@ Route::group(['prefix' => 'subcategories'], function () {
 // Categories
 Route::group(['prefix' => 'categories'], function () {
 	
+	Route::get('/subcategories/{category_id}', 'CategoryController@subcategories');
 	Route::get('/index', 'CategoryController@index');
 	Route::get('/indexadmin', 'CategoryController@indexadmin')->middleware('auth');
 	Route::get('/view/{category}', ['as' => 'account.view', 'uses' => 'CategoryController@view']);

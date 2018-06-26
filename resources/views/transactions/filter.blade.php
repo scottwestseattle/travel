@@ -17,7 +17,7 @@
 		</div>
 			
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'category_id', 'options' => $categories, 'selected_option' => $filter['category_id'], 'empty' => 'category'])@endcomponent				
+			@component('control-dropdown-menu', ['field_name' => 'category_id', 'options' => $categories, 'selected_option' => $filter['category_id'], 'empty' => 'category', 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
 		</div>
 
 		<div style="float:left;">

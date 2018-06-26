@@ -90,6 +90,8 @@ class TransactionController extends Controller
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
 		
+		//dd($subcategories);
+		
 		$vdata = $this->getViewData([
 			'accounts' => $accounts,
 			'categories' => $categories,
@@ -114,9 +116,9 @@ class TransactionController extends Controller
 		$record->user_id = Auth::id();	
 		$record->description		= $this->trimNull($request->description);
 		$record->notes				= $this->trimNull($request->notes);
-		$record->parent_id			= intval($request->parent_id);
-		$record->category_id		= intval($request->category_id);
-		$record->subcategory_id		= intval($request->subcategory_id);
+		$record->parent_id			= $request->parent_id;
+		$record->category_id		= $request->category_id;
+		$record->subcategory_id		= $request->subcategory_id;
 		$record->amount				= floatval($request->amount);
 
 		$v = isset($request->type_flag) ? $request->type_flag : 0;
@@ -161,7 +163,7 @@ class TransactionController extends Controller
 		$filter = Controller::getDateControlSelectedDate($record->transaction_date);		
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD, $record->category_id);
 		$transaction->amount = abs($transaction->amount);
 		
 		$vdata = $this->getViewData([
@@ -342,7 +344,7 @@ class TransactionController extends Controller
 		
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD, $record->category_id);
 		$transaction->amount = abs($transaction->amount);
 		
 		$vdata = $this->getViewData([
@@ -356,4 +358,5 @@ class TransactionController extends Controller
 		 
 		return view(PREFIX . '.copy', $vdata);
 	}	
+	
 }

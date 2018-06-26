@@ -13,6 +13,38 @@ class Category extends Base
     	return $this->belongsTo(User::class);
     }
 	
+    static public function getSubcategoryOptions($category_id = null)
+    {
+		$array = [];
+
+		try
+		{
+			if (isset($category_id))
+			{
+				$records = Category::select()
+					->where('parent_id', '<>', null)
+					->where('user_id', Auth::id())
+					->where('deleted_flag', 0)
+					->where('parent_id', $category_id)
+					->orderByRaw('name')
+					->get();
+			}
+
+			if (isset($records) && count($records) > 0)
+			{
+				foreach($records as $record)
+				{
+					$array[$record->id] = $record->name;					
+				}
+			}
+		}
+		catch (\Exception $e) 
+		{
+		}			
+					
+		return $array;
+	}
+	
     static public function getArray(&$error, $sub = false)
     {
 		// get account list
@@ -38,12 +70,17 @@ class Category extends Base
 					->where('deleted_flag', 0)
 					->orderByRaw('name')
 					->get();
+					
+				//$records = Category::getSubcategories();
+				//dd($subs);
 			}
 
 			if (isset($records) && count($records) > 0)
 			{
 				foreach($records as $record)
+				{
 					$array[$record->id] = $record->name;
+				}
 			}
 			else
 			{

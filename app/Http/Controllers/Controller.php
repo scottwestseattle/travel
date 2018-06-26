@@ -903,10 +903,12 @@ class Controller extends BaseController
 		return $records;
 	}
 
-    public function getSubcategories($action)
+    public function getSubcategories($action, $category_id = null)
     {
 		$error = '';
-		$records = Category::getArray($error, /* subcategories = */ true);
+		
+		//dd($category_id);
+		$records = Category::getSubcategoryOptions($category_id);
 		
 		if (count($records) == 0)
 			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List', null, null, $error);
