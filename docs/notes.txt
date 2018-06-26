@@ -61,9 +61,12 @@ ALTER TABLE `sites` ADD `previous_location_title` VARCHAR(100) NULL AFTER `curre
 ALTER TABLE `entries` ADD `order_flag` SMALLINT NULL AFTER `type_flag`;
 ALTER TABLE `sites` DROP `sections-show-blogs`, DROP `sections-show-tours`, DROP `sections-show-articles`, DROP `current_location_title`, DROP `main_section_text`, DROP `main_section_subtext`;
 
-6/15
+6/25
 
 ALTER TABLE `transactions` ADD `transfer_id` INT NULL COMMENT 'id of the first transfer transaction' AFTER `transfer_account_id`;
+
+ALTER TABLE `accounts` DROP `balance`;
+
 
 
 

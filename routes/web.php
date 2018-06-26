@@ -124,8 +124,7 @@ Route::group(['prefix' => 'transactions'], function () {
 // Accounts
 Route::group(['prefix' => 'accounts'], function () {
 	
-	Route::get('/index', 'AccountController@index');
-	Route::get('/indexadmin', 'AccountController@indexadmin')->middleware('auth');
+	Route::get('/index/{showAll?}', 'AccountController@index')->middleware('auth');
 	Route::get('/view/{account}', ['as' => 'account.view', 'uses' => 'AccountController@view']);
 	
 	// add/create

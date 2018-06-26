@@ -42,5 +42,30 @@ class Account extends Base
 		}			
 					
 		return $array;
-	}		
+	}
+
+    static public function getIndex($showAll = false)
+    {
+		$q = '
+			SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
+				, sum(t.amount) + a.starting_balance as balance 
+			FROM accounts as a
+			LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 
+			WHERE 1=1 
+			AND a.user_id = ?
+			AND a.deleted_flag = 0
+			';
+			
+		if (!$showAll)
+			$q .= ' AND a.hidden_flag = 0 ';
+		
+		$q .= '
+			GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
+			ORDER BY a.name ASC
+		';
+			
+		$records = DB::select($q, [Auth::id()]);
+
+		return $records;
+    }	
 }

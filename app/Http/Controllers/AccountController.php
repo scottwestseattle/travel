@@ -20,40 +20,8 @@ class AccountController extends Controller
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
 	}
-	
-    public function index(Request $request)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-			
-		$records = null;
-		
-		try
-		{
-			$records = Account::select()
-				->where('user_id', Auth::id())
-				->where('deleted_flag', 0)
-				//->where('account_type_flag', 1)
-				//->where('hidden_flag', 0)
-				->orderByRaw('name')
-				->get();
-		}
-		catch (\Exception $e) 
-		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . ' List', null, $e->getMessage());
 
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());		
-		}	
-			
-		$vdata = $this->getViewData([
-			'records' => $records,
-		]);
-			
-		return view(PREFIX . '.index', $vdata);
-    }	
-
-    public function indexadmin(Request $request)
+    public function index(Request $request, $showAll = null)
     {
 		if (!$this->isAdmin())
              return redirect('/');
@@ -62,11 +30,7 @@ class AccountController extends Controller
 		
 		try
 		{
-			$records = Account::select()
-				->where('user_id', Auth::id())
-				->where('deleted_flag', 0)
-				->orderByRaw('name')
-				->get();		
+			$records = Account::getIndex(isset($showAll));		
 		}
 		catch (\Exception $e) 
 		{
@@ -80,7 +44,7 @@ class AccountController extends Controller
 			'records' => $records,
 		]);
 			
-		return view(PREFIX . '.indexadmin', $vdata);
+		return view(PREFIX . '.index', $vdata);
     }
 	
     public function add()
@@ -125,7 +89,7 @@ class AccountController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/index/')); 
     }
 
 	public function edit(Account $account)
@@ -184,7 +148,7 @@ class AccountController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/index/')); 
 	}
 	
 	public function view(Account $account)
