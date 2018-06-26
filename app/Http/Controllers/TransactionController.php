@@ -151,6 +151,10 @@ class TransactionController extends Controller
     {
 		$record = $transaction;
 		
+		// if it's a transfer record, let the transfer controller handle it
+		if (isset($record->transfer_id))
+			return redirect('/transfers/edit/' . $record->id); 
+		
 		if (!$this->isAdmin())
              return redirect('/');
 		
@@ -249,6 +253,12 @@ class TransactionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
+		$record = $transaction;
+		 
+		// if it's a transfer record, let the transfer controller handle it
+		if (isset($record->transfer_id))
+			return redirect('/transfers/confirmdelete/' . $record->id); 
+		 
 		$vdata = $this->getViewData([
 			'record' => $transaction,
 		]);				
@@ -258,11 +268,11 @@ class TransactionController extends Controller
 	
     public function delete(Request $request, Transaction $transaction)
     {	
-		$record = $transaction;
-		
 		if (!$this->isAdmin())
              return redirect('/');
-		
+
+		$record = $transaction;
+		 				
 		try 
 		{
 			$record->deleteSafe();

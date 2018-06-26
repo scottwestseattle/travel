@@ -29,6 +29,8 @@
 		<div>
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unreconciled_flag" class="checkbox-label">Unreconciled</label>
+			<input type="checkbox" name="unmerged_flag" id="unmerged_flag" class="form-control-inline" value="1" {{ $filter['unmerged_flag'] == 1 ? 'checked' : '' }} />
+			<label for="unmerged_flag" class="checkbox-label">Unmerge Transfers</label>
 		</div>				
 		
 		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Filter</button>
@@ -61,7 +63,7 @@
 							@else
 								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->account}} to {{$record->transfer_account}}</a></td>
 							@endif
-							<?php $skip_id = $record->transfer_id; ?>
+							<?php $skip_id = ($filter['unmerged_flag'] == 0) ? $record->transfer_id : 0; ?>
 						@else
 							<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
 						@endif

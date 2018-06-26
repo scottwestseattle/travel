@@ -57,6 +57,7 @@ class TransferController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
+		$account->notes = '';
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		
 		$vdata = $this->getViewData([
@@ -155,20 +156,43 @@ class TransferController extends Controller
 	}		
 	
 	public function edit(Transaction $transaction)
-    {
-		$record = $transaction;
-		
+    {		
 		if (!$this->isAdmin())
              return redirect('/');
+	
+		$recordFrom = null;
+		$recordTo = null;
 		
-		$filter = Controller::getDateControlSelectedDate($record->transaction_date);		
+		// we need to edit the "from" record which has the negative value
+		if ($transaction->amount > 0)
+		{
+			$recordFrom = Transaction::select()
+				->where('deleted_flag', 0)
+				->where('id', $transaction->transfer_id)
+				->first();
+				
+			$recordTo = $transaction;
+		}
+		else
+		{
+			$recordFrom = $transaction;
+			
+			$recordTo = Transaction::select()
+				->where('deleted_flag', 0)
+				->where('id', $transaction->transfer_id)
+				->first();
+		}
+		
+		$filter = Controller::getDateControlSelectedDate($transaction->transaction_date);		
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
-		$transaction->amount = abs($transaction->amount);
+		
+		$recordFrom->amount = abs($recordFrom->amount);
 		
 		$vdata = $this->getViewData([
-			'record' => $record,
+			'recordFrom' => $recordFrom,
+			'recordTo' => $recordTo,
 			'accounts' => $accounts,
 			'categories' => $categories,
 			'subcategories' => $subcategories,
@@ -185,58 +209,65 @@ class TransferController extends Controller
 		
 		if (!$this->isAdmin())
              return redirect('/');
-		 
+		
 		$isDirty = false;
 		$changes = '';
-				
-		$record->user_id = Auth::id();	
-		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->notes = $this->copyDirty($record->notes, $request->notes, $isDirty, $changes);
-		$record->vendor_memo = $this->copyDirty($record->vendor_memo, $request->vendor_memo, $isDirty, $changes);
-		$record->parent_id = $this->copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
-		$record->category_id = $this->copyDirty($record->category_id, $request->category_id, $isDirty, $changes);
-		$record->subcategory_id = $this->copyDirty($record->subcategory_id, $request->subcategory_id, $isDirty, $changes);		
-		
-		$v = isset($request->type_flag) ? $request->type_flag : 0;
-		$record->type_flag = $this->copyDirty($record->type_flag, $v, $isDirty, $changes);
-				
-		$v = isset($request->reconciled_flag) ? 1 : 0;
-		$record->reconciled_flag = $this->copyDirty($record->reconciled_flag, $v, $isDirty, $changes);		
 
 		// put the date together from the mon day year pieces
 		$filter = Controller::getFilter($request);
 		$date = $this->trimNull($filter['from_date']);
-		$record->transaction_date = $this->copyDirty($record->transaction_date, $date, $isDirty, $changes);
+		$amount = abs(floatval($request->amount));
 		
-		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
-		$record->amount = ($record->type_flag == 1) ? -$record->amount : $record->amount; // if it's a debit, make it negative
-					
-		if ($isDirty)
-		{						
-			try
-			{
-				$record->save();
+		//
+		// record from
+		//
+		$record->amount 			= -$amount;
+		$record->transaction_date 	= $filter['from_date'];
+		$record->notes 				= trim($request->notes);
+		$record->reconciled_flag 	= isset($request->reconciled_flag) ? 1 : 0;
+		$record->parent_id 			= $request->parent_id_from;
+		$record->transfer_account_id = $request->parent_id_to;
+			
+		//
+		// record to
+		//
+		$recordTo = Transaction::select()
+			->where('deleted_flag', 0)
+			->where('id', $transaction->transfer_id)
+			->first();
 
-				Event::logEdit(LOG_MODEL, $record->description, $record->id, $changes);			
-				
-				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $this->title . ' has been updated');
-			}
-			catch (\Exception $e) 
-			{
-				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'description = ' . $record->description, null, $e->getMessage());
-				
-				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', $e->getMessage());		
-			}				
-		}
-		else
+		$recordTo->amount 			= -$record->amount;
+		$recordTo->transaction_date = $filter['from_date'];
+		$recordTo->notes 			= $record->notes;
+		$recordTo->reconciled_flag 	= $record->reconciled_flag;
+		$recordTo->parent_id 		= $request->parent_id_to;
+		$recordTo->transfer_account_id = $request->parent_id_from;
+							
+		try
 		{
-			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
-		}
+			DB::beginTransaction();	
+			
+			$record->save();
+			$recordTo->save();
+			
+			DB::commit();			
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 
+			Event::logEdit(LOG_MODEL, $record->description, $record->id, $changes);			
+				
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', $this->title . ' has been updated');
+		}
+		catch (\Exception $e) 
+		{
+			DB::rollBack();
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'description = ' . $record->description, null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}				
+
+		return redirect($this->getReferer($request, '/transactions/filter/')); 
 	}
 	
 	public function view(Transaction $transaction)
@@ -270,9 +301,20 @@ class TransferController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
+		$record2 = Transaction::select()
+			->where('deleted_flag', 0)
+			->where('id', $transaction->transfer_id)
+			->first();
+						
 		try 
 		{
+			DB::beginTransaction();	
+			
 			$record->deleteSafe();
+			$record2->deleteSafe();
+			
+			DB::commit();						
+			
 			Event::logDelete(LOG_MODEL, $record->description, $record->id);					
 			
 			$request->session()->flash('message.level', 'success');
@@ -280,13 +322,15 @@ class TransferController extends Controller
 		}
 		catch (\Exception $e) 
 		{
+			DB::rollBack();
+			
 			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->description, $record->id, $e->getMessage());
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		return redirect('/' . PREFIX . '/filter/');
+		return redirect('/transactions/filter/');
     }	
 	
     public function copy(Request $request, Transaction $transaction)

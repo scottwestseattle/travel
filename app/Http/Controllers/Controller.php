@@ -968,6 +968,7 @@ class Controller extends BaseController
 		$filter['subcategory_id'] = false;
 		$filter['search'] = false;
 		$filter['unreconciled_flag'] = false;
+		$filter['unmerged_flag'] = false;
 		
 		if (isset($request->account_id))
 		{
@@ -999,6 +1000,11 @@ class Controller extends BaseController
 		if (isset($request->unreconciled_flag))
 		{
 			$filter['unreconciled_flag'] = $request->unreconciled_flag;
+		}
+
+		if (isset($request->unmerged_flag))
+		{
+			$filter['unmerged_flag'] = $request->unmerged_flag;
 		}
 		
 		return $filter;
