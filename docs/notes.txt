@@ -30,43 +30,9 @@ $color = '#5CB85C'; // green
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Windows 7 path:
+C:\app\scott\product\11.2.0\client_1;C:\app\scott\product\11.2.0\client_1\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Users\scott\AppData\Roaming\npm;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Microsoft\Web Platform Installer\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\11;C:\Program Files (x86)\MySQL\MySQL Utilities 1.3.6\;C:\wamp64\bin\php\php7.1.9;C:\Users\scott\AppData\Roaming\Composer\vendor\bin;C:\ProgramData\ComposerSetup\bin;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;c:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 DB Changes
-
-ALTER TABLE `entries` ADD `display_date` DATE NULL AFTER `deleted_flag`;
-
-ALTER TABLE `events` ADD `ip_address` VARCHAR(50) NULL AFTER `user_id`;
-
-ALTER TABLE `entries` ADD UNIQUE(`permalink`);
-
-ALTER TABLE `photos` ADD `site_id` INT NOT NULL AFTER `id`;
-
-ALTER TABLE `sites` ADD `instagram_link` VARCHAR(100) NULL AFTER `main_section_subtext`, ADD `facebook_link` VARCHAR(100) NULL AFTER `instagram_link`, ADD `twitter_link` VARCHAR(100) NULL AFTER `facebook_link`, ADD `other_link` VARCHAR(100) NULL AFTER `twitter_link`;
-
-UPDATE photos SET site_id = 1 WHERE 1=1;
-
-UPDATE activities SET site_id = 1 WHERE 1=1;
-
-ALTER TABLE `entries` drop index `permalink`;
-
-ALTER TABLE `events` CHANGE `description` `description` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
-
-6/10
-
-ALTER TABLE `sites` ADD `current_location_title` VARCHAR(100) NULL AFTER `sections-show-articles`;
-ALTER TABLE `sites` ADD `current_location` VARCHAR(100) NULL AFTER `current_location_title`;
-ALTER TABLE `sites` ADD `previous_location_title` VARCHAR(100) NULL AFTER `current_location_photo`;
-
-6/14
-
-ALTER TABLE `entries` ADD `order_flag` SMALLINT NULL AFTER `type_flag`;
-ALTER TABLE `sites` DROP `sections-show-blogs`, DROP `sections-show-tours`, DROP `sections-show-articles`, DROP `current_location_title`, DROP `main_section_text`, DROP `main_section_subtext`;
-
-6/25
-
-ALTER TABLE `transactions` ADD `transfer_id` INT NULL COMMENT 'id of the first transfer transaction' AFTER `transfer_account_id`;
-
-ALTER TABLE `accounts` DROP `balance`;
-
-
-
-
