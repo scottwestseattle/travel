@@ -779,7 +779,20 @@ class Controller extends BaseController
 		
 		return $text;
 	}
-
+	
+	static protected function trimNullStatic($text)
+	{
+		if (isset($text))
+		{
+			$text = trim($text);
+			
+			if (strlen($text) === 0)
+				$text = null;
+		}
+		
+		return $text;
+	}
+	
 	protected function getTextOrShowEmpty($text)
 	{
 		$r = '(empty)';
@@ -949,8 +962,13 @@ class Controller extends BaseController
 			$days[$i] = $i;
 
 		$years = [];		
-		for ($i = 2014; $i <= 2022; $i++)
-			$years[$i] = $i;		
+		for ($i = 2010; $i <= 2050; $i++)
+		{
+			if ($i > intval(date('Y'))) // only go up to the current year
+				break;
+				
+			$years[$i] = $i;	
+		}			
 			
 		$dates = [
 			'months' => $months,
@@ -960,10 +978,19 @@ class Controller extends BaseController
 
 		return $dates;
 	}
-	
-    static protected function getFilter($request, $today = false)
+
+    static protected function getSelectedDate($request)
     {
-		$filter = Controller::getDateFilter($request, $today);
+		$filter = Controller::getFilter($request);
+		
+		$date = Controller::trimNullStatic($filter['from_date']);
+		
+		return $date;
+	}				
+	
+    static protected function getFilter($request, $today = false, $month = false)
+    {
+		$filter = Controller::getDateFilter($request, $today, $month);
 	
 		$filter['account_id'] = false;
 		$filter['category_id'] = false;
@@ -1012,7 +1039,7 @@ class Controller extends BaseController
 		return $filter;
 	}
 	
-    static protected function getDateFilter($request = false, $today = false)
+    static protected function getDateFilter($request = false, $today, $monthFlag)
     {
 		$dates = [];
 		
@@ -1024,7 +1051,7 @@ class Controller extends BaseController
 		$year = 0;
 		$day = 0;
 		
-		if (isset($request) && (isset($request->day) || isset($request->month) || isset($request->year)))
+		if (isset($request) && (isset($request->day) && $request->day > 0 || isset($request->month) && $request->month > 0 || isset($request->year) && $request->year > 0))
 		{
 			// date filter is on, use it
 			if (isset($request->month))
@@ -1041,14 +1068,26 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$month = intval(date("m"));
-			$year = intval(date("Y"));
-			$day = $today ? intval(date("d")) : false;
-						
-			// if nothing is set use current month
-			$dates['selected_day'] = $day;
-			$dates['selected_month'] = $month;
-			$dates['selected_year'] = $year;
+			if ($today)
+			{
+				$month = intval(date("m"));
+				$year = intval(date("Y"));
+
+				// if we're showing a month then we put then day will be false
+				$day = $monthFlag ? false : intval(date("d"));
+
+				// if nothing is set use current month
+				$dates['selected_day'] = $day;
+				$dates['selected_month'] = $month;
+				$dates['selected_year'] = $year;
+			}
+			else
+			{
+				$dates['from_date'] = null;
+				$dates['to_date'] = null;
+				
+				return $dates;
+			}
 		}
 		
 		//
@@ -1094,9 +1133,7 @@ class Controller extends BaseController
 		
 		$dates['from_date'] = '' . $fromYear . '-' . $fromMonth . '-' . $fromDay;
 		$dates['to_date'] = '' . $toYear . '-' . $toMonth . '-' . $toDay;
-		
-		//dd($dates);
-		
+				
 		return $dates;
 	}
 

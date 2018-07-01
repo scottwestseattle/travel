@@ -98,8 +98,10 @@ Route::group(['prefix' => 'categories'], function () {
 // Transactions
 Route::group(['prefix' => 'transactions'], function () {
 	
-	Route::get('/index', 'TransactionController@index');
-	Route::get('/indexadmin/{subcategory_id?}', 'TransactionController@indexadmin')->middleware('auth');
+	Route::get('/expenses', 'TransactionController@expenses')->middleware('auth');
+	Route::post('/expenses', 'TransactionController@expenses')->middleware('auth');
+	Route::get('/summary/{showAll?}', 'TransactionController@summary')->middleware('auth');
+	Route::get('/index/{subcategory_id?}', 'TransactionController@indexadmin')->middleware('auth');
 	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
 
 	// filter

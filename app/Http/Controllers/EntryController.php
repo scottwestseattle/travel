@@ -115,13 +115,15 @@ class EntryController extends Controller
 		return view('entries.index', $vdata);
     }
 	
-    public function add()
+    public function add(Request $request)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 
 		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
+			'dates' => Controller::getDateControlDates(),
+			'filter' => Controller::getFilter($request),
 		]);
 		
 		return view('entries.add', $vdata);
@@ -144,7 +146,7 @@ class EntryController extends Controller
 		$entry->title 				= $this->trimNull($request->title);
 		$entry->description_short	= $this->trimNull($request->description_short);
 		$entry->description			= $this->trimNull($request->description);
-		$entry->display_date		= $request->display_date;
+		$entry->display_date 		= Controller::getSelectedDate($request);
 
 		$entry->permalink			= $this->trimNull($request->permalink);
 		if (!isset($entry->permalink))
@@ -333,14 +335,21 @@ class EntryController extends Controller
 		return $this->index();
 	}
 	
-    public function edit(Entry $entry)
+    public function edit(Request $request, Entry $entry)
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-		 
+		
+		//dd($entry->display_date);
+		$dates = null;
+		if (isset($entry->display_date))
+			$dates = Controller::getDateControlSelectedDate($entry->display_date);
+		
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $dates,
 		]);
 		
 		return view('entries.edit', $vdata);
@@ -353,17 +362,20 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $record->user_id)
-        {				
+    	if ($this->isOwnerOrAdmin($entry->user_id))
+        {	
+			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY && $record->type_flag != $request->type_flag)
+				$record->parent_id = null; // changing from blog entry to something else, remove the parent id 
+			
 			$record->type_flag 			= $request->type_flag;
 			
 			$record->title 				= $this->trimNull($request->title);
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description_short	= $this->trimNull($request->description_short);
 			$record->description		= $this->trimNull($request->description);
-			$record->display_date		= $this->trimNull($request->display_date);
+			$record->display_date 		= Controller::getSelectedDate($request);
 			
-			$record->approved_flag = 0;
+			//todo: turned off for now: $record->approved_flag = 0;
 			
 			try
 			{

@@ -25,18 +25,20 @@ class TransactionController extends Controller
 		$this->title = TITLE;
 	}
 	
-    public function index(Request $request)
+    public function summary(Request $request, $showAll = null)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 			
-		$records = null;
-		
+		$balance = null;
+		$monthlyBalances = null;
+		$annualBalances = null;
+			
 		try
 		{
-			$records = Transaction::select()
-				->where('deleted_flag', 0)
-				->get();
+			$balance = Transaction::getBalance();
+			$annualBalances = Transaction::getAnnualBalances();
+			$monthlyBalances = Transaction::getMonthlyBalances(isset($showAll) ? PHP_INT_MAX : 12);
 		}
 		catch (\Exception $e) 
 		{
@@ -47,13 +49,15 @@ class TransactionController extends Controller
 		}	
 			
 		$vdata = $this->getViewData([
-			'records' => $records,
+			'balance' => $balance,
+			'monthlyBalances' => $monthlyBalances,
+			'annualBalances' => $annualBalances,
 		]);
 			
-		return view(PREFIX . '.index', $vdata);
+		return view(PREFIX . '.summary', $vdata);
     }	
 
-    public function indexadmin(Request $request)
+    public function index(Request $request)
     {
 		if (!$this->isAdmin())
              return redirect('/');
@@ -78,7 +82,7 @@ class TransactionController extends Controller
 			'total' => $total,
 		]);
 			
-		return view(PREFIX . '.indexadmin', $vdata);
+		return view(PREFIX . '.index', $vdata);
     }
 	
     public function add(Request $request)
@@ -299,7 +303,7 @@ class TransactionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		 
-		$filter = Controller::getFilter($request);		
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
@@ -357,6 +361,35 @@ class TransactionController extends Controller
 		]);
 		 
 		return view(PREFIX . '.copy', $vdata);
-	}	
+	}
+
+    public function expenses(Request $request)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+			
+		$filter = Controller::getFilter($request); // defaults to current month		
+		$records = null;
+			
+		try
+		{
+			$records = Transaction::getExpenses($filter);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Expense List', null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}	
+			
+		$vdata = $this->getViewData([
+			'dates' => Controller::getDateControlDates(),
+			'records' => $records,
+			'filter' => $filter,
+		]);
+			
+		return view(PREFIX . '.expenses', $vdata);
+    }	
 	
 }

@@ -70,7 +70,7 @@
 
 	.sectionWhite {
 		background-color: #F4F4F4;
-		background-image: url('/img/theme1/bg-pattern-white.png');				
+		xbackground-image: url('/img/theme1/bg-pattern-white.png');				
 		background-size: cover;
 		background-position: center;		
 		color: #3F98FD;

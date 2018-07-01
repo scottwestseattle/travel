@@ -360,41 +360,33 @@ $sectionCount = 0;
 						
 			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
 
-			<div class="row clearfix">
+			<div class="row clearfix text-left">
 				
-				<?php $count = 0; ?>
+				<table>
+				<tbody>
 				@foreach($articles as $record)
-						
-					<div class='frontpage-box' >
-
-							<!-- BACKGROUND PHOTO LINK -->
-							
-							<?php
-								$count++;
-								$h = 200;
-								$w = 300;
-								$photo = 
-								$photo = '/img/theme1/image' . $count . '.jpg';
-							?>
-							
-							<a href="/entries/{{$record->permalink}}" class="frontpage-box-link" style="width: <?php echo $w; ?>px; height: <?php echo $h; ?>px; background-size: 100%; background-repeat: no-repeat; background-image: url('<?php echo $photo; ?>');" ></a>
-
-							<!-- HEADER NAME/TITLE LINK ------------------------------------------ -->
-							
-							<div class='frontpage-box-text'>
-							
-								<!-- CAPTION/TITLE ------------------------------------------ -->
-								<p>		
-									<a style="font-family: Raleway; font-size:.9em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
-								</p>	
-								
-							</div>
-								
-					</div>
-						
-					@endforeach
+					<tr style="vertical-align:top;">
+						<td style="margin-bottom:10px;" >
+							<a href="/entries/{{$record->permalink}}">
+								<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
+								<div style="min-width:150px; min-height:100px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+							</a>							
+						</td>
+						<td style="padding: 0 10px;">
+							<table>
+							<tbody>
+								<tr><td style="font-size:1.3em;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+								<tr><td>{{$record->display_date}}</td></tr>
+							</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td><td></td></tr>
+				@endforeach
+				</tbody>
+				</table>
 					
-				</div><!-- row -->									
+			</div><!-- row -->									
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>

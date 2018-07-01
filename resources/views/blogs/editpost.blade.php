@@ -20,7 +20,7 @@
 			<input type="text" id="display_date" name="display_date" class="form-control" value="{{ $record->display_date }}"  placeholder="Display Date: YYYY-MM-DD" />
 			
 			<div class="entry-title-div">
-				<a href='#' onclick="javascript:urlEncodeWithDate('title', 'display_date', 'permalink')";>
+				<a href='#' onclick="javascript:urlEncodeWithDate('title', 'year', 'month', 'day', 'permalink')";>
 					<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
 				</a>						
 				<input type="text" id="permalink" name="permalink" class="form-control" value="{{ $record->permalink }}"  placeholder="Permalink" />

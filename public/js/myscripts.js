@@ -60,19 +60,105 @@ function urlEncode(fromId, toId)
 	}
 }
 
-function urlEncodeWithDate(fromId, fromDateId, toId)
+function urlEncodeWithDate(fromId, fromYearId, fromMonthId, fromDayId, toId)
 {	
     var fromElem = document.getElementById(fromId);
-    var fromDateElem = document.getElementById(fromDateId);
+    var fromDay = document.getElementById(fromDayId);
+    var fromMonth = document.getElementById(fromMonthId);
+    var fromYear = document.getElementById(fromYearId);
 	var toElem = document.getElementById(toId);
-	if (fromElem && fromDateElem && toElem)
+	if (fromElem && toElem && fromDay && fromMonth && fromYear)
 	{
 		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
-		toElem.value += "-" + fromDateElem.value;
+		
+		if (fromYear.value > 0 && fromMonth.value > 0 && fromDay.value > 0)
+		{			
+			toElem.value += '-' + fromYear.value + '-' + pad(fromMonth.value, 2) + '-' + pad(fromDay.value, 2);
+		}
 	}
 	else
 	{
 		alert('Error creating permalink');
+	}
+}
+
+function pad(number, length) 
+{
+    var str = '' + number;
+	
+    while (str.length < length) {
+        str = '0' + str;
+    }
+
+    return str;
+}
+
+function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
+{	
+    var fromDay = document.getElementById(fromDayId);
+    var fromMonth = document.getElementById(fromMonthId);
+    var fromYear = document.getElementById(fromYearId);
+	if (fromDay && fromMonth && fromYear)
+	{
+		if (addDays == 0) // this means clear the date
+		{
+			fromDay.value = 0;
+			fromMonth.value = 0;
+			fromYear.value = 0;
+		}
+		else if (addDays == 99) // this means set to current day
+		{
+			var today = new Date();
+			
+			fromDay.value = today.getDate();
+			fromMonth.value = today.getMonth() + 1;
+			fromYear.value = today.getFullYear();
+		}
+		else
+		{
+			var newDate = parseInt(fromDay.value) + addDays;
+			
+			if (newDate == 0) // roll to previous month
+			{
+				newMonth = parseInt(fromMonth.value) - 1;
+				if (newMonth >= 0)
+				{
+					fromMonth.value = newMonth;
+				}
+				else
+				{
+					// roll around to previous year
+					fromMonth.value = 12;
+					fromYear.value = parseInt(fromYear.value) - 1;
+				}
+				
+				fromDay.value = 31;
+			}
+			else if (newDate > 31) // roll to next month
+			{
+				fromDay.value = 1;
+				newMonth = parseInt(fromMonth.value) + 1;
+				
+				if (newMonth <= 12)
+				{
+					fromMonth.value = newMonth;
+				}
+				else
+				{
+					// roll over to next year
+					fromMonth.value = 1;
+					fromYear.value = parseInt(fromYear.value) + 1;
+				}
+			}
+			else
+			{
+				fromDay.value = newDate;
+			}
+		}
+	}
+	else
+	{
+		alert('Error changing dates');
 	}
 }
 

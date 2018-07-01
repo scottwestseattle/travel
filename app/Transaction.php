@@ -121,4 +121,109 @@ class Transaction extends Base
 		
 		return $records;
     }	
+	
+    static public function getAnnualBalances()
+    {
+		$q = '
+			SELECT YEAR(transaction_date) as year, sum(amount) as balance, count(id) as count
+			FROM transactions 
+			WHERE 1=1  
+			AND user_id = ? 
+			AND deleted_flag = 0 
+			GROUP BY YEAR(transaction_date)  
+		';
+					
+		$records = DB::select($q, [Auth::id()]);
+		//dd($records);
+		
+		return $records;
+    }
+
+    static public function getMonthlyBalances($limit = PHP_INT_MAX)
+    {			
+		$q = '
+			SELECT DATE_FORMAT(t.transaction_date, "%Y-%M") as month, DATE_FORMAT(t.transaction_date, "%Y-%m") as sortmonth, sum(t.amount) as balance
+				, sum(t2.amount) as credit
+				, sum(t3.amount) as debit 
+			FROM transactions as t
+			LEFT JOIN transactions as t2 ON t2.id = t.id AND t2.amount > 0.0 
+			LEFT JOIN transactions as t3 ON t3.id = t.id AND t3.amount < 0.0 
+			WHERE 1=1  
+			AND t.user_id = ? 
+			AND t.deleted_flag = 0 
+			AND t.description <> "Transfer" 
+			GROUP BY month, sortmonth
+			ORDER BY sortmonth DESC
+			LIMIT ? 
+		';
+			
+		$records = DB::select($q, [Auth::id(), $limit]);
+		//dd($records);
+				
+		return $records;
+    }
+	
+    static public function getBalance()
+    {
+		$balance = 0.0;
+		
+		$q = '
+			SELECT sum(amount) AS balance
+			FROM transactions 
+			WHERE 1=1  
+			AND user_id = ? 
+			AND deleted_flag = 0 
+		';
+			
+		$records = DB::select($q, [Auth::id()]);
+
+		if (count($records) > 0)
+			$balance = floatval($records[0]->balance);
+		
+		return $balance;
+    }
+
+    static public function getExpenses($filter)
+    {			
+		$q = '
+			SELECT sum(t.amount) as subtotal, 0 as total, 0 as first
+				, s.name as subcategory
+				, c.name as category
+			FROM transactions t
+			JOIN categories as s on s.id = t.subcategory_id
+			JOIN categories as c on c.id = s.parent_id
+			WHERE 1=1  
+			AND t.user_id = ? 
+			AND t.deleted_flag = 0 
+			AND t.description <> "Transfer" 
+ 			AND (t.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND t.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) 
+			GROUP BY subcategory, category
+			ORDER BY c.name ASC 
+		;';
+			
+		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
+			
+		$totals = [];
+		
+		// add up the subtotals to get the category total
+		foreach($records as $record)
+		{
+			if (!array_key_exists($record->category, $totals))
+			{
+				$totals[$record->category] = 0;
+				$record->first = 1;
+			}
+				
+			$totals[$record->category] += floatval($record->subtotal);
+		}
+		
+		// put the total on each record for easy access in the view
+		foreach($records as $record)
+		{
+			$record->total = $totals[$record->category];
+		}
+		//dd($records);
+		
+		return $records;
+    }	
 }

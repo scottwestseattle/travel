@@ -43,6 +43,8 @@ class BlogController extends Controller
 			'title' => $record->title,
 			'type_flag' => ENTRY_TYPE_BLOG_ENTRY,
 			'parent_id' => $record->id,
+			'dates' => Controller::getDateControlDates(),
+			'filter' => Controller::getFilter($request, /* today = */ true),
 		]);
 		
 		return view('entries.add', $vdata);							
@@ -220,7 +222,7 @@ class BlogController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-    	if (Auth::check() && Auth::user()->id == $record->user_id)
+    	if ($this->isOwnerOrAdmin($entry->user_id))
         {				
 			$record->type_flag 			= $request->type_flag;
 			
@@ -228,6 +230,7 @@ class BlogController extends Controller
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description		= $this->trimNull($request->description);
 			$record->display_date		= $this->trimNull($request->display_date);
+			$record->display_date 		= Controller::getSelectedDate($request);
 			
 			$record->approved_flag = 0;
 			

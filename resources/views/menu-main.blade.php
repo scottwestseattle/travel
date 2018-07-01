@@ -76,12 +76,13 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">Cash <span class="caret"></span></a>
 									<ul class="dropdown-menu">
+										<li><a href="/transactions/summary">Summary</a></li>
+										<li><a href="/transactions/filter">Transactions</a></li>
 										<li><a href="/accounts/index">Accounts</a></li>
 										<li><a href="/categories/indexadmin">Categories</a></li>
 										<li><a href="/email/check">Email</a></li>
-										<li><a href="/expenses/indexadmin">Expenses</a></li>
+										<li><a href="/transactions/expenses">Expenses</a></li>
 										<li><a href="/subcategories/indexadmin">Subcategories</a></li>
-										<li><a href="/transactions/filter">Transactions</a></li>
 									</ul>
 								</li>								
 								
