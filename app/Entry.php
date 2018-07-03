@@ -72,7 +72,7 @@ class Entry extends Base
 	}
 	
 	// get all entries for specified type
-	static public function getEntriesByType($type_flag, $approved_flag = true)
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0)
 	{
 		if (!isset($type_flag))
 			return(Entry::getEntries($approved_flag));
@@ -82,12 +82,18 @@ class Entry extends Base
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
-				, count(photos.id) as photo_count				
+				, count(photos.id) as photo_count
+				, locations.name as location
+				, locations_parent.name as location_parent
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
 			LEFT JOIN photos
 				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
+			LEFT JOIN locations
+				ON locations.id = entries.location_id AND locations.deleted_flag = 0
+			LEFT JOIN locations as locations_parent
+				ON locations_parent.id = locations.parent_id AND locations_parent.deleted_flag = 0
 			WHERE 1=1
 			AND entries.site_id = ?
 			AND entries.deleted_flag = 0
@@ -100,8 +106,12 @@ class Entry extends Base
 		$q .= '
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date 
 				, photo, photo_title, photo_path
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date ASC, entries.id DESC
+				, location, location_parent
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC
 		';
+		
+		if ($limit > 0)
+			$q .= ' LIMIT ' . $limit . ' ';
 				
 		$records = DB::select($q, [SITE_ID, $type_flag]);
 		

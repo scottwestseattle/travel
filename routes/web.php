@@ -28,6 +28,7 @@ Route::get('/error', 'FrontPageController@error');
 Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/email/check', 'EmailController@check');
+Route::get('/articles', 'EntryController@articles');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');

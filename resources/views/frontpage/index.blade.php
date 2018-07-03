@@ -304,6 +304,61 @@ $sectionCount = 0;
 @endif
 
 <!--------------------------------------------------------------------------------------->
+<!-- SECTION: Articles -->
+<!--------------------------------------------------------------------------------------->
+@if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
+<section class="{{$colors[$sectionCount++]}}">
+	<div class="container" style="max-width:1440px;">	
+		<div class="sectionHeader text-center">			
+						
+			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
+
+			<div class="row clearfix text-left">
+				
+				<table>
+				<tbody>
+				@foreach($articles as $record)
+					<tr style="vertical-align:top;">
+						<td style="margin-bottom:10px;" >
+							<a href="/entries/{{$record->permalink}}">
+								<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
+								<div style="min-width:150px; min-height:100px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+							</a>							
+						</td>
+						<td style="color:white; padding: 0 10px;">
+							<table>
+							<tbody>
+								<tr><td style="font-size:1.3em;"><a style="color:white;" href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+								@if (isset($record->display_date))
+								<tr><td>{{$record->display_date}}</td></tr>
+								@endif
+								@if (isset($record->location))
+								<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+								@endif
+							</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr><td>&nbsp;</td><td></td></tr>
+				@endforeach
+				</tbody>
+				</table>
+					
+			</div><!-- row -->	
+
+				<a href="/articles"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Articles
+					@if (false)
+					&nbsp;<span class="badge badge-light">{{$tourCount}}</span>
+					@endif
+				</button></a>
+			
+		</div><!-- text-center -->
+	</div><!-- container -->
+</section>
+@endif
+
+
+<!--------------------------------------------------------------------------------------->
 <!-- SECTION: Blogs -->
 <!--------------------------------------------------------------------------------------->
 @if (($section = getSection(SECTION_BLOGS, $sections)) != null && isset($posts))
@@ -346,48 +401,6 @@ $sectionCount = 0;
 
 		</div><!-- row -->									
 					
-	</div><!-- container -->
-</section>
-@endif
-
-<!--------------------------------------------------------------------------------------->
-<!-- SECTION: Articles -->
-<!--------------------------------------------------------------------------------------->
-@if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
-<section class="{{$colors[$sectionCount++]}}">
-	<div class="container" style="max-width:1440px;">	
-		<div class="sectionHeader text-center">			
-						
-			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
-
-			<div class="row clearfix text-left">
-				
-				<table>
-				<tbody>
-				@foreach($articles as $record)
-					<tr style="vertical-align:top;">
-						<td style="margin-bottom:10px;" >
-							<a href="/entries/{{$record->permalink}}">
-								<?php if (!isset($record->photo)) { $record->photo_path = '.'; $record->photo = TOUR_PHOTO_PLACEHOLDER; } ?>
-								<div style="min-width:150px; min-height:100px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
-							</a>							
-						</td>
-						<td style="padding: 0 10px;">
-							<table>
-							<tbody>
-								<tr><td style="font-size:1.3em;"><a href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
-								<tr><td>{{$record->display_date}}</td></tr>
-							</tbody>
-							</table>
-						</td>
-					</tr>
-					<tr><td>&nbsp;</td><td></td></tr>
-				@endforeach
-				</tbody>
-				</table>
-					
-			</div><!-- row -->									
-		</div><!-- text-center -->
 	</div><!-- container -->
 </section>
 @endif

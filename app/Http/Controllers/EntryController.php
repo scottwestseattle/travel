@@ -36,6 +36,18 @@ class EntryController extends Controller
 			
     	return view('entries.index', $vdata);
     }
+	
+    public function articles()
+    {		
+		$records = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE);
+			
+		$vdata = $this->getViewData([
+			'records' => $records,
+		]);
+			
+    	return view('entries.articles', $vdata);
+    }
+	
 
     public function indexadmin($type_flag = null)
     {		

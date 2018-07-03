@@ -56,6 +56,9 @@
 							<h4 class="letter-spacing-1">SITE MAP</h4>
 							<ul class="FooterList list-unstyled">
 								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
+							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
+								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+							@endif
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
 							@endif

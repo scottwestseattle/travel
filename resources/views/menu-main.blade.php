@@ -41,6 +41,9 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
+							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
+								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
 							@endif
@@ -65,6 +68,7 @@
 							
 							<?php if ($user_type >= 100) : ?>
 								<li><a href="/admin">Admin</a></li>
+								<li><a href="/articles">Articles</a></li>
 								<li><a href="/blogs/indexadmin">Blogs</a></li>
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
