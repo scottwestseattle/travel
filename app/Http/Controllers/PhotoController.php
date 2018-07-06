@@ -140,10 +140,10 @@ class PhotoController extends Controller
 
 		if (Auth::check())
         {
-			$photos = [];
+			$records = Photo::getIndex();
 			
 			$vdata = $this->getViewData([
-				'photos' => $photos,
+				'records' => $records,
 			]);
 			
 			return view('photos.index', $vdata);	

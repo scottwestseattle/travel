@@ -48,7 +48,7 @@ class EmailController extends Controller
 		$email_driver = env('EMAIL_DRIVER');
 		$email_encryption = env('EMAIL_ENCRYPTION');
 
-		$debug = true;
+		//$debug = true;
 		
 		$flash = '';
 		$errors = '';

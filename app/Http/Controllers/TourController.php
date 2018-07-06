@@ -372,8 +372,8 @@ class TourController extends Controller
 			$entry->description = trim($request->description);
 			$entry->description_short = trim($request->description_short);
 			
-			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
-			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			//$entry->published_flag = isset($request->published_flag) ? 1 : 0;
+			//$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
 			$entry->save();
 			

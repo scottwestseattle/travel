@@ -108,7 +108,7 @@ foreach($photos as $photo)
 
 	<div class="entry-div" style="margin-top:20px;width:100%;">
 		<div class="entry" style="width:100%;">
-			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
+			<span name="description" class="">{!! $record->description !!}</span>		
 		</div>
 	</div>
 

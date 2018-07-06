@@ -206,7 +206,12 @@ class EntryController extends Controller
 			->where('permalink', $permalink)
 			->first();
 						
-		if (!isset($entry))
+		if (isset($entry))
+		{
+			$entry->description = nl2br($entry->description);
+			$entry->description = $this->formatLinks($entry->description);		
+		}
+		else
 		{
 			$msg = 'Permalink Entry Not Found: ' . $permalink;
 			
@@ -288,6 +293,12 @@ class EntryController extends Controller
 				->where('deleted_flag', 0)
 				->where('id', $id)
 				->first();
+				
+			if (isset($entry))
+			{
+				$entry->description = nl2br($entry->description);
+				$entry->description = $this->formatLinks($entry->description);		
+			}
 				
 			if (!isset($entry))
 			{

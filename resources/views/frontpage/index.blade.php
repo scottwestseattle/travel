@@ -5,6 +5,8 @@
 
 <?php
 
+// THIS IS THE FRONT PAGE
+
 function getSection($id, $array)
 {
 	$section = null;
