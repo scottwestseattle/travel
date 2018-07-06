@@ -262,6 +262,7 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/indexadmin/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 	Route::get('/show/{id}', 'EntryController@show');
+	Route::get('/gallery', 'EntryController@gallery');
 		
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
@@ -346,7 +347,7 @@ Route::group(['prefix' => 'activities'], function ()
 Route::group(['prefix' => 'photos'], function () 
 {
 	// index
-	Route::get('/index', 'PhotoController@index')->middleware('auth');
+	Route::get('/gallery', 'PhotoController@gallery');
 	Route::get('/indexadmin', 'PhotoController@indexadmin')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');

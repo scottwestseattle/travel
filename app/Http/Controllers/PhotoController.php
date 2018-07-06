@@ -111,7 +111,7 @@ class PhotoController extends Controller
 	public function sliders()
 	{			
 		$q = '
-			SELECT id, filename, alt_text, location, main_flag
+			SELECT id, filename, alt_text, location, main_flag, parent_id 
 				, CONCAT(alt_text, " - ", location) as photo_title
 				, CONCAT("' . PHOTO_SLIDER_PATH . '") as path
 			FROM photos
@@ -133,20 +133,20 @@ class PhotoController extends Controller
 		return view('photos.sliders', $vdata);	
 	}
 	
-    public function index()
+    public function gallery()
     {
 		if (!$this->isAdmin())
              return redirect('/');
 
 		if (Auth::check())
         {
-			$records = Photo::getIndex();
+			$records = Photo::getGallery();
 			
 			$vdata = $this->getViewData([
 				'records' => $records,
 			]);
 			
-			return view('photos.index', $vdata);	
+			return view('photos.gallery', $vdata);	
         }           
         else 
 		{

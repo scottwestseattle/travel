@@ -46,7 +46,7 @@
 						<table>
 						
 							@if (Auth::user() && Auth::user()->user_type >= 100)
-								<tr><td>{{ $photo->filename }}</td></tr>
+								<tr><td>{{$photo->filename}} ({{$photo->parent_id}})</td></tr>
 								@if (isset($photo->size))
 									<tr><td>{{ number_format($photo->size) }} bytes</td></tr>
 								@endif

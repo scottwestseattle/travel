@@ -39,7 +39,7 @@ class EntryController extends Controller
 	
     public function articles()
     {		
-		$records = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE);
+		$records = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, false);
 			
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -47,7 +47,6 @@ class EntryController extends Controller
 			
     	return view('entries.articles', $vdata);
     }
-	
 
     public function indexadmin($type_flag = null)
     {		
@@ -754,5 +753,21 @@ class EntryController extends Controller
 		//echo $final;
 		
 		return $final;
-	}			
+	}
+
+    public function gallery()
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+		//dd($records);
+			
+		//dd($entries);
+		$vdata = $this->getViewData([
+			'records' => $records, 
+		]);
+		
+		return view('entries.gallery', $vdata);
+    }	
 }

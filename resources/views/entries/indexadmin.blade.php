@@ -28,6 +28,7 @@ if (isset($title))
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG}}">Blogs</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_BLOG_ENTRY}}">Blog Entries</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}">Entries</a>
+			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_GALLERY}}">Galleries</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_NOTE}}">Notes</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_SECTION}}">Sections</a>
 			<a style="margin-right:10px;" href="/entries/indexadmin/{{ENTRY_TYPE_TOUR}}">Tours</a>

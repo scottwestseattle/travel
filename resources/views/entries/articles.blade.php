@@ -20,6 +20,9 @@
 				<table>
 				<tbody>
 				@foreach($records as $record)
+					@if (($record->approved_flag != 1 || $record->published_flag !=1) && (!Auth::check() || Auth::user()->user_type < 1000))
+						@continue
+					@endif
 					<tr style="vertical-align:top;">
 						<td style="margin-bottom:10px;" >
 							<a href="/entries/{{$record->permalink}}">
@@ -30,7 +33,11 @@
 						<td style="color:default; padding: 0 10px;">
 							<table>
 							<tbody>
+								@if ($record->approved_flag != 1 || $record->published_flag != 1)
+								<tr><td style="font-size:1.3em;"><a style="color:default;" href="/entries/{{$record->permalink}}"><span style="color:red;">PRIVATE:</span> {{$record->title}}</a></td></tr>
+								@else
 								<tr><td style="font-size:1.3em;"><a style="color:default;" href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+								@endif
 								@if (isset($record->display_date))
 								<tr><td>{{$record->display_date}}</td></tr>
 								@endif

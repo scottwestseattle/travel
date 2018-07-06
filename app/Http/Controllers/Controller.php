@@ -75,6 +75,7 @@ define('ENTRY_TYPE_BLOG_ENTRY', 4);
 define('ENTRY_TYPE_ARTICLE', 	5);
 define('ENTRY_TYPE_NOTE', 		6);
 define('ENTRY_TYPE_SECTION',	7);
+define('ENTRY_TYPE_GALLERY',	8);
 define('ENTRY_TYPE_OTHER',		99);
 
 // sections
@@ -126,14 +127,15 @@ class Controller extends BaseController
 	
 	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
-		ENTRY_TYPE_ENTRY => 'Entry',
-		ENTRY_TYPE_TOUR => 'Tour/Hike',
+		ENTRY_TYPE_ARTICLE => 'Article',
 		ENTRY_TYPE_BLOG => 'Blog',
 		ENTRY_TYPE_BLOG_ENTRY => 'Blog Entry',
-		ENTRY_TYPE_ARTICLE => 'Article',
+		ENTRY_TYPE_ENTRY => 'Entry',
+		ENTRY_TYPE_GALLERY => 'Gallery',
 		ENTRY_TYPE_NOTE => 'Note',
-		ENTRY_TYPE_SECTION => 'Section',
 		ENTRY_TYPE_OTHER => 'Other',
+		ENTRY_TYPE_SECTION => 'Section',
+		ENTRY_TYPE_TOUR => 'Tour/Hike',
 	];
 		
 	public function __construct ()
