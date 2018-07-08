@@ -251,7 +251,7 @@ class Entry extends Base
 		return $record;
 	}
 	
-	protected function getEntryCount($entry_type, $allSites)
+	static protected function getEntryCount($entry_type, $allSites)
 	{
 		$q = '
 			SELECT count(entries.id) as count
@@ -271,4 +271,16 @@ class Entry extends Base
 		return intval($record[0]->count);
 	}	
 	
+	static public function getStats()
+	{
+		$stats = [];
+		
+		$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
+		$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
+		$stats['blog-entries'] = Entry::getEntryCount(ENTRY_TYPE_BLOG_ENTRY, /* allSites = */ false);
+		$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);
+		//dd($stats);
+		
+		return $stats;
+	}
 }
