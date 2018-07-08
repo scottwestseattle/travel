@@ -29,6 +29,7 @@ Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/email/check', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
+Route::get('/gallery', 'EntryController@gallery');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
@@ -262,7 +263,6 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/indexadmin/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 	Route::get('/show/{id}', 'EntryController@show');
-	Route::get('/gallery', 'EntryController@gallery');
 		
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');

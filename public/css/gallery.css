@@ -1,0 +1,46 @@
+.frontpage-box a
+{
+	color: white;
+	text-decoration: none;
+	font-size: 10pt;
+}
+
+.frontpage-box p
+{
+	margin: 0;
+	padding: 0;
+}
+
+.frontpage-box-link
+{
+	display: block; 	
+	height: 220px; 
+	width: 320px; 
+}
+
+.frontpage-box-text
+{
+	margin: 3px 4px;
+	font-weight: bold;
+}
+
+.frontpage-box
+{
+	background-color: #a0a0a0;
+
+	display: block; 
+	float: left; 
+
+	margin: 0;
+	margin-top: 5px;
+	margin-left: 5px;	
+}
+
+#container {
+	text-align: left;
+}
+
+#content{
+	clear: both;
+	overflow: auto;
+}

@@ -71,6 +71,7 @@
 								<li><a href="/articles">Articles</a></li>
 								<li><a href="/blogs/indexadmin">Blogs</a></li>
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
+								<li><a href="/gallery">Gallery</a></li>
 								<li><a href="/photos/sliders">Sliders</a></li>
 								<li><a href="/photos/indexadmin">Photos</a></li>
 								<li><a href="/tours/indexadmin">Tours</a></li>

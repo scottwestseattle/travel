@@ -756,10 +756,7 @@ class EntryController extends Controller
 	}
 
     public function gallery()
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-		
+    {		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
 		//dd($records);
 			
