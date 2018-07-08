@@ -18,12 +18,24 @@
 	</div>
 	@endif
 	
+	<h3>Stats</h3>
+	<table>
+		<tbody>
+			<tr><td style="min-width:150px;">Tours:</td><td>{{$stats['tours']}}</td></tr>
+			<tr><td>Blogs:</td><td>{{$stats['blogs']}}</td></tr>
+			<tr><td>Blog Posts:</td><td>{{$stats['blog-entries']}}</td></tr>
+			<tr><td>Articles:</td><td>{{$stats['articles']}}</td></tr>
+			<tr><td>Content Photos:</td><td>{{$stats['photos']}}</td></tr>
+			<tr><td>Header Photos:</td><td>{{$stats['sliders']}}</td></tr>
+		</tbody>
+	</table>
+
 	@if (isset($record->photo))
 	<div class="text-center" style="margin-top:50px;">
 		<img style="max-width:300px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
 	</div>
 	@endif
-		
+			
 </div>
 
 @endsection

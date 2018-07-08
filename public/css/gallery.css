@@ -21,19 +21,27 @@
 .frontpage-box-text
 {
 	margin: 3px 4px;
-	font-weight: bold;
+	font-weight: normal;
+	font-family: Raleway; 		
+	color: white;
 }
 
 .frontpage-box
 {
-	background-color: #a0a0a0;
-
+	background-color: #0096E6;
 	display: block; 
 	float: left; 
 
 	margin: 0;
 	margin-top: 5px;
-	margin-left: 5px;	
+	margin-left: 5px;
+	
+}
+
+.trim-text {
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
 }
 
 #container {

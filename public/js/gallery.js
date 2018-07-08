@@ -13,6 +13,9 @@ function onResize()
 	var dc = { width: 0, height: 0, ppl: 0, margin: 0, readonly: false };
 
 	resize(dc);
+	
+	var content = document.getElementById("content");
+	content.style.display = 'block';
 }
 
 function resize(dc)
@@ -41,14 +44,15 @@ function resize(dc)
 	var deviceWidth = (browserWidth > screen.width) ? browserWidth : screen.width;
 	var deviceHeight = screen.height;
 	var isPortrait = (deviceWidth < deviceHeight);
-	var isMicro = (deviceWidth <= 800);
+	//orig: var isMicro = (deviceWidth <= 380);
+	var isMicro = ($(document).width() <= 380);
 	
 	var fontSet = false;
 	if (isMicro) // micro screen
 	{
 		if (isPortrait) // portrait
 		{
-			photosPerLine = 1;
+			photosPerLine = 2;
 			
 			// crank up the font size
 			if (!dc.readonly)
@@ -104,6 +108,7 @@ function resize(dc)
 	flash("doc-width: " + $(document).width() 
 	+ ", screen.width: " + screen.width 
 	+ ", screen.height: " + screen.height 
+	+ ", deviceWidth: " + deviceWidth 
 	+ ", ppl: " + photosPerLine 
 	+ ", w=" + w 
 	+ ", h=" + h 
@@ -116,5 +121,10 @@ function resize(dc)
 	dc.height = h;
 	dc.ppl = photosPerLine;
 	dc.margin = margin;
+}
+
+function flash(text)
+{
+	//alert(text);	
 }
 

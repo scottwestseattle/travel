@@ -224,8 +224,12 @@ class FrontPageController extends Controller
     {
 		$entry = Entry::getAboutPage();
 		
+		$entryStats = Entry::getStats();
+		$photoStats = Photo::getStats();
+		
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,
+			'stats' => array_merge($entryStats, $photoStats),
 		]);
 		
         return view('frontpage.about', $vdata);

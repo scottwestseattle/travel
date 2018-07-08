@@ -29,4 +29,47 @@ class Photo extends Base
 		return $records;
 	}
 
+	static protected function getCount()
+	{
+		$q = '
+			SELECT count(photos.id) as count
+			FROM photos
+			JOIN entries ON entries.id = photos.parent_id AND entries.published_flag = 1 AND entries.approved_flag = 1 AND entries.deleted_flag = 0
+			WHERE 1=1
+				AND photos.deleted_flag = 0
+		';
+				
+		// get the list with the location included
+		$record = DB::select($q);
+		
+		return intval($record[0]->count);
+	}
+	
+	static protected function getCountSliders()
+	{
+		$q = '
+			SELECT count(photos.id) as count
+			FROM photos
+			WHERE 1=1
+				AND photos.deleted_flag = 0
+				AND (photos.parent_id = 0 OR photos.parent_id IS NULL) 
+		';
+				
+		// get the list with the location included
+		$record = DB::select($q);
+		
+		return intval($record[0]->count);
+	}
+	
+	static public function getStats()
+	{
+		$stats = [];
+		
+		$stats['photos'] = Photo::getCount();
+		$stats['sliders'] = Photo::getCountSliders();
+		//dd($stats);
+		
+		return $stats;
+	}
+
 }
