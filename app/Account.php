@@ -50,7 +50,7 @@ class Account extends Base
 			SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
 				, sum(t.amount) + a.starting_balance as balance 
 			FROM accounts as a
-			LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 
+			LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 AND t.reconciled_flag = 1 
 			WHERE 1=1 
 			AND a.user_id = ?
 			AND a.deleted_flag = 0

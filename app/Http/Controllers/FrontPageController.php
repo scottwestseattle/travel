@@ -227,9 +227,13 @@ class FrontPageController extends Controller
 		$entryStats = Entry::getStats();
 		$photoStats = Photo::getStats();
 		
+		$stats = array_merge($entryStats, $photoStats);
+		$stats['total-pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog-entries'] + $stats['tours'];
+		$stats['total-photos'] = $stats['sliders'] + $stats['photos']; 
+		
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,
-			'stats' => array_merge($entryStats, $photoStats),
+			'stats' => $stats,
 		]);
 		
         return view('frontpage.about', $vdata);

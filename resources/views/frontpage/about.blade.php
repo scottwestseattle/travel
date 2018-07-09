@@ -25,8 +25,13 @@
 			<tr><td>Blogs:</td><td>{{$stats['blogs']}}</td></tr>
 			<tr><td>Blog Posts:</td><td>{{$stats['blog-entries']}}</td></tr>
 			<tr><td>Articles:</td><td>{{$stats['articles']}}</td></tr>
+			<tr><td><b>Total Content Pages:</b></td><td><b>{{$stats['total-pages']}}</b></td></tr>
+
+			<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+
 			<tr><td>Content Photos:</td><td>{{$stats['photos']}}</td></tr>
 			<tr><td>Header Photos:</td><td>{{$stats['sliders']}}</td></tr>
+			<tr><td><b>Total Photos:</b></td><td><b>{{$stats['total-photos']}}</b></td></tr>
 		</tbody>
 	</table>
 

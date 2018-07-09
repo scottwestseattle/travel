@@ -36,11 +36,12 @@ class Photo extends Base
 			FROM photos
 			JOIN entries ON entries.id = photos.parent_id AND entries.published_flag = 1 AND entries.approved_flag = 1 AND entries.deleted_flag = 0
 			WHERE 1=1
+				AND photos.site_id = ?
 				AND photos.deleted_flag = 0
 		';
 				
 		// get the list with the location included
-		$record = DB::select($q);
+		$record = DB::select($q, [SITE_ID]);
 		
 		return intval($record[0]->count);
 	}
@@ -52,11 +53,12 @@ class Photo extends Base
 			FROM photos
 			WHERE 1=1
 				AND photos.deleted_flag = 0
-				AND (photos.parent_id = 0 OR photos.parent_id IS NULL) 
+				AND (photos.parent_id = 0 OR photos.parent_id IS NULL)
+				AND photos.site_id = ?
 		';
 				
 		// get the list with the location included
-		$record = DB::select($q);
+		$record = DB::select($q, [SITE_ID]);
 		
 		return intval($record[0]->count);
 	}
