@@ -737,6 +737,29 @@ class PhotoController extends Controller
 		
 		return redirect($redirect);
     }
+
+    public function rotate(Request $request, Photo $photo)
+    {					
+		$path = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+
+		//define image path
+		$path = $path . $photo->filename;
+
+		//dd($image);
+
+		// Load the image
+		$image = imagecreatefromjpeg($path);
+
+		// Rotate
+		$image = imagerotate($image, -90, 0);
+
+		//and save it on your server...
+		imagejpeg($image, $path);
+		
+		$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id;
+
+		return redirect($redirect);
+	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates

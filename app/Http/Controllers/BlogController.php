@@ -82,7 +82,8 @@ class BlogController extends Controller
 		$id = intval($id);
 		
 		try
-		{			
+		{		
+			// get the blog
 			$record = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
@@ -105,6 +106,7 @@ class BlogController extends Controller
 				return redirect('/error');
 			}				
 
+			// get the blog posts
 			$records = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
@@ -112,9 +114,10 @@ class BlogController extends Controller
 				->where('approved_flag', 1)
 				->where('parent_id', $id)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->orderByRaw('display_date ASC')
+				->orderByRaw('display_date DESC')
 				->get();
 				
+			// get the blog photos
 			$photos = Photo::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)
@@ -149,6 +152,7 @@ class BlogController extends Controller
 		
 		try
 		{
+			// get the blog
 			$record = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
@@ -168,14 +172,16 @@ class BlogController extends Controller
 				return redirect('/error');
 			}				
 
+			// get the blog posts
 			$records = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('parent_id', $id)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-				->orderByRaw('display_date ASC')
+				->orderByRaw('display_date DESC')
 				->get();
 				
+			// get the blog photos
 			$photos = Photo::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', '<>', 1)

@@ -362,6 +362,9 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/edit/{photo}','PhotoController@edit')->middleware('auth');
 	Route::post('/update/{photo}','PhotoController@update')->middleware('auth');
 
+	// rotate
+	Route::get('/rotate/{photo}','PhotoController@rotate')->middleware('auth');
+
 	// delete / confirm delete
 	Route::get('/confirmdelete/{photo}','PhotoController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{photo}','PhotoController@delete')->middleware('auth');
