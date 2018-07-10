@@ -95,7 +95,9 @@ define('LOG_TYPE_ERROR', 3);
 define('LOG_TYPE_EXCEPTION', 4);
 define('LOG_TYPE_OTHER', 99);
 	
+define('LOG_MODEL_ARTICLES', 'articles');
 define('LOG_MODEL_BLOGS', 'blogs');
+define('LOG_MODEL_BLOG_ENTRIES', 'blog entries');
 define('LOG_MODEL_ENTRIES', 'entries');
 define('LOG_MODEL_LOCATIONS', 'locations');
 define('LOG_MODEL_OTHER', 'other');
@@ -116,6 +118,17 @@ define('LOG_ACTION_MOVE', 'move');
 define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
 define('LOG_ACTION_OTHER', 'other');
+
+define('LOG_PAGE_INDEX', 'index');
+define('LOG_PAGE_VIEW', 'view');
+define('LOG_PAGE_SHOW', 'show');
+define('LOG_PAGE_GALLERY', 'gallery');
+define('LOG_PAGE_SLIDERS', 'sliders');
+define('LOG_PAGE_PERMALINK', 'permalink');
+define('LOG_PAGE_MAPS', 'maps');
+define('LOG_PAGE_LOCATION', 'location');
+define('LOG_PAGE_ABOUT', 'about');
+define('LOG_PAGE_CONFIRM', 'confirm login');
 
 class Controller extends BaseController
 {
@@ -167,8 +180,17 @@ class Controller extends BaseController
 		return $ip;
 	}
 	
-	protected function saveVisitor()
+	protected function saveVisitor($model, $page, $record_id = null)
 	{
+		if (Auth::check())
+		{
+			if (Auth::user()->user_type >= USER_SITE_ADMIN)
+			{
+				return;
+			}
+		}
+		dd('here');
+
 		$save = false;
 		$host = null;
 		$referrer = null;
@@ -176,10 +198,15 @@ class Controller extends BaseController
 		
 		$ip = $this->getVisitorInfo($host, $referrer, $userAgent);
 		
-		$visitor = Visitor::select()
-			->where('ip_address', '=', $ip)
-			->where('deleted_flag', 0)
-			->first();
+		$visitor = null;
+		if (false)
+		{
+			// the original way without page info
+			$visitor = Visitor::select()
+				->where('ip_address', '=', $ip)
+				->where('deleted_flag', 0)
+				->first();
+		}
 			
 		if (!isset($visitor)) // new visitor
 		{
@@ -192,6 +219,11 @@ class Controller extends BaseController
 		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
 		$visitor->user_agent = $this->trunc($userAgent, VISITOR_MAX_LENGTH);
 		$visitor->referrer = $this->trunc($referrer, VISITOR_MAX_LENGTH);
+		
+		// new fields
+		$visitor->model = $model;
+		$visitor->page = $page;
+		$visitor->record_id = $record_id;
 		
 		$visitor->save();		
 	}	

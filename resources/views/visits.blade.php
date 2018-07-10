@@ -7,18 +7,22 @@
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>
-				<tr><th><a href="/visitors/date">Timestamp</a></th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
+				<tr><th><a href="/visitors/date">Timestamp</a></th><th>Model</th><th>Page</th><th>IP</th><th>Referrer</th></tr>
 				@foreach($records as $record)
 				<tr>
 					<td>{{$record->updated_at}}</td>
-					<td>{{$record->visit_count}}</td>
+					<td>{{$record->model}}</td>
+					@if (!isset($record->record_id))
+					<td>{{$record->page}}</td>
+					@else
+					<td>{{$record->page}} (<a href="/entries/show/{{$record->record_id}}">{{$record->record_id}}</a>)</td>
+					@endif
 					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->ip_address}}">{{$record->ip_address}}</a></td>
-					<td>{{$record->host_name}}</td>
 					<td>{{$record->referrer}}</td>
-					<td>{{$record->user_agent}}</td>
 					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 				@endforeach
+
 			</tbody>
 		</table>
 	@else

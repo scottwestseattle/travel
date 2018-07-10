@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 use App\Entry;
 use App\Activity;
 use App\User;
@@ -13,7 +14,9 @@ use App\Visitor;
 use App\Site;
 use App\Event;
 
-define("LONGNAME", "Hike, Bike, Boat");
+define('PREFIX', 'frontpage');
+define('LOG_MODEL', 'frontpage');
+define('TITLE', 'Front Page');
 
 class FrontPageController extends Controller
 {
@@ -32,6 +35,12 @@ class FrontPageController extends Controller
      */
     public function index(Request $request)
     {
+		if (Auth::user() && Auth::user()->blocked_flag != 0)
+		{
+			Auth::logout();
+			return redirect('/confirm');
+		}
+
 		$posts = null;
 
 		//
@@ -88,7 +97,7 @@ class FrontPageController extends Controller
 		//
 		// save visitor stats
 		//
-		$this->saveVisitor();
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 		
 		$vdata = [
 			'page_title' => $page_title,
@@ -110,6 +119,9 @@ class FrontPageController extends Controller
 
     public function visits()
     {			
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$records = Visitor::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
@@ -121,6 +133,9 @@ class FrontPageController extends Controller
 
     public function visitors($sort = null)
     {			
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		if (isset($sort))
 		{
 			$records = Visitor::select()
@@ -137,13 +152,15 @@ class FrontPageController extends Controller
 				->latest()
 				->get();
 		}
-		
 						
 		return view('visits', ['records' => $records]);
     }
 	
     public function admin()
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		//
 		// get latest events
 		//
@@ -164,6 +181,7 @@ class FrontPageController extends Controller
 		//
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
+			->where('blocked_flag', 0)
 			->orderByRaw('id DESC')
 			->get();
 					
@@ -194,6 +212,8 @@ class FrontPageController extends Controller
 	
     public function posts(Entry $entry)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX, $entry->id);
+
 		$entries = Entry::select()
 			->where('site_id', SITE_ID)
 			//->where('user_id', '=', Auth::id())
@@ -207,6 +227,8 @@ class FrontPageController extends Controller
 
     public function tours(Entry $entry)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX, $entry->id);
+		
 		$entries = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('is_template_flag', '=', 1)
@@ -222,6 +244,8 @@ class FrontPageController extends Controller
      */
     public function about()
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ABOUT);
+		
 		$entry = Entry::getAboutPage();
 		
 		$entryStats = Entry::getStats();
@@ -349,4 +373,14 @@ priceTaxes=$59.50
 		
 		return $record;
 	}
+	
+    public function confirm()
+    {	
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_CONFIRM);
+
+		$vdata = $this->getViewData([
+		]);
+		
+		return view('frontpage.confirm', $vdata);
+    }
 }

@@ -116,11 +116,6 @@ class HomeController extends Controller
 		->orderByRaw('id ASC')
 		->get();
 		
-		//
-		// save visitor stats
-		//
-		$this->saveVisitor();
-		
     	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
     }
 

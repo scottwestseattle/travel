@@ -10,6 +10,10 @@ use App\Photo;
 use App\Location;
 use DB;
 
+define('PREFIX', 'tours');
+define('LOG_MODEL', 'tours');
+define('TITLE', 'Tours');
+
 class TourController extends Controller
 {
     public function indexadmin()
@@ -30,6 +34,8 @@ class TourController extends Controller
 
     public function index()
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
+
 		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);		
 		$tours = $this->getTourIndex(/* $allSites = */ true);
 		$tour_count = isset($tours) ? count($tours) : 0;
@@ -51,6 +57,8 @@ class TourController extends Controller
 
     public function maps()
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_MAPS);
+
 		$locations = null;
 		$tours = $this->getIndexData($locations);
 
@@ -165,12 +173,17 @@ class TourController extends Controller
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();	
-					
+		
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK, $id);
+		
 		return $this->handleView($entry);
 	}
 	
     public function view($title, $id)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
+		
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
@@ -487,6 +500,8 @@ class TourController extends Controller
 	
     public function location($location_id)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_LOCATION, $location_id);
+
 		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);
 		
 		$tours = $this->getTourIndexLocation($location_id, /* $allSites = */ true);

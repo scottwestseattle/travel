@@ -26,8 +26,15 @@
 
 		@if (Auth::user()->user_type >= 100)
 			<div class="form-group">
-				<input type="text" name="user_type" class="form-control" value="{{$user->user_type }}"></input>
+				<input type="text" name="user_type" class="form-control" value="{{$user->user_type}}"></input>
 			</div>
+			<div class="form-group">
+				<input type="text" name="password" class="form-control" value="{{$user->password}}"></input>
+			</div>
+		<div class="form-group">
+			<input type="checkbox" name="blocked_flag" id="blocked_flag" class="" value="{{$user->blocked_flag }}" {{ ($user->blocked_flag) ? 'checked' : '' }} />
+			<label for="blocked_flag" class="checkbox-big-label">Blocked</label>
+		</div>
 		@endif
 
 		<div class="form-group">

@@ -16,6 +16,11 @@ define('EMPTYBODY', 'Empty Body');
 define('BODY', 'Body');
 define('INTNOTSET', -1);
 
+define('PREFIX', 'entries');
+define('LOG_MODEL', 'entries');
+define('TITLE', 'Entries');
+
+
 class EntryController extends Controller
 {
     public function index()
@@ -39,6 +44,8 @@ class EntryController extends Controller
 	
     public function articles()
     {		
+		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
+
 		$records = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, false);
 			
 		$vdata = $this->getViewData([
@@ -193,7 +200,7 @@ class EntryController extends Controller
 	}
 	
     public function permalink(Request $request, $permalink)
-    {
+    {		
 		$next = null;
 		$prev = null;
 		
@@ -204,6 +211,8 @@ class EntryController extends Controller
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
+			
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $entry->id, $request->requestUri);
 						
 		if (isset($entry))
 		{
@@ -258,6 +267,10 @@ class EntryController extends Controller
 	
     public function view($title, $id)
     {
+		$id = intval($id);
+		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
+	
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
@@ -281,6 +294,9 @@ class EntryController extends Controller
 
     public function show(Request $request, $id)
     {		
+		$id = intval($id);
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SHOW, $id);
+		
 		$next = null;
 		$prev = null;
 		$photos = null;
@@ -757,6 +773,8 @@ class EntryController extends Controller
 
     public function gallery()
     {		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
+		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
 		//dd($records);
 			
@@ -766,5 +784,5 @@ class EntryController extends Controller
 		]);
 		
 		return view('entries.gallery', $vdata);
-    }	
+    }
 }

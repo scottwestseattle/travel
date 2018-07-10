@@ -7,6 +7,10 @@ use Auth;
 use App\Photo;
 use DB;
 
+define('PREFIX', 'photos');
+define('LOG_MODEL', 'photos');
+define('TITLE', 'Photos');
+
 class PhotoController extends Controller
 {
 	public function tours(Request $request, $id)
@@ -110,6 +114,8 @@ class PhotoController extends Controller
 	
 	public function sliders()
 	{			
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
+
 		$q = '
 			SELECT id, filename, alt_text, location, main_flag, parent_id 
 				, CONCAT(alt_text, " - ", location) as photo_title
@@ -135,6 +141,8 @@ class PhotoController extends Controller
 	
     public function gallery()
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
+
 		if (!$this->isAdmin())
              return redirect('/');
 
@@ -569,6 +577,8 @@ class PhotoController extends Controller
 	
     public function view(Photo $photo)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
+
 		$path = $this->getPhotoPath($photo);
 		
 		$vdata = $this->getViewData([

@@ -17,6 +17,30 @@
 		</ul>
 	</div>
 	
+	@if (count($users) > 0)
+	<div>	
+		<h3 style="color:red;">New Users ({{count($users)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
+			@foreach($users as $record)
+				<tr>
+					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td>{{$record->created_at}}</td>
+					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
+					<td>{{$record->email}}</td>
+					<td>{{$record->user_type}}</td>
+					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+		<a href="/users/index">Show All Users</a>
+	</div>
+	<hr />
+	@endif
+
+	
 	@if (false && isset($sections))
 	<div>
 		<h3>Sections ({{ count($sections) }})</h3>
@@ -174,28 +198,7 @@
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />
-		
-	<div>	
-		<h3 style="">New Users ({{count($users)}})</h3>
-		<table class="table table-striped">
-			<tbody>
-				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
-			@foreach($users as $record)
-				<tr>
-					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td>{{$record->created_at}}</td>
-					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
-					<td>{{$record->email}}</td>
-					<td>{{$record->user_type}}</td>
-					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
-		<a href="/users/index">Show All Users</a>
-	</div>
-	<hr />
-		
+				
 	<div>
 		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
 		<p><a href="/visitors">Show All Visits</a></p>

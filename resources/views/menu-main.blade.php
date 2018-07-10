@@ -100,13 +100,15 @@
 
                                 <ul class="dropdown-menu">
 								
-									<?php if (Auth::check()) : ?>
-										<li><a href="/activities/indexadmin">Activities</a></li>
-										<li><a href="/locations/indexadmin">Locations</a></li>
+									@if (Auth::check())
 										<li><a href="/users/">Settings ({{$user_type_name}})</a></li>
-										<li><a href="/sites/index">Sites</a></li>
-										<li><a href="/tasks/index">Tasks</a></li>
-									<?php endif; ?>
+										@if (Auth::user()->user_type >= 1000)
+											<li><a href="/activities/indexadmin">Activities</a></li>
+											<li><a href="/locations/indexadmin">Locations</a></li>
+											<li><a href="/sites/index">Sites</a></li>
+											<li><a href="/tasks/index">Tasks</a></li>
+										@endif
+									@endif
 
                                     <li>
                                         <a href="{{ route('logout') }}"

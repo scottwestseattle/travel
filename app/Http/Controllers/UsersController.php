@@ -68,7 +68,9 @@ class UsersController extends Controller
 			$user->name = trim($request->name);
 			$user->email = trim($request->email);
 			$user->user_type = intval($request->user_type);
-			
+			$user->password = $request->password;
+			$user->blocked_flag = isset($request->blocked_flag) ? 1 : 0;
+
 			$user->save();
 			
 			return redirect($this->redirect); 

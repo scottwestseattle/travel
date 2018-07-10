@@ -9,6 +9,10 @@ use App\Entry;
 use App\Photo;
 use App\Event;
 
+define('PREFIX', 'blogs');
+define('LOG_MODEL', 'blogs');
+define('TITLE', 'Blogs');
+
 class BlogController extends Controller
 {
 	protected $prefix = 'blogs';
@@ -54,6 +58,8 @@ class BlogController extends Controller
     {		
 		$records = Entry::getBlogIndex();
 		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
+
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'redirect' => '/' . $this->prefix . '/index',
@@ -81,6 +87,8 @@ class BlogController extends Controller
     {
 		$id = intval($id);
 		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SHOW, $id);
+
 		try
 		{		
 			// get the blog
@@ -150,6 +158,8 @@ class BlogController extends Controller
     {
 		$id = intval($id);
 		
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
+
 		try
 		{
 			// get the blog
