@@ -41,6 +41,7 @@ DB Changes
 ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
 ALTER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
 
+update `visitors` set deleted_flag = 1 WHERE 1=1
 
 
 

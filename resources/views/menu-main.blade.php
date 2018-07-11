@@ -41,6 +41,9 @@
 								$user_type_name = "unconfirmed";	
 						?>
                         @guest
+							@if (null !== (session('spy', null)))
+								<li><a href="/spy">Turn Spy Off</a></li>
+							@endif
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
 							@endif

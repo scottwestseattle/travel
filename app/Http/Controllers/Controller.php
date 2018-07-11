@@ -182,14 +182,12 @@ class Controller extends BaseController
 	
 	protected function saveVisitor($model, $page, $record_id = null)
 	{
-		if (Auth::check())
-		{
-			if (Auth::user()->user_type >= USER_SITE_ADMIN)
-			{
-				return;
-			}
-		}
-		dd('here');
+		$spy = session('spy', null);
+		if (isset($spy))
+			return; // spy mode, don't count views
+	
+		if ($this->isAdmin())
+			return; // admin user, don't count views
 
 		$save = false;
 		$host = null;

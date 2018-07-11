@@ -31,6 +31,7 @@ Route::get('/email/check', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/gallery', 'EntryController@gallery');
 Route::get('/confirm', 'FrontPageController@confirm');
+Route::get('/spy', 'FrontPageController@spy');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');

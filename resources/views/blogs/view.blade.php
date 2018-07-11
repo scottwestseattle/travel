@@ -135,7 +135,9 @@ else
 		
 		<h3>
 			<span class="middle" style="margin: 0 10px 0 0;">Blog Posts ({{ count($records) }})</span>
-			<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-action">Add New Post</button></a>				
+			@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+				<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-action">Add New Post</button></a>	
+			@endif
 		</h3>
 	
 		<!---------------------------------->
