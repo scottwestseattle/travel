@@ -212,7 +212,8 @@ class EntryController extends Controller
 			->where('permalink', $permalink)
 			->first();
 			
-		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $entry->id, $request->requestUri);
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 						
 		if (isset($entry))
 		{

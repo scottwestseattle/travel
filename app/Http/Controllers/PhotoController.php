@@ -139,29 +139,6 @@ class PhotoController extends Controller
 		return view('photos.sliders', $vdata);	
 	}
 	
-    public function gallery()
-    {
-		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
-
-		if (!$this->isAdmin())
-             return redirect('/');
-
-		if (Auth::check())
-        {
-			$records = Photo::getGallery();
-			
-			$vdata = $this->getViewData([
-				'records' => $records,
-			]);
-			
-			return view('photos.gallery', $vdata);	
-        }           
-        else 
-		{
-             return redirect('/');
-        }
-    }
-	
     public function indexadmin()
     {
 		if (!$this->isAdmin())

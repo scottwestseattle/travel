@@ -349,7 +349,6 @@ Route::group(['prefix' => 'activities'], function ()
 Route::group(['prefix' => 'photos'], function () 
 {
 	// index
-	Route::get('/gallery', 'PhotoController@gallery');
 	Route::get('/indexadmin', 'PhotoController@indexadmin')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');

@@ -16,6 +16,9 @@ function onResize()
 	
 	var content = document.getElementById("content");
 	content.style.display = 'block';
+	
+	var loader = document.getElementById("load-loop");
+	loader.style.display = 'none';
 }
 
 function resize(dc)
@@ -104,6 +107,7 @@ function resize(dc)
 	// set the new photo box size	
 	if (!dc.readonly)
 		$('.frontpage-box-link').css({width:w+'px', height:h+'px'});
+		// sbw new: $('.frontpage-box').css({width:w+'px', height:h+'px'});
 	
 	flash("doc-width: " + $(document).width() 
 	+ ", screen.width: " + screen.width 
