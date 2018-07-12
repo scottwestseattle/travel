@@ -2,8 +2,12 @@
 
 @section('content')
 
+<?php
+$now = new DateTime();
+?>
+
 <div class="page-size container">
-	<h1 style="font-size:1.3em;">Visitors ({{ count($records) }})</h1>
+	<h1 style="font-size:1.3em;">Visitors ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>

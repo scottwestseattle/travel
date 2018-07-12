@@ -95,7 +95,7 @@ foreach($photos as $photo)
 			if (strlen($main_photo->location) > 0)
 				$title .= ', ' . $main_photo->location;
 		?>
-		<img src="/img/entries/{{$record->id}}/{{$main_photo->filename}}" title="{{$title}}" style="max-width:100%; width:{{ $width }}" />
+		<img src="/img/entries/{{$record->id}}/{{$main_photo->filename}}" title="{{$title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
 	</div>	
 	@endif
 	
@@ -118,9 +118,6 @@ foreach($photos as $photo)
 				<h3>PHOTOS</h3>
 			</div>
 		</div>
-	@endif
-	
-	@if ($regular_photos > 0)
 			
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		@foreach($photos as $photo)		
@@ -135,8 +132,8 @@ foreach($photos as $photo)
 						$title .= ', ' . $photo->location;
 				?>
 				
-				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', '{{$title}}')">
-					<img class="{{SHOW_XS_ONLY}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', {{$photo->id}})">
+					<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 				</span>
 			@endif

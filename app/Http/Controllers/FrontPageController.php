@@ -145,12 +145,16 @@ class FrontPageController extends Controller
 				->get();
 		}
 		else
-		{
+		{			
+			$records = Visitor::getVisitorsToday();
+
+			/* ORIG
 			$records = Visitor::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->latest()
 				->get();
+			*/
 		}
 						
 		return view('visits', ['records' => $records]);

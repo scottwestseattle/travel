@@ -354,6 +354,8 @@ class EntryController extends Controller
 				'prev' => $prev,
 				'photos' => $photos,
 			]);
+			
+			return view('entries.view', $vdata);
 		}
 		catch (\Exception $e) 
 		{
@@ -363,7 +365,7 @@ class EntryController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}			
 		
-		return view('entries.view', $vdata);
+        return redirect('/error');
 	}
 	
     public function home()

@@ -87,6 +87,12 @@ $sectionCount = 0;
 
 <script>
 
+	function decodeHtml(html) {
+		var txt = document.createElement("textarea");
+		txt.innerHTML = html;
+		return txt.value;
+	}
+	
 	// load all the sliders so we can javascript through them
 	var sliders = [
 		@foreach($sliders as $slider)
@@ -102,7 +108,7 @@ $sectionCount = 0;
 	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
 	document.getElementById("slider-text").innerHTML = loc;
 	document.getElementById("slider-text-xs").innerHTML = loc;
-	document.getElementById("slider").title = alt + ', ' + loc;
+	document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
 
 	function showSliderControls(show)
 	{	
@@ -147,7 +153,7 @@ $sectionCount = 0;
 		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
 		document.getElementById("slider-text").innerHTML = loc;
 		document.getElementById("slider-text-xs").innerHTML = loc;
-		document.getElementById("slider").title = alt + ', ' + loc;
+		document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
 	}
 </script>
 

@@ -162,8 +162,18 @@ function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
 	}
 }
 
-function popup(id, filename, title)
-{	
+function decodeHtml(html) 
+{
+	var txt = document.createElement("textarea");
+	txt.innerHTML = html;
+	return txt.value;
+}
+
+function popup(id, filename, photo_id)
+{
+	var origImg = document.getElementById(photo_id);
+	title = decodeHtml(origImg.title);
+	
 	var popupDiv = document.getElementById("myModal");
 	popupDiv.style.display = "block";
 	
@@ -187,7 +197,7 @@ function nextPhoto(found)
 		if (found)
 		{
 			popupImg.src = photos.item(i).src;
-			popupImg.title = photos.item(i).title;
+			popupImg.title = decodeHtml(photos.item(i).title);
 			popupImgTitle.innerHTML = popupImg.title;
 			return;
 		}
