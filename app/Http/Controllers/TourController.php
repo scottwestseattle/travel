@@ -153,7 +153,7 @@ class TourController extends Controller
 			return redirect('/tours/indexadmin');
     }
 
-    public function permalocation($location, $permalink)
+    public function permaNOTUSEDlocation($location, $permalink)
     {
 		$entry = Entry::select()
 			//->where('site_id', SITE_ID)

@@ -192,12 +192,6 @@ class EntryController extends Controller
 			return redirect($this->getReferer($request, '/entries/indexadmin/'));
 		}						
     }
-
-    public function permalocation($location, $permalink)
-    {
-		dd('function permalocation: ' . $permalink);
-		return $this->permalink($permalink);
-	}
 	
     public function permalink(Request $request, $permalink)
     {		

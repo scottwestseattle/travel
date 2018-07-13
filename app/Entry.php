@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Auth;
 
 class Entry extends Base
 {
@@ -123,12 +124,13 @@ class Entry extends Base
 		$q = '
 			SELECT entries.id, entries.title, entries.description, entries.permalink
 				, photo_main.filename as photo
+				, photo_main.main_flag as photo_main
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
 				, count(posts.id) as post_count 
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.user_id = ? AND photo_main.site_id = ?
 			LEFT JOIN entries as posts
 				ON posts.parent_id = entries.id AND posts.deleted_flag = 0 AND posts.published_flag = 1 AND posts.approved_flag = 1
 			WHERE 1=1
@@ -143,7 +145,7 @@ class Entry extends Base
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG]);
+		$records = DB::select($q, [Auth::id(), SITE_ID, SITE_ID, ENTRY_TYPE_BLOG]);
 		
 		return $records;
 	}
@@ -158,7 +160,7 @@ class Entry extends Base
 				, blogs.title as blog_title, blogs.id as blog_id
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.user_id = ? AND photo_main.site_id = ?
 			JOIN entries as blogs
 				ON blogs.id = entries.parent_id AND blogs.deleted_flag = 0 AND blogs.published_flag = 1 AND blogs.approved_flag = 1
 			WHERE 1=1
@@ -174,7 +176,7 @@ class Entry extends Base
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, intval($limit)]);
+		$records = DB::select($q, [Auth::id(), SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, intval($limit)]);
 		
 		return $records;
 	}	

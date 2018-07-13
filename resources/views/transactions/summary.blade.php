@@ -43,9 +43,9 @@
 		@if (isset($monthlyBalances))
 			@foreach($monthlyBalances as $record)
 			@if ($record->balance < 0.0)
-			<tr style="color: white; background-color: red;">					
+			<tr style="color: red;">					
 			@else
-			<tr style="xcolor: white; xbackground-color: blue;">					
+			<tr style="">					
 			@endif
 				<td>{{$record->month}}</td>
 				<td>{{$record->balance}}</td>
