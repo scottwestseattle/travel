@@ -12,9 +12,16 @@
 
 		<label for="name" class="control-label">Name:</label>
 		<input type="text" name="name" class="form-control" value="{{$record->name}}"></input>	
-					
-		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'parent_id', 'options' => $categories, 'selected_option' => {{$record->parent_id}}])@endcomponent				
-					
+
+		<div class="clear" style="padding:20px 0;">
+			@component('control-dropdown-menu', [
+			'prompt' => 'Category:'
+			, 'field_name' => 'parent_id'
+			, 'options' => $categories
+			, 'selected_option' => $record->parent_id]
+			)@endcomponent				
+		</div>
+							
 		<label for="notes" class="control-label">Notes:</label>
 		<input type="text" name="notes" class="form-control" value="{{$record->notes}}"></input>	
 			

@@ -130,6 +130,7 @@ class SubcategoryController extends Controller
 			
 		$vdata = $this->getViewData([
 			'record' => $category,
+			'categories' => Controller::getCategories(LOG_ACTION_ADD),
 		]);		
 		 
 		return view(PREFIX . '.edit', $vdata);
@@ -145,8 +146,9 @@ class SubcategoryController extends Controller
 		$isDirty = false;
 		$changes = '';
 		
-		$record->name = $this->copyDirty($record->name, $request->title, $isDirty, $changes);
+		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes);
 		$record->notes = $this->copyDirty($record->notes, $request->notes, $isDirty, $changes);
+		$record->parent_id = $this->copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 										
 		if ($isDirty)
 		{						
@@ -173,7 +175,7 @@ class SubcategoryController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexupdate/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
 	}
 	
 	public function view(Category $category)
