@@ -5188,7 +5188,8 @@ tbody.collapse.in {
 }
 
 .navbar-default .navbar-brand {
-    color: #777
+    color: #777;
+	color: white; //sbw
 }
 
 .navbar-default .navbar-brand:focus,
@@ -5199,12 +5200,14 @@ tbody.collapse.in {
 
 .navbar-default .navbar-nav>li>a,
 .navbar-default .navbar-text {
-    color: #777
+    color: #777;
+	color: white; //sbw
 }
 
 .navbar-default .navbar-nav>li>a:focus,
 .navbar-default .navbar-nav>li>a:hover {
     color: #333;
+	color: LightGray; //sbw
     background-color: transparent
 }
 

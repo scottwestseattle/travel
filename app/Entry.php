@@ -124,7 +124,6 @@ class Entry extends Base
 		$q = '
 			SELECT entries.id, entries.title, entries.description, entries.permalink
 				, photo_main.filename as photo
-				, photo_main.main_flag as photo_main
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
 				, count(posts.id) as post_count 
