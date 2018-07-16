@@ -28,6 +28,8 @@ $now = new DateTime();
 						$agent = 'BingBot';
 					else if (stripos($agent, 'mediapartners') !== FALSE)
 						$agent = 'AdSense';
+					else if (stripos($agent, 'a6-indexer') !== FALSE)
+						$agent = 'Amazon A6';
 					
 				?>
 				<tr>
