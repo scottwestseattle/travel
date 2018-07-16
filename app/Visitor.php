@@ -4,14 +4,27 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use DateTime;
 
 class Visitor extends Base
 {
-    static public function getVisitorsToday()
+    static public function getVisitors($date = null)
     {		
-		$month = intval(date("m"));
-		$year = intval(date("Y"));
-		$day = intval(date("d"));
+		if (isset($date))
+		{
+			$date = DateTime::createFromFormat('Y-m-d', $date);
+			
+			$month = intval($date->format("m"));
+			$year = intval($date->format("Y"));
+			$day = intval($date->format("d"));
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = intval(date("d"));
+		}
+
 		$fromTime = ' 00:00:00';
 		$toTime = ' 23:23:59';
 		

@@ -1,4 +1,6 @@
+@if (isset($div))
 <div class="form-group">
+@endif
 
 	@if (isset($prompt))
 	<label for="{{$field_name}}">{{$prompt}}</label>
@@ -52,7 +54,9 @@
 	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day')";>
 		<span id="" class="glyphCustom glyphicon glyphicon-calendar" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
-	
+
+@if (isset($div))	
 </div>	
+@endif
 
 

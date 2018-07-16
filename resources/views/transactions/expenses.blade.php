@@ -10,7 +10,7 @@
 		
 		{{$filter['from_date']}} - {{$filter['to_date']}}
 		
-		@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'filter' => $filter])@endcomponent
+		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'filter' => $filter])@endcomponent
 							
 		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Filter</button>
 

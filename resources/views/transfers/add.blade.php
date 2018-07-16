@@ -10,7 +10,7 @@
 
 	<form method="POST" action="/{{$prefix}}/create">
 
-		@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 			
 		<div style="font-size:1.4em;" class="form-group">
 			<div>

@@ -221,8 +221,9 @@ Route::group(['prefix' => 'sites'], function () {
 Route::group(['prefix' => 'frontpage'], function () {
 	
 	Route::get('/index', 'FrontPageController@index');
-	Route::get('/visitors/{sort?}', 'FrontPageController@visitors');
-	Route::get('/admin', 'FrontPageController@admin');
+	Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');
+	Route::post('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');
+	Route::get('/admin', 'FrontPageController@admin')->middleware('auth');
 
 });
 

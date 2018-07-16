@@ -1168,7 +1168,7 @@ class Controller extends BaseController
 				
 		return $dates;
 	}
-
+	
     static protected function getDateControlSelectedDate($date)
     {
 		$date = DateTime::createFromFormat('Y-m-d', $date);

@@ -16,7 +16,7 @@
 			@component('control-entry-types', ['current_type' => $record->type_flag, 'entryTypes' => $entryTypes])
 			@endcomponent			
 		
-			@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 
 			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 			

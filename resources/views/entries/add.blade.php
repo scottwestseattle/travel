@@ -25,7 +25,7 @@
 				<input type="hidden" name="parent_id" value="{{$parent_id}}">
 			@endif
 
-			@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 			
 			<div class="entry-title-div">
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />

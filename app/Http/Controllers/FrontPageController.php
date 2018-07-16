@@ -131,10 +131,14 @@ class FrontPageController extends Controller
 		return view('visits', ['records' => $records]);
     }
 
-    public function visitors($sort = null)
+    public function visitors(Request $request, $sort = null)
     {			
 		if (!$this->isAdmin())
              return redirect('/');
+
+		$dates = Controller::getDateFilter($request, false, false);
+			 
+		$filter = Controller::getFilter($request, /* today = */ true);		
 
 		if (isset($sort))
 		{
@@ -145,8 +149,10 @@ class FrontPageController extends Controller
 				->get();
 		}
 		else
-		{			
-			$records = Visitor::getVisitorsToday();
+		{		
+			$date = isset($dates['from_date']) ? $dates['from_date'] : null;
+		
+			$records = Visitor::getVisitors($date);
 
 			/* ORIG
 			$records = Visitor::select()
@@ -156,8 +162,15 @@ class FrontPageController extends Controller
 				->get();
 			*/
 		}
+		
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'dates' => Controller::getDateControlDates(),
+			'filter' => Controller::getFilter($request, /* today = */ true),
+		]);
+
 						
-		return view('visits', ['records' => $records]);
+		return view('visits', $vdata);
     }
 	
     public function admin()
