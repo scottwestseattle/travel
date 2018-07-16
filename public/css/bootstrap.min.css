@@ -11,26 +11,28 @@
  
 .navbar-default .navbar-brand {
 	color:#777;
-	color: white;
+	color: white; /* sbw */
 }
 
 .navbar-default .navbar-brand:focus,.navbar-default .navbar-brand:hover {
 	color:#5e5e5e;
-	background-color:transparent
+	color: LightGray; //sbw
+	background-color:transparent;
 }
 
 .navbar-default .navbar-text {
 	color:#777;
-	color: white;
+	color: white; /* sbw */
 }
 
 .navbar-default .navbar-nav>li>a{
 	color:#777;
-	color: white;
+	color: white; /* sbw */
 }
 
 .navbar-default .navbar-nav>li>a:focus,.navbar-default .navbar-nav>li>a:hover {
 	color:#333;
+	color: LightGray;  /* sbw */
 	background-color:transparent;
 }
 
