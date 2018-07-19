@@ -118,8 +118,6 @@ class BlogController extends Controller
 			$records = Entry::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
 				->where('parent_id', $id)
 				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
 				->orderByRaw('display_date DESC')

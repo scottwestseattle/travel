@@ -170,7 +170,7 @@ class Entry extends Base
 				AND entries.approved_flag = 1
 			GROUP BY 
 				entries.id, entries.title, entries.description, entries.permalink, entries.display_date, photo, photo_title, photo_path, blog_title, blog_id
-			ORDER BY entries.id DESC 
+			ORDER BY entries.display_date DESC, entries.id DESC 
 			LIMIT ?
 		';
 		

@@ -138,12 +138,13 @@ else
 		</h3>
 	
 		<!---------------------------------->
-		<!-- The Blog Entry list          -->
+		<!-- The Blog Post list          -->
 		<!---------------------------------->
 		<table id="blogEntryTable" class="table table-striped">
 			<tbody>
 			<?php $count = 0; ?>
 			@foreach($records as $record)
+				@if ((Auth::user() && Auth::user()->user_type >= 1000) || ($record->published_flag == 1 && $record->approved_flag == 1))
 				<tr style="display:{{$count++ < 10 ? 'default' : 'none'}};">
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
@@ -152,11 +153,20 @@ else
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
 						
-						@if (!isset($record->permalink) || strlen($record->permalink) === 0)
-							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+						@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+							@if ($record->published_flag === 0)
+								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+							@elseif ($record->approved_flag === 0)
+								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
+							@endif
+							
+							@if (!isset($record->permalink) || strlen($record->permalink) === 0)
+								<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+							@endif
 						@endif
 					</td>
 				</tr>
+				@endif
 			@endforeach
 			</tbody>
 		</table>
