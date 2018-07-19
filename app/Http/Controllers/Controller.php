@@ -38,6 +38,7 @@ define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
+define('PHOTO_RECEIPTS_FOLDER', 'receipts');
 define('PHOTO_TMP_FOLDER', 'tmp');
 define('PHOTO_ENTRY_PATH', '/img/entries/');
 define('PHOTO_SLIDER_PATH', '/img/sliders/');

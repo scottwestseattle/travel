@@ -28,11 +28,11 @@
 			</tr>
 			<tr>
 				<td>Category:</td>
-				<td>{{$record->category_id}}</td>
+				<td>{{$record->category}}</td>
 			</tr>
 			<tr>
 				<td>Subcategory:</td>
-				<td>{{$record->subcategory_id}}</td>
+				<td>{{$record->subcategory}}</td>
 			</tr>
 			<tr>
 				<td>Notes:</td>
@@ -41,10 +41,6 @@
 			<tr>
 				<td>Vendor Memo:</td>
 				<td>{{$record->vendor_memo}}</td>
-			</tr>
-			<tr>
-				<td>Reconciled:</td>
-				<td>{{$record->reconciled_flag}}</td>
 			</tr>
 			<tr>
 				<td>Transaction Type:</td>
@@ -68,6 +64,17 @@
 			</tr>
 		</tbody>
 	</table>	
+	
+	<div class="text-center" style="display:default; margin-top:5px;">	
+		@foreach($photos as $photo)		
+				<div id="myModal" onclick="" class="modal-popup text-center">
+					<div  style="" class="modal-content">
+						<img id="popupImg" style="max-width:900px;" width="100%"  src="{{$record->photo_path}}/{{$photo->filename}}" />
+					</div>
+				</div>
+		@endforeach	
+	</div>
+	
 	
 </div>
 @endsection

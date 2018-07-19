@@ -24,6 +24,32 @@ class Transaction extends Base
 
 		return $record;
     }
+
+    static public function get($id)
+    {
+		$q = '
+			SELECT t.*
+				, accounts.name as account
+				, categories.name as category
+				, subcategories.name as subcategory 
+				, CONCAT("' . PHOTO_RECEIPTS_FOLDER . '", t.id, "/") as photo_path
+			FROM transactions as t
+			JOIN accounts ON accounts.id = t.parent_id
+			JOIN categories ON categories.id = t.category_id
+			JOIN categories as subcategories ON subcategories.id = t.subcategory_id
+			LEFT JOIN photos on photos.parent_id = t.id
+			WHERE 1=1 
+			AND t.user_id = ?
+			AND t.deleted_flag = 0
+			AND t.id = ? 
+		';
+
+		$record = DB::select($q, [Auth::id(), $id]);
+
+		$record = (count($record) > 0) ? $record[0] : null;
+		
+		return $record;
+    }
 	
     static public function getIndex($limit = null)
     {

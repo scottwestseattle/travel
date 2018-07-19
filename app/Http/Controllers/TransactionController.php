@@ -11,6 +11,7 @@ use App\Transaction;
 use App\Account;
 use App\Category;
 use DateTime;
+use App\Photo;
 
 define('PREFIX', 'transactions');
 define('LOG_MODEL', 'transactions');
@@ -155,6 +156,9 @@ class TransactionController extends Controller
 	
 	public function edit(Transaction $transaction)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$record = $transaction;
 		
 		// if it's a transfer record, let the transfer controller handle it
@@ -184,6 +188,9 @@ class TransactionController extends Controller
 		
     public function update(Request $request, Transaction $transaction)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$record = $transaction;
 		
 		if (!$this->isAdmin())
@@ -242,13 +249,23 @@ class TransactionController extends Controller
 		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 
 	}
 	
-	public function view(Transaction $transaction)
+	public function view($id)
     {
 		if (!$this->isAdmin())
              return redirect('/');
+
+		$transaction = Transaction::get($id);
+		
+		$photos = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $id)
+			->orderByRaw('created_at ASC')
+			->get();
 		 
 		$vdata = $this->getViewData([
 			'record' => $transaction,
+			'photos' => $photos,
 		]);				
 		 
 		return view(PREFIX . '.view', $vdata);
@@ -341,6 +358,9 @@ class TransactionController extends Controller
 	
     public function copy(Request $request, Transaction $transaction)
     {
+		if (!$this->isAdmin())
+             return redirect('/');
+
 		$record = $transaction;
 		
 		if (!$this->isAdmin())
