@@ -49,9 +49,7 @@ class TasksController extends Controller
     public function update(Request $request, Task $task)
     {	
     	if (Auth::check() && Auth::user()->id == $task->user_id)
-        {
-			//dd($request);
-				
+        {				
 			//$task->title = $request->title;
 			$task->description = $request->description;
 			$task->link = $request->link;

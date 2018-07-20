@@ -8,27 +8,18 @@
 @section('content')
 
 <?php
-	$add_link = '/photos/add/';
-	$id = (isset($id) ? $id : 0);
-	if ($id > 0)
-		$add_link .= $id;
-	
-	if (!isset($title))
-		$title = '';
-	
-	if (!isset($record_id))
-		$record_id = null;
+	$add_link = '/photos/add/' . PHOTO_TYPE_SLIDER;
 ?>
 
 <div class="container page-size">
 
-	@component('menu-submenu-entries', ['record_id' => $record_id])@endcomponent
+	@component('menu-submenu-entries')@endcomponent
 	
 	<h1 style="font-size:1.5em;">
 		@if (Auth::user() && Auth::user()->user_type >= 100)
 			<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
 		@endif
-		<span style="margin-left: 5px;">Photos ({{ count($photos) }})</span>
+		<span style="margin-left: 5px;">Slider Photos ({{ count($photos) }})</span>
 	</h1>
 	
 	<div class="{{SHOW_NON_XS}}">	

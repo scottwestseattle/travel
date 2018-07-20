@@ -23,7 +23,6 @@ class TagsController extends Controller
 
     public function entries(Tag $tag)
     {		
-		//dd($tag->entries);
     	return view('entries.index', ['entries' => $tag->entries]);
     }
 	

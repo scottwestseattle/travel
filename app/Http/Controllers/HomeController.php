@@ -169,8 +169,6 @@ class HomeController extends Controller
 			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC')
 			->get();
 			
-		//dd($activities);
-
 		//
 		// get unconfirmed users
 		//

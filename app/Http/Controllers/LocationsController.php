@@ -80,7 +80,6 @@ class LocationsController extends Controller
 				
 				$record['photo'] = $main_photo;
 				$record['link'] = $link;
-				//dd($main_photo);
 			}		
 		}
 
@@ -203,9 +202,7 @@ class LocationsController extends Controller
 			->select('locations.*', 'parent.name as parent_name', 'parent.id as parent_id')
 			->where('locations.id', $id)
 			->first();
-			
-		//dd($location);
-			
+						
 		$activities = Activity::select()
 			->where('deleted_flag', '<>', 1)
 			->where('location_id', '=', $id)

@@ -353,11 +353,11 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/indexadmin', 'PhotoController@indexadmin')->middleware('auth');
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
-	Route::get('/entries/{id}', 'PhotoController@entries')->middleware('auth');
+	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
 	Route::get('/view/{photo}', 'PhotoController@view');
 
 	// add/create
-	Route::get('/add/{parent_id?}','PhotoController@add')->middleware('auth');
+	Route::get('/add/{type_flag}/{parent_id?}','PhotoController@add')->middleware('auth');
 	Route::post('/create','PhotoController@create')->middleware('auth');
 	
 	// edit/update

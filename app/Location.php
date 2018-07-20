@@ -41,7 +41,6 @@ class Location extends Base
 		
 		// get the list with the location included
 		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
-		//dd($records);
 		
 		return $records;
 	}		

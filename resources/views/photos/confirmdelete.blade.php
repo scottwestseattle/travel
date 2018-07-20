@@ -3,12 +3,10 @@
 @section('content')
 
 <div class="container page-size">
-	<h1>Delete {{ (intval($photo->parent_id) === 0 ? 'Slider ' : '') }}Photo</h1>
+	<h1>Delete {{$type}} Photo</h1>
 
 	<form method="POST" action="/photos/delete/{{ $photo->id }}">
-	
-		<input type="hidden" name="parent_id" value="{{$photo->parent_id}}" />
-	
+		
 		<div class="form-group">
 			<span name="filename" class="">{{$photo->filename}}</span>
 		</div>
@@ -26,7 +24,7 @@
 		</div>
 		
 		<div class="form-group">
-			<img alt="{{$photo->alt_text}}" title="{{$photo->alt_text}}" style="width:500px; max-width:100%;" src="{{$path}}{{$photo->filename}}" />
+			<img alt="{{$photo->alt_text}}" title="{{$photo->alt_text}}" style="width:500px; max-width:100%;" src="{{$path}}/{{$photo->filename}}" />
 		</div>
 		
 		<div class="form-group">

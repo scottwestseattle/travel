@@ -94,9 +94,7 @@ class TransactionController extends Controller
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
-		
-		//dd($subcategories);
-		
+				
 		$vdata = $this->getViewData([
 			'accounts' => $accounts,
 			'categories' => $categories,
@@ -334,7 +332,6 @@ class TransactionController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			//dd($records);
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');

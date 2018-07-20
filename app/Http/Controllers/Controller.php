@@ -31,14 +31,18 @@ define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
 define('PHOTOS_FULL_PATH', '/public/img/');
 define('PHOTOS_WEB_PATH', '/img/');
 
-// -1=not set, 0=slider, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 
-define('PHOTO_TYPE_NOTSET', 	-1);
-define('PHOTO_TYPE_SLIDER', 	0);
+// -1=not set, 0=slider, 1=entry, 2=receipt, 99=other 
+define('PHOTO_TYPE_NOTSET',		-1);
+define('PHOTO_TYPE_SLIDER',		0);
+define('PHOTO_TYPE_ENTRY', 		1);
+define('PHOTO_TYPE_RECEIPT', 	2);
+define('PHOTO_TYPE_OTHER', 		99);
+
 define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
-define('PHOTO_RECEIPTS_FOLDER', 'receipts');
+define('PHOTO_RECEIPT_FOLDER', 'receipts');
 define('PHOTO_TMP_FOLDER', 'tmp');
 define('PHOTO_ENTRY_PATH', '/img/entries/');
 define('PHOTO_SLIDER_PATH', '/img/sliders/');
@@ -232,7 +236,6 @@ class Controller extends BaseController
 		$ellipsis = '...';
 		$newLength = $length - strlen($ellipsis);
 		$string = (strlen($string) > $length) ? substr($string, 0, $newLength) . $ellipsis : $string;
-		//dd($string);
 		
 		return $string;
 	}	
@@ -246,8 +249,6 @@ class Controller extends BaseController
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->first();
-
-		//dd($visitor);
 		
 		return(!isset($visitor));
 	}		
@@ -331,14 +332,13 @@ class Controller extends BaseController
     protected function getSliders()
     {
 		$path = base_path() . SLIDER_PHOTOS_PATH;
-		//dd($path);
 		$files = scandir($path);
 		$photos = [];
 		foreach($files as $file)
 		{
 			if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
 			{
-				if (/* $this->startsWith($file, 'slider') && */ $this->endsWith($file, '.jpg'))
+				if (/* $this->startsWith($file, 'slider') && */ Controller::endsWith($file, '.jpg'))
 				{
 					$photos[] = $file;					
 				}
@@ -355,11 +355,9 @@ class Controller extends BaseController
 		if (strlen($subfolder) > 0)
 			$path .= $subfolder;
 			
-		if (!$this->endsWith($path, '/'))
+		if (!Controller::endsWith($path, '/'))
 			$path .= '/';
-			
-		//dd($path);
-		
+					
 		return $path;
 	}
 	
@@ -370,10 +368,8 @@ class Controller extends BaseController
 		if (strlen($subfolder) > 0)
 			$path .= $subfolder;
 			
-		if (!$this->endsWith($path, '/'))
+		if (!Controller::endsWith($path, '/'))
 			$path .= '/';
-			
-		//dd($path);
 		
 		return $path;
 	}
@@ -391,7 +387,7 @@ class Controller extends BaseController
 			{
 				if ($file != '..' && $file != '.' && !is_dir($path . '/' . $file))
 				{
-					if ($this->endsWith($file, $ext))
+					if (Controller::endsWith($file, $ext))
 					{
 						$photos[] = $file;					
 					}
@@ -416,9 +412,7 @@ class Controller extends BaseController
 				$photos[] = $file;					
 			}
 		}
-		
-		//dd($photos);
-			
+					
 		/*
 			$thumbs_path = $this->getGalleryPath($gallery . '/thumbs' . $width, $user_id);
 			$files = scandir($thumbs_path);	
@@ -515,7 +509,7 @@ class Controller extends BaseController
 		return $rc;
 	}
 	
-	protected function endsWith($haystack, $needle)
+	static protected function endsWith($haystack, $needle)
 	{
 		$rc = false;
 		$pos = strrpos($haystack, $needle);
@@ -540,79 +534,121 @@ class Controller extends BaseController
 		return $rc;
 	}
 
-    protected function getPhotoPath(Photo $photo = null)
+    static protected function getPhotoPath(Photo $photo = null)
     {
 		if ($photo == null)
 		{
 			// the higher level photo path
-			$path = '/img/' . PHOTO_ENTRY_FOLDER . '/';
+			$path = '/img/';
 		}
 		else
 		{
-			if ($photo->parent_id === 0)	// slider photo path
-				$path = '/img/' . PHOTO_SLIDER_FOLDER . '/';
-			else 							// entry photo path
-				$path = '/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
+			$info = Controller::getPhotoInfoPath($photo);
+			$path = $info['path'];
 		}
 		
 		return $path;
 	}
+
+	static protected function getPhotoInfoPath($photo)
+	{		
+		$info = Controller::getPhotoInfo($photo->type_flag);
+		
+		$info['path'] = '/img/' . $info['folder'];
+		$info['redirect'] = '/photos/' . $info['redirect'];
+
+		if (!Controller::isSlider($photo))
+		{
+			$info['path'] .= '/' . $photo->parent_id;
+			$info['redirect'] .= '/' . intval($photo->parent_id) . '/' . intval($photo->type_flag);
+		}
+
+		$info['filepath'] = base_path() . '/public' . $info['path'];
+
+		return $info;
+	}
 	
-	protected function deletePhoto(Photo $photo, &$redirect, &$message, &$messageLevel)
+	static protected function getPhotoInfo($type_flag)
+	{		
+		// default to these for backwards compatibility
+		$folder = PHOTO_ENTRY_FOLDER;
+		$type = 'Entry';
+		$redirect = $folder; // physical folder and url folder are the same
+		
+		switch($type_flag)
+		{
+			case PHOTO_TYPE_ENTRY:
+				// already set above for default
+				break;
+			case PHOTO_TYPE_RECEIPT:
+				$folder = PHOTO_RECEIPT_FOLDER; // physical folder is different, 
+				$redirect = PHOTO_ENTRY_FOLDER; // url folder for redirect NOT different
+				$type = 'Receipt';
+				break;
+			case PHOTO_TYPE_SLIDER:
+				$folder = PHOTO_SLIDER_FOLDER;
+				$redirect = 'sliders';
+				$type = 'Slider';
+				break;
+			default:
+				break;
+		}
+
+		$info = [
+			'type' => $type,
+			'folder' => $folder,
+			'redirect' => $redirect,
+		];
+
+		return $info;
+	}
+	
+	static protected function deletePhoto(Photo $photo, &$redirect, &$message, &$messageLevel)
 	{
 		$redirect = '/';
 		$message = 'Photo successfully deleted';
 		$messageLevel = 'success';
 		$rc = false;
-		
-		if (!$this->isAdmin())
-             return redirect('/');
-	
-    	if ($this->isOwnerOrAdmin($photo->user_id))
-        {			
-			// 
-			// update the database record
-			//
-			$photo->deleteSafe();
-			//$photo->deleted_flag = 1;
-			//$photo->save();	
-
-			//
-			// move the file to the deleted folder
-			//
-			if ($this->isSlider($photo))
-			{
-				$path_from = base_path() . '/public/img/' . PHOTO_SLIDER_FOLDER . '/';
-				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
-			}
-			else
-			{
-				$path_from = base_path() . '/public/img/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id . '/';
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $photo->parent_id;
-			}
 			
-			$path_to = $path_from . 'deleted/';
-						
-			if (!is_dir($path_to)) 
+		// 
+		// update the database record
+		//
+		$photo->deleteSafe();
+		//$photo->deleted_flag = 1;
+		//$photo->save();	
+
+		//
+		// move the file to the deleted folder
+		//
+		$info = Controller::getPhotoInfoPath($photo);
+		$folder = $info['folder'];
+		$redirect = $info['redirect'];
+		$path_from = $info['filepath'];
+		
+		$path_to = $path_from . '/deleted';
+					
+		if (!is_dir($path_to)) 
+		{
+			if (is_dir($path_from)) 
 			{
 				// make the folder with read/execute for everybody
 				mkdir($path_to, 0755);
-			}
-			
-			$path_from .= $photo->filename;
-			$path_to .= $photo->filename;
+			}			
+		}
+		
+		$path_from .= '/' . $photo->filename;
+		$path_to .= '/' . $photo->filename;
 
-			try
-			{
-				rename($path_from, $path_to);
-				
-				$rc = true;
-			}
-			catch (\Exception $e) 
-			{
-				$messageLevel = 'danger';
-				$message = $e->getMessage();				
-			}
+		try
+		{
+			rename($path_from, $path_to);
+			
+			$rc = true;
+		}
+		catch (\Exception $e) 
+		{
+			$messageLevel = 'danger';
+			$message = $e->getMessage();				
 		}
 		
 		return $rc;
@@ -703,16 +739,13 @@ class Controller extends BaseController
 		
 		// get the list with the location included
 		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
-		//dd($records);
 		
 		return $records;
 	}	
 	
-	protected function isSlider(Photo $photo)
+	static protected function isSlider(Photo $photo)
 	{
-		$id = intval($photo->parent_id);
-		
-		return ($id === 0);
+		return intval($photo->type_flag) === PHOTO_TYPE_SLIDER;
 	}
 	
     protected function saveLocations($entry, $locations)
@@ -739,7 +772,6 @@ class Controller extends BaseController
 			$record = Location::select()
 					->where('id', '=', $id)
 					->first();
-			//dd($record);
 					
 			if (isset($record))
 			{
@@ -748,7 +780,7 @@ class Controller extends BaseController
 			}
 			else
 			{
-				//todo: log this dd('location record not found');
+				//todo: log this 'location record not found'
 			}
 		}
 		else
@@ -953,7 +985,6 @@ class Controller extends BaseController
     {
 		$error = '';
 		
-		//dd($category_id);
 		$records = Category::getSubcategoryOptions($category_id);
 		
 		if (count($records) == 0)
@@ -1181,5 +1212,37 @@ class Controller extends BaseController
 		];
 		
 		return $parts;
+	}
+	
+    static protected function getUniqueFilename($path, $filename)
+    {
+		$filenameOrig = $filename;
+		
+		for($i = 0; $i < 100; $i++)
+		{
+			$fullPath = Controller::appendPath($path, $filename);
+
+			if (file_exists($fullPath))
+			{
+				$base = basename($filenameOrig, ".jpg");
+				$base = basename($base, ".JPG");
+				
+				$filename =  $base . '(' . ($i+1) . ').jpg';
+			}
+			else
+			{
+				break;
+			}
+		}	
+		
+		return $filename;
+	}
+
+    static protected function appendPath($path, $filename)
+    {
+		if (!Controller::endsWith($path, '/'))
+			$path .= '/';
+			
+		return $path . $filename;
 	}
 }

@@ -10,6 +10,12 @@ update `visitors` set deleted_flag = 1 WHERE 1=1
 7/13
 ALTER TABLE `sites` CHANGE `telephone` `telephone` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
+7/20
+ALTER TABLE `photos` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '-1' COMMENT '-1=not set, 0=slider, 1=entry, 2=receipt, 99=other';
+update photos set type_flag = 0 where parent_id = 0; 
+UPDATE photos SET type_flag = 1 WHERE parent_id <> 0;
+UPDATE photos SET type_flag = 2 WHERE parent_id > 1000; 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // drop all tables and migrate all

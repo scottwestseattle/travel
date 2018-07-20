@@ -72,7 +72,6 @@ class Category extends Base
 					->get();
 					
 				//$records = Category::getSubcategories();
-				//dd($subs);
 			}
 
 			if (isset($records) && count($records) > 0)

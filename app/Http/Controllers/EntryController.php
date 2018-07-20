@@ -104,7 +104,6 @@ class EntryController extends Controller
 			->orderByRaw('entries.id DESC')
 			->get();
 			
-		//dd($entries);
 		$vdata = $this->getViewData([
 			'entries' => $entries, 
 			'data' => $this->getViewData(), 
@@ -151,9 +150,7 @@ class EntryController extends Controller
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-           
-			//dd($request);
-			
+        			
 		$entry = new Entry();
 		
 		$entry->site_id = SITE_ID;
@@ -375,7 +372,6 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		//dd($entry->display_date);
 		$dates = null;
 		if (isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);
@@ -429,7 +425,6 @@ class EntryController extends Controller
 				$request->session()->flash('message.content', $e->getMessage());		
 			}			
 
-			//dd($request->referer);
 			return redirect($this->getReferer($request, '/entries/indexadmin')); 
 		}
 		else
@@ -476,9 +471,7 @@ class EntryController extends Controller
              return redirect('/');
 
     	if ($this->isOwnerOrAdmin($entry->user_id))
-        {
-			//dd($entry);
-			
+        {			
 			$entry->deleteSafe();
 			
 			return redirect('/entries/index');
@@ -649,7 +642,6 @@ class EntryController extends Controller
 						)
 						->where('entries.id', $entry->id)
 						->first();
-					//dd($locations);
 					
 					try 
 					{
@@ -773,9 +765,7 @@ class EntryController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
-		//dd($records);
-			
-		//dd($entries);
+
 		$vdata = $this->getViewData([
 			'records' => $records, 
 		]);

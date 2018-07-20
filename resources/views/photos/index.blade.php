@@ -1,23 +1,9 @@
 @extends('layouts.app')
 
-<!--
-@component('menu-submenu-entries')
-@endcomponent
--->
-
 @section('content')
 
 <?php
-	$add_link = '/photos/add/';
-	$id = (isset($id) ? $id : 0);
-	if ($id > 0)
-		$add_link .= $id;
-	
-	if (!isset($title))
-		$title = '';
-	
-	if (!isset($record_id))
-		$record_id = null;
+	$add_link = '/photos/add/' . $type_flag . '/' . $id;
 ?>
 
 <div class="container page-size">
@@ -30,7 +16,7 @@
 	@else
 		@if (Auth::user()->user_type >= 100)
 		<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
-		<span style="margin-left: 5px;">{{$title}} Photos ({{ count($photos) }})</span>
+		<span style="margin-left: 5px;">{{$type}} Photos ({{ count($photos) }})</span>
 		@endif
 	@endguest
 	</h1>

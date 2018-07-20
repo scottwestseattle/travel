@@ -61,7 +61,6 @@ class SubcategoryController extends Controller
 		try
 		{
 			$records = Category::getSubcategories();
-			//dd($records);
 		}
 		catch (\Exception $e) 
 		{
@@ -94,9 +93,7 @@ class SubcategoryController extends Controller
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-           
-			//dd($request);
-			
+           			
 		$record = new Category();
 		
 		$record->user_id = Auth::id();

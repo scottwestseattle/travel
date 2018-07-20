@@ -47,9 +47,7 @@ class SiteController extends Controller
     {		
 		if (!$this->isSuperAdmin())
              return redirect('/');
-           
-			//dd($request);
-			
+           			
 		$record = new Site();
 		
 		$record->user_id = Auth::id();

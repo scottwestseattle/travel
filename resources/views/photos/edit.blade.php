@@ -7,12 +7,10 @@
 	@component('menu-submenu-photos', ['record_id' => $record->id])
 	@endcomponent	
 
-	<h1>Edit Photo</h1>
+	<h1>Edit {{$type}} Photo</h1>
 
 	<form method="POST" action="/photos/update/{{$record->id}}">
 		<div class="form-group form-control-big">
-		
-			<input type="hidden" name="parent_id" value={{$record->parent_id}} />
 
 			<div class="entry-title-div">
 				<input type="text" name="filename" class="form-control" value="{{ $record->filename }}" placeholder="File Name" />
@@ -39,7 +37,7 @@
 			</div>
 						
 			<div class="entry-title-div">
-				<img style="width:100%; max-width:500px;" src="{{$path}}" title="{{$record->alt_text}}" />
+				<img style="width:100%; max-width:500px;" src="{{$path}}/{{$record->filename}}" title="{{$record->alt_text}}" />
 			</div>			
 			
 			{{ csrf_field() }}

@@ -71,7 +71,7 @@ class FrontPageController extends Controller
 		// get tour page link and main photo
 		//
 		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
-		$photosWebPath = '/public/img/entries/';
+		$photosWebPath = '/img/entries/';
 		
 		//
 		// get the sliders
@@ -87,7 +87,6 @@ class FrontPageController extends Controller
 		// get the latest blog posts
 		//
 		$posts = Entry::getLatestBlogPosts(3);
-		//dd($posts);
 
 		//
 		// get the articles

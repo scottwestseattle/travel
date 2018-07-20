@@ -45,7 +45,6 @@ class Entry extends Base
 		';
 		
 		$records = DB::select($q, [SITE_ID, ENTRY_TYPE_TOUR]);
-		//dd($records);
 		
 		return $records;
 	}
@@ -129,7 +128,7 @@ class Entry extends Base
 				, count(posts.id) as post_count 
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.user_id = ? AND photo_main.site_id = ?
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
 			LEFT JOIN entries as posts
 				ON posts.parent_id = entries.id AND posts.deleted_flag = 0 AND posts.published_flag = 1 AND posts.approved_flag = 1
 			WHERE 1=1
@@ -144,7 +143,7 @@ class Entry extends Base
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [Auth::id(), SITE_ID, SITE_ID, ENTRY_TYPE_BLOG]);
+		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG]);
 		
 		return $records;
 	}
@@ -159,7 +158,7 @@ class Entry extends Base
 				, blogs.title as blog_title, blogs.id as blog_id
 			FROM entries
 			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.user_id = ? AND photo_main.site_id = ?
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
 			JOIN entries as blogs
 				ON blogs.id = entries.parent_id AND blogs.deleted_flag = 0 AND blogs.published_flag = 1 AND blogs.approved_flag = 1
 			WHERE 1=1
@@ -175,7 +174,7 @@ class Entry extends Base
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [Auth::id(), SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, intval($limit)]);
+		$records = DB::select($q, [SITE_ID, SITE_ID, ENTRY_TYPE_BLOG_ENTRY, intval($limit)]);
 		
 		return $records;
 	}	
@@ -280,7 +279,6 @@ class Entry extends Base
 		$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
 		$stats['blog-entries'] = Entry::getEntryCount(ENTRY_TYPE_BLOG_ENTRY, /* allSites = */ false);
 		$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);
-		//dd($stats);
 		
 		return $stats;
 	}

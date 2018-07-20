@@ -23,9 +23,7 @@ class ActivityController extends Controller
 			->orderByRaw('published_flag ASC, approved_flag ASC, map_link ASC, updated_at DESC') // put records with missing stuff at the top
 			//->orderByRaw('id ASC')
 			->get();
-			
-		//dd($records);
-		
+				
     	return view('activities.indexadmin', ['records' => $records]);
     }
 
@@ -221,7 +219,6 @@ class ActivityController extends Controller
 				)
 			->where('activities.id', $activity->id)
 			->first();
-		//dd($locations);
 
 		$location = array();
 		if (isset($locations->loc1))
@@ -273,7 +270,6 @@ class ActivityController extends Controller
 			$location[7]['breadcrumb_flag'] = $locations->loc8_breadcrumb_flag;
 		}
 
-		//dd('joins=' . count($location) . ', hasMany=' . $activity->locations()->count());
 		
 		// this happens if the location structure has been changed, the hasMany table needs to be updated
 		if (count($location) != $activity->locations()->count())
@@ -288,9 +284,7 @@ class ActivityController extends Controller
 			//
 			$this->saveLocationsA($activity, $locations);
 		}
-					
-		//dd($location);
-					
+										
 		$photos = Photo::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
@@ -311,7 +305,6 @@ class ActivityController extends Controller
 					if ($height > $width)
 					{
 						$photo['vertical'] = true;
-						//dd($photo);
 					}
 					else
 					{
@@ -342,9 +335,7 @@ class ActivityController extends Controller
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('photos.id DESC')
 			->get();
-			
-		//dd($photos);
-		
+					
 		$activity->description = $this->formatLinks($activity->description);
 		
 		return view('activities.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
@@ -500,9 +491,7 @@ class ActivityController extends Controller
 		$current_location = $activity->locations()->orderByRaw('location_type DESC')->first();
 			
     	if (Auth::check())
-        {			
-			//dd($request);
-			
+        {						
 			return view('activities.location', ['record' => $activity, 'locations' => $locations, 'current_location' => $current_location]);							
         }           
         else 
@@ -579,7 +568,6 @@ class ActivityController extends Controller
 						)
 						->where('activities.id', $activity->id)
 						->first();
-					//dd($locations);
 					
 					$this->saveLocationsA($activity, $locations);
 				}
@@ -616,7 +604,6 @@ class ActivityController extends Controller
 			$record = Location::select()
 					->where('id', '=', $id)
 					->first();
-			//dd($record);
 					
 			if (isset($record))
 			{
@@ -624,7 +611,7 @@ class ActivityController extends Controller
 			}
 			else
 			{
-				dd('location record not found');
+				//error 'location record not found'
 			}
 		}
 		else

@@ -22,9 +22,7 @@ class TourController extends Controller
              return redirect('/');
 					
 		$records = $this->getTourIndexAdmin();
-			
-		//dd($records);
-		
+					
 		$vdata = $this->getViewData([
 			'records' => $records,
 		]);
@@ -153,7 +151,7 @@ class TourController extends Controller
 			return redirect('/tours/indexadmin');
     }
 
-    public function permaNOTUSEDlocation($location, $permalink)
+    public function NOTUSEDpermalocation($location, $permalink)
     {
 		$entry = Entry::select()
 			//->where('site_id', SITE_ID)
@@ -297,17 +295,15 @@ class TourController extends Controller
 				$this->saveLocations($entry, $locations);
 			}
 		
-			//dd($location);
-		}
-					
+		}		
 					
 		$photos = Photo::select()
-			//->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
-
+			
 		// update the view count for new visitors only
 		if ($this->isNewVisitor())
 		{
@@ -338,9 +334,7 @@ class TourController extends Controller
 			->where('parent_id', '=', $activity->id)
 			->orderByRaw('photos.id DESC')
 			->get();
-			
-		//dd($photos);
-		
+					
 		$activity->description = $this->formatLinks($activity->description);
 		
 		return view('tours.view', ['record' => $activity, 'data' => $this->getViewData(), 'photos' => $photos]);
@@ -481,7 +475,7 @@ class TourController extends Controller
 				$message = null;
 				$messageLevel = null;
 				
-				$rc = $this->deletePhoto($photo, $redirect, $message, $messageLevel);
+				$rc = Controller::deletePhoto($photo, $redirect, $message, $messageLevel);
 				
 				$request->session()->flash('message.level', $messageLevel);
 				$request->session()->flash('message.content', $message);
@@ -515,7 +509,7 @@ class TourController extends Controller
 			'tour_count' => $tour_count, 
 			'locations' => $locations, 
 			'showAll' => $showAll, 
-			'photo_path' => '/public/img/entries/', 
+			'photo_path' => '/img/entries/', 
 			'page_title' => 'Tours, Hikes, Things To Do'
 		]);
 		

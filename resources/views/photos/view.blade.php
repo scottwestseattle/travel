@@ -19,7 +19,7 @@
 		<div class="form-group">
 			<?php $location = (strlen($photo->location) > 0) ? ', ' . $photo->location : ''; ?>
 			
-			<img alt="{{$photo->alt_text}}" title="{{$photo->alt_text . $location}}" style="width:100%;" src="{{$path}}{{$photo->filename}}" />
+			<img alt="{{$photo->alt_text}}" title="{{$photo->alt_text . $location}}" style="width:100%;" src="{{$path}}/{{$photo->filename}}" />
 		</div>
 		
 </div>

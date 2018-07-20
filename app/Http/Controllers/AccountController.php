@@ -62,8 +62,6 @@ class AccountController extends Controller
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-           
-			//dd($request);
 			
 		$record = new Account();
 		

@@ -136,8 +136,6 @@ class FaqsController extends Controller
 		$faqs = $this->formatList($faqs);
 			
 		$faqs = compact('faqs');
-
-		//dd($faqs);
 				
     	return view('faqs.search', $faqs);
 	}
@@ -147,7 +145,6 @@ class FaqsController extends Controller
 		foreach($faqs as $faq)
 		{
 			$faq->description = $this->formatLinks($faq->description);
-			//dd($description);
 			
 			/*
 			$lines = explode("\r\n", $faq);

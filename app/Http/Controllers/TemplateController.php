@@ -128,8 +128,6 @@ class TemplateController extends Controller
     {		
 		if (!$this->isAdmin())
              return redirect('/');
-           
-			//dd($request);
 			
 		$record = new Template();
 		

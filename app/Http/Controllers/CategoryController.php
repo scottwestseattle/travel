@@ -98,8 +98,6 @@ class CategoryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
            
-			//dd($request);
-			
 		$record = new Category();
 		
 		$record->user_id = Auth::id();
@@ -231,8 +229,6 @@ class CategoryController extends Controller
     public function subcategories(Request $request, $category_id)
     {
 		$records = Category::getSubcategoryOptions($category_id);
-
-		//dd($records);
 		
 		$vdata = $this->getViewData([
 			'records' => $records,

@@ -265,7 +265,6 @@ class BlogController extends Controller
 				$request->session()->flash('message.content', $e->getMessage());		
 			}			
 
-			//dd($request->referer);
 			return redirect($this->getReferer($request, '/entries/indexadmin')); 
 		}
 		else

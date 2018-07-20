@@ -24,7 +24,6 @@ class Photo extends Base
 		';
 		
 		$records = DB::select($q, [SITE_ID, Auth::id()]);
-		//dd($records);
 		
 		return $records;
 	}
@@ -69,7 +68,6 @@ class Photo extends Base
 		
 		$stats['photos'] = Photo::getCount();
 		$stats['sliders'] = Photo::getCountSliders();
-		//dd($stats);
 		
 		return $stats;
 	}

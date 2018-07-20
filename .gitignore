@@ -1,10 +1,11 @@
 /node_modules
 /public/hot
 /public/storage
-/public/img/sliders
 /docs/sliders
 /public/img/tours
 /public/img/entries
+/public/img/receipts
+/public/img/sliders
 /storage/*.key
 /.idea
 /.vagrant

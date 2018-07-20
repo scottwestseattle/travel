@@ -32,7 +32,7 @@ class Transaction extends Base
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory 
-				, CONCAT("' . PHOTO_RECEIPTS_FOLDER . '", t.id, "/") as photo_path
+				, CONCAT("/img/' . PHOTO_RECEIPT_FOLDER . '/", t.id, "/") as photo_path
 			FROM transactions as t
 			JOIN accounts ON accounts.id = t.parent_id
 			JOIN categories ON categories.id = t.category_id
@@ -140,9 +140,7 @@ class Transaction extends Base
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
-		
-		//dd($q);
-					
+							
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
 		
 		return $records;
@@ -160,7 +158,6 @@ class Transaction extends Base
 		';
 					
 		$records = DB::select($q, [Auth::id()]);
-		//dd($records);
 		
 		return $records;
     }
@@ -184,7 +181,6 @@ class Transaction extends Base
 		';
 			
 		$records = DB::select($q, [Auth::id(), $limit]);
-		//dd($records);
 				
 		return $records;
     }
@@ -248,7 +244,6 @@ class Transaction extends Base
 		{
 			$record->total = $totals[$record->category];
 		}
-		//dd($records);
 		
 		return $records;
     }	
