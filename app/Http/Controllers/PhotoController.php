@@ -164,12 +164,24 @@ class PhotoController extends Controller
 		if (!$this->isAdmin())
 			return redirect('/');
            
-		$type = Controller::getPhotoInfo($type_flag)['type'];
+		$info = Controller::getPhotoInfoPath($type_flag, $parent_id);
+		$type = $info['type'];
+		
+		$photos = null;
+		
+		if (!Controller::isSlider($type_flag))
+			$photos = Photo::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->get();	
 		
 		$vdata = $this->getViewData([
 			'parent_id' => $parent_id,
 			'type_flag' => $type_flag,
 			'type' => $type,
+			'photos' => $photos,
+			'path' => $info['path'],
 		]);
 		
 		return view('photos.add', $vdata);      
@@ -599,7 +611,7 @@ class PhotoController extends Controller
     	if ($this->isOwnerOrAdmin($photo->user_id))
         {
 			$id = intval($photo->parent_id);
-			$info = Controller::getPhotoInfoPath($photo);
+			$info = Controller::getPhotoInfoPath($photo->type_flag, $photo->parent_id);
 			$folder = $info['folder'];			
 			$redirect = $info['redirect'];
 			$path_from = $info['filepath'];
@@ -686,7 +698,7 @@ class PhotoController extends Controller
 	
     	if ($this->isOwnerOrAdmin($photo->user_id))
         {			
-			$info = Controller::getPhotoInfoPath($photo);
+			$info = Controller::getPhotoInfoPath($photo->type_flag, $photo->parent_id);
 			$path = $info['path'];
 			
 			$vdata = $this->getViewData([

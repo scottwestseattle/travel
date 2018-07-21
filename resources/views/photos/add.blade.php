@@ -4,6 +4,9 @@
 
 <div class="page-size container">
 
+	@component('photos.menu-submenu', ['record_id' => $parent_id])
+	@endcomponent	
+
 	<h1>Add {{$type}} Photo</h1>
                			   
 	<form method="POST" action="/photos/create" enctype="multipart/form-data">
@@ -49,6 +52,15 @@
 			{{ csrf_field() }}
 		</div>
 	</form>
+	
+	@if (isset($photos))
+	<h3>Photos</h3>
+	<div>
+	@foreach ($photos as $photo)
+		<img width="200" src="{{$path}}/{{$photo->filename}}" title="{{$photo->alt_text}}" />
+	@endforeach
+	</div>
+	@endif
 	
 </div>
 @endsection

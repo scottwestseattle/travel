@@ -543,24 +543,24 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$info = Controller::getPhotoInfoPath($photo);
+			$info = Controller::getPhotoInfoPath($photo->type_flag, $photo->parent_id);
 			$path = $info['path'];
 		}
 		
 		return $path;
 	}
 
-	static protected function getPhotoInfoPath($photo)
+	static protected function getPhotoInfoPath($type_flag, $parent_id)
 	{		
-		$info = Controller::getPhotoInfo($photo->type_flag);
+		$info = Controller::getPhotoInfo($type_flag);
 		
 		$info['path'] = '/img/' . $info['folder'];
 		$info['redirect'] = '/photos/' . $info['redirect'];
 
-		if (!Controller::isSlider($photo))
+		if (!Controller::isSlider($type_flag))
 		{
-			$info['path'] .= '/' . $photo->parent_id;
-			$info['redirect'] .= '/' . intval($photo->parent_id) . '/' . intval($photo->type_flag);
+			$info['path'] .= '/' . $parent_id;
+			$info['redirect'] .= '/' . intval($parent_id) . '/' . intval($type_flag);
 		}
 
 		$info['filepath'] = base_path() . '/public' . $info['path'];
@@ -620,7 +620,7 @@ class Controller extends BaseController
 		//
 		// move the file to the deleted folder
 		//
-		$info = Controller::getPhotoInfoPath($photo);
+		$info = Controller::getPhotoInfoPath($photo->type_flag, $photo->parent_id);
 		$folder = $info['folder'];
 		$redirect = $info['redirect'];
 		$path_from = $info['filepath'];
@@ -743,9 +743,9 @@ class Controller extends BaseController
 		return $records;
 	}	
 	
-	static protected function isSlider(Photo $photo)
+	static protected function isSlider($type_flag)
 	{
-		return intval($photo->type_flag) === PHOTO_TYPE_SLIDER;
+		return intval($type_flag) === PHOTO_TYPE_SLIDER;
 	}
 	
     protected function saveLocations($entry, $locations)

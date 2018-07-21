@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@component('menu-submenu-photos', ['record_id' => $record->id])
+	@component('photos.menu-submenu', ['record_id' => $record->parent_id])
 	@endcomponent	
 
 	<h1>Edit {{$type}} Photo</h1>
