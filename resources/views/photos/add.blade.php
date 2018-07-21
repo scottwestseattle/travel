@@ -27,16 +27,19 @@
 			<input type="hidden" name="parent_id" value={{$parent_id}} />
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="filename" class="form-control" placeholder="Optional: new photo name"/>
+				<input type="text" name="alt_text" id="alt_text" class="form-control" placeholder="Optional: alt text"/>
 			</div>			
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="alt_text" class="form-control" placeholder="Optional: alt text"/>
-			</div>			
-
-			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="location" class="form-control" placeholder="Required: location"/>
+				<input type="text" name="location" id="location" class="form-control" placeholder="Required: location"/>
 			</div>	
+
+			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
+				<a href='#' onclick="javascript:createPhotoName('alt_text', 'location', 'filename')";>
+					<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
+				</a>						
+				<input type="text" name="filename" id="filename" class="form-control" placeholder="Optional: new photo name"/>
+			</div>			
 
 			@if ($parent_id !== 0)
 				<div style="clear: both;" class="">

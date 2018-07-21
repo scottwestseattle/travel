@@ -72,13 +72,19 @@
 							<?php if ($user_type >= 100) : ?>
 								<li><a href="/about">About</a></li>
 								<li><a href="/admin">Admin</a></li>
-								<li><a href="/articles">Articles</a></li>
-								<li><a href="/blogs/indexadmin">Blogs</a></li>
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
-								<li><a href="/gallery">Gallery</a></li>
-								<li><a href="/photos/sliders">Sliders</a></li>
-								<li><a href="/tours/indexadmin">Tours</a></li>
 								<li><a href="/visitors/">Visitors</a></li>
+
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">More <span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a href="/articles">Articles</a></li>
+										<li><a href="/blogs/indexadmin">Blogs</a></li>
+										<li><a href="/galleries">Galleries</a></li>
+										<li><a href="/photos/sliders">Sliders</a></li>
+										<li><a href="/tours/indexadmin">Tours</a></li>
+									</ul>
+								</li>
 								
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">Cash <span class="caret"></span></a>

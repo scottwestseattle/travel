@@ -2,10 +2,6 @@
 
 @section('content')
 
-<?php
-	$add_link = '/photos/add/' . $type_flag . '/' . $id;
-?>
-
 <div class="container page-size">
 
 	@component('menu-submenu-entries', ['record_id' => $record_id])@endcomponent
@@ -15,8 +11,9 @@
 		<span style="margin-left: 5px;">Photos ({{ count($photos) }})</span>
 	@else
 		@if (Auth::user()->user_type >= 100)
-		<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
+		<a href="/photos/add/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-cloud-upload" style="padding:5px;"></span></a>
 		<span style="margin-left: 5px;">{{$type}} Photos ({{ count($photos) }})</span>
+		<a href="/photos/share/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-duplicate" style="padding:5px;"></span></a>
 		@endif
 	@endguest
 	</h1>

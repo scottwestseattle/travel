@@ -82,6 +82,54 @@ function urlEncodeWithDate(fromId, fromYearId, fromMonthId, fromDayId, toId)
 	}
 }
 
+function createPhotoName(fromId, fromLocationId, toId)
+{	
+    var fromElem = document.getElementById(fromId);
+    var fromLocation = document.getElementById(fromLocationId);
+	var toElem = document.getElementById(toId);
+	if (fromElem && toElem && fromLocation)
+	{
+		var location = fromLocation.value.trim().split(", ");
+		if (location.length == 1)
+		{
+			location = fromLocation.value.trim().split(",");
+			
+			if (location.length == 1)
+			{
+				location = fromLocation.value.trim().split(" ");
+			}
+		}
+		
+		if (location.length > 2)
+		{
+			// flip the words, for example "Beijing, China" becomes "china-beijing"
+			toElem.value = location[2] + '-';
+			toElem.value += location[1] + '-';
+			toElem.value += location[0] + '-';
+		}
+		else if (location.length > 1)
+		{
+			// flip the words, for example "Beijing, China" becomes "china-beijing"
+			toElem.value = location[1] + '-';
+			toElem.value += location[0] + '-';
+		}
+		else
+		{
+			// not sure of the format, just copy it as is
+			toElem.value = fromLocation.value.trim() + '-';
+		}
+		
+		toElem.value += fromElem.value.trim();
+		
+		// replace whitespace with '-' and make all lower
+		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
+	}
+	else
+	{
+		alert('Error creating photo file name');
+	}
+}
+
 function pad(number, length) 
 {
     var str = '' + number;

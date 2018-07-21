@@ -29,13 +29,33 @@ Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/email/check', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
-Route::get('/gallery', 'EntryController@gallery');
 Route::get('/confirm', 'FrontPageController@confirm');
 Route::get('/spy', 'FrontPageController@spy');
+Route::get('/gallery', 'EntryController@gallery');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
+
+// Galleries
+Route::group(['prefix' => 'galleries'], function () {
+	
+	Route::get('/', 'GalleryController@index');
+	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'GalleryController@view']);
+	
+	// add/create/copy
+	Route::get('/copy/{transaction}','GalleryController@copy')->middleware('auth');
+	Route::get('/add/{account}','GalleryController@add')->middleware('auth');
+	Route::post('/create','GalleryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{transaction}','GalleryController@edit')->middleware('auth');
+	Route::post('/update/{transaction}','GalleryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{transaction}', 'GalleryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{transaction}', 'GalleryController@delete')->middleware('auth');	
+});
 
 // Transfers
 Route::group(['prefix' => 'transfers'], function () {
