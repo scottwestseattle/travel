@@ -70,9 +70,7 @@ foreach($photos as $photo)
 		$base_folder = 'img/entries/';
 		$photo_folder = $base_folder . $record->id . '/';
 		$photo = $photo_folder . 'main.jpg';
-			
-		//dd(getcwd());
-					
+								
 		if (file_exists($photo) === FALSE)
 		{
 			$photo = '/img/theme1/placeholder.jpg';
