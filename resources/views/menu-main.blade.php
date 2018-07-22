@@ -64,12 +64,8 @@
 							@endif	
 							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
                             <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
-                        @else
-							<?php if (false && $user_type >= 1000) : ?>
-								<li><a href="/tests/">Tests</a></li>
-							<?php endif; ?>
-							
-							<?php if ($user_type >= 100) : ?>
+                        @else							
+							@if ($user_type >= 100)
 								<li><a href="/about">About</a></li>
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/articles">Articles</a></li>
@@ -100,9 +96,25 @@
 										<li><a href="/transactions/expenses">Expenses</a></li>
 										<li><a href="/subcategories/indexadmin">Subcategories</a></li>
 									</ul>
-								</li>								
-								
-							<?php endif; ?>
+								</li>
+							@else
+								@if (null !== (session('spy', null)))
+									<li><a href="/spy">Turn Spy Off</a></li>
+								@endif
+								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
+									<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+								@endif
+								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+									<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+								@endif
+								@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
+								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
+								@endif
+								@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
+									<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+								@endif
+								<li><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About</a></li>
+							@endif
 														
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">

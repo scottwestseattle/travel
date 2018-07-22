@@ -4,7 +4,7 @@
 
 <div class="page-size container">
 
-		@if (Auth::check() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+		@if (Auth::check() && isset($record) && (Auth::user()->user_type >= 1000 || (Auth::user()->id === $record->user_id)))
 			<!-- Sub-menu ------>
 			<div class="" style="font-size:20px;">
 				<table class=""><tr>			
