@@ -114,10 +114,11 @@ a:hover .btn-blog-nav {
         top: 0;
         border-width: 0 0 1px;
     }
+
     .navbar-collapse.collapse {
         display: none!important;
     }
-    .navbar-nav {
+    .SBW-CAUSING-OVERLAP-navbar-nav {
         float: none!important;
         margin-top: 7.5px;
     }
@@ -131,7 +132,6 @@ a:hover .btn-blog-nav {
     .collapse.in{
         display:block !important;
     }
-
 }	
 
 /* navbar overrides */
