@@ -80,7 +80,6 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">More <span class="caret"></span></a>
 									<ul class="dropdown-menu">
-										<li><a href="/activities/indexadmin">Activities</a></li>
 										<li><a href="/blogs/indexadmin">Blogs</a></li>
 										<li><a href="/galleries">Galleries</a></li>
 										<li><a href="/locations/indexadmin">Locations</a></li>
@@ -115,6 +114,7 @@
 									@if (Auth::check())
 										<li><a href="/users/">Settings ({{$user_type_name}})</a></li>
 										@if (Auth::user()->user_type >= 1000)
+											<li><a href="/activities/indexadmin">Activities</a></li>
 											<li><a href="/tasks/index">Tasks</a></li>
 											<li><a href="/templates/indexadmin">Templates</a></li>
 										@endif
