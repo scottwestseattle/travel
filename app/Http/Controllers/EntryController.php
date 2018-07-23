@@ -761,7 +761,7 @@ class EntryController extends Controller
 	}
 
     public function gallery()
-    {		
+    {		   
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
@@ -772,4 +772,78 @@ class EntryController extends Controller
 		
 		return view('entries.gallery', $vdata);
     }
+	
+    public function test()
+    {		
+		// Create DOM from URL or file
+		$server = 'epictravelguide.com';
+
+		$results[] = $this->testPage("http://$server/", 'Todos Derechos Reservados');
+
+		if (true)
+		{
+			$results[] = $this->testPage("http://$server/spy", 'Spy mode is ON');
+			$results[] = $this->testPage("http://$server/spy", 'Spy mode is OFF');
+			$results[] = $this->testPage("http://$server/login", 'Login');
+			$results[] = $this->testPage("http://$server/register", 'Register');
+			$results[] = $this->testPage("http://$server/password/reset", 'Reset Password');
+			$results[] = $this->testPage("http://$server/about", 'About');
+			$results[] = $this->testPage("http://$server/gallery", 'Todos Derechos Reservados');
+
+			// Photos
+			$results[] = $this->testPage("http://$server/photos/sliders", 'Slider Photos');
+			$results[] = $this->testPage("http://$server/photos/view/64", 'Siem Reap');
+		}
+		
+		if (true)
+		{
+			// Blogs
+			$results[] = $this->testPage("http://$server/blogs/index", 'Blogs');
+			$results[] = $this->testPage("http://$server/blogs/show/105", 'Big Asia Trip 2018');
+			$results[] = $this->testPage("http://$server/blogs/show/31", '21 Countries');
+			$results[] = $this->testPage("http://$server/entries/thursday-tienanmen-square-2018-06-28", 'Thursday, Tienanmen Square');
+			$results[] = $this->testPage("http://$server/entries/show/157", 'Beijing Summer Palace'); // prev
+			$results[] = $this->testPage("http://$server/entries/show/155", 'Thursday, Tienanmen Square'); // next
+			$results[] = $this->testPage("http://$server/blogs/show/105", 'Big Asia'); // back to blog
+			
+			// Tours
+			$results[] = $this->testPage("http://$server/tours/index", 'Tours');
+			$results[] = $this->testPage("http://$server/tours/location/2", 'USA');
+			$results[] = $this->testPage("http://$server/tours/location/9", 'China');
+			$results[] = $this->testPage("http://$server/tours/Fremont-to-Gas-Works-Park-Loop", 'Fremont');
+			$results[] = $this->testPage("http://$server/tours/xian-day-trip-to-luoyang-longmen-grottoes", 'Longmen');
+
+			// Articles
+			$results[] = $this->testPage("http://$server/articles", 'Articles');
+			$results[] = $this->testPage("http://$server/entries/beijing-subway-map-and-schedule-2018-06-27", 'Beijing Metro');
+			$results[] = $this->testPage("http://$server/entries/web-sites-that-are-blocked-in-china", 'Blocked');
+			$results[] = $this->testPage("http://$server/entries/datong-fly-by-knight-highrise-hostel-datong-china-2018-07-02", 'Knight');
+		}
+		
+		$vdata = $this->getViewData([
+			'records' => $results,
+		]);
+		
+		return view('entries.test', $vdata);
+    }
+    public function testPage($url, $expected)
+    {
+		$text = '';
+		$results['url'] = $url;
+		$results['expected'] = $expected;
+
+		try
+		{
+			$text = file_get_contents($url);
+			
+			$results['results'] = strpos($text, $expected) === false ? 'EXPECTED NOT FOUND' : 'success';
+		}
+		catch (\Exception $e) 
+		{
+			//$error = $e->getMessage();
+			$results['results'] = 'ERROR OPENING PAGE';
+		}	
+				
+		return $results;
+	}	
 }

@@ -69,7 +69,7 @@
 								<!-- this still uses Activities instead of tours -->
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
 							@endif
-							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
