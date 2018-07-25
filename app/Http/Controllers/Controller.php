@@ -186,7 +186,7 @@ class Controller extends BaseController
 	}
 	
 	protected function saveVisitor($model, $page, $record_id = null)
-	{
+	{		
 		$spy = session('spy', null);
 		if (isset($spy))
 			return; // spy mode, don't count views
@@ -200,6 +200,11 @@ class Controller extends BaseController
 		$userAgent = null;
 		
 		$ip = $this->getVisitorInfo($host, $referrer, $userAgent);
+		
+		if (strlen($userAgent) == 0 && strlen($referrer) == 0)
+		{
+			return; // no host or referrer probably means that it's the ETG tester so don't count it
+		}
 		
 		$visitor = null;
 		if (false)
@@ -221,6 +226,7 @@ class Controller extends BaseController
 		$visitor->site_id = SITE_ID;
 		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
 		$visitor->user_agent = $this->trunc($userAgent, VISITOR_MAX_LENGTH);
+		//$visitor->user_agent = "host=" . $host . ', refer=' . $referrer . ', user=' . $userAgent;
 		$visitor->referrer = $this->trunc($referrer, VISITOR_MAX_LENGTH);
 		
 		// new fields

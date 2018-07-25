@@ -16,6 +16,9 @@ update photos set type_flag = 0 where parent_id = 0;
 UPDATE photos SET type_flag = 1 WHERE parent_id <> 0;
 UPDATE photos SET type_flag = 2 WHERE parent_id > 1000; 
 
+Booking Affiliate Links
+https://www.booking.com/index.html?aid=1535306
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 // drop all tables and migrate all

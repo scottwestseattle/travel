@@ -17,7 +17,7 @@ $now = new DateTime();
 	
 		<table class="table table-striped">
 			<tbody>
-				<tr><th><a href="/visitors/date">Timestamp</a></th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th></tr>
+				<tr><th><a href="/visitors/date">Timestamp</a></th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th></tr>
 				@foreach($records as $record)
 				<?php
 					// shorten the user_agent
@@ -30,7 +30,8 @@ $now = new DateTime();
 						$agent = 'AdSense';
 					else if (stripos($agent, 'a6-indexer') !== FALSE)
 						$agent = 'Amazon A6';
-					
+					else if (stripos($agent, 'pinterest') !== FALSE)
+						$agent = 'PinBot';					
 				?>
 				<tr>
 					<td>{{$record->updated_at}}</td>
@@ -42,6 +43,7 @@ $now = new DateTime();
 					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->ip_address}}">{{$record->ip_address}}</a></td>
 					<td>{{$record->referrer}}</td>
 					<td>{{$agent}}</td>
+					<td>{{$record->host_name}}</td>
 					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 				@endforeach

@@ -777,13 +777,12 @@ class EntryController extends Controller
     {		
 		// Create DOM from URL or file
 		$server = 'epictravelguide.com';
+		//$server = 'localhost';
 
 		$results[] = $this->testPage("http://$server/", 'Todos Derechos Reservados');
 
 		if (true)
 		{
-			$results[] = $this->testPage("http://$server/spy", 'Spy mode is ON');
-			$results[] = $this->testPage("http://$server/spy", 'Spy mode is OFF');
 			$results[] = $this->testPage("http://$server/login", 'Login');
 			$results[] = $this->testPage("http://$server/register", 'Register');
 			$results[] = $this->testPage("http://$server/password/reset", 'Reset Password');
@@ -835,7 +834,7 @@ class EntryController extends Controller
 		try
 		{
 			$text = file_get_contents($url);
-			
+			//dd($url . ': ' . $text);
 			$results['results'] = strpos($text, $expected) === false ? 'EXPECTED NOT FOUND' : 'success';
 		}
 		catch (\Exception $e) 
