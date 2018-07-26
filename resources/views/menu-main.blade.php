@@ -53,8 +53,8 @@
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
 							@endif
-							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
-								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+							@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
+								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Galleries</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>

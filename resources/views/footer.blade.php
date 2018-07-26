@@ -75,7 +75,9 @@
 							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
 								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
 							@endif
-								<li><a href="/gallery"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Gallery</a></li>
+							@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
+								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Gallery</a></li>
+							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
 								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
 						

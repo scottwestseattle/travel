@@ -788,13 +788,16 @@ class EntryController extends Controller
 			$results[] = $this->testPage("http://$server/password/reset", 'Reset Password');
 			$results[] = $this->testPage("http://$server/about", 'About');
 			$results[] = $this->testPage("http://$server/gallery", 'Todos Derechos Reservados');
+			$results[] = $this->testPage("http://$server/galleries", 'Todos Derechos Reservados');
+			$results[] = $this->testPage("http://$server/galleries/xian-china", 'China');
+			$results[] = $this->testPage("http://$server/galleries/zhangye-china", 'Zhangye');
 
 			// Photos
 			$results[] = $this->testPage("http://$server/photos/sliders", 'Slider Photos');
 			$results[] = $this->testPage("http://$server/photos/view/64", 'Siem Reap');
 		}
 		
-		if (true)
+		if (false)
 		{
 			// Blogs
 			$results[] = $this->testPage("http://$server/blogs/index", 'Blogs');

@@ -173,7 +173,7 @@ class CategoryController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexupdate/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
 	}
 	
 	public function view(Category $category)

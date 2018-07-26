@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Entry;
 use App\Photo;
+use App\Event;
 
 define('PREFIX', 'galleries');
 define('LOG_MODEL', 'galleries');
@@ -20,16 +21,14 @@ class GalleryController extends Controller
 	}
 	
     public function index()
-    {		
+    {				
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
 		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
-
-		$vdata = $this->getViewData([
-			'records' => $records, 
-		]);
 		
-		return view(PREFIX . '.index', $vdata);
+		return view(PREFIX . '.index', $this->getViewData([
+			'records' => $records, 
+		]));
     }
 	
     public function indexadmin(Request $request)
@@ -41,10 +40,7 @@ class GalleryController extends Controller
 		
 		try
 		{
-			$records = Entry::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->get();		
+			$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
 		}
 		catch (\Exception $e) 
 		{
@@ -63,33 +59,69 @@ class GalleryController extends Controller
 
     public function permalink(Request $request, $permalink)
     {
+		$next = null;
+		$prev = null;
+		
 		$permalink = trim($permalink);
 		
-		$record = Entry::select()
+		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
-			->where('published_flag', 1)
-			->where('approved_flag', 1)
 			->where('permalink', $permalink)
 			->first();
+			
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 						
-		if (!isset($record))
+		if (isset($entry))
+		{
+			$entry->description = nl2br($entry->description);
+			$entry->description = $this->formatLinks($entry->description);		
+		}
+		else
 		{
 			$msg = 'Permalink Entry Not Found: ' . $permalink;
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			Event::logError(LOG_MODEL, LOG_ACTION_VIEW, /* title = */ $msg);			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
 			
-            return redirect('/' . PREFIX . '/index');
+            return redirect('/entries/index');
+		}
+		
+		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+		{
+			if (isset($entry->display_date))
+			{
+				$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
+				$prev = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id, /* next = */ false);
+			}
+			else
+			{
+				$msg = 'Missing Display Date to view record: ' . $entry->id;
+				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+						
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+			}
 		}
 			
+		$photos = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+			
 		$vdata = $this->getViewData([
-			'record' => $record, 
+			'record' => $entry, 
+			'next' => $next,
+			'prev' => $prev,
+			'photos' => $photos,
 		]);
 		
-		return view(PREFIX . '.view', $vdata);
+		return view('galleries.view', $vdata);
 	}
 		
 	
@@ -198,7 +230,7 @@ class GalleryController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexupdate/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
 	}
 	
 	public function view(Entry $entry)

@@ -42,20 +42,24 @@ Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 Route::group(['prefix' => 'galleries'], function () {
 	
 	Route::get('/', 'GalleryController@index');
-	Route::get('/view/{transaction}', ['as' => 'account.view', 'uses' => 'GalleryController@view']);
+	Route::get('/index', 'GalleryController@index');
+	Route::get('/indexadmin', 'GalleryController@indexadmin')->middleware('auth');
+	Route::get('/view/{entry}', ['as' => 'entry.view', 'uses' => 'GalleryController@view']);
 	
 	// add/create/copy
-	Route::get('/copy/{transaction}','GalleryController@copy')->middleware('auth');
 	Route::get('/add/{account}','GalleryController@add')->middleware('auth');
 	Route::post('/create','GalleryController@create')->middleware('auth');
 
 	// edit/update
-	Route::get('/edit/{transaction}','GalleryController@edit')->middleware('auth');
-	Route::post('/update/{transaction}','GalleryController@update')->middleware('auth');
+	Route::get('/edit/{entry}','GalleryController@edit')->middleware('auth');
+	Route::post('/update/{entry}','GalleryController@update')->middleware('auth');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/{transaction}', 'GalleryController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{transaction}', 'GalleryController@delete')->middleware('auth');	
+	Route::get('/confirmdelete/{entry}', 'GalleryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}', 'GalleryController@delete')->middleware('auth');	
+	
+	// permalink has to go at the bottom of the filter or it will catch everything
+	Route::get('/{permalink}', ['as' => 'gallery.permalink', 'uses' => 'GalleryController@permalink']);	
 });
 
 // Transfers
