@@ -180,7 +180,7 @@ class FrontPageController extends Controller
 		//
 		// get latest events
 		//
-		$events = Event::get(5);
+		$events = Event::get(10);
 
 		//
 		// get blog entries which need action

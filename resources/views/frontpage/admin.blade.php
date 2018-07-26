@@ -108,13 +108,12 @@
 	<hr />	
 	@endif
 	
-	
+	@if (count($records))
 	<div>
 		<h3>Pending Tour Information ({{ count($records) }})</h3>
 		<table class="table table-striped">
 			<tbody>
 			@foreach($records as $record)
-				@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($record->location_id) || strlen($record->map_link) == 0 || !isset($record->photo) || intval($record->photo_count) < 3)
 				<tr>
 					<td style="width:20px;"><a href='/activities/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
@@ -153,13 +152,13 @@
 						<a href='/activities/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
 					</td>
 				</tr>
-				@endif
 			@endforeach
 			</tbody>
 		</table>   	
 		<a href="/activities/index">Show All Activities</a>	
 	</div>
 	<hr />
+	@endif
 	
 	<div>
 		<h3 style="">Latest Events ({{count($events)}})</h3>

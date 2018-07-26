@@ -77,6 +77,7 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">More <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										<li><a href="/blogs/indexadmin">Blogs</a></li>
+										<li><a href="/events/index">Events</a></li>
 										<li><a href="/galleries">Galleries</a></li>
 										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/photos/indexadmin">Photos</a></li>

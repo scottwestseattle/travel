@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
-use App\Photo;
 use DB;
+use App\Photo;
+use App\Event;
 
 define('PREFIX', 'photos');
 define('LOG_MODEL', 'photos');
@@ -207,8 +208,12 @@ class PhotoController extends Controller
 			
 		if (!isset($file))
 		{
+			$msg = 'Image to upload must be set using the [Browse] button';
+			
+			Event::logError(LOG_MODEL, LOG_ACTION_ADD, /* title = */ $msg);			
+
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', 'Image to upload must be set using the [Browse] button');		
+			$request->session()->flash('message.content', $msg);		
 			
 			return view('photos.add', $vdata);
 		}
@@ -223,9 +228,13 @@ class PhotoController extends Controller
 		}
 		else
 		{
+			$msg = 'Only JPG images can be uploaded';
+			
+			Event::logError(LOG_MODEL, LOG_ACTION_ADD, /* title = */ $msg);			
+
 			// bad or missing extension
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', 'Only JPG images can be uploaded');	
+			$request->session()->flash('message.content', $msg);	
 
 			return view('photos.add', $vdata);					
 		}
@@ -335,8 +344,12 @@ class PhotoController extends Controller
 				}
 				else
 				{
+					$msg = 'Resizing of image failed';
+					
+					Event::logError(LOG_MODEL, LOG_ACTION_ADD, /* title = */ $msg);			
+
 					$request->session()->flash('message.level', 'danger');
-					$request->session()->flash('message.content', 'Resizing of image failed');
+					$request->session()->flash('message.content', $msg);
 				}
 			}
 			else
@@ -365,17 +378,32 @@ class PhotoController extends Controller
 			$request->session()->flash('message.level', $msgDuplicate ? 'danger' : 'success');	
 						
 			if ($resized)
-				$request->session()->flash('message.content', $msgDuplicate . 'Photo was successfully uploaded and resized from ' . number_format($size) . ' bytes to ' . number_format($newSize) . ' bytes');
+			{
+				$msg = $msgDuplicate . 'Photo was successfully uploaded and resized from ' . number_format($size) . ' bytes to ' . number_format($newSize) . ' bytes';
+
+				Event::logAdd(LOG_MODEL, $photo->filename, $msg, $photo->id);
+				
+				$request->session()->flash('message.content', $msg);
+			}
 			else
-				$request->session()->flash('message.content', $msgDuplicate . 'Photo was successfully uploaded');
+			{
+				$msg = $msgDuplicate . 'Photo was successfully uploaded';
+
+				Event::logAdd(LOG_MODEL, $photo->filename, $msg, $photo->id);
+
+				$request->session()->flash('message.content', $msg);
+			}
 			
 			return redirect($redirect);
 		}
 		catch (\Exception $e) 
 		{
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'filename = ' . $photo->filename, null, $e->getMessage());
+
 			if ($e->getCode() == 0)
 			{
 			}
+			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());
 			

@@ -40,7 +40,7 @@
 						@else
 							@if (Auth::user()->user_type >= 100)
 								<tr><td>{{ $photo->filename }}</td></tr>
-								<tr><td>{{ number_format($photo->size) }} bytes</td></tr>
+								<!-- tr><td>{{ number_format($photo->size) }} bytes</td></tr -->
 							@endif
 						@endguest						
 						
