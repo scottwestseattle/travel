@@ -33,9 +33,18 @@ else
 				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
 			@endif
 		@endif
-				
+
 	@endguest
-		
+	
+	@if (!(Auth::user() && (Auth::user()->user_type >= 1000)))
+		<!----------------------->
+		<!-- show bread crumbs -->
+		<!----------------------->
+		<div style="margin-top:10px;" class="form-group">			
+			<a href="/blogs/index"><button type="button" class="btn btn-blog-nav">Back to Blog List<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>			
+		</div>	
+	@endif
+			
 	<div class="form-group">
 		<h1 name="title" class="">{{$record->title }}</h1>
 	</div>
@@ -145,7 +154,7 @@ else
 			<?php $count = 0; ?>
 			@foreach($records as $record)
 				@if ((Auth::user() && Auth::user()->user_type >= 1000) || ($record->published_flag == 1 && $record->approved_flag == 1))
-				<tr style="display:{{$count++ < 10 ? 'default' : 'none'}};">
+				<tr style="display:{{($count++ < 10 || isset($all)) ? 'default' : 'none'}};">
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
 						
@@ -171,12 +180,14 @@ else
 			</tbody>
 		</table>
 
-		<!-- the Show All button -->
+		<!-- if not showing all, show the Show All button -->
+		@if (!isset($all))
 		<span id="showAllButton" style="cursor:pointer;" onclick="showAllRows('blogEntryTable', 'showAllButton')">
 			<button style="margin-bottom:10px;" type="button" class="btn btn-blog-nav">Show All Posts&nbsp;
 				<span style="background-color: white; color: #5CB85C;" class="badge">{{count($records)}}</span>
 			</button>
 		</span>
+		@endif
 		
 	</div>
 	

@@ -202,7 +202,7 @@ Route::group(['prefix' => 'templates'], function () {
 // blogs
 Route::group(['prefix' => 'blogs'], function () 
 {	
-	Route::get('/show/{id}', 'BlogController@show');
+	Route::get('/show/{id}/{all?}', 'BlogController@show');
 	Route::get('/view/{id}', 'BlogController@view');
 	Route::get('/index', 'BlogController@index');
 	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');

@@ -42,6 +42,7 @@ foreach($photos as $photo)
 		<!-- Top Navigation Buttons -->
 		<!------------------------------------>
 		
+		@if (isset($prev) || isset($record->parent_id) || isset($next))
 		<div style="margin-top: 10px;">
 			@if (isset($prev))
 				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
@@ -51,9 +52,18 @@ foreach($photos as $photo)
 			@endif
 			@if (isset($next))
 				<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
-			@endif			
-			</ul>		
+			@endif	
+
 		</div>
+		@elseif (isset($backLink) && isset($backLinkText) && !((Auth::user() && (Auth::user()->user_type >= 1000))))
+		<div style="margin-top: 10px;">
+			<a href="{{$backLink}}">
+				<button type="button" class="btn btn-blog-nav">{{$backLinkText}}
+					<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span>
+				</button>
+			</a>			
+		</div>
+		@endif
 		
 		<h1 name="title" class="">{{$record->title }}</h1>
 		@if (isset($record->display_date))

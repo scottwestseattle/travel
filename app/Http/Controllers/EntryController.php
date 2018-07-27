@@ -223,6 +223,8 @@ class EntryController extends Controller
             return redirect('/entries/index');
 		}
 		
+		$backLink = null;
+		$backLinkText = null;
 		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 		{
 			if (isset($entry->display_date))
@@ -239,7 +241,12 @@ class EntryController extends Controller
 				$request->session()->flash('message.content', $msg);
 			}
 		}
-			
+		else if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
+		{
+			$backLink = '/articles';
+			$backLinkText = 'Back to Article List';
+		}
+		
 		$photos = Photo::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
@@ -252,6 +259,8 @@ class EntryController extends Controller
 			'next' => $next,
 			'prev' => $prev,
 			'photos' => $photos,
+			'backLink' => $backLink,
+			'backLinkText' => $backLinkText,
 		]);
 		
 		return view('entries.view', $vdata);
@@ -774,14 +783,29 @@ class EntryController extends Controller
     }
 	
     public function test()
-    {		
-		// Create DOM from URL or file
+    {	
+		$results = [];
 		$server = 'epictravelguide.com';
 		//$server = 'localhost';
-
-		$results[] = $this->testPage("http://$server/", 'Todos Derechos Reservados');
-
-		if (true)
+		
+		$frontpage = false;
+		$misc = false;
+		$blogs = false;
+		$tours = false;
+		$articles = true;
+				
+		if ($frontpage)
+		{
+			$results[] = $this->testPage("http://$server/", 'Affiliates');
+			$results[] = $this->testPage("http://$server/", 'Buddha');
+			$results[] = $this->testPage("http://$server/", 'Exploring');
+			$results[] = $this->testPage("http://$server/", 'Tours, Hikes, Things To Do');
+			$results[] = $this->testPage("http://$server/", 'USA');
+			$results[] = $this->testPage("http://$server/", 'Show All Articles');
+			$results[] = $this->testPage("http://$server/", 'Show All Blogs');
+		}
+		
+		if ($misc)
 		{
 			$results[] = $this->testPage("http://$server/login", 'Login');
 			$results[] = $this->testPage("http://$server/register", 'Register');
@@ -797,24 +821,30 @@ class EntryController extends Controller
 			$results[] = $this->testPage("http://$server/photos/view/64", 'Siem Reap');
 		}
 		
-		if (false)
+		if ($blogs)
 		{
 			// Blogs
-			$results[] = $this->testPage("http://$server/blogs/index", 'Blogs');
-			$results[] = $this->testPage("http://$server/blogs/show/105", 'Big Asia Trip 2018');
-			$results[] = $this->testPage("http://$server/blogs/show/31", '21 Countries');
+			$results[] = $this->testPage("http://$server/blogs/index", 'Epic Euro Trip');
+			$results[] = $this->testPage("http://$server/blogs/show/105", 'Show All Posts');
+			$results[] = $this->testPage("http://$server/blogs/show/31", 'Day 71');
 			$results[] = $this->testPage("http://$server/entries/thursday-tienanmen-square-2018-06-28", 'Thursday, Tienanmen Square');
 			$results[] = $this->testPage("http://$server/entries/show/157", 'Beijing Summer Palace'); // prev
 			$results[] = $this->testPage("http://$server/entries/show/155", 'Thursday, Tienanmen Square'); // next
 			$results[] = $this->testPage("http://$server/blogs/show/105", 'Big Asia'); // back to blog
-			
+		}
+		
+		if ($tours)
+		{
 			// Tours
-			$results[] = $this->testPage("http://$server/tours/index", 'Tours');
+			$results[] = $this->testPage("http://$server/tours/index", 'Seattle Waterfront to Lake Union');
 			$results[] = $this->testPage("http://$server/tours/location/2", 'USA');
 			$results[] = $this->testPage("http://$server/tours/location/9", 'China');
 			$results[] = $this->testPage("http://$server/tours/Fremont-to-Gas-Works-Park-Loop", 'Fremont');
 			$results[] = $this->testPage("http://$server/tours/xian-day-trip-to-luoyang-longmen-grottoes", 'Longmen');
-
+		}
+		
+		if ($articles)
+		{
 			// Articles
 			$results[] = $this->testPage("http://$server/articles", 'Articles');
 			$results[] = $this->testPage("http://$server/entries/beijing-subway-map-and-schedule-2018-06-27", 'Beijing Metro');

@@ -83,7 +83,7 @@ class BlogController extends Controller
     	return view($this->prefix . '.indexadmin', $vdata);
     }
 	
-    public function show(Request $request, $id)
+    public function show(Request $request, $id, $all = null)
     {
 		$id = intval($id);
 		
@@ -131,13 +131,12 @@ class BlogController extends Controller
 				->orderByRaw('created_at ASC')
 				->get();		
 				
-			$vdata = $this->getViewData([
+			return view($this->prefix . '.view', $this->getViewData([
 				'record' => $record, 
 				'records' => $records, 
 				'photos' => $photos,
-			]);
-				
-			return view($this->prefix . '.view', $vdata);				
+				'all' => $all,
+			]));				
 		}
 		catch (\Exception $e) 
 		{

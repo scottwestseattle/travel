@@ -9,7 +9,7 @@
 	<table class="table">
 	@foreach($records as $record)
 		<tr>
-			<td>{{$record['url']}}</td>
+			<td><a target="_blank" href="{{$record['url']}}">{{$record['url']}}</a></td>
 			<td>{{$record['expected']}}</td>
 			<td>{{$record['results']}}</td>
 		</tr>

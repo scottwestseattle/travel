@@ -43,6 +43,7 @@ foreach($photos as $photo)
 	<!-- show bread crumbs -->
 	<!----------------------->
 	<div style="margin-top:10px;" class="form-group">
+		<span name="" class=""><a href="\tours\index\">Tours</a>&nbsp;>&nbsp;</span>	
 		@foreach($locations as $location)
 			@if ($location['breadcrumb_flag'] == 1)
 				<span name="" class=""><a href="\tours\location\{{$location['id']}}">{{$location['name']}}</a>&nbsp;>&nbsp;</span>
