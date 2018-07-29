@@ -22,7 +22,7 @@ if (isset($photos))
 	@guest
 	@else
 	
-		@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])
+		@component('entries.menu-submenu', ['record' => $record])
 		@endcomponent
 		
 		@if ($record->published_flag === 0)

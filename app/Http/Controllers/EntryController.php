@@ -203,6 +203,9 @@ class EntryController extends Controller
 			->where('permalink', $permalink)
 			->first();
 			
+		//foreach($entry->photos as $photo)
+		//	dd($photo);
+			
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 						
@@ -788,10 +791,10 @@ class EntryController extends Controller
 		$server = 'epictravelguide.com';
 		//$server = 'localhost';
 		
-		$frontpage = false;
-		$misc = false;
-		$blogs = false;
-		$tours = false;
+		$frontpage = true;
+		$misc = true;
+		$blogs = true;
+		$tours = true;
 		$articles = true;
 				
 		if ($frontpage)

@@ -8,6 +8,11 @@ use DB;
 
 class Photo extends Base
 {
+    public function entries()
+    {
+        return $this->belongsToMany('App\Entry')->withTimestamps();
+    }
+	
 	static public function getIndex()
 	{
 		$q = '

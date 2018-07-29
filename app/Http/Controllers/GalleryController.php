@@ -58,10 +58,7 @@ class GalleryController extends Controller
     }
 
     public function permalink(Request $request, $permalink)
-    {
-		$next = null;
-		$prev = null;
-		
+    {		
 		$permalink = trim($permalink);
 		
 		$entry = Entry::select()
@@ -89,23 +86,6 @@ class GalleryController extends Controller
 			
             return redirect('/entries/index');
 		}
-		
-		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
-		{
-			if (isset($entry->display_date))
-			{
-				$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
-				$prev = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id, /* next = */ false);
-			}
-			else
-			{
-				$msg = 'Missing Display Date to view record: ' . $entry->id;
-				Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
-						
-				$request->session()->flash('message.level', 'danger');
-				$request->session()->flash('message.content', $msg);
-			}
-		}
 			
 		$photos = Photo::select()
 			->where('site_id', SITE_ID)
@@ -113,15 +93,11 @@ class GalleryController extends Controller
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
-			
-		$vdata = $this->getViewData([
-			'record' => $entry, 
-			'next' => $next,
-			'prev' => $prev,
-			'photos' => $photos,
-		]);
 		
-		return view('galleries.view', $vdata);
+		return view('galleries.view', $this->getViewData([
+			'record' => $entry, 
+			'photos' => $photos,
+		]));
 	}
 		
 	
@@ -336,5 +312,108 @@ class GalleryController extends Controller
 			return redirect('/');
 		}
     }	
+
+	// share photo with an entry
+    public function share($entry_id)
+    {		
+		if (!$this->isAdmin())
+			return redirect('/');
+           
+		$entry = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('id', $entry_id)
+			->first();
+			
+		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+		
+		$vdata = $this->getViewData([
+			'entry' => $entry,
+			'galleries' => $galleries,
+		]);
+		
+		return view('galleries.share', $vdata);      
+	}
+	
+	// link photo with an entry
+    public function link($entry_id, $gallery_id)
+    {		
+		if (!$this->isAdmin())
+			return redirect('/');
+           
+		$entry = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('id', $entry_id)
+			->first();
+			
+		$photos = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $gallery_id)
+			->orderByRaw('created_at ASC')
+			->get();
+		
+		return view('galleries.link', $this->getViewData([
+			'entry' => $entry, 
+			'photos' => $photos,
+		]));		     
+	}
+	
+	// attach photo to an entry as a many-to-many
+    public function attach($entry_id, $photo_id)
+    { 
+		if (!$this->isAdmin())
+			return redirect('/');
+
+		$entry_id = intval($entry_id);
+		$photo_id = intval($photo_id);
+	 		
+		try 
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $entry_id)
+				->first();
+				
+			if (isset($entry))
+			{
+				//throw new \Exception('entry not found');
+			}
+			
+			// get the photo
+			$photo = Photo::select()
+					->where('id', abs($photo_id))
+					->first();
+					
+			if (!isset($photo))
+			{
+				//throw new \Exception('photo not found');
+			}
+						
+			if ($photo_id > 0)
+			{
+				//
+				// add photo
+				//
+				$entry->photos()->save($photo);
+			}
+			else
+			{
+				//
+				// remove photo
+				//
+				$entry->photos()->detach($photo);
+			}
+		}
+		catch (\Exception $e) 
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $e->getMessage());
+		}
+		
+		return redirect("/galleries/link/$entry_id/$photo->parent_id");
+	}
 
 }

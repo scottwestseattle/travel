@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 <!--
-@component('menu-submenu-entries')
+@component('entries.menu-submenu')
 @endcomponent
 -->
 

@@ -20,7 +20,7 @@ foreach($photos as $photo)
 	@guest
 	@else
 	
-		@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent
+		@component('entries.menu-submenu', ['record' => $record])@endcomponent
 		
 		@if (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id)
 		<div class="publish-pills">
@@ -120,14 +120,15 @@ foreach($photos as $photo)
 		</div>
 	</div>
 
-	@if ($regular_photos > 0)
+	@if ($regular_photos > 0 || count($record->photos) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
 				<h3>PHOTOS</h3>
 			</div>
 		</div>
 			
-	<div class="text-center" style="display:default; margin-top:5px;">	
+	<div class="text-center" style="display:default; margin-top:5px;">
+		@if (isset($photos))
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
 				<?php 
@@ -146,6 +147,24 @@ foreach($photos as $photo)
 				</span>
 			@endif
 		@endforeach	
+		@endif
+		
+		@foreach($record->photos as $photo)
+			<?php 
+				$title = $photo->filename;  // just in case the others are empty
+				
+				if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
+					$title = $photo->alt_text;
+				
+				if (isset($photo->location) && strlen($photo->location) > 0)
+					$title .= ', ' . $photo->location;
+			?>
+				
+			<span style="cursor:pointer;" onclick="popup({{$photo->parent_id}}, '{{$photo->filename}}', {{$photo->id}})">
+				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
+			</span>
+		@endforeach
 	</div>
 
 	@endif
@@ -172,7 +191,7 @@ foreach($photos as $photo)
 			@endif			
 		</div>
 	
-@if (count($photos))
+@if (count($photos) > 0 || count($record->photos) > 0)
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
 	<div  style="cursor:pointer;" class="modal-content">

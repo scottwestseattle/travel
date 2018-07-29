@@ -24,7 +24,7 @@ else
 	@guest
 	@else
 	
-		@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent
+		@component('entries.menu-submenu', ['record' => $record])@endcomponent
 		
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			@if ($record->published_flag === 0)

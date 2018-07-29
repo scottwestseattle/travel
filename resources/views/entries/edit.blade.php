@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@component('menu-submenu-entries', ['record_id' => $record->id, 'record_permalink' => $record->permalink])@endcomponent	
+	@component('entries.menu-submenu', ['record' => $record])@endcomponent	
 
 	<h1>Edit Entry</h1>
 

@@ -55,6 +55,9 @@
 						@if (isset($record->title))
 							<div style="padding:0px 5px 10px 5px;">{{$record->title}}</div>
 						@endif
+						@if (isset($record->description))
+							<div style="padding:0px 5px 10px 5px;">{{$record->description}}</div>
+						@endif
 						@if (isset($record->updates))
 							<div style="padding:0px 5px 10px 5px;">{{$record->updates}}</div>
 						@endif

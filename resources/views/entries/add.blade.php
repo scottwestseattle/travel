@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@component('menu-submenu-entries')@endcomponent	
+	@component('entries.menu-submenu')@endcomponent	
 
 	@if (isset($title))
 		<h3>{{$title}}</h3>

@@ -7,6 +7,7 @@ use Auth;
 use DB;
 use App\Photo;
 use App\Event;
+use App\Entry;
 
 define('PREFIX', 'photos');
 define('LOG_MODEL', 'photos');
@@ -82,7 +83,13 @@ class PhotoController extends Controller
 
 			$subfolder = $folder . '/' . $parent_id . '/';			
 			$path = $this->getPhotosWebPath($subfolder);
-				
+			
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $parent_id)
+				->first();
+							
 			$photos = Photo::select()
 				//->where('site_id', SITE_ID)
 				//->where('user_id', '=', Auth::id())
@@ -98,6 +105,7 @@ class PhotoController extends Controller
 				'record_id' => $parent_id,
 				'type_flag' => $type_flag,
 				'type' => $type,
+				'entry' => $entry,
 			]);				
 				
 			return view('photos.index', $vdata);
@@ -328,6 +336,19 @@ class PhotoController extends Controller
 			//
 			$newSize = 0;
 			$size = filesize($tempPath . $filename);
+			if ($size == 0)
+			{
+				$msg = 'Error uploading file: ' . $tempPath . $filename . ', uploaded size = 0';
+				
+				Event::logError(LOG_MODEL, LOG_ACTION_ADD, /* title = */ $msg);			
+
+				// bad or missing extension
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);	
+
+				return redirect($redirect_error);
+			}
+			
 			$resized = false;
 	
 			$filenameUnique = Controller::getUniqueFilename($path, $filename);
@@ -341,6 +362,8 @@ class PhotoController extends Controller
 					$resized = true;
 					$newSize = filesize($path . $filename);
 					unlink($tempPath . $filename); // delete the oversized file
+					
+					//Event::logAdd(LOG_MODEL, $tempPath . $filename, 'file resized to:' . $newSize, 0);			
 				}
 				else
 				{
@@ -356,6 +379,8 @@ class PhotoController extends Controller
 			{
 				// no need to resize, just move it from temp to live photo folder
 				rename($tempPath . $filename, $path . $filenameUnique);
+				$size = filesize($path . $filenameUnique);
+				//Event::logAdd(LOG_MODEL, $tempPath . $filename, 'file moved to:' . $path . $filenameUnique . ', final size = ' . $size, 0);			
 			}
 			
 			$filename = $filenameUnique;
@@ -398,7 +423,7 @@ class PhotoController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'filename = ' . $photo->filename, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'filename = ' . (isset($photo) ? $photo->filename : 'no name'), null, $e->getMessage());
 
 			if ($e->getCode() == 0)
 			{

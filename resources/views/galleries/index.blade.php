@@ -34,7 +34,8 @@
 						<div style='white-space: nowrap; overflow: hidden;' class='frontpage-box-text'>
 							{{$record->title}}
 						</div>
-					</div>			@endif
+					</div>			
+			@endif
 		@endforeach			
 	</div>
 		

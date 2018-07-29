@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@component('menu-submenu-entries', ['record_id' => $entry->id, 'record_permalink' => $entry->permalink])@endcomponent	
+	@component('entries.menu-submenu', ['record' => $entry])@endcomponent	
 
 	<h1>Delete Entry</h1>
 

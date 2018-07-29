@@ -40,14 +40,17 @@ Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
 // Galleries
 Route::group(['prefix' => 'galleries'], function () {
-	
+
 	Route::get('/', 'GalleryController@index');
 	Route::get('/index', 'GalleryController@index');
 	Route::get('/indexadmin', 'GalleryController@indexadmin')->middleware('auth');
 	Route::get('/view/{entry}', ['as' => 'entry.view', 'uses' => 'GalleryController@view']);
+	Route::get('/share/{entry_id}', 'GalleryController@share')->middleware('auth');
+	Route::get('/link/{entry_id}/{gallery_id}', 'GalleryController@link')->middleware('auth');
+	Route::get('/attach/{entry_id}/{photo_id}', 'GalleryController@attach')->middleware('auth');
 	
 	// add/create/copy
-	Route::get('/add/{account}','GalleryController@add')->middleware('auth');
+	Route::get('/add/{entry}','GalleryController@add')->middleware('auth');
 	Route::post('/create','GalleryController@create')->middleware('auth');
 
 	// edit/update

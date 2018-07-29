@@ -17,18 +17,23 @@ class Entry extends Base
     {
 		return $this->belongsToMany('App\Tag');
     }
-	
+
+	// has one primary location
     public function location()
     {
 		return $this->belongsTo('App\Location');
     }	
 
-	//
-	// has many locations
-	//
+	// has many breadcrumb heirarchy locations
     public function locations()
     {
 		return $this->belongsToMany('App\Location')->withTimestamps();
+    }
+
+	// has many photos
+    public function photos()
+    {
+		return $this->belongsToMany('App\Photo')->withTimestamps();
     }
 	
 	// get all locations that have at least one entry record

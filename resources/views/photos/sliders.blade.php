@@ -1,10 +1,5 @@
 @extends('layouts.app')
 
-<!--
-@component('menu-submenu-entries')
-@endcomponent
--->
-
 @section('content')
 
 <?php
@@ -13,7 +8,7 @@
 
 <div class="container page-size">
 
-	@component('menu-submenu-entries')@endcomponent
+	@component('entries.menu-submenu')@endcomponent
 	
 	<h1 style="font-size:1.5em;">
 		@if (Auth::user() && Auth::user()->user_type >= 100)
