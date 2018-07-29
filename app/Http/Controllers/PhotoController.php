@@ -98,6 +98,8 @@ class PhotoController extends Controller
 				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
 				->get();
 				
+			$galleries = Photo::getGalleryMenuOptions();
+
 			$vdata = $this->getViewData([
 				'id' => $parent_id, 
 				'path' => $path, 
@@ -106,6 +108,7 @@ class PhotoController extends Controller
 				'type_flag' => $type_flag,
 				'type' => $type,
 				'entry' => $entry,
+				'galleries' => $galleries,
 			]);				
 				
 			return view('photos.index', $vdata);
@@ -655,6 +658,22 @@ class PhotoController extends Controller
              return redirect('/');
 		}            	
     }
+
+    public function updateparent(Request $request, Photo $photo)
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$parent_id_orig = $photo->parent_id;
+		
+    	if ($this->isOwnerOrAdmin($photo->user_id))
+        {
+			$photo->parent_id = intval($request->parent_id);
+			$photo->save();
+		}
+
+		return redirect('/photos/entries/' . $parent_id_orig);
+	}
 	
     public function update(Request $request, Photo $photo)
     {		

@@ -52,6 +52,11 @@ class Event extends Model
     {		
 		Event::add(LOG_TYPE_EXCEPTION, $model, $action, $title, null, $record_id, $error);
 	}
+
+    static public function logInfo($model, $action, $title)
+	{
+		Event::add(LOG_TYPE_INFO, $model, $action, $title);
+	}
 	
 	// this is the add for all records
     static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null)

@@ -56,6 +56,7 @@ Route::group(['prefix' => 'galleries'], function () {
 	// edit/update
 	Route::get('/edit/{entry}','GalleryController@edit')->middleware('auth');
 	Route::post('/update/{entry}','GalleryController@update')->middleware('auth');
+	Route::post('/move/{photo}','GalleryController@move')->middleware('auth');
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{entry}', 'GalleryController@confirmdelete')->middleware('auth');
@@ -391,6 +392,7 @@ Route::group(['prefix' => 'photos'], function ()
 	// edit/update
 	Route::get('/edit/{photo}','PhotoController@edit')->middleware('auth');
 	Route::post('/update/{photo}','PhotoController@update')->middleware('auth');
+	Route::post('/updateparent/{photo}','PhotoController@updateparent')->middleware('auth');
 
 	// rotate
 	Route::get('/rotate/{photo}','PhotoController@rotate')->middleware('auth');

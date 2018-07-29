@@ -416,4 +416,71 @@ class GalleryController extends Controller
 		return redirect("/galleries/link/$entry_id/$photo->parent_id");
 	}
 
+    public function move(Request $request, Photo $photo)
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$parent_id_orig = $photo->parent_id;
+		$filename_orig = $photo->filename;
+		$redirect = '/photos/entries/' . $parent_id_orig;
+		
+    	if ($this->isOwnerOrAdmin($photo->user_id))
+        {
+			//
+			// move the physical photo to the folder of the new parent
+			//
+			$info_from = Controller::getPhotoInfoPath($photo->type_flag, $photo->parent_id);
+			$info_to = Controller::getPhotoInfoPath($photo->type_flag, $request->parent_id);
+
+			$path_from = $info_from['filepath'];
+			$path_to = $info_to['filepath'];
+
+			// check for unique filename in the destination folder
+			$filename = Controller::getUniqueFilename($path_to, $photo->filename);
+			$duplicate = ($filename != $photo->filename); // filename had to be changed to make it unique
+			
+			$path_from = Controller::appendPath($path_from, $photo->filename);
+			$path_to = Controller::appendPath($path_to, $filename);
+			
+			try
+			{
+				//dd($path_from . ' - ' . $path_to);
+				
+				// Step 1: move the file
+				rename($path_from, $path_to);
+			
+				// Step 2: change the photo's parent to the gallery id
+				$photo->parent_id = intval($request->parent_id);
+				$photo->filename = $filename;
+				$photo->save();
+				
+				// Step 3: link the photo back to the entry that we removed it from
+				if (isset($request->entry_id))
+				{
+					$this->attach($request->entry_id, $photo->id);
+				}
+				
+				$msg = 'Photo ' . $filename_orig . ' moved to Gallery ' . $parent_id_orig;
+				Event::logInfo(LOG_MODEL, LOG_ACTION_MOVE, $msg);
+				
+				$request->session()->flash('message.level', 'success');
+				$request->session()->flash('message.content', $msg);
+			}
+			catch (\Exception $e) 
+			{
+				$msg = $path_from . ' to ' . $path_to;
+				Event::logException(LOG_MODEL, LOG_ACTION_MOVE, $msg, null, $e->getMessage());
+
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());
+				return redirect($redirect);
+			}
+			
+			
+		}
+
+		return redirect($redirect);
+	}
+	
 }

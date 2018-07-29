@@ -48,6 +48,9 @@
 								<tr><td style="padding-top:15px;"><a href="/photos/edit/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>
+								<tr><td style="padding-top:15px;">
+									@component('control-dropdown-gallery-move', ['entry_id' => $entry->id, 'photo_id' => $photo->id, 'galleries' => $galleries])@endcomponent
+								</td></tr>
 							@endif
 							
 						</table>
@@ -78,20 +81,18 @@
 						<table>
 						
 							@if (Auth::user()->user_type >= 100)
-								<tr><td>{{ $photo->filename }}</td></tr>
+								<tr><td>{{ $photo->filename }} <a href="/photos/entries/{{$photo->parent_id}}">(Gallery)</a></td></tr>
 								<!-- tr><td>{{ number_format($photo->size) }} bytes</td></tr -->
 							@endif					
 						
 							<tr><td>{{ $photo->alt_text }}</td></tr>
 							<tr><td>{{ $photo->location }}</td></tr>
-							@if ($photo->main_flag === 1)
-							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span>{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
-							@endif
 							
 							@if (Auth::user()->user_type >= 100)
+								<tr><td style="padding-top:15px;"><a href="/galleries/attach/{{$entry->id}}/-{{$photo->id}}">Unlink</a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/edit/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
-								<tr><td style="padding-top:15px;"><a href="/galleries/attach/{{$entry->id}}/-{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>
+								<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 							@endif
 							
 						</table>

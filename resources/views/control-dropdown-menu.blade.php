@@ -1,6 +1,12 @@
 
 @if (isset($prompt))
-<label for="{{$field_name}}">{{$prompt}}</label>
+@if (isset($prompt_div))
+<div>
+@endif
+	<label for="{{$field_name}}">{{$prompt}}</label>
+@if (isset($prompt_div))
+</div>
+@endif
 @endif
 @if (isset($onchange))
 <select name="{{$field_name}}" id="{{$field_name}}"  onchange="{{$onchange}}">

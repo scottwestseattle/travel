@@ -77,4 +77,20 @@ class Photo extends Base
 		return $stats;
 	}
 
+    static public function getGalleryMenuOptions()
+    {
+		$array = [];
+
+		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+
+		if (isset($records) && count($records) > 0)
+		{
+			foreach($records as $record)
+			{
+				$array[$record->id] = $record->title;					
+			}
+		}			
+					
+		return $array;
+	}
 }
