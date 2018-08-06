@@ -86,8 +86,14 @@ function resize(dc)
 	w = Math.floor(w);
 
 	var widthTotal = ((w + margin) * photosPerLine);	// only for info
-	var h = Math.floor(w * ratio);	
+	var h = Math.floor(w * ratio);
 
+	if ((widthTotal + 10) > $(document).width())
+	{
+		w -= 4;
+		widthTotal = ((w + margin) * photosPerLine);	// only for info
+	}
+	
 	if (!dc.readonly && !fontSet)
 	{
 		// check if text needs to shrink
@@ -109,17 +115,19 @@ function resize(dc)
 		$('.frontpage-box-link').css({width:w+'px', height:h+'px'});
 		// sbw new: $('.frontpage-box').css({width:w+'px', height:h+'px'});
 	
-	flash("doc-width: " + $(document).width() 
-	+ ", screen.width: " + screen.width 
-	+ ", screen.height: " + screen.height 
-	+ ", deviceWidth: " + deviceWidth 
-	+ ", ppl: " + photosPerLine 
-	+ ", w=" + w 
-	+ ", h=" + h 
-	+ ", wt=" + widthTotal
-	+ ", micro=" + isMicro
-	+ ", vert=" + isPortrait
-	);
+	if (false)
+		flash("doc-width: " + $(document).width() 
+		+ ", screen.width: " + screen.width 
+		+ ", screen.height: " + screen.height 
+		+ ", deviceWidth: " + deviceWidth 
+		+ ", ppl: " + photosPerLine 
+		+ ", w=" + w 
+		+ ", h=" + h 
+		+ ", wt=" + widthTotal
+		+ ", micro=" + isMicro
+		+ ", vert=" + isPortrait
+		+ ", margin=" + margin
+		);
 	
 	dc.width = w;
 	dc.height = h;
@@ -129,6 +137,6 @@ function resize(dc)
 
 function flash(text)
 {
-	//alert(text);	
+	$('#debug').text(text);	
 }
 
