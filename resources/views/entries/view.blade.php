@@ -2,18 +2,7 @@
 
 @section('content')
 
-<?php 
-$main_photo = null;
-$regular_photos = 0;
-if (isset($photos))
-foreach($photos as $photo)
-{
-	if ($photo->main_flag === 1)
-		$main_photo = $photo;
-	else
-		$regular_photos++;
-}
-?>
+<?php $gallery = isset($gallery) ? $gallery : null; ?>
 
 <div class="page-size container">
                
@@ -45,13 +34,13 @@ foreach($photos as $photo)
 		@if (isset($prev) || isset($record->parent_id) || isset($next))
 		<div style="margin-top: 10px;">
 			@if (isset($prev))
-				<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
+				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
 			@endif
 			@if (isset($record->parent_id))
 				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">Back to Blog<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 			@endif
 			@if (isset($next))
-				<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
+				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
 			@endif	
 
 		</div>
@@ -96,21 +85,20 @@ foreach($photos as $photo)
 		$mapWidth = 500;
 	?>
 
-	@if ($main_photo !== null)
+	@if ($record->photo_gallery !== null)
 	<div style="display:default; margin-top:20px;">
-		<?php 
-			$title = $main_photo->alt_text;
-			if (strlen($main_photo->location) > 0)
-				$title .= ', ' . $main_photo->location;
-		?>
-		<img src="/img/entries/{{$record->id}}/{{$main_photo->filename}}" title="{{$title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
+		<img src="{{$record->photo_gallery_path}}/{{$record->photo_gallery}}" title="{{$record->photo_gallery_title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
+	</div>		
+	@elseif ($record->photo !== null)
+	<div style="display:default; margin-top:20px;">
+		<img src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
 	</div>	
 	@endif
 	
-	@if (strlen(trim($record->highlights)) > 0)
+	@if (strlen(trim($record->description_short)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
 		<h3>Highlights</h3>
-		<div>{{$record->highlights}}</div>
+		<div>{{$record->description_short}}</div>
 	</div>
 	@endif
 
@@ -120,7 +108,7 @@ foreach($photos as $photo)
 		</div>
 	</div>
 
-	@if ($regular_photos > 0 || count($record->photos) > 0)
+	@if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
 				<h3>PHOTOS</h3>
@@ -149,7 +137,7 @@ foreach($photos as $photo)
 		@endforeach	
 		@endif
 		
-		@foreach($record->photos as $photo)
+		@foreach($gallery as $photo)
 			<?php 
 				$title = $photo->filename;  // just in case the others are empty
 				
@@ -159,11 +147,13 @@ foreach($photos as $photo)
 				if (isset($photo->location) && strlen($photo->location) > 0)
 					$title .= ', ' . $photo->location;
 			?>
-				
+		
+			@if ($record->photo_id != $photo->id)
 			<span style="cursor:pointer;" onclick="popup({{$photo->parent_id}}, '{{$photo->filename}}', {{$photo->id}})">
 				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
 				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
 			</span>
+			@endif
 		@endforeach
 	</div>
 
@@ -176,22 +166,22 @@ foreach($photos as $photo)
 		<div class="trim-text " style="max-width:100%; margin-top: 30px;">
 			@if (isset($prev))
 				<div class="" style="float:left; margin: 0 5px 5px 0;" >
-					<a href="/entries/show/{{$prev->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span>{{$prev->title}}</button></a>
+					<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span>{{$prev->title}}</button></a>
 				</div>
 			@endif
 			@if (isset($next))
 				<div style="float:left;">
 				<span class="{{SHOW_NON_XS}}">
-					<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-nav-bottom">{{$next->title}}<span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
+					<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom">{{$next->title}}<span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
 				</span>
 				<span class="{{SHOW_XS_ONLY}}">
-					<a href="/entries/show/{{$next->id}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span>{{$next->title}}</button></a>
+					<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span>{{$next->title}}</button></a>
 				</span>
 				</div>
 			@endif			
 		</div>
 	
-@if (count($photos) > 0 || count($record->photos) > 0)
+@if (count($photos) > 0 || count($gallery) > 0)
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
 	<div  style="cursor:pointer;" class="modal-content">

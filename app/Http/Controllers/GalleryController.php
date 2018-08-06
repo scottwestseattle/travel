@@ -453,6 +453,7 @@ class GalleryController extends Controller
 				// Step 2: change the photo's parent to the gallery id
 				$photo->parent_id = intval($request->parent_id);
 				$photo->filename = $filename;
+				$photo->main_flag = 0;
 				$photo->save();
 				
 				// Step 3: link the photo back to the entry that we removed it from
@@ -481,6 +482,53 @@ class GalleryController extends Controller
 		}
 
 		return redirect($redirect);
+	}
+
+	// attach photo to an entry as a many-to-many
+    public function setmain($entry_id, $photo_id)
+    { 
+		if (!$this->isAdmin())
+			return redirect('/');
+
+		$entry_id = intval($entry_id);
+		$photo_id = intval($photo_id);
+	 		
+		try 
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $entry_id)
+				->first();
+				
+			if (isset($entry))
+			{
+				//throw new \Exception('entry not found');
+			}
+			
+			// get the photo
+			$photo = Photo::select()
+					->where('id', abs($photo_id))
+					->first();
+					
+			if (!isset($photo))
+			{
+				//throw new \Exception('photo not found');
+			}
+			
+			//
+			// set the photo as the main photo
+			//
+			$entry->photo_id = $photo->id;
+			$entry->save();
+		}
+		catch (\Exception $e) 
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $e->getMessage());
+		}
+		
+		return redirect("/photos/entries/$entry->id");
 	}
 	
 }

@@ -4,8 +4,9 @@
 
 <div class="container page-size">
 
-	@component('entries.menu-submenu', ['record' => $entry])@endcomponent
-	
+	@if (isset($entry))
+		@component('entries.menu-submenu', ['record' => $entry])@endcomponent
+	@endif
 	<h3>{{isset($entry) ? $entry->title : 'No Title'}}</h3>
 	
 	@if (Auth::user()->user_type >= 100)
@@ -49,7 +50,9 @@
 								<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>
 								<tr><td style="padding-top:15px;">
+								@if (isset($entry))
 									@component('control-dropdown-gallery-move', ['entry_id' => $entry->id, 'photo_id' => $photo->id, 'galleries' => $galleries])@endcomponent
+								@endif
 								</td></tr>
 							@endif
 							
@@ -60,7 +63,7 @@
 			</tbody>
 		</table>
 		
-	@if (isset($entry->photos))
+	@if (isset($entry) && isset($entry->photos))
 	@if (Auth::user()->user_type >= 100)
 	<h3>
 		<a href="/galleries/share/{{$id}}"><span class="glyphSliders glyphicon glyphicon-duplicate" style="padding:5px;"></span></a>
@@ -89,6 +92,11 @@
 							<tr><td>{{ $photo->location }}</td></tr>
 							
 							@if (Auth::user()->user_type >= 100)
+								@if (isset($entry->photo_id) && $entry->photo_id == $photo->id)
+									<tr><td style="padding-top:15px;">Main Photo</td></tr>
+								@else
+									<tr><td style="padding-top:15px;"><a href="/galleries/setmain/{{$entry->id}}/{{$photo->id}}">Set as Main Photo</a></td></tr>
+								@endif
 								<tr><td style="padding-top:15px;"><a href="/galleries/attach/{{$entry->id}}/-{{$photo->id}}">Unlink</a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/edit/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>

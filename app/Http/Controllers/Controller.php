@@ -660,7 +660,7 @@ class Controller extends BaseController
 		return $rc;
 	}
 	
-	protected function getTourIndexAdmin()
+	protected function getTourIndexAdmin($pending = false)
 	{
 		$q = '
 			SELECT entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag, entries.permalink,
@@ -679,8 +679,14 @@ class Controller extends BaseController
 				AND entries.site_id = ? 
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
-				AND (entries.approved_flag = 0 OR entries.published_flag = 0 OR entries.location_id IS NULL	OR entries.location_id = 0)
-				
+		';
+		
+		if ($pending)
+		{
+			$q .= ' AND (entries.approved_flag = 0 OR entries.published_flag = 0 OR entries.location_id IS NULL	OR entries.location_id = 0) ';
+		}	
+
+		$q .= '
 			GROUP BY 
 				entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag, entries.permalink,
 				activities.id, photo_main.filename, activities.map_link, activities.location_id

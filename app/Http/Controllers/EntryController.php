@@ -197,14 +197,17 @@ class EntryController extends Controller
 		
 		$permalink = trim($permalink);
 		
+		// get the entry the Laravel way so we can access the gallery photo list
 		$entry = Entry::select()
 			->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
-			
-		//foreach($entry->photos as $photo)
-		//	dd($photo);
+		$gallery = isset($entry) ? $entry->photos : null;
+		
+		// get the entry the mysql way so we can have all the main photo and location info
+		$entry = Entry::getEntry($permalink);
+		//dd($entry);
 			
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
@@ -262,6 +265,7 @@ class EntryController extends Controller
 			'next' => $next,
 			'prev' => $prev,
 			'photos' => $photos,
+			'gallery' => $gallery,
 			'backLink' => $backLink,
 			'backLinkText' => $backLinkText,
 		]);
@@ -312,7 +316,7 @@ class EntryController extends Controller
 				->where('deleted_flag', 0)
 				->where('id', $id)
 				->first();
-				
+								
 			if (isset($entry))
 			{
 				$entry->description = nl2br($entry->description);
@@ -790,6 +794,12 @@ class EntryController extends Controller
 		$results = [];
 		$server = 'epictravelguide.com';
 		//$server = 'localhost';
+
+		$frontpage = false;
+		$misc = false;
+		$blogs = false;
+		$tours = false;
+		$articles = false;
 		
 		$frontpage = true;
 		$misc = true;

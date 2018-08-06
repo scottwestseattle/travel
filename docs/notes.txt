@@ -18,9 +18,9 @@ UPDATE photos SET type_flag = 2 WHERE parent_id > 1000;
 
 7/28
 ALTER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE `entries` ADD `photo_id` INT NULL AFTER `parent_id`;
 
-
-Booking Affiliate Links
+My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

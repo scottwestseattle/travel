@@ -86,7 +86,7 @@ class FrontPageController extends Controller
 		//
 		// get the latest blog posts
 		//
-		$posts = Entry::getLatestBlogPosts(3);
+		$posts = Entry::getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 3);
 
 		//
 		// get the articles
