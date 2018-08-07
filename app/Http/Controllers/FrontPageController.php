@@ -92,6 +92,11 @@ class FrontPageController extends Controller
 		// get the articles
 		//
 		$articles = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, true, 10);
+
+		//
+		// get the gallery
+		//
+		$gallery = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
 		
 		//
 		// save visitor stats
@@ -111,6 +116,7 @@ class FrontPageController extends Controller
 			'photoPath' => $photosWebPath, 
 			'sections' => $sections,
 			'articles' => $articles,
+			'gallery' => $gallery,
 		];
 		
     	return view('frontpage.index', $vdata);

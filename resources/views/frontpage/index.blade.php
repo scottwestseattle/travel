@@ -20,13 +20,14 @@ function getSection($id, $array)
 }
 
 $colors = [
-'sectionWhite',
+'sectionGray',
 'powerBlue',
 'sectionWhite',
 'sectionGreen',
-'sectionWhite',
+'sectionGray',
 'sectionOrange',
-'sectionWhite'
+'sectionGray',
+'sectionWhite',
 ];
 
 $sectionCount = 0;
@@ -204,112 +205,44 @@ $sectionCount = 0;
 @endif
 
 <!--------------------------------------------------------------------------------------->
-<!-- SECTION: Tours, Hikes, Things To Do -->
+<!-- SECTION: Photo Gallery -->
 <!--------------------------------------------------------------------------------------->
 
-@if (($section = getSection(SECTION_TOURS, $sections)) != null)
+@if (($section = getSection(SECTION_GALLERY, $sections)) != null)
 
-<?php
-	$h = 200;
-	$w = 300;
-	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
-	$tours_webpath = '/img/tours/';
-	$link = '/activities/';
-?>
+<div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
-<section id="" class="{{$colors[$sectionCount++]}}" style="" >
-	<div class="container">	
-		<div class="text-center">			
-			
-			<!-------------------- Section header image --------->
-			<div class="sectionHeader hidden-xs">	
-				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<!-- div><img src="/img/round-mountain.png" /></div -->
-				<h1 style="" class="main-font sectionImageBlue">{{$section->title}}</h1>
-			</div>		
-			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">	
-				<h3 style="margin:0; padding:0;" class="main-font sectionImageBlue">{{$section->title}}</h3>
-			</div>		
+	<div class="sectionHeader text-center main-font">
+		@if (isset($section->title))
+			<h1>{{$section->title}}</h1>
+		@else
+			<h1>Photo Gallery</h1>
+		@endif
+	</div>
 
-			<!---------------------------------------------------->
-			<!-- Locations -->
-			<!---------------------------------------------------->
-			@if (isset($locations) && $tour_count > 0)
-			<div style="margin:20px; 0" class="text-center">
-				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
-				@foreach($locations as $location)
-					@if ($location->count > 0)
-						<a href="/tours/location/{{$location->id}}">
-							<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
-								<span class="badge badge-light">{{$location->count}}</span>
-							</button>
-						</a>
-					@endif
-				@endforeach
+	<!------------------------------------------------------------------------------------------------------------->
+	<!-- Content -------------------------------------------------------------------------------------------------->
+	<!------------------------------------------------------------------------------------------------------------->
+	
+	<div id="content" style='background-color: white; margin:0; padding:0; padding-bottom: 5px; min-height: 200px; text-align: center;'>
+		@foreach($gallery as $record)
+			<div class='frontpage-box' style="" >
+				<!-- BACKGROUND PHOTO LINK -->
+				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; height: 150px; background-size: 100%; background-repeat: no-repeat; background-image: url('{{$record->photo_path}}{{$record->photo}}')" ></a>
+
+				<div style='white-space: nowrap; overflow: hidden;' class='frontpage-box-text'>
+					{{$record->title}}
+				</div>
 			</div>			
-			@endif
-						
-			<!---------------------------------------------------->
-			<!-- Tours, Hikes, Things To Do -->
-			<!---------------------------------------------------->
-			<div class="clearfix">
-						
-				<div id="tourParentDiv" class="row">
+		@endforeach			
+	</div>
+	
+	<span id="debug"></span>
+		
+</div><!-- container -->
 
-					@if ($tour_count > 0)
-					<?php $count = 0; ?>
-					@foreach($tours as $entry)
-						<?php
-							if (isset($entry->photo))
-							{
-								$photo = $photoPath . $entry->id . '/' . $entry->photo;
-								//dd($photo);
-							}
-							else
-							{
-								$photo = TOUR_PHOTO_PLACEHOLDER;
-							}
-						?>
-						<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
-						
-							@if (isset($entry->location))
-								<a href="{{ route('tour.permalocation', [$entry->location, $entry->permalink]) }}">
-							@else
-								<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
-							@endif
-									<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
-								</a>
-							
-							<!-- tour title -->
-							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
-								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('tour.permalink', [$entry->permalink]) }}">{{ $entry->title }}</a>
-							</div>
-							
-						</div>
-					
-					@endforeach
-					@else
-						@guest
-						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
-							<a style="font-family: Raleway; color: gray; font-size:1em; text-decoration: none; " href="/login">Log-in to add content for this section</a>
-						</div>
-						@else
-						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
-							<i><a style="font-family: Raleway; font-size:1.1em; text-decoration: none; " href="/tours/add">Click here to add content for this section</a></i>
-						</div>
-						@endguest
-					@endif
-					
-				</div><!-- row -->	
-				
-				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Tours&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
-
-			</div>
-						
-		</div><!-- text-center -->
-	</div><!-- container -->
-</section>									
 @endif
+
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Articles -->
@@ -482,6 +415,120 @@ $sectionCount = 0;
 </div>
 </section>
 @endif
+
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: Tours, Hikes, Things To Do -->
+<!--------------------------------------------------------------------------------------->
+
+@if (($section = getSection(SECTION_TOURS, $sections)) != null)
+
+<?php
+	$h = 200;
+	$w = 300;
+	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
+	$tours_webpath = '/img/tours/';
+	$link = '/activities/';
+?>
+
+<section id="" class="{{$colors[$sectionCount++]}}" style="padding-bottom: 50px;" >
+	<div class="container">	
+		<div class="text-center">			
+			
+			<!-------------------- Section header image --------->
+			<div style="padding-top:40px;" class="sectionHeader hidden-xs">	
+				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
+				<!-- div><img src="/img/round-mountain.png" /></div -->
+				<h1 style="" class="main-font sectionImageBlue">{{$section->title}}</h1>
+			</div>		
+			<div style="padding-top:40px;" class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">	
+				<h3 style="margin:0; padding:0;" class="main-font sectionImageBlue">{{$section->title}}</h3>
+			</div>		
+
+			<!---------------------------------------------------->
+			<!-- Locations -->
+			<!---------------------------------------------------->
+			@if (isset($locations) && $tour_count > 0)
+			<div style="margin:20px; 0" class="text-center">
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
+				@foreach($locations as $location)
+					@if ($location->count > 0)
+						<a href="/tours/location/{{$location->id}}">
+							<button style="margin-bottom:10px;" type="button" class="btn btn-success">{{$location->name}}&nbsp;
+								<span class="badge badge-light">{{$location->count}}</span>
+							</button>
+						</a>
+					@endif
+				@endforeach
+			</div>			
+			@endif
+						
+			<!---------------------------------------------------->
+			<!-- Tours, Hikes, Things To Do -->
+			<!---------------------------------------------------->
+			<div class="clearfix">
+						
+				<div id="tourParentDiv" class="row">
+
+					@if ($tour_count > 0)
+					<?php $count = 0; ?>
+					@foreach($tours as $entry)
+						<?php
+							if (isset($entry->photo))
+							{
+								$photo = $photoPath . $entry->id . '/' . $entry->photo;
+								//dd($photo);
+							}
+							else
+							{
+								$photo = TOUR_PHOTO_PLACEHOLDER;
+							}
+						?>
+						<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
+						
+							@if (isset($entry->location))
+								<a href="{{ route('tour.permalocation', [$entry->location, $entry->permalink]) }}">
+							@else
+								<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
+							@endif
+									<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
+								</a>
+							
+							<!-- tour title -->
+							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">
+								<a style="font-family: Raleway; color: white; font-size:1em; text-decoration: none; " href="{{ route('tour.permalink', [$entry->permalink]) }}">{{ $entry->title }}</a>
+							</div>
+							
+						</div>
+					
+					@endforeach
+					@else
+						@guest
+						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
+							<a style="font-family: Raleway; color: gray; font-size:1em; text-decoration: none; " href="/login">Log-in to add content for this section</a>
+						</div>
+						@else
+						<div class="" style="color: white; font-size:1.2em; font-weight:bold;">
+							<i><a style="font-family: Raleway; font-size:1.1em; text-decoration: none; " href="/tours/add">Click here to add content for this section</a></i>
+						</div>
+						@endguest
+					@endif
+					
+				</div><!-- row -->	
+				
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Tours&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
+
+			</div>
+						
+		</div><!-- text-center -->
+	</div><!-- container -->
+</section>	
+
+@endif
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: Affiliates -->
+<!--------------------------------------------------------------------------------------->
 
 @if (($section = getSection(SECTION_AFFILIATES, $sections)) != null)
 <section class="{{$colors[$sectionCount++]}}">

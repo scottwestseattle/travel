@@ -24,6 +24,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/frontpage.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/gallery.css') }}" rel="stylesheet">
 	
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -49,7 +50,7 @@
 	@endif
 	
 </head>
-<body>
+<body onresize="onResize()" onload="onResize()">
     <div id="app" style="min-height: 500px;">
         <nav class="navbar navbar-default navbar-static-top powerBlue" style="margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
@@ -63,5 +64,6 @@
 		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/gallery.js') }}"></script>
 </body>
 </html>

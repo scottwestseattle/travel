@@ -83,9 +83,15 @@
 		padding: 50px 0 40px 0;
 	}
 
-	.sectionWhite {
+	.sectionGray {
 		background-color: #F4F4F4;
-		xbackground-image: url('/img/theme1/bg-pattern-white.png');				
+		background-size: cover;
+		background-position: center;		
+		color: #3F98FD;
+	}
+
+	.sectionWhite {
+		background-color: white;
 		background-size: cover;
 		background-position: center;		
 		color: #3F98FD;
