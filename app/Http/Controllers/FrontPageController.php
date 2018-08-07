@@ -91,7 +91,7 @@ class FrontPageController extends Controller
 		//
 		// get the articles
 		//
-		$articles = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, true, 10);
+		$articles = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
 
 		//
 		// get the gallery
