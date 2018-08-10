@@ -9,7 +9,7 @@
 		@foreach($galleries as $record)
 			<div class='' style="border:1px solid black" >
 				<!-- BACKGROUND PHOTO LINK -->
-				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><img style="width: 100px;" src="{{$record->photo_path}}{{$record->photo}}" /></a>
+				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><img style="width: 100px;" src="{{$record->photo_path}}/{{$record->photo}}" /></a>
 
 				<div style='white-space: nowrap; overflow: hidden;' class=''>
 					{{$record->title}}

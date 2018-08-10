@@ -228,7 +228,7 @@ $sectionCount = 0;
 		@foreach($gallery as $record)
 			<div class='frontpage-box' style="" >
 				<!-- BACKGROUND PHOTO LINK -->
-				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; height: 150px; background-size: 100%; background-repeat: no-repeat; background-image: url('{{$record->photo_path}}{{$record->photo}}')" ></a>
+				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; height: 150px; background-size: 100%; background-repeat: no-repeat; background-image: url('{{$record->photo_path}}/{{$record->photo}}')" ></a>
 
 				<div style='white-space: nowrap; overflow: hidden;' class='frontpage-box-text'>
 					{{$record->title}}

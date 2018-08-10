@@ -86,17 +86,17 @@ class FrontPageController extends Controller
 		//
 		// get the latest blog posts
 		//
-		$posts = Entry::getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 3);
+		$posts = Controller::getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 3);
 
 		//
 		// get the articles
 		//
-		$articles = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
+		$articles = Controller::getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
 
 		//
 		// get the gallery
 		//
-		$gallery = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+		$gallery = Controller::getEntriesByType(ENTRY_TYPE_GALLERY);
 		
 		//
 		// save visitor stats

@@ -639,3 +639,11 @@ Media specific overrides go below here
 .drop-box {
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 10px 0 rgba(0, 0, 0, 0.19);
 }
+
+.index-article {
+	min-width:150px; 
+	min-height:100px; 
+	background-color: white; 
+	background-size: cover; 
+	background-position: center; 
+}

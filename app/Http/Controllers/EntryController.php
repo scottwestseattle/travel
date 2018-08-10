@@ -46,7 +46,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = Entry::getEntriesByType(ENTRY_TYPE_ARTICLE, false);
+		$records = Controller::getEntriesByType(ENTRY_TYPE_ARTICLE, false);
 			
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -60,7 +60,7 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$entries = Entry::getEntriesByType($type_flag, /* approved = */ false);
+		$entries = Controller::getEntriesByType($type_flag, /* approved = */ false);
 
 		$vdata = $this->getViewData([
 			'records' => $entries,
@@ -780,7 +780,7 @@ class EntryController extends Controller
     {		   
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
-		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+		$records = Controller::getEntriesByType(ENTRY_TYPE_GALLERY);
 
 		$vdata = $this->getViewData([
 			'records' => $records, 

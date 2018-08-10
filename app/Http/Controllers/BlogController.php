@@ -148,7 +148,6 @@ class BlogController extends Controller
 			
 			return redirect('/error');			
 		}								
-		
 	}
 	
     public function view(Request $request, $id)

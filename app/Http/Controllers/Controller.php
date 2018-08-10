@@ -30,6 +30,7 @@ define('TOUR_PHOTOS_PATH', '/public/img/tours/');
 define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
 define('PHOTOS_FULL_PATH', '/public/img/');
 define('PHOTOS_WEB_PATH', '/img/');
+define('PHOTOS_THUMBNAIL_FOLDER', 'tn');
 
 // -1=not set, 0=slider, 1=entry, 2=receipt, 99=other 
 define('PHOTO_TYPE_NOTSET',		-1);
@@ -38,7 +39,7 @@ define('PHOTO_TYPE_ENTRY', 		1);
 define('PHOTO_TYPE_RECEIPT', 	2);
 define('PHOTO_TYPE_OTHER', 		99);
 
-define('TOUR_PHOTO_PLACEHOLDER', '/img/theme1/entry-placeholder.jpg');
+define('TOUR_PHOTO_PLACEHOLDER', 'img/theme1/entry-placeholder.jpg');
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
@@ -122,6 +123,7 @@ define('LOG_ACTION_SELECT', 'select');
 define('LOG_ACTION_MOVE', 'move');
 define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
+define('LOG_ACTION_RESIZE', 'resize');
 define('LOG_ACTION_OTHER', 'other');
 
 define('LOG_PAGE_INDEX', 'index');
@@ -545,7 +547,7 @@ class Controller extends BaseController
 		if ($photo == null)
 		{
 			// the higher level photo path
-			$path = '/img/';
+			$path = '/img/entries/';
 		}
 		else
 		{
@@ -1259,4 +1261,252 @@ class Controller extends BaseController
 			
 		return $path . $filename;
 	}
+	
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0)
+	{
+		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit);
+		
+		// fix-up the photo paths
+		foreach($records as $record)
+		{
+			if (isset($record->photo_gallery))
+			{
+				$record->photo = $record->photo_gallery;
+				$record->photo_path = $record->photo_path_gallery;
+				
+				Controller::makeThumbnail($record);
+			}
+			else if (isset($record->photo))
+			{
+				// no path change, path and photo already set correctly
+				
+				Controller::makeThumbnail($record);
+			}
+			else
+			{
+				$record->photo = TOUR_PHOTO_PLACEHOLDER;
+				$record->photo_path = '';
+			}
+
+			//echo 'folder: ' . $record->photo_path . '/' . $record->photo . '<br/>';
+		}
+		
+		//die;
+		
+		return $records;
+	}
+	
+	static public function makeThumbnail($record)
+	{
+		$tnFolder = base_path() . '/public' . $record->photo_path . '/' . PHOTOS_THUMBNAIL_FOLDER; 
+		$found = false;
+		
+		if (is_dir($tnFolder))
+		{
+			// does TN already exists for this photo
+			$tn = $tnFolder . '/' . $record->photo;
+			
+			if (file_exists($tn))
+			{
+				// TN already exists
+				$found = true;
+			}
+		}
+		else
+		{
+			// create the TN folder and the TN for this photo
+			try
+			{
+				mkdir($tnFolder, 0755);
+			}
+			catch (\Exception $e) 
+			{	
+				// log exception
+				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder: ' . $tnFolder, null, $e->getMessage());
+			}			
+		}
+		
+		if (!$found)
+		{
+			$fromPath = base_path() . '/public' . $record->photo_path;
+			
+			try
+			{
+				if (Controller::resizeImage($fromPath, $tnFolder, $record->photo, $record->photo, /* new height = */ 200))
+				{
+					// log results
+					$msg = 'TN created for photo ' . $record->photo . ' in folder ' . $tnFolder;
+					Event::logInfo(LOG_MODEL, LOG_ACTION_RESIZE, $msg);
+				}
+				else
+				{
+					// log error
+					$msg = 'Error resizing image: photo=' . $record->photo . ', folder=' . $tnFolder;
+					Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg);
+				}
+			}
+			catch (\Exception $e) 
+			{	
+				// log exception
+				$msg = 'Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
+				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+			}				
+		}
+		
+		$record->photo_path = $record->photo_path . '/tn';
+	}
+	
+	static private function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
+	{	
+		//dd($toPath);
+		
+		if (!is_dir($toPath)) 
+		{
+			mkdir($toPath, 0755);// make the folder with read/execute for everybody
+		}
+		
+		//
+		// get image info
+		//
+		//Debugger::dump('from: ' . $toPath);die;	
+			
+		$file = $fromPath;
+						
+		$file = Controller::appendPath($file, $filename);
+		$fileThumb = Controller::appendPath($toPath, $filenameTo);
+				
+		$image_info = getimagesize($file);
+		
+		switch($image_info["mime"])
+		{
+			case "image/jpeg":
+				$image = @imagecreatefromjpeg($file); //jpeg file
+				break;
+				
+			case "image/gif":
+				$image = @imagecreatefromgif($file); //gif file
+				break;
+				
+			case "image/png":
+				$image = @imagecreatefrompng($file); //png file
+				break;
+				
+			default: 
+				$image = false;
+				break;
+		}
+		
+		// check for bad image
+		if (!$image)
+		{
+			//Debugger::dump('filename = ' . $filename);
+			//Debugger::dump('file = ' . $file);
+			//Debugger::dump($image_info);
+	
+			return false;
+		}
+		
+		//
+		// resize the file
+		//
+		
+		$portrait = (imagesy($image) > imagesx($image));
+		
+		$width = 0;
+		$height = $heightNew;
+		
+		if ($portrait)
+		{
+			$ratio = $height / imagesy($image);
+			$width = imagesx($image) * $ratio; 			
+		}
+		else
+		{
+			$ratio = $height / imagesy($image);			
+			$width = imagesx($image) * $ratio; 			
+		}
+
+		//sbw $fileThumb = $toPath . '/' . $filename;
+
+		if (false /*sbw*/ && file_exists($fileThumb))
+		{			
+			// check the thumb
+			$image_info_thumb = getimagesize($fileThumb);
+			
+			switch($image_info_thumb["mime"])
+			{
+				case "image/jpeg":
+					$imageThumb = @imagecreatefromjpeg($fileThumb); //jpeg file
+					break;
+					
+				case "image/gif":
+					$imageThumb = @imagecreatefromgif($fileThumb); //gif file
+					break;
+					
+				case "image/png":
+					$imageThumb = @imagecreatefrompng($fileThumb); //png file
+					break;
+					
+				default: 
+					$imageThumb = false;
+					break;
+			}
+			
+			// check for bad image
+			if (!$imageThumb)
+			{		
+				return false;
+			}	
+
+			//Debugger::dump( 'r = ' . $ratio .', h = ' . $height . ', w = ' . $width . ', ' . $portrait . ', ' . $file . '<br />' );
+			//Debugger::dump( 'r = ' . $ratio .', h = ' . imagesy($imageThumb) . ', w = ' . imagesx($imageThumb) . ', ' . $portrait . ', ' . $file . '<br />' );
+			
+			if (intval($height) == imagesy($imageThumb) && intval($width) == imagesx($imageThumb))
+			{
+				return false;
+			}
+		}
+		
+		//echo 'rewriting file...<b />';
+		
+		$new_image = imagecreatetruecolor($width, $height); 
+		
+		imagecopyresampled($new_image, $image, 0, 0, 0, 0, $width, $height
+			, imagesx($image)
+			, imagesy($image)
+			); 
+			
+		$image = $new_image;
+		
+		//
+		// save the thumb
+		//
+		$permissions = null;
+
+		switch($image_info["mime"])
+		{
+			case "image/jpeg":
+				$compression = 75;
+				imagejpeg($image, $fileThumb, $compression); 
+				break;
+				
+			case "image/gif":
+				imagegif($image, $fileThumb); 
+				break;
+				
+			case "image/png":
+				imagepng($image, $fileThumb); 
+				break;
+				
+			default: 
+				break;
+		}
+		
+		if( $permissions != null) 
+		{   
+			chmod($fileThumb, $permissions); 
+		}
+		
+		return true;
+	}	
 }

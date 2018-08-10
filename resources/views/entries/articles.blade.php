@@ -26,19 +26,7 @@
 					<tr style="vertical-align:top;">
 						<td style="margin-bottom:10px;" >
 							<a href="/entries/{{$record->permalink}}">
-								<?php
-									if (isset($record->photo_gallery))
-									{
-										$record->photo_path = $record->photo_path_gallery; 
-										$record->photo = $record->photo_gallery; 
-									}
-									else if (!isset($record->photo)) 
-									{ 
-										$record->photo_path = '.'; 
-										$record->photo = TOUR_PHOTO_PLACEHOLDER; 
-									} 
-								?>
-								<div style="min-width:150px; min-height:100px; background-color: white; background-size: cover; background-position: center; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); "></div>
+								@component('entries.show-main-photo', ['record' => $record, 'class' => 'index-article'])@endcomponent
 							</a>							
 						</td>
 						<td style="color:default; padding: 0 10px;">

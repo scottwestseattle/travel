@@ -154,8 +154,9 @@ class PhotoController extends Controller
         {
 			$photos = Photo::select()
 				->where('site_id', SITE_ID)
-				->where('deleted_flag', '<>', 1)
+				->where('deleted_flag', 0)
 				->where('parent_id', '>', 0)
+				->where('type_flag', 1)
 				->get();
 			
 			$vdata = $this->getViewData([
@@ -360,7 +361,7 @@ class PhotoController extends Controller
 			if ($id > 0 && intval($size) > 2000000) // 2mb limit for non-sliders only
 			{
 				// resize and put it up in the live photo folder
-				if ($this->resizeImage($tempPath, $path, $filename, $filenameUnique, /* new size = */ 750))
+				if ($this->resizeImage($tempPath, $path, $filename, $filenameUnique, /* new height = */ 750))
 				{
 					$resized = true;
 					$newSize = filesize($path . $filename);
@@ -438,156 +439,6 @@ class PhotoController extends Controller
 			return redirect($redirect_error);
 		}					
     }
-	
-	private function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
-	{
-		if (!is_dir($toPath)) 
-			mkdir($toPath, 0755);// make the folder with read/execute for everybody
-		
-		//
-		// get image info
-		//
-		//Debugger::dump('from: ' . $toPath);die;	
-			
-		$file = $fromPath;
-						
-		$file = Controller::appendPath($file, $filename);
-		$fileThumb = Controller::appendPath($toPath, $filenameTo);
-				
-		$image_info = getimagesize($file);
-		
-		switch($image_info["mime"])
-		{
-			case "image/jpeg":
-				$image = @imagecreatefromjpeg($file); //jpeg file
-				break;
-				
-			case "image/gif":
-				$image = @imagecreatefromgif($file); //gif file
-				break;
-				
-			case "image/png":
-				$image = @imagecreatefrompng($file); //png file
-				break;
-				
-			default: 
-				$image = false;
-				break;
-		}
-		
-		// check for bad image
-		if (!$image)
-		{
-			//Debugger::dump('filename = ' . $filename);
-			//Debugger::dump('file = ' . $file);
-			//Debugger::dump($image_info);
-	
-			return false;
-		}
-		
-		//
-		// resize the file
-		//
-		
-		$portrait = (imagesy($image) > imagesx($image));
-		
-		$width = 0;
-		$height = $heightNew;
-		
-		if ($portrait)
-		{
-			$ratio = $height / imagesy($image);
-			$width = imagesx($image) * $ratio; 			
-		}
-		else
-		{
-			$ratio = $height / imagesy($image);			
-			$width = imagesx($image) * $ratio; 			
-		}
-
-		//sbw $fileThumb = $toPath . '/' . $filename;
-
-		if (false /*sbw*/ && file_exists($fileThumb))
-		{			
-			// check the thumb
-			$image_info_thumb = getimagesize($fileThumb);
-			
-			switch($image_info_thumb["mime"])
-			{
-				case "image/jpeg":
-					$imageThumb = @imagecreatefromjpeg($fileThumb); //jpeg file
-					break;
-					
-				case "image/gif":
-					$imageThumb = @imagecreatefromgif($fileThumb); //gif file
-					break;
-					
-				case "image/png":
-					$imageThumb = @imagecreatefrompng($fileThumb); //png file
-					break;
-					
-				default: 
-					$imageThumb = false;
-					break;
-			}
-			
-			// check for bad image
-			if (!$imageThumb)
-			{		
-				return false;
-			}	
-
-			//Debugger::dump( 'r = ' . $ratio .', h = ' . $height . ', w = ' . $width . ', ' . $portrait . ', ' . $file . '<br />' );
-			//Debugger::dump( 'r = ' . $ratio .', h = ' . imagesy($imageThumb) . ', w = ' . imagesx($imageThumb) . ', ' . $portrait . ', ' . $file . '<br />' );
-			
-			if (intval($height) == imagesy($imageThumb) && intval($width) == imagesx($imageThumb))
-			{
-				return false;
-			}
-		}
-		
-		//echo 'rewriting file...<b />';
-		
-		$new_image = imagecreatetruecolor($width, $height); 
-		
-		imagecopyresampled($new_image, $image, 0, 0, 0, 0, $width, $height
-			, imagesx($image)
-			, imagesy($image)
-			); 
-			
-		$image = $new_image;
-		
-		//
-		// save the thumb
-		//
-		$permissions = null;
-
-		switch($image_info["mime"])
-		{
-			case "image/jpeg":
-				$compression = 75;
-				imagejpeg($image, $fileThumb, $compression); 
-				break;
-				
-			case "image/gif":
-				imagegif($image, $fileThumb); 
-				break;
-				
-			case "image/png":
-				imagepng($image, $fileThumb); 
-				break;
-				
-			default: 
-				break;
-		}
-		
-		if( $permissions != null) 
-		{   
-			chmod($fileThumb, $permissions); 
-		}
-		
-		return true;
-	}	
 
     protected function getPhotoName($filename_to, $filename_from, &$alt_text)
     {

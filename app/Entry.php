@@ -86,10 +86,10 @@ class Entry extends Base
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date 
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
-				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id) as photo_path
 				, photo_main_gallery.filename as photo_gallery 
 				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_title_gallery
-				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id, "/") as photo_path_gallery
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id) as photo_path_gallery
 				, count(photos.id) as photo_count
 				, locations.name as location
 				, locations_parent.name as location_parent
