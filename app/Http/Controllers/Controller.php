@@ -40,6 +40,7 @@ define('PHOTO_TYPE_RECEIPT', 	2);
 define('PHOTO_TYPE_OTHER', 		99);
 
 define('TOUR_PHOTO_PLACEHOLDER', 'img/theme1/entry-placeholder.jpg');
+define('PHOTO_THUMBNAIL_HEIGHT', 400);
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
@@ -1332,7 +1333,7 @@ class Controller extends BaseController
 			
 			try
 			{
-				if (Controller::resizeImage($fromPath, $tnFolder, $record->photo, $record->photo, /* new height = */ 200))
+				if (Controller::resizeImage($fromPath, $tnFolder, $record->photo, $record->photo, /* new height = */ PHOTO_THUMBNAIL_HEIGHT))
 				{
 					// log results
 					$msg = 'TN created for photo ' . $record->photo . ' in folder ' . $tnFolder;
