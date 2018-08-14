@@ -50,6 +50,7 @@ class EntryController extends Controller
 			
 		$vdata = $this->getViewData([
 			'records' => $records,
+			'page_title' => 'Article List',
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -268,6 +269,7 @@ class EntryController extends Controller
 			'gallery' => $gallery,
 			'backLink' => $backLink,
 			'backLinkText' => $backLinkText,
+			'page_title' => $entry->title,
 		]);
 		
 		return view('entries.view', $vdata);

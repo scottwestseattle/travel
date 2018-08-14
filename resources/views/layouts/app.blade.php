@@ -20,7 +20,9 @@
 
 	<?php
 		if (!isset($page_title))
+		{
 			$page_title = config('app.name', 'Travel Guide');
+		}
 		else
 			$page_title = config('app.name', 'Travel Guide') . ' - ' . $page_title;
 	?>

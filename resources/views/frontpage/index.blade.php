@@ -52,6 +52,10 @@ $sectionCount = 0;
 	<section>
 		<div class="slider-center" xonclick="slider_right()">
 			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
+			
+				<!------------------------------------------------------->
+				<!-- these is the slider spacer used to size the slider-->
+				<!------------------------------------------------------->			
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
 				
 				<!------------------------------------------------------->
@@ -95,6 +99,7 @@ $sectionCount = 0;
 	}
 	
 	// load all the sliders so we can javascript through them
+	var sliderPath = "{{$slider_path}}";
 	var sliders = [
 		@foreach($sliders as $slider)
 			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}'],
@@ -105,7 +110,7 @@ $sectionCount = 0;
 	var loc = sliders[ix][1];
 	var alt = sliders[ix][2];
 	
-	document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
+	document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
 	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
 	document.getElementById("slider-text").innerHTML = loc;
 	document.getElementById("slider-text-xs").innerHTML = loc;
@@ -151,7 +156,7 @@ $sectionCount = 0;
 		var loc = sliders[ix][1];
 		var alt = sliders[ix][2];
 		
-		document.getElementById("slider").style.backgroundImage = "url('/img/sliders/" + img + "')";
+		document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
 		document.getElementById("slider-text").innerHTML = loc;
 		document.getElementById("slider-text-xs").innerHTML = loc;
 		document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);

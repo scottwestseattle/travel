@@ -24,8 +24,8 @@ class GalleryController extends Controller
     {				
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
-		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
-		
+		$records = Controller::getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
+
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records, 
 		]));
@@ -62,7 +62,7 @@ class GalleryController extends Controller
 		$permalink = trim($permalink);
 		
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
@@ -88,15 +88,19 @@ class GalleryController extends Controller
 		}
 			
 		$photos = Photo::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
+			
+		$photo_path = '/img/entries/';
+		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
 		
 		return view('galleries.view', $this->getViewData([
 			'record' => $entry, 
 			'photos' => $photos,
+			'photo_path' => $photo_path,
 		]));
 	}
 		

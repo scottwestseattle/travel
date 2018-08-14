@@ -77,11 +77,14 @@ class FrontPageController extends Controller
 		// get the sliders
 		//
 		$sliders = Photo::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('parent_id', '=', 0)
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('id ASC')
 			->get();
+			
+		$sliderPath = '/img/sliders/';
+		$sliderPath = count($sliders) > 0 ? Controller::getPhotoPathRemote($sliderPath, $sliders[0]->site_id) : $sliderPath;
 		
 		//
 		// get the latest blog posts
@@ -96,7 +99,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = Controller::getEntriesByType(ENTRY_TYPE_GALLERY);
+		$gallery = Controller::getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
 		
 		//
 		// save visitor stats
@@ -110,6 +113,7 @@ class FrontPageController extends Controller
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
 			'sliders' => $sliders, 
+			'slider_path' => $sliderPath,
 			'locations' => $locations, 
 			'tourCount' => Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true), 
 			'blogCount' => Entry::getEntryCount(ENTRY_TYPE_BLOG, /* $allSites = */ false),

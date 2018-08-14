@@ -7,7 +7,9 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DateTime;
+
 define('SITE_ID', intval(env('SITE_ID')));
+define('PHOTO_SERVER', env('PHOTO_SERVER'));
 
 use DB;
 use Auth;
@@ -366,6 +368,28 @@ class Controller extends BaseController
 			
 		if (!Controller::endsWith($path, '/'))
 			$path .= '/';
+					
+		return $path;
+	}
+
+    static protected function getPhotoPathRemote($subfolder, $site_id)
+    {		
+		if ($site_id == SITE_ID)
+		{
+			// nothing to do since the photo is local to the original site
+			$path = $subfolder;
+		}
+		else
+		{
+			$path = PHOTO_SERVER;
+			//$path = 'http://localhost/';
+			
+			if (strlen($subfolder) > 0)
+				$path .= $subfolder;
+				
+			if (!Controller::endsWith($path, '/'))
+				$path .= '/';
+		}
 					
 		return $path;
 	}
@@ -1263,23 +1287,26 @@ class Controller extends BaseController
 		return $path . $filename;
 	}
 	
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0)
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
 	{
-		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit);
+		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $all_sites);
 		
 		// fix-up the photo paths
 		foreach($records as $record)
 		{
+			//dd($record);
+			
 			if (isset($record->photo_gallery))
 			{
 				$record->photo = $record->photo_gallery;
-				$record->photo_path = $record->photo_path_gallery;
+				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path_gallery, $record->site_id);
 				
 				Controller::makeThumbnail($record);
 			}
 			else if (isset($record->photo))
 			{
-				// no path change, path and photo already set correctly
+				// photo name already set correctly
+				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
 				
 				Controller::makeThumbnail($record);
 			}
@@ -1299,6 +1326,12 @@ class Controller extends BaseController
 	
 	static public function makeThumbnail($record)
 	{
+		if ($record->site_id != SITE_ID)
+		{
+			$record->photo_path = $record->photo_path . '/tn';
+			return;
+		}
+			
 		$tnFolder = base_path() . '/public' . $record->photo_path . '/' . PHOTOS_THUMBNAIL_FOLDER; 
 		$found = false;
 		
@@ -1357,7 +1390,7 @@ class Controller extends BaseController
 		$record->photo_path = $record->photo_path . '/tn';
 	}
 	
-	static private function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
+	static protected function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
 	{	
 		//dd($toPath);
 		

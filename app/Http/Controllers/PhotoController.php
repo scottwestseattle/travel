@@ -361,7 +361,7 @@ class PhotoController extends Controller
 			if ($id > 0 && intval($size) > 2000000) // 2mb limit for non-sliders only
 			{
 				// resize and put it up in the live photo folder
-				if ($this->resizeImage($tempPath, $path, $filename, $filenameUnique, /* new height = */ 750))
+				if (Controller::resizeImage($tempPath, $path, $filename, $filenameUnique, /* new height = */ 750))
 				{
 					$resized = true;
 					$newSize = filesize($path . $filename);
