@@ -810,7 +810,7 @@ class EntryController extends Controller
 		['All Rights Reserved', '/galleries', ''],
 		['China', '/galleries/xian-china', ''],
 		['Zhangye', '/galleries/zhangye-china', ''],
-		['Slider Photos', '/photos/sliders', ''],
+		['Featured Photos', '/photos/sliders', ''],
 		['Siem Reap', '/photos/view/64', ''],
 		['Epic Euro Trip', '/blogs/index', ''],
 		['Show All Posts', '/blogs/show/105', ''],

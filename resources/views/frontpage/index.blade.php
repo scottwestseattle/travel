@@ -19,6 +19,7 @@ function getSection($id, $array)
 	return $section;
 }
 
+if (SITE_ID == 1)
 $colors = [
 'sectionGray',
 'powerBlue',
@@ -26,6 +27,30 @@ $colors = [
 'sectionGreen',
 'sectionGray',
 'sectionOrange',
+'sectionGray',
+'sectionWhite',
+];
+
+else if (SITE_ID == 2)
+$colors = [
+'sectionGray',
+'powerBlue',
+'sectionWhite',
+'sectionGreen',
+'sectionGray',
+'sectionOrange',
+'sectionGray',
+'sectionWhite',
+];
+
+else if (SITE_ID == 3)
+$colors = [
+'sectionGray',
+'sectionGray',
+'sectionOrange',
+'powerBlue',
+'sectionGreen',
+'sectionGray',
 'sectionGray',
 'sectionWhite',
 ];
@@ -50,7 +75,7 @@ $sectionCount = 0;
 <div style="width:100%; background-color: gray; background-position: cover; background-image:url('/img/theme1/bg-pattern.png'); " >
 @endif
 	<section>
-		<div class="slider-center" xonclick="slider_right()">
+		<div class="slider-center">
 			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
 			
 				<!------------------------------------------------------->
@@ -217,19 +242,21 @@ $sectionCount = 0;
 
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
-	<div class="sectionHeader text-center main-font">
-		@if (isset($section->title))
-			<h1>{{$section->title}}</h1>
-		@else
-			<h1>Photo Gallery</h1>
-		@endif
+	<div class="text-center main-font">
+		<h1 style="margin:0;padding: 50px 0 30px 0">
+			@if (isset($section->title))
+				{{$section->title}}
+			@else
+				Photo Gallery
+			@endif
+		</h1>
 	</div>
 
 	<!------------------------------------------------------------------------------------------------------------->
 	<!-- Content -------------------------------------------------------------------------------------------------->
 	<!------------------------------------------------------------------------------------------------------------->
 	
-	<div id="content" style='background-color: white; margin:0; padding:0; padding-bottom: 5px; min-height: 200px; text-align: center;'>
+	<div id="content" style='margin:0; padding: 0 0 30px 0; min-height: 200px; text-align: center;'>
 		@foreach($gallery as $record)
 			<div class='frontpage-box' style="" >
 				<!-- BACKGROUND PHOTO LINK -->
