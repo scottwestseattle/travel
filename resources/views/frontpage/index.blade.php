@@ -457,22 +457,12 @@ $sectionCount = 0;
 
 @if (($section = getSection(SECTION_TOURS, $sections)) != null)
 
-<?php
-	$h = 200;
-	$w = 300;
-	$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
-	$tours_webpath = '/img/tours/';
-	$link = '/activities/';
-?>
-
 <section id="" class="{{$colors[$sectionCount++]}}" style="padding-bottom: 50px;" >
 	<div class="container">	
 		<div class="text-center">			
 			
 			<!-------------------- Section header image --------->
 			<div style="padding-top:40px;" class="sectionHeader hidden-xs">	
-				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<!-- div><img src="/img/round-mountain.png" /></div -->
 				<h1 style="" class="main-font sectionImageBlue">{{$section->title}}</h1>
 			</div>		
 			<div style="padding-top:40px;" class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">	

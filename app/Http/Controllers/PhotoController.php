@@ -481,6 +481,7 @@ class PhotoController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
 
 		$path = Controller::getPhotoPath($photo);
+		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
 		
 		$vdata = $this->getViewData([
 			'photo' => $photo, 

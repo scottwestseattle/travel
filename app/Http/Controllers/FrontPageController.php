@@ -70,8 +70,7 @@ class FrontPageController extends Controller
 		//
 		// get tour page link and main photo
 		//
-		$tours_fullpath = base_path() . PHOTOS_FULL_PATH . 'tours/';
-		$photosWebPath = '/img/entries/';
+		$photosWebPath = Controller::getPhotoPathRemote('/img/entries/', count($tours) > 0 ? $tours[0]->site_id : 0);
 		
 		//
 		// get the sliders

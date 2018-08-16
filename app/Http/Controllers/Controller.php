@@ -730,7 +730,7 @@ class Controller extends BaseController
 	protected function getTourIndex($allSites = false)
 	{
 		$q = '
-			SELECT entries.id, entries.title, entries.permalink,
+			SELECT entries.id, entries.title, entries.permalink, entries.site_id, 
 				photo_main.filename as photo
 			FROM entries
 			LEFT JOIN photos as photo_main
@@ -746,7 +746,7 @@ class Controller extends BaseController
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 			GROUP BY 
-				entries.id, entries.title, photo_main.filename, entries.permalink
+				entries.id, entries.title, photo_main.filename, entries.permalink, entries.site_id
 			ORDER BY entries.id DESC
 		';
 		
