@@ -14,7 +14,7 @@
 		@if (Auth::user() && Auth::user()->user_type >= 100)
 			<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
 		@endif
-		<span style="margin-left: 5px;">Slider Photos ({{ count($photos) }})</span>
+		<span style="margin-left: 5px;">Featured Photos ({{ count($photos) }})</span>
 	</h1>
 	
 	<div class="{{SHOW_NON_XS}}">	
@@ -24,7 +24,7 @@
 				<tr>
 					<td>
 						<a href="/photos/view/{{$photo->id}}">
-							<img title="{{$photo->photo_title}}" src="{{$photo->path}}{{$photo->filename}}" style="width: 100%; max-width:500px"/>
+							<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="width: 100%; max-width:500px"/>
 						</a>
 					</td>
 					
@@ -64,7 +64,7 @@
 				<tr>
 					<td>
 						<a href="/photos/view/{{$photo->id}}">
-							<img title="{{$photo->photo_title}}" src="{{$photo->path}}{{$photo->filename}}" style="width: 100%;"/>
+							<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="width: 100%;"/>
 						</a>
 
 						<table>

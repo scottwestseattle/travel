@@ -46,11 +46,11 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = Controller::getEntriesByType(ENTRY_TYPE_ARTICLE, false);
+		$records = Controller::getEntriesByType(ENTRY_TYPE_ARTICLE, false, 0, true);
 			
 		$vdata = $this->getViewData([
 			'records' => $records,
-			'page_title' => 'Article List',
+			'page_title' => 'List of Articles',
 		]);
 			
     	return view('entries.articles', $vdata);
@@ -195,7 +195,6 @@ class EntryController extends Controller
     {		
 		$next = null;
 		$prev = null;
-		
 		$permalink = trim($permalink);
 		
 		// get the entry the Laravel way so we can access the gallery photo list
@@ -230,10 +229,13 @@ class EntryController extends Controller
             return redirect('/entries/index');
 		}
 		
+		$page_title = $entry->title;
 		$backLink = null;
 		$backLinkText = null;
 		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 		{
+			$page_title = 'Blog Post - ' . $page_title;
+			
 			if (isset($entry->display_date))
 			{
 				$next = Entry::getNextPrevBlogEntry($entry->display_date, $entry->parent_id);
@@ -252,6 +254,7 @@ class EntryController extends Controller
 		{
 			$backLink = '/articles';
 			$backLinkText = 'Back to Article List';
+			$page_title = 'Article - ' . $page_title;
 		}
 		
 		$photos = Photo::select()
@@ -269,7 +272,7 @@ class EntryController extends Controller
 			'gallery' => $gallery,
 			'backLink' => $backLink,
 			'backLinkText' => $backLinkText,
-			'page_title' => $entry->title,
+			'page_title' => $page_title,
 		]);
 		
 		return view('entries.view', $vdata);
@@ -790,89 +793,85 @@ class EntryController extends Controller
 		
 		return view('entries.gallery', $vdata);
     }
+
+	private $tests = [
+		['Affiliates', '/', ''],
+		['Buddha', '/', ''],
+		['Exploring', '/', ''],
+		['Tours, Hikes, Things To Do', '/', ''],
+		['USA', '/', ''],
+		['Show All Articles', '/', ''],
+		['Show All Blogs', '/', ''],
+		['Login', '/login', ''],
+		['Register', '/register', ''],
+		['Reset Password', '/password/reset', ''],
+		['About', '/about', ''],
+		['Todos Derechos Reservados', '/gallery', ''],
+		['All Rights Reserved', '/galleries', ''],
+		['China', '/galleries/xian-china', ''],
+		['Zhangye', '/galleries/zhangye-china', ''],
+		['Slider Photos', '/photos/sliders', ''],
+		['Siem Reap', '/photos/view/64', ''],
+		['Epic Euro Trip', '/blogs/index', ''],
+		['Show All Posts', '/blogs/show/105', ''],
+		['Day 71', '/blogs/show/31', ''],
+		['Thursday, Tienanmen Square', '/entries/thursday-tienanmen-square-2018-06-28', ''],
+		['Beijing Summer Palace', '/entries/show/157', ''], // prev
+		['Thursday, Tienanmen Square', '/entries/show/155', ''], // next
+		['Big Asia', '/blogs/show/105', ''], // back to blog
+		['Seattle Waterfront to Lake Union', '/tours/index', ''],
+		['Seattle', '/tours/location/2', ''],
+		['China', '/tours/location/9', ''],
+		['Fremont', '/tours/Fremont-to-Gas-Works-Park-Loop', ''],
+		['Longmen', '/tours/xian-day-trip-to-luoyang-longmen-grottoes', ''],
+		['Articles', '/articles', ''],
+		['Beijing Metro', '/entries/beijing-subway-map-and-schedule-2018-06-27', ''],
+		['Blocked', '/entries/web-sites-that-are-blocked-in-china', ''],
+		['Knight', '/entries/datong-fly-by-knight-highrise-hostel-datong-china-2018-07-02', ''],
+		];
+		
+    public function test(Request $request)
+    {		
+		$server = 'http://epictravelguide.com';
+		//$server = 'http://localhost';
+		
+		if (isset($request->test_server))
+		{					
+			for ($i = 0; $i < count($this->tests); $i++)
+			{			
+				// if item is checked
+				if (isset($request->{'test'.$i}))
+				{
+					$this->tests[$i][2] = $this->testPage($request->test_server . $this->tests[$i][1], $this->tests[$i][0])['results'];
+				}
+			}
+		}
+		
+		return view('entries.test', $this->getViewData([
+			'records' => $this->tests,
+			'test_server' => $server,
+		]));
+	}
 	
-    public function test()
-    {	
+    public function testresults(Request $request)
+    {
 		$results = [];
-		$server = 'epictravelguide.com';
-		//$server = 'localhost';
-
-		$frontpage = false;
-		$misc = false;
-		$blogs = false;
-		$tours = false;
-		$articles = false;
-		
-		$frontpage = true;
-		$misc = true;
-		$blogs = true;
-		$tours = true;
-		$articles = true;
 				
-		if ($frontpage)
-		{
-			$results[] = $this->testPage("http://$server/", 'Affiliates');
-			$results[] = $this->testPage("http://$server/", 'Buddha');
-			$results[] = $this->testPage("http://$server/", 'Exploring');
-			$results[] = $this->testPage("http://$server/", 'Tours, Hikes, Things To Do');
-			$results[] = $this->testPage("http://$server/", 'USA');
-			$results[] = $this->testPage("http://$server/", 'Show All Articles');
-			$results[] = $this->testPage("http://$server/", 'Show All Blogs');
+		for ($i = 0; $i < count($this->tests); $i++)
+		{			
+			// if item is checked
+			if (isset($request->{'test'.$i}))
+			{
+				$results[] = $this->testPage($request->test_server . $this->tests[$i][1], $this->tests[$i][0]);
+			}
 		}
 		
-		if ($misc)
-		{
-			$results[] = $this->testPage("http://$server/login", 'Login');
-			$results[] = $this->testPage("http://$server/register", 'Register');
-			$results[] = $this->testPage("http://$server/password/reset", 'Reset Password');
-			$results[] = $this->testPage("http://$server/about", 'About');
-			$results[] = $this->testPage("http://$server/gallery", 'Todos Derechos Reservados');
-			$results[] = $this->testPage("http://$server/galleries", 'Todos Derechos Reservados');
-			$results[] = $this->testPage("http://$server/galleries/xian-china", 'China');
-			$results[] = $this->testPage("http://$server/galleries/zhangye-china", 'Zhangye');
-
-			// Photos
-			$results[] = $this->testPage("http://$server/photos/sliders", 'Slider Photos');
-			$results[] = $this->testPage("http://$server/photos/view/64", 'Siem Reap');
-		}
-		
-		if ($blogs)
-		{
-			// Blogs
-			$results[] = $this->testPage("http://$server/blogs/index", 'Epic Euro Trip');
-			$results[] = $this->testPage("http://$server/blogs/show/105", 'Show All Posts');
-			$results[] = $this->testPage("http://$server/blogs/show/31", 'Day 71');
-			$results[] = $this->testPage("http://$server/entries/thursday-tienanmen-square-2018-06-28", 'Thursday, Tienanmen Square');
-			$results[] = $this->testPage("http://$server/entries/show/157", 'Beijing Summer Palace'); // prev
-			$results[] = $this->testPage("http://$server/entries/show/155", 'Thursday, Tienanmen Square'); // next
-			$results[] = $this->testPage("http://$server/blogs/show/105", 'Big Asia'); // back to blog
-		}
-		
-		if ($tours)
-		{
-			// Tours
-			$results[] = $this->testPage("http://$server/tours/index", 'Seattle Waterfront to Lake Union');
-			$results[] = $this->testPage("http://$server/tours/location/2", 'USA');
-			$results[] = $this->testPage("http://$server/tours/location/9", 'China');
-			$results[] = $this->testPage("http://$server/tours/Fremont-to-Gas-Works-Park-Loop", 'Fremont');
-			$results[] = $this->testPage("http://$server/tours/xian-day-trip-to-luoyang-longmen-grottoes", 'Longmen');
-		}
-		
-		if ($articles)
-		{
-			// Articles
-			$results[] = $this->testPage("http://$server/articles", 'Articles');
-			$results[] = $this->testPage("http://$server/entries/beijing-subway-map-and-schedule-2018-06-27", 'Beijing Metro');
-			$results[] = $this->testPage("http://$server/entries/web-sites-that-are-blocked-in-china", 'Blocked');
-			$results[] = $this->testPage("http://$server/entries/datong-fly-by-knight-highrise-hostel-datong-china-2018-07-02", 'Knight');
-		}
-		
-		$vdata = $this->getViewData([
+		return view('entries.test', $this->getViewData([
 			'records' => $results,
-		]);
-		
-		return view('entries.test', $vdata);
+			'test_server' => $server,
+		]));
     }
+	
     public function testPage($url, $expected)
     {
 		$text = '';

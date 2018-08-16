@@ -28,6 +28,7 @@ class GalleryController extends Controller
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records, 
+			'page_title' => 'Photo Galleries',
 		]));
     }
 	
@@ -101,6 +102,7 @@ class GalleryController extends Controller
 			'record' => $entry, 
 			'photos' => $photos,
 			'photo_path' => $photo_path,
+			'page_title' => 'Photo Gallery of ' . $entry->title,
 		]));
 	}
 		

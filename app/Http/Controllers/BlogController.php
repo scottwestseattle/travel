@@ -63,6 +63,7 @@ class BlogController extends Controller
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'redirect' => '/' . $this->prefix . '/index',
+			'page_title' => 'List of Blogs',
 		]);
 
     	return view($this->prefix . '.index', $vdata);
@@ -136,6 +137,7 @@ class BlogController extends Controller
 				'records' => $records, 
 				'photos' => $photos,
 				'all' => $all,
+				'page_title' => 'Blog - ' . $record->title,
 			]));				
 		}
 		catch (\Exception $e) 

@@ -252,6 +252,7 @@ $sectionCount = 0;
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Articles -->
 <!--------------------------------------------------------------------------------------->
+@if (isset($articles) && count($articles) > 0)
 @if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
 <section class="{{$colors[$sectionCount++]}}">
 	<div class="container" style="max-width:1440px;">	
@@ -300,6 +301,7 @@ $sectionCount = 0;
 		</div><!-- text-center -->
 	</div><!-- container -->
 </section>
+@endif
 @endif
 
 

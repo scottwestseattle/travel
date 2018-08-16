@@ -76,16 +76,23 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">More <span class="caret"></span></a>
 									<ul class="dropdown-menu">
-										<li><a href="/blogs/indexadmin">Blogs</a></li>
+										@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
+											<li><a href="/blogs/indexadmin">Blogs</a></li>
+										@endif
 										<li><a href="/events/index">Events</a></li>
-										<li><a href="/galleries">Galleries</a></li>
+										@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
+											<li><a href="/galleries">Galleries</a></li>
+										@endif
 										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/photos/indexadmin">Photos</a></li>
 										<li><a href="/sites/index">Sites</a></li>
-										<li><a href="/tours/indexadmin">Tours</a></li>
+										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+											<li><a href="/tours/indexadmin">Tours</a></li>
+										@endif
 									</ul>
 								</li>
 								
+								@if (isset($sections) && array_key_exists(SECTION_CASH, $sections))
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">Cash <span class="caret"></span></a>
 									<ul class="dropdown-menu">
@@ -98,6 +105,7 @@
 										<li><a href="/subcategories/indexadmin">Subcategories</a></li>
 									</ul>
 								</li>
+								@endif
 							@else
 								@if (null !== (session('spy', null)))
 									<li><a href="/spy">Turn Spy Off</a></li>

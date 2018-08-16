@@ -33,6 +33,7 @@ Route::get('/confirm', 'FrontPageController@confirm');
 Route::get('/spy', 'FrontPageController@spy');
 Route::get('/gallery', 'EntryController@gallery');
 Route::get('/test', 'EntryController@test')->middleware('auth');
+Route::post('/test', 'EntryController@test')->middleware('auth');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
