@@ -30,11 +30,13 @@ class FrontPageController extends Controller
         //$this->middleware('auth');
     }
 
-    /**
-     * This is the front page
-     */
-    public function index(Request $request)
+    public function first(Request $request)
     {
+		return $this->index($request, true);
+	}
+	
+    public function index(Request $request, $firstslider = null)
+    {						
 		if (Auth::user() && Auth::user()->blocked_flag != 0)
 		{
 			Auth::logout();
@@ -120,6 +122,7 @@ class FrontPageController extends Controller
 			'sections' => $sections,
 			'articles' => $articles,
 			'gallery' => $gallery,
+			'firstslider' => $firstslider,
 		];
 		
     	return view('frontpage.index', $vdata);

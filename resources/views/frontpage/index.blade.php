@@ -20,40 +20,51 @@ function getSection($id, $array)
 }
 
 if (SITE_ID == 1)
-$colors = [
-'sectionGray',
-'powerBlue',
-'sectionWhite',
-'sectionGreen',
-'sectionGray',
-'sectionOrange',
-'sectionGray',
-'sectionWhite',
-];
-
+{
+	$colors = [
+		'sectionGray',
+		'powerBlue',
+		'sectionWhite',
+		'sectionGreen',
+		'sectionGray',
+		'sectionOrange',
+		'sectionGray',
+		'sectionWhite',
+	];
+	
+	$colorAlt = 'DarkBlue';
+}
 else if (SITE_ID == 2)
-$colors = [
-'sectionGray',
-'powerBlue',
-'sectionWhite',
-'sectionGreen',
-'sectionGray',
-'sectionOrange',
-'sectionGray',
-'sectionWhite',
-];
-
+{
+	$colors = [
+		'sectionGray',
+		'powerBlue',
+		'sectionWhite',
+		'sectionGreen',
+		'sectionGray',
+		'sectionOrange',
+		'sectionGray',
+		'sectionWhite',
+	];
+	
+	$colorAlt = 'DarkBlue';
+}
 else if (SITE_ID == 3)
-$colors = [
-'sectionGray',
-'sectionGray',
-'sectionOrange',
-'powerBlue',
-'sectionGreen',
-'sectionGray',
-'sectionGray',
-'sectionWhite',
-];
+{
+	$colors = [
+		'sectionPurple',
+		'sectionGray',
+		'sectionOrange',
+		'powerBlue',
+		'sectionGreen',
+		'sectionGray',
+		'sectionGray',
+		'sectionWhite',
+	];
+
+	$colorAlt = 'DarkPurple';
+
+}
 
 $sectionCount = 0;
 
@@ -100,7 +111,7 @@ $sectionCount = 0;
 					
 			</div>
 			
-			<div class="DarkBlue">
+			<div class="{{$colorAlt}}">
 				<!------------------------------------------------------->
 				<!-- This is the slider caption -->
 				<!------------------------------------------------------->
@@ -130,7 +141,14 @@ $sectionCount = 0;
 			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}'],
 		@endforeach
 	];
+	
+	// if firstslider is set then show the first one, otherwise show one randomly
+	@if (isset($firstslider))
+	var ix = 0;
+	@else
 	var ix = Math.floor(Math.random() * sliders.length);
+	@endif
+	
 	var img = sliders[ix][0];
 	var loc = sliders[ix][1];
 	var alt = sliders[ix][2];

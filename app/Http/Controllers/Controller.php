@@ -983,7 +983,7 @@ class Controller extends BaseController
 		
 		try 
 		{
-			$sections = Entry::getEntriesByType(ENTRY_TYPE_SECTION);
+			$sections = Controller::getEntriesByType(ENTRY_TYPE_SECTION);
 		}
 		catch (\Exception $e)
 		{

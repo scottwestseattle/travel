@@ -53,7 +53,7 @@
 <body onresize="onResize()" onload="onResize()">
     <div id="app" style="min-height: 500px;">
 	
-        <nav class="navbar navbar-default navbar-static-top powerBlue" style="margin-bottom:0px; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default navbar-static-top {{(SITE_ID == 3) ? 'purple' : 'powerBlue'}}" style="margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
         </nav>
 
