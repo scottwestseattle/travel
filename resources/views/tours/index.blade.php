@@ -45,18 +45,8 @@
 						<div class="col-md-4 col-sm-6">
 						
 							<!-- tour main photo -->
-							<?php
-							if (isset($entry->photo))
-							{
-								$photo = $photo_path . $entry->id . '/' . $entry->photo;
-								//dd($photo);
-							}
-							else
-								$photo = TOUR_PHOTO_PLACEHOLDER;
-							?>
-							
 							<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
-								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
+								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo_path}}/{{$entry->photo}}'); "></div>
 							</a>
 							
 							<!-- tour title -->

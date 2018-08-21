@@ -718,7 +718,7 @@ class Controller extends BaseController
 			GROUP BY 
 				entries.id, entries.title, entries.location_id, entries.view_count, entries.published_flag, entries.approved_flag, entries.permalink,
 				activities.id, photo_main.filename, activities.map_link, activities.location_id
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, activities.map_link ASC, entries.updated_at DESC
+			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.updated_at DESC
 		';
 		
 		// get the list with the location included
@@ -759,10 +759,18 @@ class Controller extends BaseController
 	protected function getTourIndexLocation($location_id, $allSites)
 	{
 		$q = '
-			SELECT entries.id, entries.title, entries.permalink, photo_main.filename as photo
+			SELECT entries.id, entries.title, entries.permalink, entries.site_id
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id) as photo_path
+				, photo_main_gallery.filename as photo_gallery 
+				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_title_gallery
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id) as photo_path_gallery
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0			
+			LEFT JOIN photos as photo_main_gallery
+				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0 
 			JOIN entry_location entloc ON entries.id = entloc.entry_id
 			JOIN locations ON entloc.location_id = locations.id AND locations.id = ?
 			WHERE 1=1 ';
@@ -775,12 +783,17 @@ class Controller extends BaseController
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 			GROUP BY 
-				entries.id, entries.title, entries.permalink, photo_main.filename
+				entries.id, entries.title, entries.permalink, entries.site_id
+				, photo_main.filename
+				, photo, photo_title, photo_path
+				, photo_gallery, photo_title_gallery, photo_path_gallery
 			ORDER BY entries.id DESC
 		';
 		
 		// get the list with the location included
 		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
+		
+		$records = Controller::fixPhotoPaths($records);		
 		
 		return $records;
 	}	
@@ -1287,10 +1300,52 @@ class Controller extends BaseController
 			
 		return $path . $filename;
 	}
+
+	static private function fixPhotoPaths($records)
+	{
+		// fix-up the photo paths
+		foreach($records as $record)
+		{
+			//dd($record);
+			
+			if (isset($record->photo_gallery))
+			{
+				$record->photo = $record->photo_gallery;
+				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path_gallery, $record->site_id);
+				
+				Controller::makeThumbnail($record);
+			}
+			else if (isset($record->photo))
+			{
+				// photo name already set correctly
+				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
+				
+				Controller::makeThumbnail($record);
+			}
+			else
+			{
+				$record->photo = TOUR_PHOTO_PLACEHOLDER;
+				$record->photo_path = '';
+			}
+
+			//echo 'folder: ' . $record->photo_path . '/' . $record->photo . '<br/>';
+		}
+
+		return $records;
+	}
 	
 	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
 	{
 		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $all_sites);
+		
+		$records = Controller::fixPhotoPaths($records);
+		
+		return $records;
+	}
+	
+	static public function getPhotosByParent($parent_id)
+	{
+		$records = Photo::getByParent($parent_id);
 		
 		// fix-up the photo paths
 		foreach($records as $record)
@@ -1319,8 +1374,6 @@ class Controller extends BaseController
 
 			//echo 'folder: ' . $record->photo_path . '/' . $record->photo . '<br/>';
 		}
-		
-		//die;
 		
 		return $records;
 	}

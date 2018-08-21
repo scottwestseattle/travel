@@ -95,7 +95,7 @@ class PhotoController extends Controller
 				//->where('user_id', '=', Auth::id())
 				->where('deleted_flag', 0)
 				->where('parent_id', '=', $parent_id)
-				->orderByRaw('photos.main_flag DESC, photos.created_at ASC')
+				->orderByRaw('photos.main_flag DESC, photos.id DESC')
 				->get();
 				
 			$galleries = Photo::getGalleryMenuOptions();

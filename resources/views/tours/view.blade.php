@@ -2,18 +2,6 @@
 
 @section('content')
 
-<?php 
-$main_photo = null;
-$regular_photos = 0;
-foreach($photos as $photo)
-{
-	if ($photo->main_flag === 1)
-		$main_photo = $photo;
-	else
-		$regular_photos++;
-}
-?>
-
 <div class="page-size container">
                
 	@guest
@@ -85,17 +73,16 @@ foreach($photos as $photo)
 		$mapWidth = 500;
 	?>
 
-	@if ($main_photo !== null)
+	@if ($record->photo_gallery !== null)
 	<div style="display:default; margin-top:20px;">
-		<?php 
-			$title = $main_photo->alt_text;
-			if (strlen($main_photo->location) > 0)
-				$title .= ', ' . $main_photo->location;
-		?>
-		<img src="/img/{{$subfolder}}/{{$record->id}}/{{$main_photo->filename}}" title="{{$title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
+		<img src="{{$record->photo_gallery_path}}/{{$record->photo_gallery}}" title="{{$record->photo_gallery_title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
+	</div>		
+	@elseif ($record->photo !== null)
+	<div style="display:default; margin-top:20px;">
+		<img src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
 	</div>	
-	@endif
-	
+	@endif	
+
 	@if (strlen(trim($record->description_short)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
 		<h3>Highlights</h3>
@@ -165,104 +152,104 @@ foreach($photos as $photo)
 	<div class="amenities">
 		
 	@if (isset($activity))
-		
-	@if (!empty(trim($activity->info_link)))
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<!-- h3>MORE INFORMATION</h3 -->
-				<div id="" style="display:default; margin-top:20px;">				
-					<a href="{{ $activity->info_link }}">Please click here for more information</a>
-				</div>
-			</div>
-		</div>
-	@endif			
-	
-	@if (!empty(trim($activity->map_link)))
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>MAP</h3>
-				<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
-					<iframe id="xttd-map" src="{{ $activity->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
-				</div>
-				
-				<p><a target="_blank" href="{{$activity->map_link}}">Open Map to Navigate</a></p>
-				
-			</div>
-		</div>
-	@endif	
-
-	@if (false && strlen($activity->map_link) > 0)
-		<div class="col-md-4 col-sm-6">
-			<div class="amenity-item">
-				<h3>LOCATION</h3>
-				<p><a target="_blank" href="{{$activity->map_link}}">Show Map</a></p>
-			</div>
-		</div>
-	@endif	
-	
-	@if (strlen($activity->parking) > 0)
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>PARKING</h3>
-				<span name="parking" class="">{{$activity->parking}}</span>	
-			</div>
-		</div>
-	@endif
-
-	@if (strlen(trim($activity->cost)) > 0)
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>COST / ENTRY FEE</h3>
-				<span name="cost" class="">{{$activity->cost}}</span>	
-			</div>
-		</div>
-	@endif
-	
-	@if (strlen(trim($activity->facilities)) > 0)
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>FACILITIES</h3>
-				<span name="facilities" class="">{{$activity->facilities}}</span>	
-			</div>
-		</div>
-	@endif
 			
-	@if (strlen(trim($activity->public_transportation)) > 0)
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>PUBLIC TRANSPORTATION</h3>
-				<span name="facilities" class="">{{$activity->public_transportation}}</span>	
+		@if (!empty(trim($activity->info_link)))
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<!-- h3>MORE INFORMATION</h3 -->
+					<div id="" style="display:default; margin-top:20px;">				
+						<a href="{{ $activity->info_link }}">Please click here for more information</a>
+					</div>
+				</div>
 			</div>
-		</div>
-	@endif
-
-	@if (strlen(trim($activity->wildlife)) > 0)
-		<div class="entry-div">
-			<div class="entry amenity-item">
-				<h3>WILDLIFE</h3>
-				<span name="facilities" class="">{{$activity->wildlife}}</span>	
+		@endif			
+		
+		@if (!empty(trim($activity->map_link)))
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>MAP</h3>
+					<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
+						<iframe id="xttd-map" src="{{ $activity->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
+					</div>
+					
+					<p><a target="_blank" href="{{$activity->map_link}}">Open Map to Navigate</a></p>
+					
+				</div>
 			</div>
-		</div>
-	@endif
+		@endif	
 
-	@if ($regular_photos > 0)
+		@if (false && strlen($activity->map_link) > 0)
+			<div class="col-md-4 col-sm-6">
+				<div class="amenity-item">
+					<h3>LOCATION</h3>
+					<p><a target="_blank" href="{{$activity->map_link}}">Show Map</a></p>
+				</div>
+			</div>
+		@endif	
+		
+		@if (strlen($activity->parking) > 0)
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>PARKING</h3>
+					<span name="parking" class="">{{$activity->parking}}</span>	
+				</div>
+			</div>
+		@endif
+
+		@if (strlen(trim($activity->cost)) > 0)
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>COST / ENTRY FEE</h3>
+					<span name="cost" class="">{{$activity->cost}}</span>	
+				</div>
+			</div>
+		@endif
+		
+		@if (strlen(trim($activity->facilities)) > 0)
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>FACILITIES</h3>
+					<span name="facilities" class="">{{$activity->facilities}}</span>	
+				</div>
+			</div>
+		@endif
+				
+		@if (strlen(trim($activity->public_transportation)) > 0)
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>PUBLIC TRANSPORTATION</h3>
+					<span name="facilities" class="">{{$activity->public_transportation}}</span>	
+				</div>
+			</div>
+		@endif
+
+		@if (strlen(trim($activity->wildlife)) > 0)
+			<div class="entry-div">
+				<div class="entry amenity-item">
+					<h3>WILDLIFE</h3>
+					<span name="facilities" class="">{{$activity->wildlife}}</span>	
+				</div>
+			</div>
+		@endif
+
 		<div class="entry-div">
 			<div class="entry amenity-item">
 				<h3>PHOTOS</h3>
 			</div>
 		</div>
-	@endif
 	
 	@endif
 	
 	</div><!-- class="amenities" -->
-	
-	@if ($regular_photos > 0)
 			
-	<div class="text-center" style="display:default; margin-top:5px;">	
+	<!-------------------------------------------------->
+	<!-- Show the Photos                              -->
+	<!-------------------------------------------------->
+	
+	<div class="text-center" style="display:default; margin-top:5px;">
+		@if (isset($photos))
 		@foreach($photos as $photo)		
 			@if ($photo->main_flag !== 1)
-				
 				<?php 
 					$title = $photo->filename;  // just in case the others are empty
 					
@@ -272,17 +259,38 @@ foreach($photos as $photo)
 					if (isset($photo->location) && strlen($photo->location) > 0)
 						$title .= ', ' . $photo->location;
 				?>
-						
+				
 				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', {{$photo->id}})">
 					<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
 				</span>
-				
 			@endif
 		@endforeach	
+		@endif
+		
+		@foreach($gallery as $photo)
+			<?php 
+				$title = $photo->filename;  // just in case the others are empty
+				
+				if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
+					$title = $photo->alt_text;
+				
+				if (isset($photo->location) && strlen($photo->location) > 0)
+					$title .= ', ' . $photo->location;
+			?>
+		
+			@if ($record->photo_id != $photo->id)
+			<span style="cursor:pointer;" onclick="popup({{$photo->parent_id}}, '{{$photo->filename}}', {{$photo->id}})">
+				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
+			</span>
+			@endif
+		@endforeach
 	</div>
-
-	@endif
+	
+	<!-------------------------------------------------->
+	<!-- Show the Affiliates                          -->
+	<!-------------------------------------------------->
 	
 	<div class="amenities">
 	

@@ -63,7 +63,8 @@ class FrontPageController extends Controller
 		//
 		// get tour info
 		//
-		$tours = $this->getTourIndex(/* $allSites = */ true);
+		//$tours = $this->getTourIndex(/* $allSites = */ true);
+		$tours = Controller::getEntriesByType(ENTRY_TYPE_TOUR, /* approved_flag = */ true, /* limit = */ 0, /* allSites = */ true);
 
 		$tour_count = isset($tours) ? count($tours) : 0;
 

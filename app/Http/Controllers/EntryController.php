@@ -574,7 +574,7 @@ class EntryController extends Controller
 		 
 		$locations = Location::select()
 			->where('location_type', '>=', LOCATION_TYPE_CITY)
-			->orderByRaw('locations.location_type ASC')
+			->orderByRaw('locations.name ASC')
 			->get();
 
 		$current_location = $entry->locations()->orderByRaw('location_type DESC')->first();

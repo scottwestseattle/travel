@@ -235,11 +235,13 @@ $sectionCount = 0;
 	<!--------------------------------------------------------------------------------------->
 	<!-- The "Join Us" button -->
 	<!--------------------------------------------------------------------------------------->		
+@if (false)
 	<div class="row text-center" style="margin-top:40px;">
 		<div class="header">
 			<a href="/register"><button class="textWhite formControlSpace20 btn btn-submit btn-lg bgGreen"><span class="glyphicon glyphicon-user"></span>&nbsp;Click Here to Join us!</button></a>
 		</div>		
 	</div>
+@endif
 
 	<!--------------------------------------------------------------------------------------->
 	<!-- The charming Quote -->
@@ -515,26 +517,11 @@ $sectionCount = 0;
 					@if ($tour_count > 0)
 					<?php $count = 0; ?>
 					@foreach($tours as $entry)
-						<?php
-							if (isset($entry->photo))
-							{
-								$photo = $photoPath . $entry->id . '/' . $entry->photo;
-								//dd($photo);
-							}
-							else
-							{
-								$photo = TOUR_PHOTO_PLACEHOLDER;
-							}
-						?>
 						<div style="display:{{$count++ < 6 ? 'default' : 'none'}};" class="col-md-4 col-sm-6">
 						
-							@if (isset($entry->location))
-								<a href="{{ route('tour.permalocation', [$entry->location, $entry->permalink]) }}">
-							@else
-								<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
-							@endif
-									<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$photo}}'); "></div>
-								</a>
+							<a href="{{ route('tour.permalink', [$entry->permalink]) }}">
+								<div style="min-height:220px; background-color: #4993FD; background-size: cover; background-position: center; background-image: url('{{$entry->photo_path}}/{{$entry->photo}}'); "></div>
+							</a>
 							
 							<!-- tour title -->
 							<div class="trim-text" style="color: white; font-size:1.2em; font-weight:bold; padding:5px; margin-bottom:20px; background-color: #3F98FD;">

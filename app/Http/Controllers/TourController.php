@@ -34,8 +34,11 @@ class TourController extends Controller
     {
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 
-		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);		
-		$tours = $this->getTourIndex(/* $allSites = */ true);
+		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);	
+		
+		//$tours = $this->getTourIndex(/* $allSites = */ true);
+		$tours = Controller::getEntriesByType(ENTRY_TYPE_TOUR);
+
 		$tour_count = isset($tours) ? count($tours) : 0;
 		$locations = Location::getPills();
 			
@@ -165,17 +168,20 @@ class TourController extends Controller
 	
     public function permalink($permalink)
     {
+		// get the entry the Laravel way so we can access the gallery photo list
 		$entry = Entry::select()
 			//->where('site_id', SITE_ID)
-			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
-			->first();	
+			->first();
+		
+		// get the entry the mysql way so we can have all the main photo and location info
+		$entry2 = Entry::getEntry($permalink);			
 		
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK, $id);
 		
-		return $this->handleView($entry);
+		return $this->handleView($entry, $entry2);
 	}
 	
     public function view($title, $id)
@@ -188,11 +194,14 @@ class TourController extends Controller
 			->where('deleted_flag', 0)
 			->where('id', $id)
 			->first();	
+
+		// get the entry the mysql way so we can have all the main photo and location info
+		$entry2 = Entry::getEntry($permalink);			
 			
-		return $this->handleView($entry);
+		return $this->handleView($entry, $entry2);
 	}
 
-    private function handleView($entry)
+    private function handleView($entry, $entry2)
     {
 		if (!isset($entry))
 		{
@@ -200,6 +209,8 @@ class TourController extends Controller
 			//$request->session()->flash('message.content', 'Entry Not Found');
             return redirect('/tours/index');
 		}
+		
+		$gallery = isset($entry) ? $entry->photos : null;
 				
 		$activity = Activity::select()
 			//->where('site_id', SITE_ID)
@@ -294,12 +305,11 @@ class TourController extends Controller
 				//
 				$this->saveLocations($entry, $locations);
 			}
-		
 		}		
-					
+				
 		$photos = Photo::select()
 			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
+			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
@@ -315,12 +325,13 @@ class TourController extends Controller
 		$entry->description = $this->formatLinks($entry->description);		
 		
 		$vdata = $this->getViewData([
-			'record' => $entry, 
+			'record' => $entry2, 
 			'activity' => $activity, 
 			'locations' => array_reverse($location), 
 			'data' => $this->getViewData(), 
 			'photos' => $photos, 
 			'page_title' => $entry->title,
+			'gallery' => $gallery,
 		]);
 		
 		return view('tours.view', $vdata);

@@ -12,6 +12,23 @@ class Photo extends Base
     {
         return $this->belongsToMany('App\Entry')->withTimestamps();
     }
+
+	static public function getByParent($parent_id)
+	{
+		$q = '
+			SELECT *
+				, CONCAT(alt_text, " - ", location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", parent_id, "/") as photo_path
+			FROM photos
+			WHERE 1=1
+			AND parent_id = ?
+			AND deleted_flag = 0
+		';
+		
+		$records = DB::select($q, [$parent_id]);
+		
+		return $records;
+	}
 	
 	static public function getIndex()
 	{
