@@ -55,9 +55,14 @@
 		@endif
 		
 		<h1 name="title" class="">{{$record->title }}</h1>
-		@if (isset($record->display_date))
-			<p style="font-weight: bold;"><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
+		<strong>
+		@if (isset($record->location))
+			<p>{{$record->location}}, {{$record->location_parent}}</p>
 		@endif
+		@if (isset($record->display_date))
+			<p><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
+		@endif
+		</strong>
 	</div>
 	
 	<?php 
@@ -137,6 +142,7 @@
 		@endforeach	
 		@endif
 		
+		@if (isset($gallery))
 		@foreach($gallery as $photo)
 			<?php 
 				$title = $photo->filename;  // just in case the others are empty
@@ -155,6 +161,7 @@
 			</span>
 			@endif
 		@endforeach
+		@endif
 	</div>
 
 	@endif
