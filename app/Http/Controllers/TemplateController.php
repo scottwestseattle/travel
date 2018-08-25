@@ -19,6 +19,8 @@ class TemplateController extends Controller
 	{
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
+		
+		
 	}
 	
     public function index(Request $request)
