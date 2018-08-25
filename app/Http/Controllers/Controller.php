@@ -147,6 +147,8 @@ class Controller extends BaseController
 
 	protected $prefix = 'prefix';
 	protected $title = 'Title';
+	protected $domainName = 'Not Set';
+	
 	private $viewData = [];
 	
 	static private $entryTypes = [
@@ -164,6 +166,10 @@ class Controller extends BaseController
 		
 	public function __construct ()
 	{
+		if (array_key_exists("SERVER_NAME", $_SERVER))
+		{
+			$this->domainName = $_SERVER["SERVER_NAME"];
+		}
 	}
 	
 	static public function getEntryTypes()

@@ -154,18 +154,6 @@ class TourController extends Controller
 			return redirect('/tours/indexadmin');
     }
 
-    public function NOTUSEDpermalocation($location, $permalink)
-    {
-		$entry = Entry::select()
-			//->where('site_id', SITE_ID)
-			->where('type_flag', ENTRY_TYPE_TOUR)
-			->where('deleted_flag', '<>', 1)
-			->where('permalink', $permalink)
-			->first();	
-						
-		return $this->handleView($entry);
-	}
-	
     public function permalink($permalink)
     {
 		// get the entry the Laravel way so we can access the gallery photo list
@@ -321,8 +309,8 @@ class TourController extends Controller
 			$entry->save();
 		}
 		
-		$entry->description = nl2br($entry->description);
-		$entry->description = $this->formatLinks($entry->description);		
+		$entry2->description = nl2br($entry2->description);
+		$entry2->description = $this->formatLinks($entry2->description);		
 		
 		$vdata = $this->getViewData([
 			'record' => $entry2, 

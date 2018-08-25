@@ -25,11 +25,15 @@ class FrontPageController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        //$this->middleware('auth');
-    }
 
+	public function __construct ()
+	{
+		parent::__construct();
+
+		$this->prefix = PREFIX;
+		$this->title = $this->domainName . ' - ' . TITLE;
+	}
+	
     public function first(Request $request)
     {
 		return $this->index($request, true);
