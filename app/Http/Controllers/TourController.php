@@ -164,7 +164,7 @@ class TourController extends Controller
 			->first();
 		
 		// get the entry the mysql way so we can have all the main photo and location info
-		$entry2 = Entry::getEntry($permalink);			
+		$entry2 = Entry::getEntry($permalink);		
 		
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK, $id);
@@ -177,7 +177,7 @@ class TourController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
 		
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+			//->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_TOUR)
 			->where('deleted_flag', 0)
 			->where('id', $id)
@@ -309,8 +309,11 @@ class TourController extends Controller
 			$entry->save();
 		}
 		
-		$entry2->description = nl2br($entry2->description);
-		$entry2->description = $this->formatLinks($entry2->description);		
+		if (isset($entry2))
+		{
+			$entry2->description = nl2br($entry2->description);
+			$entry2->description = $this->formatLinks($entry2->description);		
+		}
 		
 		$vdata = $this->getViewData([
 			'record' => $entry2, 

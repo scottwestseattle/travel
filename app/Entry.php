@@ -161,7 +161,6 @@ class Entry extends Base
 			LEFT JOIN locations as locations_parent
 				ON locations_parent.id = locations.parent_id AND locations_parent.deleted_flag = 0
 			WHERE 1=1
-			AND entries.site_id = ?
 			AND entries.deleted_flag = 0
 			AND entries.permalink = ?
 
@@ -172,8 +171,8 @@ class Entry extends Base
 		
 				LIMIT 1
 		';
-				
-		$records = DB::select($q, [SITE_ID, $permalink]);
+						
+		$records = DB::select($q, [$permalink]);
 		
 		$records = count($records) > 0 ? $records[0] : null;
 			

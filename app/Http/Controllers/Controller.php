@@ -986,7 +986,45 @@ class Controller extends BaseController
 		}
 		
 		return $site;
-	}		
+	}
+
+	// this is the new version that uses the php server_name
+    protected function getSiteNew()
+    {		
+		$site = null;
+
+		try 
+		{
+			$site = Site::select()
+				->where('site_url', strtolower($this->domainName))
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error loading Front Page Sites';
+			Event::logException(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
+		}
+		
+		if (isset($site))
+		{
+			// good to go
+		}
+		else
+		{
+			$msg = 'Front Page: Site Not Found, Site: ' . $this->domainName;
+			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+			
+			// create a dummy site so everything will work
+			$site = new Site;
+			$site->site_name = 'Site Not Found - Check Event Log For Errors';
+			$site->site_url = 'not found';
+		}
+		
+		$this->domainName = $site->site_url;
+			
+		return $site;
+	}	
 
     static protected function fixLinks($link)
     {		
@@ -1602,5 +1640,37 @@ class Controller extends BaseController
 		}
 		
 		return true;
-	}	
+	}
+
+	protected function makePageTitle($title = null)
+	{
+		$page_title = $this->domainName;
+		
+		if (isset($title))
+			$page_title .= ' - ' . $title;
+
+		return $page_title;
+	}
+
+	protected function getViewDataNew($vdata = null, $page_title = null)
+	{			
+		$this->viewData = isset($vdata) ? $vdata : [];
+		
+		// add-on the mandatory parts
+		$this->viewData['sections'] = Controller::getSections();
+		$this->viewData['site'] = Controller::getSite();
+		$this->viewData['prefix'] = $this->prefix;
+		$this->viewData['title'] = $this->title;
+		$this->viewData['titlePlural'] = ucwords($this->prefix);
+		
+		if (isset($page_title))
+			$this->viewData['page_title'] = $this->makePageTitle($page_title);
+			
+		if (!array_key_exists('page_title', $this->viewData))
+		{
+			$this->viewData['page_title'] = $this->makePageTitle();			
+		}
+		
+		return $this->viewData;
+	}
 }
