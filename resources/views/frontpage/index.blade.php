@@ -596,6 +596,21 @@ $sectionCount = 0;
 			</script>
 		
 		</div>
+		
+		<!-- GOOGLE ADS -->
+		<div style="float:left; margin:20px;">
+		
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Front Page Ad 300 x 250 -->
+			<ins class="adsbygoogle"
+				 style="display:inline-block;width:300px;height:250px"
+				 data-ad-client="ca-pub-3301644572924270"
+				 data-ad-slot="8699059746"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+
+		</div>
 				
 	</div>
 </div>
