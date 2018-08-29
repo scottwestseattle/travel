@@ -31,7 +31,7 @@ class FrontPageController extends Controller
 		parent::__construct();
 
 		$this->prefix = PREFIX;
-		$this->title = $this->domainName . ' - ' . TITLE;
+		//$this->title = $this->domainName . ' - ' . TITLE;
 	}
 	
     public function first(Request $request)
@@ -48,17 +48,7 @@ class FrontPageController extends Controller
 		}
 
 		$posts = null;
-
-		//
-		// set up the site info
-		//
-		$page_title = config('app.name', 'Travel Guide');
-		
-		$site = Controller::getSite();
-			
-		if (isset($site->site_title))
-			$page_title .= ' - ' . $site->site_title;
-		
+				
 		//
 		// Set up the sections
 		//
@@ -113,8 +103,7 @@ class FrontPageController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 		
 		$vdata = $this->getViewData([
-			'page_title' => $page_title,
-			'site' => $site,
+			'site' => Controller::getSite(),
 			'posts' => $posts, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
@@ -238,7 +227,7 @@ class FrontPageController extends Controller
 			'visitors' => $visitors, 
 			'ip' => $ip, 
 			'new_visitor' => $this->isNewVisitor()
-		]);
+		], 'Admin Page');
 			
 		return view('frontpage.admin', $vdata);
     }
@@ -294,7 +283,7 @@ class FrontPageController extends Controller
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,
 			'stats' => $stats,
-		]);
+		], 'About Page');
 		
         return view('frontpage.about', $vdata);
     }

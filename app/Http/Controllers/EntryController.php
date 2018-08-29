@@ -834,6 +834,7 @@ class EntryController extends Controller
     {		
 		$server = 'http://epictravelguide.com';
 		//$server = 'http://localhost';
+		//$server = 'http://grittytravel.com';
 		
 		if (isset($request->test_server))
 		{					

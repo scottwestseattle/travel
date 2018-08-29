@@ -18,15 +18,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<?php
-		if (!isset($page_title))
-		{
-			$page_title = config('app.name', 'Travel Guide');
-		}
-		else
-			$page_title = config('app.name', 'Travel Guide') . ' - ' . $page_title;
-	?>
-    <title>{{$page_title}}</title>
+    <title>{{isset($page_title) ? $page_title : $_SERVER["SERVER_NAME"]}}</title>
 	
     <!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">

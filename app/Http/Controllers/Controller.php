@@ -306,7 +306,7 @@ class Controller extends BaseController
 		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
 	}	
 	
-	protected function getViewData($vdata = null)
+	protected function getViewData($vdata = null, $page_title = null)
 	{			
 		$this->viewData = isset($vdata) ? $vdata : [];
 		
@@ -317,6 +317,19 @@ class Controller extends BaseController
 		$this->viewData['title'] = $this->title;
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
 		$this->viewData['domainName'] = $this->domainName;
+
+		if (isset($page_title))
+		{
+			$this->viewData['page_title'] = $this->makePageTitle($page_title);			
+		}		
+		else if (!array_key_exists('page_title', $this->viewData))
+		{
+			$this->viewData['page_title'] = $this->makePageTitle();			
+		}
+		else
+		{
+			$this->viewData['page_title'] = $this->makePageTitle($this->viewData['page_title']);			
+		}
 		
 		return $this->viewData;
 	}
@@ -1686,10 +1699,13 @@ class Controller extends BaseController
 
 	protected function makePageTitle($title = null)
 	{
-		$page_title = $this->domainName;
+		$site = Controller::getSite();
+		$page_title = $site->site_name;
 		
 		if (isset($title))
 			$page_title .= ' - ' . $title;
+		else
+			$page_title .= ' - ' . $site->site_title;			
 
 		return $page_title;
 	}

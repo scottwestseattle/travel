@@ -14,12 +14,6 @@ define('TITLE', 'Gallery');
 
 class GalleryController extends Controller
 {
-	public function __construct ()
-	{
-		$this->prefix = PREFIX;
-		$this->title = TITLE;
-	}
-	
     public function index()
     {				
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
