@@ -179,6 +179,52 @@ class Entry extends Base
 		return $records;
 	}
 	
+	static public function getEntryNEW($permalink)
+	{		
+		$q = '
+			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
+				, photo_main.filename as photo
+				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
+				
+				, photo_main_gallery.filename as photo_gallery 
+				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_title_gallery
+				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id) as photo_path_gallery
+
+				, count(photos.id) as photo_count
+				, count(photo_main_gallery.id) as photo_gallery_count
+				, locations.name as location
+				, locations_parent.name as location_parent
+			FROM entries
+			LEFT JOIN photos as photo_main
+				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
+			LEFT JOIN photos as photo_main_gallery
+				ON photo_main_gallery.id = entries.photo_id AND photo_main_gallery.deleted_flag = 0 
+			LEFT JOIN photos
+				ON photos.parent_id = entries.id AND photos.deleted_flag = 0
+			LEFT JOIN locations
+				ON locations.id = entries.location_id AND locations.deleted_flag = 0
+			LEFT JOIN locations as locations_parent
+				ON locations_parent.id = locations.parent_id AND locations_parent.deleted_flag = 0
+			WHERE 1=1
+			AND entries.deleted_flag = 0
+			AND entries.permalink = ?
+
+			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id, entries.site_id
+				, photo, photo_title, photo_path
+				, photo_gallery, photo_title_gallery, photo_path_gallery
+				, location, location_parent
+		
+				LIMIT 1
+		';
+						
+		$records = DB::select($q, [$permalink]);
+		
+		$records = count($records) > 0 ? $records[0] : null;
+			
+		return $records;
+	}
+	
 	static public function getBlogIndex()
 	{
 		$q = '

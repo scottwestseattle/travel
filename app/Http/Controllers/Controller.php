@@ -1350,32 +1350,37 @@ class Controller extends BaseController
 		// fix-up the photo paths
 		foreach($records as $record)
 		{
-			//dd($record);
-			
-			if (isset($record->photo_gallery))
-			{
-				$record->photo = $record->photo_gallery;
-				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path_gallery, $record->site_id);
-				
-				Controller::makeThumbnail($record);
-			}
-			else if (isset($record->photo))
-			{
-				// photo name already set correctly
-				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
-				
-				Controller::makeThumbnail($record);
-			}
-			else
-			{
-				$record->photo = TOUR_PHOTO_PLACEHOLDER;
-				$record->photo_path = '';
-			}
-
-			//echo 'folder: ' . $record->photo_path . '/' . $record->photo . '<br/>';
+			Controller::fixPhotoPath($record, /* $makeThumbnail = */ true);
 		}
 
 		return $records;
+	}
+
+	static protected function fixPhotoPath($record, $makeThumbnail = false)
+	{		
+		if (isset($record->photo_gallery))
+		{
+			$record->photo = $record->photo_gallery;
+			$record->photo_path = Controller::getPhotoPathRemote($record->photo_path_gallery, $record->site_id);
+			$record->photo_title = $record->photo_title_gallery;
+			
+			if ($makeThumbnail)
+				Controller::makeThumbnail($record);
+		}
+		else if (isset($record->photo))
+		{
+			// photo name and title already set correctly
+			$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
+			
+			if ($makeThumbnail)
+				Controller::makeThumbnail($record);
+		}
+		else
+		{
+			$record->photo = TOUR_PHOTO_PLACEHOLDER;
+			$record->photo_path = '';
+			//todo: $record->photo_title = $this->;
+		}
 	}
 	
 	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
