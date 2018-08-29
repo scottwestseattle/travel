@@ -149,6 +149,7 @@ class Controller extends BaseController
 	protected $title = 'Title';
 	protected $domainName = 'Not Set';
 	
+	private $site = null;
 	private $viewData = [];
 	
 	static private $entryTypes = [
@@ -315,6 +316,7 @@ class Controller extends BaseController
 		$this->viewData['prefix'] = $this->prefix;
 		$this->viewData['title'] = $this->title;
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
+		$this->viewData['domainName'] = $this->domainName;
 		
 		return $this->viewData;
 	}
@@ -960,14 +962,29 @@ class Controller extends BaseController
 	
     protected function getSite()
     {		
-		$site = null;
-		
+		if (isset($this->site))
+			return $this->site;
+			
 		try 
 		{
-			$site = Site::select()
-				->where('id', SITE_ID)
-				->where('deleted_flag', 0)
-				->first();
+			if (SITE_ID == 1) //todo: temporary
+			{
+				// do it the new way for sites sharing the same server
+				$this->site = Site::select()
+					->where('site_url', strtolower($this->domainName))
+					->where('deleted_flag', 0)
+					->first();
+					
+				//dd($this->site);	
+			}
+			else
+			{
+				// do it this way for sites with their own installation
+				$this->site = Site::select()
+					->where('id', SITE_ID)
+					->where('deleted_flag', 0)
+					->first();
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -975,7 +992,7 @@ class Controller extends BaseController
 			Event::logException(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 		}
 		
-		if (isset($site))
+		if (isset($this->site))
 		{
 			// massage data?
 		}
@@ -983,15 +1000,21 @@ class Controller extends BaseController
 		{
 			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID;
 			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+			
+			// create a dummy site so everything will still work
+			$this->site = new Site;
+			$this->site->site_name = 'Site Not Found - Check Event Log For Errors';
+			$this->site->site_url = 'not found';
 		}
 		
-		return $site;
+		return $this->site;
 	}
 
 	// this is the new version that uses the php server_name
     protected function getSiteNew()
     {		
-		$site = null;
+		if (isset($this->site))
+			return $this->site;
 
 		try 
 		{
@@ -1033,6 +1056,15 @@ class Controller extends BaseController
 		
 		return $link;
 	}
+
+    static protected function fixSiteInfo($text, $site)
+    {
+		//dd($site);
+		$text = str_replace('[[site-name]]', $site->site_name, $text);
+		$text = str_replace('[[site-email]]', $site->email, $text);
+			
+		return $text;
+	}
 	
     protected function getSections()
     {		
@@ -1055,6 +1087,11 @@ class Controller extends BaseController
 			$sectionArray = [];
 			foreach($sections as $section)
 			{
+				if (isset($section->description))
+				{	
+					$section->description = Controller::fixSiteInfo($section->description, Controller::getSite());
+				}
+				
 				$sectionArray[$section->permalink] = $section;
 			}
 			
@@ -1667,6 +1704,7 @@ class Controller extends BaseController
 		$this->viewData['prefix'] = $this->prefix;
 		$this->viewData['title'] = $this->title;
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
+		$this->viewData['domainName'] = $this->domainName;
 		
 		if (isset($page_title))
 			$this->viewData['page_title'] = $this->makePageTitle($page_title);

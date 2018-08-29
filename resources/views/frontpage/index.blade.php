@@ -227,7 +227,7 @@ $sectionCount = 0;
 		</div>
 		
 		<div style="margin-top:40px;">
-			<img style="width:95%; max-width:400px;" src="/img/theme1/logo-main.png" />
+			<img style="width:95%; max-width:400px;" src="/img/theme1/logo-{{$domainName}}.png" />
 		</div>
 	
 	</div>	

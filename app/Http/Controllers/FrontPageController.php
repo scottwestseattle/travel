@@ -112,7 +112,7 @@ class FrontPageController extends Controller
 		//
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 		
-		$vdata = [
+		$vdata = $this->getViewData([
 			'page_title' => $page_title,
 			'site' => $site,
 			'posts' => $posts, 
@@ -128,7 +128,7 @@ class FrontPageController extends Controller
 			'articles' => $articles,
 			'gallery' => $gallery,
 			'firstslider' => $firstslider,
-		];
+		]);
 		
     	return view('frontpage.index', $vdata);
     }
@@ -280,6 +280,9 @@ class FrontPageController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ABOUT);
 		
 		$entry = Entry::getAboutPage();
+
+		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
+			$entry[0]->description = Controller::fixSiteInfo($entry[0]->description, Controller::getSite());
 		
 		$entryStats = Entry::getStats();
 		$photoStats = Photo::getStats();
