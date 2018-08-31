@@ -37,7 +37,7 @@ class TourController extends Controller
 		$showAll = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);	
 		
 		//$tours = $this->getTourIndex(/* $allSites = */ true);
-		$tours = Controller::getEntriesByType(ENTRY_TYPE_TOUR);
+		$tours = $this->getEntriesByType(ENTRY_TYPE_TOUR);
 
 		$tour_count = isset($tours) ? count($tours) : 0;
 		$locations = Location::getPills();

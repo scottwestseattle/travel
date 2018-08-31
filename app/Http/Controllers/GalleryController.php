@@ -18,7 +18,7 @@ class GalleryController extends Controller
     {				
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
-		$records = Controller::getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
+		$records = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records, 
