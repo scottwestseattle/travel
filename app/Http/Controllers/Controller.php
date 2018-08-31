@@ -41,7 +41,6 @@ define('PHOTO_TYPE_ENTRY', 		1);
 define('PHOTO_TYPE_RECEIPT', 	2);
 define('PHOTO_TYPE_OTHER', 		99);
 
-define('TOUR_PHOTO_PLACEHOLDER', 'img/theme1/entry-placeholder.jpg');
 define('PHOTO_THUMBNAIL_HEIGHT', 400);
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
@@ -168,8 +167,13 @@ class Controller extends BaseController
 	public function __construct ()
 	{
 		if (array_key_exists("SERVER_NAME", $_SERVER))
-		{
-			$this->domainName = $_SERVER["SERVER_NAME"];
+		{			
+			$dn = $_SERVER["SERVER_NAME"];
+						
+			if ($this->startsWith($dn, 'www.'))
+				$dn = substr($dn, 4);
+			
+			$this->domainName = $dn;
 		}
 	}
 	
@@ -814,7 +818,7 @@ class Controller extends BaseController
 		// get the list with the location included
 		$records = DB::select($q, [$location_id, ENTRY_TYPE_TOUR]);
 		
-		$records = Controller::fixPhotoPaths($records);		
+		$records = $this->fixPhotoPaths($records);		
 		
 		return $records;
 	}	
@@ -1016,7 +1020,7 @@ class Controller extends BaseController
 			
 			// create a dummy site so everything will still work
 			$this->site = new Site;
-			$this->site->site_name = 'Site Not Found - Check Event Log For Errors';
+			$this->site->site_name = $this->domainName . ' - Site Not Found';
 			$this->site->site_url = 'not found';
 		}
 		
@@ -1085,7 +1089,7 @@ class Controller extends BaseController
 		
 		try 
 		{
-			$sections = Controller::getEntriesByType(ENTRY_TYPE_SECTION);
+			$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION);
 		}
 		catch (\Exception $e)
 		{
@@ -1395,18 +1399,18 @@ class Controller extends BaseController
 		return $path . $filename;
 	}
 
-	static private function fixPhotoPaths($records)
+	private function fixPhotoPaths($records)
 	{
 		// fix-up the photo paths
 		foreach($records as $record)
 		{
-			Controller::fixPhotoPath($record, /* $makeThumbnail = */ true);
+			$this->fixPhotoPath($record, /* $makeThumbnail = */ true);
 		}
 
 		return $records;
 	}
 
-	static protected function fixPhotoPath($record, $makeThumbnail = false)
+	protected function fixPhotoPath($record, $makeThumbnail = false)
 	{		
 		if (isset($record->photo_gallery))
 		{
@@ -1427,17 +1431,17 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$record->photo = TOUR_PHOTO_PLACEHOLDER;
+			$record->photo = 'img/theme1/placeholder-' . $this->domainName . '.jpg';
 			$record->photo_path = '';
 			//todo: $record->photo_title = $this->;
 		}
 	}
 	
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
+	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
 	{
 		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $all_sites);
 		
-		$records = Controller::fixPhotoPaths($records);
+		$records = $this->fixPhotoPaths($records);
 		
 		return $records;
 	}

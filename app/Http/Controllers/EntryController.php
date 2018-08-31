@@ -46,7 +46,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = Controller::getEntriesByType(ENTRY_TYPE_ARTICLE, false, 0, true);
+		$records = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, false, 0, true);
 			
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -61,7 +61,7 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$entries = Controller::getEntriesByType($type_flag, /* approved = */ false);
+		$entries = $this->getEntriesByType($type_flag, /* approved = */ false);
 
 		$vdata = $this->getViewData([
 			'records' => $entries,
@@ -785,7 +785,7 @@ class EntryController extends Controller
     {		   
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
-		$records = Controller::getEntriesByType(ENTRY_TYPE_GALLERY);
+		$records = $this->getEntriesByType(ENTRY_TYPE_GALLERY);
 
 		$vdata = $this->getViewData([
 			'records' => $records, 
@@ -835,6 +835,8 @@ class EntryController extends Controller
 		$server = 'http://epictravelguide.com';
 		//$server = 'http://localhost';
 		//$server = 'http://grittytravel.com';
+		//$server = 'http://hikebikeboat.com';
+		//$server = 'http://scotthub.com';
 		
 		if (isset($request->test_server))
 		{					
