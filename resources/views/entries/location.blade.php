@@ -13,10 +13,6 @@
 		<div class="form-group">
 			<h3 name="title" class="">{{$record->title }}</h3>
 		</div>
-
-		<div class="form-group">
-			<span name="description" class="">{{$record->description }}</span>	
-		</div>
 		
 		<div class="form-group">
 			<label for="location_id">Location:&nbsp;</label>		

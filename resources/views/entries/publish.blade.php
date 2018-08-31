@@ -13,10 +13,6 @@
 		<div class="form-group">
 			<h3 name="title" class="">{{$record->title }}</h3>
 		</div>
-
-		<div class="form-group">
-			<span name="description" class="">{{$record->description }}</span>	
-		</div>
 				
 		<div class="form-group">
 			<input type="checkbox" name="published_flag" id="published_flag" class="" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
