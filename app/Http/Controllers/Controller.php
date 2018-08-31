@@ -338,7 +338,7 @@ class Controller extends BaseController
 		return $this->viewData;
 	}
 	
-	protected function formatLinks($text)
+	protected function formatLinksOLD($text)
 	{
 		$lines = explode("\r\n", $text);
 
@@ -346,26 +346,40 @@ class Controller extends BaseController
 		
 		foreach($lines as $line)
 		{
-				preg_match('/\[(.*?)\]/', $line, $title);	// replace the chars between []
-				preg_match('/\((.*?)\)/', $line, $link);	// replace the chars between ()
-				
-				if (sizeof($title) > 0 && sizeof($link)) // if its a link
-				{
-					$text .= '<div style="font-family: \'Raleway\';font-weight:bold;"><a style="font-size:.9em; color:#4993FD;" href=' . $link[1] . ' target="_blank">' . $title[1] . '</a></div>';
-				}
-				else if (mb_strlen($line) === 0) // blank line
-				{
-					$text .= $line;
-				}
-				else // regular line with text
-				{
-					$text .= $line;
-				}
+			preg_match('/\[(.*?)\]/', $line, $title);	// get the link text between []
+			preg_match('/\((.*?)\)/', $line, $link);	// get the link url between ()
+			
+			if (sizeof($title) > 0 && sizeof($link)) // if its a link
+			{
+				$text .= '<div style="font-family: \'Raleway\';font-weight:bold;"><a style="font-size:.9em; color:#4993FD;" href=' . $link[1] . ' target="_blank">' . $title[1] . '</a></div>';
+			}
+			else if (mb_strlen($line) === 0) // blank line
+			{
+				$text .= $line;
+			}
+			else // regular line with text
+			{
+				$text .= $line;
+			}
 		}
 		
 		return $text;
 	}
 
+	protected function formatLinks($text)
+	{
+		$link = '<span style="font-family: \'Raleway\';font-weight:bold;"><a style="font-size:.9em; color:#4993FD;" href="$2" target="_blank">$1</a></span>';
+		$link = '<a href="$2" target="_blank">$1</a>';
+				
+		$text = preg_replace('/\[(.*?)\]\((.*?)\)/', $link, $text);
+		
+		$link = 'THE LINK';
+		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="https://www.google.com/search?q=$1.$2,$3.$4">Map Location: $1.$2, $3.$4</a>', $text);		
+		//dd($text);
+		
+		return $text;
+	}
+	
     protected function getSliders()
     {
 		$path = base_path() . SLIDER_PHOTOS_PATH;
