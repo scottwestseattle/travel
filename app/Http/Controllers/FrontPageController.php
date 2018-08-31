@@ -415,11 +415,7 @@ priceTaxes=$59.50
 
     public function spy(Request $request)
     {	
-		$spy = session('spy', null);
-		if (isset($spy))
-			session(['spy' => null]);
-		else
-			session(['spy' => true]);
+		session(['spy' => true]);
 
 		$spy = session('spy', null);
 		$spy = isset($spy) ? 'ON' : 'OFF';
@@ -433,5 +429,21 @@ priceTaxes=$59.50
 
 		return view('frontpage.spy', $vdata);
     }	
-	
+
+    public function spyoff(Request $request)
+    {	
+		session(['spy' => null]);
+
+		$spy = session('spy', null);
+		$spy = isset($spy) ? 'ON' : 'OFF';
+		
+		$vdata = $this->getViewData([
+			'spy' => $spy,
+		]);
+		
+		$request->session()->flash('message.level', 'success');
+		$request->session()->flash('message.content', 'Spy mode is ' . $spy);
+
+		return view('frontpage.spy', $vdata);
+    }	
 }

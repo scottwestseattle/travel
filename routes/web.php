@@ -31,6 +31,7 @@ Route::get('/email/check', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/confirm', 'FrontPageController@confirm');
 Route::get('/spy', 'FrontPageController@spy');
+Route::get('/spyoff', 'FrontPageController@spyoff');
 Route::get('/gallery', 'EntryController@gallery');
 Route::get('/test', 'EntryController@test')->middleware('auth');
 Route::post('/test', 'EntryController@test')->middleware('auth');
