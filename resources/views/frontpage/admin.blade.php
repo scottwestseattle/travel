@@ -40,39 +40,27 @@
 	<hr />
 	@endif
 
-	
-	@if (false && isset($sections))
-	<div>
-		<h3>Sections ({{ count($sections) }})</h3>
+	@if (isset($todo) && count($todo) > 0)
+	<div>	
+		<h3 style="color:red;">Photo Names to Fix ({{count($todo)}})</h3>
 		<table class="table table-striped">
 			<tbody>
-			@foreach($sections as $record)
-				<tr>
-				{{dd($record->id)}}
-					<td style="width:20px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td>
-						<a href="/entries/view/{{$record->id}}">{{$record->title}}</a>
-						
-						<div>
-							@if ($record->published_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
-							@elseif ($record->approved_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
-							@endif
-						</div>
-					</td>
-					<td>
-						<a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a>
-					</td>
+				<tr><th></th><th></th><th>File Name</th><th>Created Date</th><th>Entry</th>
+			@foreach($todo as $record)
+				<tr>				
+					<td style="width:10px;"><a href='/photos/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td><a href='/photos/entries/{{$record->parent_id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
+					<td>{{$record->filename}}</td>
+					<td>{{$record->date}}</td>
+					<td><a href='/entries/{{$record->permalink}}'>{{$record->entry_title}}</a></td>
 				</tr>
 			@endforeach
 			</tbody>
-		</table>   	
-		<a href="/entries/indexadmin/{{ENTRY_TYPE_SECTION}}">Show All Sections</a>	
+		</table>
 	</div>
-	<hr />	
+	<hr />
 	@endif
-
+	
 	
 	@if (isset($posts) && count($posts) > 0)
 	<div>

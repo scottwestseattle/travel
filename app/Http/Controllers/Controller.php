@@ -1736,4 +1736,29 @@ class Controller extends BaseController
 		
 		return $this->viewData;
 	}
+	
+	static protected function getPhotosWithShortNames()
+	{			
+		$q = '
+			SELECT photos.*, DATE_FORMAT(photos.created_at, "%Y-%m-%d") as date, entries.permalink, entries.title as entry_title
+			FROM photos
+			JOIN entries 
+				ON entries.id = photos.parent_id 
+				AND entries.deleted_flag = 0 
+				AND entries.published_flag = 1 
+				AND entries.approved_flag = 1
+			WHERE 1=1
+				AND length(filename) < 20
+				AND photos.site_id = ? 
+				AND photos.deleted_flag = 0
+				AND photos.type_flag <> ?
+			ORDER by photos.id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
+			
+		//dd($records);
+		
+		return $records;
+	}
 }
