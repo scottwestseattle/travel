@@ -184,6 +184,11 @@ class FrontPageController extends Controller
              return redirect('/');
 
 		//
+		// get todo list
+		//
+		$todo = Controller::getPhotosWithShortNames();
+		
+		//
 		// get latest events
 		//
 		$events = Event::get(10);
@@ -219,17 +224,16 @@ class FrontPageController extends Controller
 			
 		$ip = Event::getVisitorIp();
 			
-		$vdata = $this->getViewData([
+		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
 			'records' => $entries, 
 			'users' => $users, 
 			'visitors' => $visitors, 
 			'ip' => $ip, 
+			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor()
-		], 'Admin Page');
-			
-		return view('frontpage.admin', $vdata);
+		], 'Admin Page'));
     }
 	
     public function posts(Entry $entry)
