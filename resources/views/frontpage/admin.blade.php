@@ -40,6 +40,46 @@
 	<hr />
 	@endif
 
+	@if (isset($linksToFix) && count($linksToFix) > 0)
+	<div>	
+		<h3 style="color:red;">Links to Fix ({{count($linksToFix)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Entry</th><th>Created Date</th><th>Type</th>
+			@foreach($linksToFix as $record)
+				<tr>				
+					<td style="width:10px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td><a href='/entries/{{$record->permalink}}'>{{$record->title}}</a></td>
+					<td>{{$record->created_at}}</td>
+					<td>{{$record->type_flag}}</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+	</div>
+	<hr />
+	@endif
+
+	@if (isset($linksToTest) && count($linksToTest) > 0)
+	<div>	
+		<h3 style="color:red;">Links to Test ({{count($linksToTest)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Entry</th><th>Created Date</th><th>Type</th>
+			@foreach($linksToTest as $record)
+				<tr>				
+					<td style="width:10px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td><a href='/entries/{{$record->permalink}}' target="_blank">{{$record->title}}</a></td>
+					<td>{{$record->created_at}}</td>
+					<td>{{$record->type_flag}}</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+	</div>
+	<hr />
+	@endif
+	
 	@if (isset($todo) && count($todo) > 0)
 	<div>	
 		<h3 style="color:red;">Photo Names to Fix ({{count($todo)}})</h3>
@@ -60,8 +100,7 @@
 	</div>
 	<hr />
 	@endif
-	
-	
+		
 	@if (isset($posts) && count($posts) > 0)
 	<div>
 		<h3>Pending Blog Entries ({{ count($posts) }})</h3>

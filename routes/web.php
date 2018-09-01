@@ -36,6 +36,8 @@ Route::get('/gallery', 'EntryController@gallery');
 Route::get('/test', 'EntryController@test')->middleware('auth');
 Route::post('/test', 'EntryController@test')->middleware('auth');
 Route::get('/first', 'FrontPageController@first');
+Route::get('/search', 'EntryController@search');
+Route::post('/search', 'EntryController@search');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');

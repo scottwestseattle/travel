@@ -1,48 +1,53 @@
-<!-- search results -->
-<style>
-a:hover {
-	text-decoration:none
-}
+@extends('layouts.app')
 
-.popup {
-    position: relative;
-    display: inline-block;
-}
-	
-/* The actual popup (appears on top) */
-.popup .popuptext 
-{
-	width:500px;
-    background-color: white;
-    color: #fff;
-    position: absolute;
-    z-index: 1;
-	top: 14px;
-    left: 100%;
-    margin-left: -380px;
-	padding: 10px;
-	border: solid 1px lightblue;
-    border-radius: 6px;	
-}
+@section('content')
 
-</style>
+<div class="container page-size">
+
+	<h1>Search @if (isset($records))({{count($records)}})@endif</h1>
 	
-<div class='popup'>
-	<span class='popuptext'>
-	
-	@foreach($entries as $entry)
-		<div style="padding: 3px 0px;" class="">
-			<a style="" href="/entries/gen/{{$entry->id}}">{{$entry->title}}</a>
+	<form method="POST" action="/search">
+		<div class="form-group form-control-big">
+			
+			<input type="text" id="searchText" name="searchText" class="form-control" value="{{$search}}"/>
+			
+			<div style="clear:both;">				
+				<div class="">
+					<button type="submit" name="submit" class="btn btn-primary">Search</button>
+				</div>
+			</div>
+			
+			{{ csrf_field() }}
 		</div>
-	@endforeach
+	</form>
 	
-	@if (count($entries) === 25)
-		<div style="padding: 3px 0px;" class="">
-			<span style="color: gray;" >{{ '(Only showing first 25 results)' }}</span>
-		</div>
-	@elseif (count($entries) === 0)
-		<span style="color: gray;" >{{ '(not found)' }}</span>
+	@if (isset($records))
+		<table class="table table-striped">
+			<tbody>
+			@foreach($records as $record)
+				<tr>
+					<td><a href="{{ route('entry.permalink', [$record->permalink]) }}" target="_blank">{{$record->title}}</a></td>
+					<td>{{$entryTypes[$record->type_flag]}}</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
 	@endif
 	
-	</span>
 </div>
+
+@endsection
+
+<script>
+	
+window.onload = function(){
+	var input = document.getElementById("searchText");
+	
+	if (!input)
+		return;
+		
+    input.focus();
+    input.select();
+};
+
+</script>

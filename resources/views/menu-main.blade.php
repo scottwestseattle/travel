@@ -1,3 +1,16 @@
+<?php 
+	$user_type = (null !== Auth::user()) ? intval(Auth::user()->user_type) : 0; 
+	$user_type_name = 'not set';
+	if ($user_type >= 1000)
+		$user_type_name = "super admin";
+	else if ($user_type >= 100)
+		$user_type_name = "admin";
+	else if ($user_type >= 10)
+		$user_type_name = "confirmed";
+	else
+		$user_type_name = "unconfirmed";	
+?>
+						
            <div class="xcontainer">
                 <div class="navbar-header">
 
@@ -18,6 +31,11 @@
 						-->
                     </a>
 					
+					@if ($user_type >= 100)
+                    <!-- Search -->
+                    <a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+					@endif
+					
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -28,18 +46,6 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-						<?php 
-							$user_type = (null !== Auth::user()) ? intval(Auth::user()->user_type) : 0; 
-							$user_type_name = 'not set';
-							if ($user_type >= 1000)
-								$user_type_name = "super admin";
-							else if ($user_type >= 100)
-								$user_type_name = "admin";
-							else if ($user_type >= 10)
-								$user_type_name = "confirmed";
-							else
-								$user_type_name = "unconfirmed";	
-						?>
                         @guest
 							@if (null !== (session('spy', null)))
 								<li><a href="/spy">Turn Spy Off</a></li>
@@ -86,6 +92,7 @@
 										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/photos/indexadmin">Photos</a></li>
 										<li><a href="/sites/index">Sites</a></li>
+										<li><a href="/search/">Search</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 											<li><a href="/tours/indexadmin">Tours</a></li>
 										@endif

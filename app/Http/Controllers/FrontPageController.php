@@ -187,7 +187,9 @@ class FrontPageController extends Controller
 		// get todo list
 		//
 		$todo = Controller::getPhotosWithShortNames();
-		
+		$linksToFix = Controller::getLinksToFix();
+		$linksToTest = Controller::getLinksToTest();
+
 		//
 		// get latest events
 		//
@@ -232,7 +234,9 @@ class FrontPageController extends Controller
 			'visitors' => $visitors, 
 			'ip' => $ip, 
 			'todo' => $todo,
-			'new_visitor' => $this->isNewVisitor()
+			'new_visitor' => $this->isNewVisitor(),
+			'linksToFix' => $linksToFix,
+			'linksToTest' => $linksToTest,
 		], 'Admin Page'));
     }
 	
