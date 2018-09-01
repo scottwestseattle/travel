@@ -20,17 +20,21 @@
 			
 			<div style="margin:20px 0;">
 				<button type="submit" name="update" class="btn btn-primary">Run Tests</button>
+				&nbsp;&nbsp;&nbsp;<a href="/test">Reload Tests</a>
+
 			</div>	
 
 			<table class="table">
 				<tr><th>Select</th><th>URL</th><th>Expected</th><th>Results</th></tr>
 			@for ($i = 0; $i < count($records); $i++)
+				@if (!$executed || $records[$i][2] != '')
 				<tr>
 					<td><input type="checkbox" name="test{{$i}}" id="test{{$i}}" style="margin:0;padding:0;" /></td>
 					<td><a target="_blank" href="{{$test_server}}{{$records[$i][1]}}">{{$test_server}}{{$records[$i][1]}}</a></td>
 					<td>{{$records[$i][0]}}</td>
 					<td>{{$records[$i][2]}}</td>
 				</tr>
+				@endif
 			@endfor
 			</table>
 			

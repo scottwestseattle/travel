@@ -795,6 +795,7 @@ class EntryController extends Controller
     }
 
 	private $tests = [
+		['EXPECTED NOT FOUND', '/', ''],
 		['Affiliates', '/', ''],
 		['Buddha', '/', ''],
 		['Exploring', '/', ''],
@@ -808,52 +809,118 @@ class EntryController extends Controller
 		['About', '/about', ''],
 		['Todos Derechos Reservados', '/gallery', ''],
 		['All Rights Reserved', '/galleries', ''],
-		['China', '/galleries/xian-china', ''],
-		['Zhangye', '/galleries/zhangye-china', ''],
 		['Featured Photos', '/photos/sliders', ''],
 		['Siem Reap', '/photos/view/64', ''],
 		['Epic Euro Trip', '/blogs/index', ''],
 		['Show All Posts', '/blogs/show/105', ''],
 		['Day 71', '/blogs/show/31', ''],
-		['Thursday, Tienanmen Square', '/entries/thursday-tienanmen-square-2018-06-28', ''],
 		['Beijing Summer Palace', '/entries/show/157', ''], // prev
 		['Thursday, Tienanmen Square', '/entries/show/155', ''], // next
 		['Big Asia', '/blogs/show/105', ''], // back to blog
 		['Seattle Waterfront to Lake Union', '/tours/index', ''],
 		['Seattle', '/tours/location/2', ''],
 		['China', '/tours/location/9', ''],
-		['Fremont', '/tours/Fremont-to-Gas-Works-Park-Loop', ''],
-		['Longmen', '/tours/xian-day-trip-to-luoyang-longmen-grottoes', ''],
 		['Articles', '/articles', ''],
-		['Beijing Metro', '/entries/beijing-subway-map-and-schedule-2018-06-27', ''],
-		['Blocked', '/entries/web-sites-that-are-blocked-in-china', ''],
-		['Knight', '/entries/datong-fly-by-knight-highrise-hostel-datong-china-2018-07-02', ''],
 		];
 		
     public function test(Request $request)
-    {		
-		$server = 'http://epictravelguide.com';
+    {	
+		$executed = null;
+		
+		//$server = 'http://epictravelguide.com';
 		//$server = 'http://localhost';
 		//$server = 'http://grittytravel.com';
 		//$server = 'http://hikebikeboat.com';
-		//$server = 'http://scotthub.com';
+		$server = 'http://scotthub.com';
+
+		$tests = array_merge($this->tests, EntryController::getTestEntries());
 		
 		if (isset($request->test_server))
-		{					
-			for ($i = 0; $i < count($this->tests); $i++)
+		{
+			$executed = true;
+			
+			for ($i = 0; $i < count($tests); $i++)
 			{			
 				// if item is checked
 				if (isset($request->{'test'.$i}))
 				{
-					$this->tests[$i][2] = $this->testPage($request->test_server . $this->tests[$i][1], $this->tests[$i][0])['results'];
+					$tests[$i][2] = $this->testPage($request->test_server . $tests[$i][1], $tests[$i][0])['results'];
 				}
 			}
 		}
+		else
+		{
+		}
 		
 		return view('entries.test', $this->getViewData([
-			'records' => $this->tests,
+			'records' => $tests,
 			'test_server' => $server,
+			'executed' => $executed,
 		]));
+	}
+	
+	static protected function getTestEntries()
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND type_flag in (2,3,4,5,8)
+				AND deleted_flag = 0
+				AND published_flag = 1 
+				AND approved_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+			
+		//dd($records);
+		
+		$tests = [];
+		
+		foreach($records as $record)
+		{
+			$type = null;
+			
+			switch($record->type_flag)
+			{
+				case 1:
+					$type = 'entries';
+					break;
+				case 2:
+					$type = 'tours';
+					break;
+				case 3:
+					$type = 'blogs';
+					break;
+				case 4:
+					$type = 'entries';
+					break;
+				case 5:
+					$type = 'entries';
+					break;
+				case 8:
+					$type = 'galleries';
+					break;
+				default:
+					break;
+			}
+			
+			if (isset($type))
+			{
+				if ($record->type_flag == 3) // blogs don't use permalink
+				{
+					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/view/' . $record->id, ''];	
+				}
+				else
+				{
+					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/' . $record->permalink, ''];
+				}
+			}
+		}
+		//dd($tests);
+		
+		return $tests;
 	}
 	
     public function testresults(Request $request)
@@ -883,17 +950,29 @@ class EntryController extends Controller
 
 		try
 		{
-			$text = file_get_contents($url);
+			$text = $this->file_get_contents_curl($url);
 			//dd($url . ': ' . $text);
 			$results['results'] = strpos($text, $expected) === false ? 'EXPECTED NOT FOUND' : 'success';
 		}
 		catch (\Exception $e) 
 		{
 			//$error = $e->getMessage();
-			$results['results'] = 'ERROR OPENING PAGE';
+			$results['results'] = 'ERROR OPENING PAGE: ' . $url;
 		}	
 				
 		return $results;
+	}
+	
+	private function file_get_contents_curl($url) 
+	{
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$data = curl_exec($ch);
+		curl_close($ch);
+		
+		return $data;
 	}
 
     public function search(Request $request)
