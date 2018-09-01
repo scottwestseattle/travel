@@ -60,7 +60,7 @@
 	<hr />
 	@endif
 
-	@if (isset($linksToTest) && count($linksToTest) > 0)
+	@if (false && isset($linksToTest) && count($linksToTest) > 0)
 	<div>	
 		<h3 style="color:red;">Links to Test ({{count($linksToTest)}})</h3>
 		<table class="table table-striped">
