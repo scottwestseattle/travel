@@ -155,7 +155,7 @@ class Controller extends BaseController
 		ENTRY_TYPE_NOTSET => 'Not Set',
 		ENTRY_TYPE_ARTICLE => 'Article',
 		ENTRY_TYPE_BLOG => 'Blog',
-		ENTRY_TYPE_BLOG_ENTRY => 'Blog Entry',
+		ENTRY_TYPE_BLOG_ENTRY => 'Blog Post',
 		ENTRY_TYPE_ENTRY => 'Entry',
 		ENTRY_TYPE_GALLERY => 'Gallery',
 		ENTRY_TYPE_NOTE => 'Note',
@@ -373,8 +373,10 @@ class Controller extends BaseController
 				
 		$text = preg_replace('/\[(.*?)\]\((.*?)\)/', $link, $text);
 		
-		$link = 'THE LINK';
-		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="https://www.google.com/search?q=$1.$2,$3.$4">Map Location: $1.$2, $3.$4</a>', $text);		
+		// orig: https://www.google.com/search?q=$1.$2,$3.$4
+		$link = 'https://maps.google.com/maps?q=$1.$2,$3.$4'; //new
+		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: $1.$2, $3.$4</a>', $text);
+		
 		//dd($text);
 		
 		return $text;
@@ -1770,6 +1772,64 @@ class Controller extends BaseController
 		';
 
 		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
+			
+		//dd($records);
+		
+		return $records;
+	}
+	
+	static protected function getLinksToFix()
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND description like "%epictravelguide.com%"				
+				AND site_id = ? 
+				AND deleted_flag = 0
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+			
+		//dd($records);
+		
+		return $records;
+	}
+	
+	static protected function getLinksToTest($internal = false)
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND (description like "%http%" OR description like "%](%")
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND published_flag = 1 AND approved_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+			
+		//dd($records);
+		
+		return $records;
+	}
+	
+	static protected function searchEntries($text)
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND (title like "%' . $text . '%" OR description like "%' . $text . '%")
+				AND site_id = ? 
+			ORDER by id DESC
+		';
+		//AND type_flag in (2,3,4,5,8)
+
+		$records = DB::select($q, [SITE_ID]);
 			
 		//dd($records);
 		
