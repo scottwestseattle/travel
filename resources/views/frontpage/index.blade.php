@@ -325,9 +325,15 @@ $sectionCount = 0;
 								@if (isset($record->display_date))
 								<tr><td>{{$record->display_date}}</td></tr>
 								@endif
+								
 								@if (isset($record->location))
-								<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+									@if ($record->location_type != LOCATION_TYPE_COUNTRY)
+										<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+									@else
+										<tr><td>{{$record->location}}</td></tr>
+									@endif
 								@endif
+								
 							</tbody>
 							</table>
 						</td>

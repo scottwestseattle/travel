@@ -207,7 +207,6 @@ class EntryController extends Controller
 		
 		// get the entry the mysql way so we can have all the main photo and location info
 		$entry = Entry::getEntry($permalink);
-		//dd($entry);
 			
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);

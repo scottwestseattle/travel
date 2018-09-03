@@ -56,9 +56,15 @@
 		
 		<h1 name="title" class="">{{$record->title }}</h1>
 		<strong>
+
 		@if (isset($record->location))
-			<p>{{$record->location}}, {{$record->location_parent}}</p>
+			@if ($record->location_type != LOCATION_TYPE_COUNTRY)
+				<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+			@else
+				<tr><td>{{$record->location}}</td></tr>
+			@endif
 		@endif
+		
 		@if (isset($record->display_date))
 			<p><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
 		@endif

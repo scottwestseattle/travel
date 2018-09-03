@@ -91,7 +91,7 @@ class Entry extends Base
 				, CONCAT(photo_main_gallery.alt_text, " - ", photo_main_gallery.location) as photo_title_gallery
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id) as photo_path_gallery
 				, count(photos.id) as photo_count
-				, locations.name as location
+				, locations.name as location, locations.location_type as location_type
 				, locations_parent.name as location_parent
 				, blogs.title as blog_title, blogs.id as blog_id				
 			FROM entries
@@ -122,7 +122,7 @@ class Entry extends Base
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date, entries.site_id  
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_title_gallery, photo_path_gallery
-				, location, location_parent
+				, location, location_parent, location_type
 				, blog_title, blog_id
 			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC
 		';
@@ -147,7 +147,7 @@ class Entry extends Base
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id, "/") as photo_gallery_path
 				, count(photos.id) as photo_count
 				, count(photo_main_gallery.id) as photo_gallery_count
-				, locations.name as location
+				, locations.name as location, locations.location_type as location_type
 				, locations_parent.name as location_parent
 			FROM entries
 			LEFT JOIN photos as photo_main
@@ -167,7 +167,7 @@ class Entry extends Base
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date, entries.photo_id, entries.parent_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_gallery_title, photo_gallery_path
-				, location, location_parent
+				, location, location_parent, location_type 
 		
 				LIMIT 1
 		';
