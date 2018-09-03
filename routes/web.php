@@ -38,6 +38,7 @@ Route::post('/test', 'EntryController@test')->middleware('auth');
 Route::get('/first', 'FrontPageController@first');
 Route::get('/search', 'EntryController@search');
 Route::post('/search', 'EntryController@search');
+Route::get('/sitemap', 'EntryController@sitemap')->middleware('auth');
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');

@@ -163,7 +163,20 @@ class Controller extends BaseController
 		ENTRY_TYPE_SECTION => 'Section',
 		ENTRY_TYPE_TOUR => 'Tour/Hike',
 	];
-		
+
+	static private $entryUrls = [
+		ENTRY_TYPE_NOTSET => 'entries',
+		ENTRY_TYPE_ARTICLE => 'entries',
+		ENTRY_TYPE_BLOG => 'blogs',
+		ENTRY_TYPE_BLOG_ENTRY => 'entries',
+		ENTRY_TYPE_ENTRY => 'entries',
+		ENTRY_TYPE_GALLERY => 'galleries',
+		ENTRY_TYPE_NOTE => 'entries',
+		ENTRY_TYPE_OTHER => 'entries',
+		ENTRY_TYPE_SECTION => 'entries',
+		ENTRY_TYPE_TOUR => 'tours',
+	];
+	
 	public function __construct ()
 	{
 		if (array_key_exists("SERVER_NAME", $_SERVER))
@@ -181,7 +194,12 @@ class Controller extends BaseController
 	{		
 		return Controller::$entryTypes;
 	}
-		
+
+	static public function getEntryUrls()
+	{		
+		return Controller::$entryUrls;
+	}
+	
 	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
 	{
 		//
@@ -1834,5 +1852,81 @@ class Controller extends BaseController
 		//dd($records);
 		
 		return $records;
+	}
+	
+    protected function makeSiteMap()
+    {	
+		$urls = [
+			'/',
+			'/login',
+			'/register',
+			'/password/reset',
+			'/about',
+			'/articles',
+			'/blogs/index',
+			'/galleries',
+			'/tours/index',
+			'/photos/sliders',
+		];
+		
+		$servers = [
+			'http://epictravelguide.com',
+			'http://grittytravel.com',
+			'http://hikebikeboat.com',
+			'http://scotthub.com',
+		];
+		
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND type_flag in (2,3,4,5,8)
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND published_flag = 1 AND approved_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+		
+		if (isset($records))
+		{
+			$entryUrls = Controller::getEntryUrls();
+
+			foreach($records as $record)
+			{
+				$type = $entryUrls[$record->type_flag];
+
+				if (isset($type))
+				{
+					if ($record->type_flag == ENTRY_TYPE_BLOG) // blogs don't use permalink
+					{
+						$urls[] = '/' . $type . '/view/' . $record->id;	
+					}
+					else // everything else uses permalinks
+					{
+						$urls[] = '/' . $type . '/' . $record->permalink;
+					}
+				}
+			}
+			
+			// write the sitemap file
+			$siteMap = [];
+			foreach($servers as $server)
+			{
+				foreach($urls as $url)
+				{
+					$siteMap[] = $server . $url;
+				}
+				
+				//break;
+			}
+			
+			//dd($siteMap);
+		}
+		
+		//dd($urls);
+		
+		return $siteMap;
 	}
 }

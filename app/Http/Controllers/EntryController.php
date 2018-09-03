@@ -834,7 +834,7 @@ class EntryController extends Controller
 		$server = 'http://scotthub.com';
 
 		$tests = array_merge($this->tests, EntryController::getTestEntries());
-		
+
 		if (isset($request->test_server))
 		{
 			$executed = true;
@@ -848,10 +848,7 @@ class EntryController extends Controller
 				}
 			}
 		}
-		else
-		{
-		}
-		
+
 		return view('entries.test', $this->getViewData([
 			'records' => $tests,
 			'test_server' => $server,
@@ -880,39 +877,16 @@ class EntryController extends Controller
 		
 		foreach($records as $record)
 		{
-			$type = null;
-			
-			switch($record->type_flag)
-			{
-				case 1:
-					$type = 'entries';
-					break;
-				case 2:
-					$type = 'tours';
-					break;
-				case 3:
-					$type = 'blogs';
-					break;
-				case 4:
-					$type = 'entries';
-					break;
-				case 5:
-					$type = 'entries';
-					break;
-				case 8:
-					$type = 'galleries';
-					break;
-				default:
-					break;
-			}
-			
+			$entryUrls = Controller::getEntryUrls();
+			$type = $entryUrls[$record->type_flag];
+
 			if (isset($type))
 			{
-				if ($record->type_flag == 3) // blogs don't use permalink
+				if ($record->type_flag == ENTRY_TYPE_BLOG) // blogs don't use permalink
 				{
 					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/view/' . $record->id, ''];	
 				}
-				else
+				else // everything else uses permalinks
 				{
 					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/' . $record->permalink, ''];
 				}
@@ -1007,5 +981,24 @@ class EntryController extends Controller
 			'records' => $records,
 			'entryTypes' => Controller::getEntryTypes(),
 		]));		
-	}	
+	}
+
+    public function sitemap(Request $request)
+    {			
+		//$server = 'http://epictravelguide.com';
+		//$server = 'http://localhost';
+		//$server = 'http://grittytravel.com';
+		//$server = 'http://hikebikeboat.com';
+		$server = 'http://scotthub.com';
+
+		$tests = $this->makeSiteMap();
+		
+		return view('entries.test', $this->getViewData([
+			'records' => $tests,
+			'test_server' => $server,
+			'executed' => null,
+			'sitemap' => true,
+		]));
+	}
+	
 }

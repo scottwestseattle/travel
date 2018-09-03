@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
+
+@if (isset($site))
+	@if ($site->site_url == 'GrittyTravel.com')
+		<meta name="google-site-verification" content="i7p4o3hPqvPXmI5kIW5RV4FPCWSH_dtRr-O7I8mI2WM" />
+	@elseif ($site->site_url == 'EpicTravelGuide.com')
+		<meta name="google-site-verification" content="MEp4jIJmKsPp12t-haoya25iUKZ6m4rrp2oUVPMPmv4" />
+	@elseif ($site->site_url == 'HikeBikeBoat.com')
+		<meta name="google-site-verification" content="bG25umkXbLrLjb4gUdQM4dk59Ot5jrIIwlZKK6Jt1gY" />	
+	@elseif ($site->site_url == 'ScottHub.com')
+		<meta name="google-site-verification" content="qYo4zBjsZSY-XJByMrHDUDKO_mTKFZ9tJKO2WdQTmPo" />	
+	@endif
+@endif
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
