@@ -8,11 +8,17 @@
 	
 		<div class="form-group">
 			<span name="alt_text" class="">
+				
 				<p><a href="#" onclick="window.history.back();"><span style="font-size: 23px" class="glyphCustom glyphicon glyphicon-circle-arrow-left"></span></a></p>
-				{{trim($photo->alt_text)}}
+				
+				<p>{{trim($photo->alt_text)}}</p>
+				
 				@if (isset($photo->location) && strlen($photo->location) > 0)
-					&nbsp;&mdash;&nbsp;{{$photo->location}}
+					<p>Location: {{$photo->location}}</p>
 				@endif
+
+				<p>Photo Taken on {{date_format($photo->created_at, "l, F j, Y")}}.</p>
+				
 			</span>
 		</div>
 				

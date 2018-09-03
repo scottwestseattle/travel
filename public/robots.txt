@@ -1,2 +1,6 @@
 User-agent: *
 Disallow:
+Sitemap: http://grittytravel.com/sitemap-grittytravel.com.txt
+Sitemap: http://epictravelguide.com/sitemap-epictravelguide.com.txt
+Sitemap: http://hikebikeboat.com/sitemap-hikebikeboat.com.txt
+Sitemap: http://scotthub.com/sitemap-scotthub.com.txt

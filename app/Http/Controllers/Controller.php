@@ -1853,29 +1853,11 @@ class Controller extends BaseController
 		
 		return $records;
 	}
+
+    protected function getSiteMapEntries()
+    {
+		$urls = [];
 	
-    protected function makeSiteMap()
-    {	
-		$urls = [
-			'/',
-			'/login',
-			'/register',
-			'/password/reset',
-			'/about',
-			'/articles',
-			'/blogs/index',
-			'/galleries',
-			'/tours/index',
-			'/photos/sliders',
-		];
-		
-		$servers = [
-			'http://epictravelguide.com',
-			'http://grittytravel.com',
-			'http://hikebikeboat.com',
-			'http://scotthub.com',
-		];
-		
 		$q = '
 			SELECT *
 			FROM entries
@@ -1909,17 +1891,84 @@ class Controller extends BaseController
 					}
 				}
 			}
-			
+		}
+		
+		return $urls;
+	}
+
+    protected function getSiteMapPhotos()
+    {	
+		$urls = [];
+
+		$q = '
+			SELECT *
+			FROM photos
+			WHERE 1=1
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND parent_id = 0
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+		
+		if (isset($records))
+		{
+			foreach($records as $record)
+			{
+				$urls[] = '/photos/view/' . $record->id;	
+			}
+		}
+		
+		return $urls;
+	}
+	
+    protected function makeSiteMap()
+    {	
+		$urls = [
+			'/',
+			'/login',
+			'/register',
+			'/about',
+			'/articles',
+			'/blogs/index',
+			'/galleries',
+			'/tours/index',
+			'/photos/sliders',
+			'/tours/location/2',
+			'/tours/location/9',
+			'/tours/location/23',
+			'/tours/location/25',
+		];
+		
+		$servers = [
+			'http://grittytravel.com',
+			'http://epictravelguide.com',
+			'http://hikebikeboat.com',
+			'http://scotthub.com',
+		];
+		
+		$urls = array_merge($urls, Controller::getSiteMapPhotos());
+		$urls = array_merge($urls, Controller::getSiteMapEntries());
+		
+		if (isset($urls))
+		{
 			// write the sitemap file
 			$siteMap = [];
+			
 			foreach($servers as $server)
 			{
+				$filename = 'sitemap-' . parse_url($server, PHP_URL_HOST) . '.txt';
+				$myfile = fopen($filename, "w") or die("Unable to open file!");
+				
 				foreach($urls as $url)
 				{
-					$siteMap[] = $server . $url;
+					$line = $server . $url;
+					$siteMap[] = $line;
+					fwrite($myfile, utf8_encode($line . PHP_EOL));
 				}
-				
-				//break;
+
+				fclose($myfile);
 			}
 			
 			//dd($siteMap);

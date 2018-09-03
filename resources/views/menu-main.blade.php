@@ -76,7 +76,9 @@
 								<li><a href="/admin">Admin</a></li>
 								<li><a href="/articles">Articles</a></li>
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
-								<li><a href="/photos/sliders">Sliders</a></li>
+								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
+									<li><a href="/tours/index">Tours</a></li>
+								@endif
 								<li><a href="/visitors/">Visitors</a></li>
 
 								<li class="dropdown">
@@ -91,8 +93,11 @@
 										@endif
 										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/photos/indexadmin">Photos</a></li>
-										<li><a href="/sites/index">Sites</a></li>
 										<li><a href="/search/">Search</a></li>
+										<li><a href="/sites/index">Sites</a></li>
+										<li><a href="/sitemap/">Site Map</a></li>
+										<li><a href="/photos/sliders">Sliders</a></li>
+										<li><a href="/test/">Tests</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 											<li><a href="/tours/indexadmin">Tours</a></li>
 										@endif
