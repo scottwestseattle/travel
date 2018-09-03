@@ -341,10 +341,21 @@ class Entry extends Base
 			->where('published_flag', 1)
 			->where('approved_flag', 1)
 			->where('type_flag', ENTRY_TYPE_ARTICLE)
-			->where('display_date', $next ? '>=' : '<=', $display_date)
-			->where('id', '<>', $id)
+			->where('display_date', $next ? '=' : '=', $display_date)
+			->where('id', $next ? '>' : '<', $id)
 			->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC') . ', id ' . ($next ? 'ASC' : 'DESC '))			
 			->first();
+
+		if (!isset($record))
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('type_flag', ENTRY_TYPE_ARTICLE)
+				->where('display_date', $next ? '>' : '<', $display_date)
+				->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC') . ', id ' . ($next ? 'ASC' : 'DESC '))			
+				->first();
 
 		return $record;
 	}

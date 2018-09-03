@@ -255,7 +255,7 @@ class EntryController extends Controller
 			$backLinkText = 'Back to Article List';
 			$page_title = 'Article - ' . $page_title;
 			
-			if (false && isset($entry->display_date))
+			if (isset($entry->display_date))
 			{
 				$next = Entry::getNextPrevEntry($entry->display_date, $entry->id);
 				$prev = Entry::getNextPrevEntry($entry->display_date, $entry->id, /* next = */ false);

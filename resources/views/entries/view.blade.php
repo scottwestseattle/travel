@@ -36,8 +36,10 @@
 			@if (isset($prev))
 				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
 			@endif
-			@if (isset($record->parent_id))
+			@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">Back to Blog<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
+			@elseif($record->type_flag == ENTRY_TYPE_ARTICLE)
+				<a href="/articles"><button type="button" class="btn btn-blog-nav">Back to Articles<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 			@endif
 			@if (isset($next))
 				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
