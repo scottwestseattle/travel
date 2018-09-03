@@ -1970,11 +1970,7 @@ class Controller extends BaseController
 
 				fclose($myfile);
 			}
-			
-			//dd($siteMap);
 		}
-		
-		//dd($urls);
 		
 		return $siteMap;
 	}

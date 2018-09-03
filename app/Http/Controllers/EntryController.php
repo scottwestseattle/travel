@@ -574,6 +574,7 @@ class EntryController extends Controller
 		 
 		$locations = Location::select()
 			->where('location_type', '>=', LOCATION_TYPE_CITY)
+			->orWhere('location_type', LOCATION_TYPE_COUNTRY)
 			->orderByRaw('locations.name ASC')
 			->get();
 
