@@ -57,11 +57,11 @@
 		<h1 name="title" class="">{{$record->title }}</h1>
 		<strong>
 
-		@if (isset($record->location))
+		@if (isset($record->location) && is_string($record->location))
 			@if ($record->location_type != LOCATION_TYPE_COUNTRY)
-				<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+				{{$record->location}}, {{$record->location_parent}}
 			@else
-				<tr><td>{{$record->location}}</td></tr>
+				{{$record->location}}
 			@endif
 		@endif
 		
