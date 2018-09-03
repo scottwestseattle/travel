@@ -6,6 +6,7 @@
 /public/img/entries
 /public/img/receipts
 /public/img/sliders
+/public/sitemap-*.txt
 /storage/*.key
 /.idea
 /.vagrant
