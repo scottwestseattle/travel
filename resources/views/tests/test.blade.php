@@ -4,20 +4,15 @@
 
 <div class="page-size container">
                
-@if (isset($sitemap))
-<h1>Site Map ({{count($records)}})</h1>
-@else
 <h1>Test ({{count($records)}})</h1>
-@endif
 
 	<form method="POST" action="/test">
 		<div class="form-control-big">	
 
 			@if (isset($test_server))
-			<input type="hidden" name="test_server" value="{{$test_server}}">
+				<input type="hidden" name="test_server" value="{{$test_server}}">
 			@endif
 			
-			@if (!isset($sitemap))
 			<button onclick="check(event);">Check All</button>
 			<button onclick="check(event, 1)">Check First Half</button>
 			<button onclick="check(event, 2)">Check Last Half</button>
@@ -30,33 +25,22 @@
 
 			<table class="table">
 				<tr><th>Select</th><th>URL</th><th>Expected</th><th>Results</th></tr>
-			@else
-			<table class="table">
-			@endif
 					
-			@for ($i = 0; $i < count($records); $i++)
-				@if (!$executed || $records[$i][2] != '')
+			<?php $count = 0; ?>
+			@foreach ($records as $record)
 				<tr>
-					@if (isset($sitemap))
-						<td><a target="_blank" href="{{$records[$i]}}">{{$records[$i]}}</a></td>
-						<td></td>
-						<td></td>
-					@else
-						<td><input type="checkbox" name="test{{$i}}" id="test{{$i}}" style="margin:0;padding:0;" /></td>
-						<td><a target="_blank" href="{{$test_server}}{{$records[$i][1]}}">{{$test_server}}{{$records[$i][1]}}</a></td>
-						<td>{{$records[$i][0]}}</td>
-						<td>{{$records[$i][2]}}</td>
-					@endif
+					<td><input type="checkbox" name="test{{$count}}" id="test{{$count}}" style="margin:0;padding:0;" /></td>
+					<td><a target="_blank" href="{{$test_server}}{{$record[1]}}">{{$test_server}}{{$record[1]}}</a></td>
+					<td>{{$record[0]}}</td>
+					<td>{{$record[2]}}</td>
 				</tr>
-				@endif
-			@endfor
+				<?php $count++; ?>
+			@endforeach
 			</table>
 			
-			@if (!isset($sitemap))
 			<div style="margin:20px 0;">
 				<button type="submit" name="update" class="btn btn-primary">Run Tests</button>
 			</div>	
-			@endif
 			
 		</div>			
 			{{ csrf_field() }}
@@ -66,8 +50,8 @@
 
 @endsection
 
-@if (!isset($sitemap))
 <script>
+
 function check(event, checkFlag = 0)
 {		
 	event.preventDefault();
@@ -87,7 +71,8 @@ function check(event, checkFlag = 0)
 		count /= 2;
 
 		for (i = 0; i < count; i++) {
-		  document.getElementById('test' + i).checked = true;
+		  var e = document.getElementById('test' + i);
+		  e.checked = true;
 		}
 	}
 	else if (checkFlag == 2)
@@ -115,4 +100,3 @@ function check(event, checkFlag = 0)
 }
 
 </script>
-@endif

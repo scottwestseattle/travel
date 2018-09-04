@@ -33,12 +33,13 @@ Route::get('/confirm', 'FrontPageController@confirm');
 Route::get('/spy', 'FrontPageController@spy');
 Route::get('/spyoff', 'FrontPageController@spyoff');
 Route::get('/gallery', 'EntryController@gallery');
-Route::get('/test', 'EntryController@test')->middleware('auth');
-Route::post('/test', 'EntryController@test')->middleware('auth');
 Route::get('/first', 'FrontPageController@first');
 Route::get('/search', 'EntryController@search');
 Route::post('/search', 'EntryController@search');
 Route::get('/sitemap', 'EntryController@sitemap')->middleware('auth');
+Route::get('/test', 'TestController@test')->middleware('auth');
+Route::post('/test', 'TestController@test')->middleware('auth');
+
 
 // crypt / encrypt
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
@@ -257,8 +258,8 @@ Route::group(['prefix' => 'sites'], function () {
 Route::group(['prefix' => 'frontpage'], function () {
 	
 	Route::get('/index', 'FrontPageController@index');
-	Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');
-	Route::post('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');
+	Route::get('/visitors', 'FrontPageController@visitors')->middleware('auth');
+	Route::post('/visitors', 'FrontPageController@visitors')->middleware('auth');
 	Route::get('/admin', 'FrontPageController@admin')->middleware('auth');
 
 });
