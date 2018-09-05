@@ -29,8 +29,9 @@
 
 			<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 
-			<tr><td>Content Photos:</td><td>{{$stats['photos']}}</td></tr>
-			<tr><td>Header Photos:</td><td>{{$stats['sliders']}}</td></tr>
+			<tr><td>Content Photos:</td><td>{{$stats['photos_content']}}</td></tr>
+			<tr><td>Gallery Photos:</td><td>{{$stats['photos_gallery']}}</td></tr>
+			<tr><td>Featured Photos:</td><td>{{$stats['sliders']}}</td></tr>
 			<tr><td><b>Total Photos:</b></td><td><b>{{$stats['total-photos']}}</b></td></tr>
 		</tbody>
 	</table>

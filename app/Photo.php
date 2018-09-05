@@ -50,19 +50,19 @@ class Photo extends Base
 		return $records;
 	}
 
-	static protected function getCount()
+	static protected function getCount($type)
 	{
 		$q = '
 			SELECT count(photos.id) as count
 			FROM photos
-			JOIN entries ON entries.id = photos.parent_id AND entries.published_flag = 1 AND entries.approved_flag = 1 AND entries.deleted_flag = 0
+			JOIN entries ON entries.id = photos.parent_id AND entries.published_flag = 1 AND entries.approved_flag = 1 AND entries.deleted_flag = 0 AND entries.type_flag = ?
 			WHERE 1=1
 				AND photos.site_id = ?
 				AND photos.deleted_flag = 0
 		';
 				
 		// get the list with the location included
-		$record = DB::select($q, [SITE_ID]);
+		$record = DB::select($q, [$type, SITE_ID]);
 		
 		return intval($record[0]->count);
 	}
@@ -87,8 +87,13 @@ class Photo extends Base
 	static public function getStats()
 	{
 		$stats = [];
+
+		$stats['photos_article'] = Photo::getCount(ENTRY_TYPE_ARTICLE);
+		$stats['photos_blog'] = Photo::getCount(ENTRY_TYPE_BLOG);
+		$stats['photos_post'] = Photo::getCount(ENTRY_TYPE_BLOG_ENTRY);
+		$stats['photos_tour'] = Photo::getCount(ENTRY_TYPE_TOUR);
+		$stats['photos_gallery'] = Photo::getCount(ENTRY_TYPE_GALLERY);
 		
-		$stats['photos'] = Photo::getCount();
 		$stats['sliders'] = Photo::getCountSliders();
 		
 		return $stats;

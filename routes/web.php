@@ -392,6 +392,7 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
 	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
 	Route::get('/view/{photo}', 'PhotoController@view');
+	Route::get('/slideshow/{entry}', 'PhotoController@slideshow');
 
 	// add/create
 	Route::get('/add/{type_flag}/{parent_id?}','PhotoController@add')->middleware('auth');

@@ -141,8 +141,11 @@ class FrontPageController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$noBots = isset($request->nobots);
-
+		$showBots = false;
+		
+		if (isset($request->showbots))
+			$showBots = true;
+			
 		$dates = Controller::getDateFilter($request, false, false);
 			 
 		$filter = Controller::getFilter($request, /* today = */ true);		
@@ -170,6 +173,10 @@ class FrontPageController extends Controller
 				
 				if (stripos($agent, 'Googlebot') !== FALSE)
 					$new = 'GoogleBot';
+				else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
+					$new = 'GoogleUserContent';
+				else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
+					$new = 'GoogleSiteVerification';
 				else if (stripos($agent, 'bingbot') !== FALSE)
 					$new = 'BingBot';
 				else if (stripos($agent, 'mediapartners') !== FALSE)
@@ -182,16 +189,18 @@ class FrontPageController extends Controller
 					$new = 'YandexBot';					
 				else if (stripos($agent, 'alphaseobot') !== FALSE)
 					$new = 'AlphaSeoBot';
-				else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
-					$new = 'GoogleSiteVerification';
 				else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
 					$new = 'AmazonAWS';
-
-				if ($noBots && isset($new))
-					continue;
+				else if (stripos($record->referrer, 'localhost') !== FALSE)
+					$new = 'localhost';
 					
 				if (isset($new))
+				{
+					if (!$showBots)
+						continue;
+
 					$record->user_agent = $new;
+				}
 					
 				$out[$count]['date'] = $record->updated_at;
 				$out[$count]['id'] = $record->record_id;
@@ -212,7 +221,7 @@ class FrontPageController extends Controller
 			'records' => $records,
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
-			'noBots' => $noBots,
+			'bots' => $showBots,
 		]);
 
 						
@@ -326,8 +335,16 @@ class FrontPageController extends Controller
 		$photoStats = Photo::getStats();
 		
 		$stats = array_merge($entryStats, $photoStats);
+		
+		$stats['photos_content'] 
+			= $stats['photos_article']
+			+ $stats['photos_blog']
+			+ $stats['photos_post']
+			+ $stats['photos_tour']
+			;
+
 		$stats['total-pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog-entries'] + $stats['tours'];
-		$stats['total-photos'] = $stats['sliders'] + $stats['photos']; 
+		$stats['total-photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
 		
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,

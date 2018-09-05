@@ -681,6 +681,129 @@ class PhotoController extends Controller
 		return redirect($redirect);
 	}
 	
+    public function permalink(Request $request, $permalink)
+    {		
+		$next = null;
+		$prev = null;
+		$permalink = trim($permalink);
+		
+		// get the entry the Laravel way so we can access the gallery photo list
+		$entry = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('permalink', $permalink)
+			->first();
+		$gallery = isset($entry) ? $entry->photos : null;
+		
+		// get the entry the mysql way so we can have all the main photo and location info
+		$entry = Entry::getEntry($permalink);
+			
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+						
+		if (isset($entry))
+		{
+			$entry->description = nl2br($entry->description);
+			$entry->description = $this->formatLinks($entry->description);		
+		}
+		else
+		{
+			$msg = 'Photo Permalink Not Found: ' . $permalink;
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
+            return redirect('/entries/index');
+		}
+		
+		$page_title = $entry->title;
+		$backLink = null;
+		$backLinkText = null;
+		
+		$photos = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', '<>', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+			
+		$vdata = $this->getViewData([
+			'record' => $photo, 
+			'next' => $next,
+			'prev' => $prev,
+		], 'Photo Title');
+		
+		return view('entries.view', $vdata);
+	}
+	
+    public function slideshow(Request $request, Entry $entry)
+    {		
+		$next = null;
+		$prev = null;
+		$photos = [];
+		if (isset($entry))
+		{
+			$gallery = isset($entry) ? $entry->photos : null;
+			foreach($gallery as $photo)
+			{
+				$photos[] = $photo;
+			}
+
+			$p = Photo::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('parent_id', '=', $entry->id)
+				->orderByRaw('id ASC')
+				->get();
+			foreach($p as $photo)
+			{
+				$photos[] = $photo;
+			}
+		}
+		else
+		{
+			// log error			
+			$msg = 'SlideShow Not Found for entry: ' . $entry->title;
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
+            return redirect('/articles');
+		}
+		
+if (false)
+{
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+						
+		if (isset($entry))
+		{
+			$entry->description = nl2br($entry->description);
+			$entry->description = $this->formatLinks($entry->description);		
+		}
+		else
+		{
+
+		}
+}
+
+		$backLink = null;
+		$backLinkText = null;
+			
+		$vdata = $this->getViewData([
+			'record' => $entry,
+			'photo' => $photos[0], 
+			'next' => $next,
+			'prev' => $prev,
+		], 'Photo Slideshow');
+		
+		return view('photos.slideshow', $vdata);
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// Privates
 	//////////////////////////////////////////////////////////////////////////////////////////

@@ -124,7 +124,8 @@
 	@if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PHOTOS</h3>
+				<h3>PHOTOS <!-- a style="font-size:.65em;" href="/photos/slideshow/{{$record->id}}">(Slideshow)</a --></h3>
+				
 			</div>
 		</div>
 			
