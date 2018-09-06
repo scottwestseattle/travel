@@ -71,6 +71,7 @@ foreach($photos as $photo)
 	
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		<h1 name="title" class="">{{$record->title}} ({{count($photos)}})</h1>
+		<p><a href="/photos/slideshow/{{$record->id}}">Slide Show</a></p>
 		@foreach($photos as $photo)		
 			<?php 
 				$title = $photo->filename;  // just in case the others are empty

@@ -22,8 +22,7 @@ class GalleryController extends Controller
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records, 
-			'page_title' => 'Photo Galleries',
-		]));
+		], 'Photo Galleries'));
     }
 	
     public function indexadmin(Request $request)
@@ -96,8 +95,7 @@ class GalleryController extends Controller
 			'record' => $entry, 
 			'photos' => $photos,
 			'photo_path' => $photo_path,
-			'page_title' => 'Photo Gallery of ' . $entry->title,
-		]));
+		], 'Photo Gallery of ' . $entry->title));
 	}
 		
 	

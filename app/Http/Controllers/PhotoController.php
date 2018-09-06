@@ -799,9 +799,10 @@ if (false)
 			'photo' => $photos[0], 
 			'next' => $next,
 			'prev' => $prev,
+			'path' => PHOTO_ENTRY_PATH . $entry->id . '/',
 		], 'Photo Slideshow');
 		
-		return view('photos.slideshow', $vdata);
+		return view('photos.view', $vdata);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
