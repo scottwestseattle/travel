@@ -1956,6 +1956,7 @@ class Controller extends BaseController
 			
 			foreach($servers as $server)
 			{
+				// file name looks like: sitemap-domain.com.txt
 				$filename = 'sitemap-' . parse_url($server, PHP_URL_HOST) . '.txt';
 				$myfile = fopen($filename, "w") or die("Unable to open file!");
 				

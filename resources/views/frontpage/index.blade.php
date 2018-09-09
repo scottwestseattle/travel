@@ -289,6 +289,12 @@ $sectionCount = 0;
 		@endforeach			
 	</div>
 	
+	<div class='text-center'>
+		<a href="/galleries">
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Galleries</button>
+		</a>
+	</div>
+	
 	<span id="debug"></span>
 		
 </div><!-- container -->

@@ -95,7 +95,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 10, /* all_sites = */ true);
 		
 		//
 		// save visitor stats
