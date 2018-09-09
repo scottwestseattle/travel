@@ -323,7 +323,7 @@ class GalleryController extends Controller
 			->where('id', $entry_id)
 			->first();
 			
-		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY);
+		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, false);
 		
 		$vdata = $this->getViewData([
 			'entry' => $entry,
@@ -433,17 +433,25 @@ class GalleryController extends Controller
 
 			$path_from = $info_from['filepath'];
 			$path_to = $info_to['filepath'];
-
+			
 			// check for unique filename in the destination folder
 			$filename = Controller::getUniqueFilename($path_to, $photo->filename);
 			$duplicate = ($filename != $photo->filename); // filename had to be changed to make it unique
 			
 			$path_from = Controller::appendPath($path_from, $photo->filename);
+			$folder_to = $path_to; // save the folder in case we have to create it
 			$path_to = Controller::appendPath($path_to, $filename);
 			
 			try
 			{
 				//dd($path_from . ' - ' . $path_to);
+				
+				// Stop 0: make sure the destination folder exists
+				if (!is_dir($folder_to))
+				{
+					// make the folder with read/execute for everybody
+					mkdir($folder_to, 0755);					
+				}
 				
 				// Step 1: move the file
 				rename($path_from, $path_to);

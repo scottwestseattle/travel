@@ -1779,8 +1779,6 @@ class Controller extends BaseController
 			JOIN entries 
 				ON entries.id = photos.parent_id 
 				AND entries.deleted_flag = 0 
-				AND entries.published_flag = 1 
-				AND entries.approved_flag = 1
 			WHERE 1=1
 				AND length(filename) < 20
 				AND photos.site_id = ? 

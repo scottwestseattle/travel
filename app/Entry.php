@@ -77,7 +77,7 @@ class Entry extends Base
 	}
 	
 	// get all entries for specified type
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false, $orderAlpha = false)
 	{
 		if (!isset($type_flag))
 			return(Entry::getEntries($approved_flag));
@@ -124,8 +124,20 @@ class Entry extends Base
 				, photo_gallery, photo_title_gallery, photo_path_gallery
 				, location, location_parent, location_type
 				, blog_title, blog_id
-			ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC
 		';
+		
+		if ($orderAlpha)
+		{
+			$q .= '
+				ORDER BY entries.title ASC 
+			';
+		}
+		else
+		{
+			$q .= '
+				ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC
+			';
+		}
 		
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';
