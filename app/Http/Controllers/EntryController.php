@@ -836,17 +836,12 @@ class EntryController extends Controller
 
     public function sitemap(Request $request)
     {			
-		//$server = 'http://epictravelguide.com';
-		//$server = 'http://localhost';
-		//$server = 'http://grittytravel.com';
-		//$server = 'http://hikebikeboat.com';
-		$server = 'http://scotthub.com';
-
-		$tests = $this->makeSiteMap();
+		$siteMap = $this->makeSiteMap();
 		
 		return view('entries.sitemap', $this->getViewData([
-			'records' => $tests,
-			'test_server' => $server,
+			'records' => $siteMap['sitemap'],
+			'server' => $siteMap['server'],
+			'filename' => $siteMap['filename'],
 			'executed' => null,
 			'sitemap' => true,
 		]));

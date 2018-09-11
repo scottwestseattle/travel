@@ -6,22 +6,21 @@
                
 <h1>Site Map ({{count($records)}})</h1>
 
-	<form method="POST" action="/test">
-		<div class="form-control-big">	
+	<div class="form-control-big">	
 
-			<table class="table">
-					
+		<p>Site Map written to file: {{$filename}}</p>
+	
+		<table class="table">
+				
 			@foreach ($records as $record)
-				<tr>
-					<td><a target="_blank" href="{{$record}}">{{$record}}</a></td>
-				</tr>
+			<tr>
+				<td><a target="_blank" href="{{$record}}">{{$record}}</a></td>
+			</tr>
 			@endforeach
-			
-			</table>
-			
-		</div>			
-			{{ csrf_field() }}
-	</form>	
+		
+		</table>
+		
+	</div>			
 	
 </div>
 

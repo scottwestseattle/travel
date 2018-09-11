@@ -1938,14 +1938,7 @@ class Controller extends BaseController
 			'/tours/location/23',
 			'/tours/location/25',
 		];
-		
-		$servers = [
-			'http://grittytravel.com',
-			'http://epictravelguide.com',
-			'http://hikebikeboat.com',
-			'http://scotthub.com',
-		];
-		
+
 		$urls = array_merge($urls, Controller::getSiteMapPhotos());
 		$urls = array_merge($urls, Controller::getSiteMapEntries());
 		
@@ -1954,23 +1947,29 @@ class Controller extends BaseController
 			// write the sitemap file
 			$siteMap = [];
 			
-			foreach($servers as $server)
+			$server = $this->domainName;
+			
+			// file name looks like: sitemap-domain.com.txt
+			$filename = 'sitemap-' . $server . '.txt';
+			$myfile = fopen($filename, "w") or die("Unable to open file!");
+			
+			$server = 'http://' . $server;
+			
+			foreach($urls as $url)
 			{
-				// file name looks like: sitemap-domain.com.txt
-				$filename = 'sitemap-' . parse_url($server, PHP_URL_HOST) . '.txt';
-				$myfile = fopen($filename, "w") or die("Unable to open file!");
-				
-				foreach($urls as $url)
-				{
-					$line = $server . $url;
-					$siteMap[] = $line;
-					fwrite($myfile, utf8_encode($line . PHP_EOL));
-				}
-
-				fclose($myfile);
+				$line = $server . $url;
+				$siteMap[] = $line;
+				fwrite($myfile, utf8_encode($line . PHP_EOL));
 			}
+
+			fclose($myfile);
 		}
 		
-		return $siteMap;
+		$rc = [];
+		$rc['sitemap'] = $siteMap;
+		$rc['filename'] = $filename;
+		$rc['server'] = $server;
+		
+		return $rc;
 	}
 }
