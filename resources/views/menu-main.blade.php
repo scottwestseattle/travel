@@ -94,6 +94,7 @@
 										<li><a href="/locations/indexadmin">Locations</a></li>
 										<li><a href="/photos/indexadmin">Photos</a></li>
 										<li><a href="/search/">Search</a></li>
+										<li><a href="/sections">Sections</a></li>
 										<li><a href="/sites/index">Sites</a></li>
 										<li><a href="/sitemap/">Site Map</a></li>
 										<li><a href="/photos/sliders">Sliders</a></li>

@@ -77,10 +77,13 @@ class Entry extends Base
 	}
 	
 	// get all entries for specified type
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false, $orderAlpha = false)
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $orderAlpha = false)
 	{
 		if (!isset($type_flag))
 			return(Entry::getEntries($approved_flag));
+		
+		// if site_id is set use it, otherwise use the old SITE_ID constant for backwards compatibility
+		$site_id = isset($site_id) && $site_id != false ? $site_id : SITE_ID;
 		
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date, entries.site_id  
@@ -110,11 +113,9 @@ class Entry extends Base
 			WHERE 1=1
 			AND entries.deleted_flag = 0
 			AND entries.type_flag = ?
+			AND entries.site_id = ?
 		';
-		
-		if (!$all_sites)
-			$q .= ' AND entries.site_id = ' . SITE_ID . ' ';
-		
+				
 		if ($approved_flag)
 			$q .= ' AND entries.published_flag = 1 AND entries.approved_flag = 1 ';
 		
@@ -142,7 +143,7 @@ class Entry extends Base
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';
 				
-		$records = DB::select($q, [$type_flag]);
+		$records = DB::select($q, [$type_flag, $site_id]);
 		
 		return $records;
 	}

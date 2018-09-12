@@ -1010,6 +1010,11 @@ class Controller extends BaseController
 		
 		return $ret;
 	}
+
+    protected function getSiteId()
+    {
+		return $this->getSite()->id;
+	}
 	
     protected function getSite()
     {		
@@ -1123,7 +1128,11 @@ class Controller extends BaseController
 		
 		try 
 		{
+			$site_id = $this->getSiteId();
+			
+			// old way:
 			$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION);
+			// new way: $sections = $this->getEntriesByType(ENTRY_TYPE_SECTION, /* approved = */ true, /* limit = */ 0, $site_id);
 		}
 		catch (\Exception $e)
 		{
@@ -1471,9 +1480,9 @@ class Controller extends BaseController
 		}
 	}
 	
-	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $all_sites = false)
+	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null)
 	{
-		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $all_sites);
+		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $site_id);
 		
 		$records = $this->fixPhotoPaths($records);
 		

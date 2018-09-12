@@ -46,7 +46,7 @@ class EntryController extends Controller
     {		
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, false, 0, true);
+		$records = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, /* approved = */ false); // get all because they are displayed by super admin
 			
 		$vdata = $this->getViewData([
 			'records' => $records,

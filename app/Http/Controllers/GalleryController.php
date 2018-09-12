@@ -18,7 +18,7 @@ class GalleryController extends Controller
     {				
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_GALLERY);
 		
-		$records = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 0, /* all_sites = */ true);
+		$records = $this->getEntriesByType(ENTRY_TYPE_GALLERY);
 
 		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records, 
@@ -323,7 +323,7 @@ class GalleryController extends Controller
 			->where('id', $entry_id)
 			->first();
 			
-		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, false);
+		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, /* published = */ false);
 		
 		$vdata = $this->getViewData([
 			'entry' => $entry,

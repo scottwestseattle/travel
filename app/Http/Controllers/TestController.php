@@ -49,10 +49,10 @@ class TestController extends Controller
 		$executed = null;
 		
 		//$server = 'http://epictravelguide.com';
-		//$server = 'http://localhost';
-		//$server = 'http://grittytravel.com';
+		$server = 'http://localhost';
+		$server = 'http://grittytravel.com';
 		//$server = 'http://hikebikeboat.com';
-		$server = 'http://scotthub.com';
+		//$server = 'http://scotthub.com';
 
 		$tests = array_merge($this->tests, TestController::getTestEntries());
 

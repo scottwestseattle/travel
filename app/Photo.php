@@ -103,7 +103,7 @@ class Photo extends Base
     {
 		$array = [];
 
-		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, false, 0, false, true);
+		$records = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ false, /* limit = */ 0, /* site_id = */ null, /* orderAlpha = */ true);
 
 		if (isset($records) && count($records) > 0)
 		{

@@ -57,8 +57,7 @@ class FrontPageController extends Controller
 		//
 		// get tour info
 		//
-		//$tours = $this->getTourIndex(/* $allSites = */ true);
-		$tours = $this->getEntriesByType(ENTRY_TYPE_TOUR, /* approved_flag = */ true, /* limit = */ 0, /* allSites = */ true);
+		$tours = $this->getEntriesByType(ENTRY_TYPE_TOUR);
 
 		$tour_count = isset($tours) ? count($tours) : 0;
 
@@ -95,7 +94,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved only = */ true, /* limit = */ 10, /* all_sites = */ true);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ 10);
 		
 		//
 		// save visitor stats

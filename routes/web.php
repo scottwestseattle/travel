@@ -45,6 +45,30 @@ Route::post('/test', 'TestController@test')->middleware('auth');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// sections
+Route::group(['prefix' => 'sections'], function () {
+	
+	Route::get('/', 'SectionController@index')->middleware('auth');
+	Route::get('/view/{entry}', 'SectionController@view')->middleware('auth');
+	Route::get('/show/{entry}', 'SectionController@show')->middleware('auth');
+		
+	// publish
+	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
+
+	// add/create
+	Route::get('/add','SectionController@add')->middleware('auth');
+	Route::post('/create','EntryController@create')->middleware('auth');
+
+	// edit/update
+	Route::get('/edit/{entry}','SectionController@edit')->middleware('auth');
+	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');		
+});
+
 // Galleries
 Route::group(['prefix' => 'galleries'], function () {
 
