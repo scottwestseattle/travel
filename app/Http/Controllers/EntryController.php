@@ -154,7 +154,11 @@ class EntryController extends Controller
         			
 		$entry = new Entry();
 		
-		$entry->site_id = SITE_ID;
+		if (true) // new way
+			$entry->site_id = isset($request->site_id) ? $request->site_id : SITE_ID;
+		else // old way
+			$entry->site_id = SITE_ID;
+		
 		$entry->user_id = Auth::id();
 		$entry->type_flag = $request->type_flag;
 
@@ -564,7 +568,8 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			return redirect(route('entry.permalink', [$entry->permalink]));
+			//return redirect(route('entry.permalink', [$entry->permalink]));
+			return redirect('/entries/show/' . $entry->id);
 		}
 		else
 		{

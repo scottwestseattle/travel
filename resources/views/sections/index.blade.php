@@ -20,7 +20,7 @@
 					<td style="width:20px;"><a href='/sections/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-asterisk"></span></a></td>
 					<td style="width:20px;"><a href='/sections/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td>
-						<a href="/sections/show/{{$record->id}}">{{$record->title}}</a>
+						<a href="/sections/show/{{$record->id}}">{{$record->title}} ({{$record->permalink}})</a>
 						
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>

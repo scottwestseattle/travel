@@ -8,6 +8,7 @@
 				<td style="width:40px;"><a href='/sections/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td style="width:40px;"><a href='/sections/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				<td style="width:40px;"><a href='/photos/sections/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+				<td style="width:40px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 			@endif
 		</tr></table>
 	</div>

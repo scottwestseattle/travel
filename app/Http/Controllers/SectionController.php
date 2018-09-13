@@ -20,7 +20,8 @@ class SectionController extends Controller
              return redirect('/');
 		
 		$entries = Entry::select()
-			->where('site_id', SITE_ID)
+			->where('site_id', $this->getSiteId())
+			//->where('site_id', SITE_ID)
 			->where('type_flag', ENTRY_TYPE_SECTION)
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
@@ -43,6 +44,7 @@ class SectionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request),
 			'type_flag' => ENTRY_TYPE_SECTION,
+			'site_id' => $this->getSiteId(),
 		]);
 		
 		return view('sections.add', $vdata);

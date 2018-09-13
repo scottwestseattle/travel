@@ -1130,9 +1130,17 @@ class Controller extends BaseController
 		{
 			$site_id = $this->getSiteId();
 			
-			// old way:
-			$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION);
-			// new way: $sections = $this->getEntriesByType(ENTRY_TYPE_SECTION, /* approved = */ true, /* limit = */ 0, $site_id);
+			$new_way = false;
+			if ($new_way)
+			{
+				// new way: 
+				$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION, /* approved = */ true, /* limit = */ 0, $site_id);
+			}
+			else
+			{
+				// old way:
+				$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION);
+			}
 		}
 		catch (\Exception $e)
 		{
