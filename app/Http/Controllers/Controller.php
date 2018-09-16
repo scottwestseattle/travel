@@ -339,6 +339,9 @@ class Controller extends BaseController
 		$this->viewData['title'] = $this->title;
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
 		$this->viewData['domainName'] = $this->domainName;
+		
+		if ($this->domainName == 'localhost')
+			$this->viewData['localhost'] = true;
 
 		if (isset($page_title))
 		{
@@ -394,9 +397,7 @@ class Controller extends BaseController
 		// orig: https://www.google.com/search?q=$1.$2,$3.$4
 		$link = 'https://maps.google.com/maps?q=$1.$2,$3.$4'; //new
 		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: $1.$2, $3.$4</a>', $text);
-		
-		//dd($text);
-		
+				
 		return $text;
 	}
 	
@@ -434,22 +435,8 @@ class Controller extends BaseController
 
     static protected function getPhotoPathRemote($subfolder, $site_id)
     {		
-		if ($site_id == SITE_ID)
-		{
-			// nothing to do since the photo is local to the original site
-			$path = $subfolder;
-		}
-		else
-		{
-			$path = PHOTO_SERVER;
-			//$path = 'http://localhost/';
-			
-			if (strlen($subfolder) > 0)
-				$path .= $subfolder;
-				
-			if (!Controller::endsWith($path, '/'))
-				$path .= '/';
-		}
+		// doesn't do anything anymore
+		$path = $subfolder;
 					
 		return $path;
 	}
@@ -1029,9 +1016,7 @@ class Controller extends BaseController
 				$this->site = Site::select()
 					->where('site_url', strtolower($this->domainName))
 					->where('deleted_flag', 0)
-					->first();
-					
-				//dd($this->site);	
+					->first();					
 			}
 			else
 			{
@@ -1115,7 +1100,6 @@ class Controller extends BaseController
 
     static protected function fixSiteInfo($text, $site)
     {
-		//dd($site);
 		$text = str_replace('[[site-name]]', $site->site_name, $text);
 		$text = str_replace('[[site-email]]', $site->email, $text);
 			
@@ -1134,7 +1118,7 @@ class Controller extends BaseController
 			if ($new_way)
 			{
 				// new way: 
-				$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION, /* approved = */ true, /* limit = */ 0, $site_id);
+				$sections = $this->getEntriesByType(ENTRY_TYPE_SECTION, /* approved = */ true, /* limit = */ 0, $site_id, /* makeThumbnail = */ false);
 			}
 			else
 			{
@@ -1232,7 +1216,7 @@ class Controller extends BaseController
 		$years = [];		
 		for ($i = 2010; $i <= 2050; $i++)
 		{
-			if ($i > intval(date('Y'))) // only go up to the current year
+			if ($i > (intval(date('Y')) + 1)) // only go up to next year
 				break;
 				
 			$years[$i] = $i;	
@@ -1450,12 +1434,12 @@ class Controller extends BaseController
 		return $path . $filename;
 	}
 
-	private function fixPhotoPaths($records)
+	private function fixPhotoPaths($records, $makeThumbnail = true)
 	{
 		// fix-up the photo paths
 		foreach($records as $record)
 		{
-			$this->fixPhotoPath($record, /* $makeThumbnail = */ true);
+			$this->fixPhotoPath($record, $makeThumbnail);
 		}
 
 		return $records;
@@ -1488,11 +1472,11 @@ class Controller extends BaseController
 		}
 	}
 	
-	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null)
+	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $makeThumbnail = true)
 	{
 		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $site_id);
 		
-		$records = $this->fixPhotoPaths($records);
+		$records = $this->fixPhotoPaths($records, $makeThumbnail);
 		
 		return $records;
 	}
@@ -1504,8 +1488,6 @@ class Controller extends BaseController
 		// fix-up the photo paths
 		foreach($records as $record)
 		{
-			//dd($record);
-			
 			if (isset($record->photo_gallery))
 			{
 				$record->photo = $record->photo_gallery;
@@ -1600,8 +1582,6 @@ class Controller extends BaseController
 	
 	static protected function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
 	{	
-		//dd($toPath);
-		
 		if (!is_dir($toPath)) 
 		{
 			mkdir($toPath, 0755);// make the folder with read/execute for everybody
@@ -1805,9 +1785,7 @@ class Controller extends BaseController
 		';
 
 		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
-			
-		//dd($records);
-		
+					
 		return $records;
 	}
 	
@@ -1825,8 +1803,6 @@ class Controller extends BaseController
 
 		$records = DB::select($q, [SITE_ID]);
 			
-		//dd($records);
-		
 		return $records;
 	}
 	
@@ -1844,9 +1820,7 @@ class Controller extends BaseController
 		';
 
 		$records = DB::select($q, [SITE_ID]);
-			
-		//dd($records);
-		
+					
 		return $records;
 	}
 	
@@ -1863,9 +1837,7 @@ class Controller extends BaseController
 		//AND type_flag in (2,3,4,5,8)
 
 		$records = DB::select($q, [SITE_ID]);
-			
-		//dd($records);
-		
+					
 		return $records;
 	}
 
