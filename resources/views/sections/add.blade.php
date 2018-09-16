@@ -14,6 +14,7 @@
 			<input type="hidden" name="type_flag" value="{{$type_flag}}">
 			<input type="hidden" name="site_id" value="{{$site_id}}">
 			<input type="hidden" name="approved_flag" value="1">
+			<input type="hidden" name="referer" value="{{$referer}}">
 	
 			<div class="entry-title-div">
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />
@@ -34,6 +35,10 @@
 			
 			<div class="entry-description-div">
 				<textarea rows="12" name="description" class="form-control"  placeholder="Optional: Extra Information" ></textarea>	
+			</div>
+
+			<div class="entry-description-div">
+				<textarea rows="12" name="description_short" class="form-control"  placeholder="Optional: More Extra Information" ></textarea>	
 			</div>
 			
 			<div style="margin:20px 0;">

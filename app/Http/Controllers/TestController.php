@@ -97,9 +97,7 @@ class TestController extends Controller
 		';
 
 		$records = DB::select($q, [SITE_ID]);
-			
-		//dd($records);
-		
+
 		$tests = [];
 		
 		foreach($records as $record)
@@ -119,8 +117,7 @@ class TestController extends Controller
 				}
 			}
 		}
-		//dd($tests);
-		
+	
 		return $tests;
 	}
 	
@@ -152,7 +149,6 @@ class TestController extends Controller
 		try
 		{
 			$text = $this->file_get_contents_curl($url);
-			//dd($url . ': ' . $text);
 			$results['results'] = strpos($text, $expected) === false ? 'EXPECTED NOT FOUND' : 'success';
 		}
 		catch (\Exception $e) 

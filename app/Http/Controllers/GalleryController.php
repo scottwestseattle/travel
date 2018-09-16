@@ -443,9 +443,7 @@ class GalleryController extends Controller
 			$path_to = Controller::appendPath($path_to, $filename);
 			
 			try
-			{
-				//dd($path_from . ' - ' . $path_to);
-				
+			{				
 				// Stop 0: make sure the destination folder exists
 				if (!is_dir($folder_to))
 				{

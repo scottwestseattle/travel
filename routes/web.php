@@ -53,7 +53,7 @@ Route::group(['prefix' => 'sections'], function () {
 	Route::get('/show/{entry}', 'SectionController@show')->middleware('auth');
 		
 	// publish
-	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
+	Route::get('/publish/{entry}', 'SectionController@publish')->middleware('auth');
 	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');
 
 	// add/create
@@ -65,7 +65,7 @@ Route::group(['prefix' => 'sections'], function () {
 	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/{entry}','EntryController@confirmdelete')->middleware('auth');
+	Route::get('/confirmdelete/{entry}','SectionController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{entry}','EntryController@delete')->middleware('auth');		
 });
 

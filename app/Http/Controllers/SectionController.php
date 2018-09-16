@@ -45,6 +45,7 @@ class SectionController extends Controller
 			'filter' => Controller::getFilter($request),
 			'type_flag' => ENTRY_TYPE_SECTION,
 			'site_id' => $this->getSiteId(),
+			'referer' => '/sections',
 		]);
 		
 		return view('sections.add', $vdata);
@@ -166,9 +167,36 @@ class SectionController extends Controller
 			'entryTypes' => Controller::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
+			'referer' => '/sections',
 		]);
 		
 		return view('sections.edit', $vdata);
     }
 
+    public function publish(Request $request, Entry $entry)
+    {	
+    	if (!$this->isOwnerOrAdmin($entry->user_id))
+             return redirect('/');
+
+		$vdata = $this->getViewData([
+			'record' => $entry,
+			'referer' => '/sections',
+		]);
+		
+		return view('entries.publish', $vdata);
+    }
+	
+    public function confirmdelete(Request $request, Entry $entry)
+    {		
+    	if (!$this->isOwnerOrAdmin($entry->user_id))
+             return redirect('/');
+		
+		$entry->description = nl2br(trim($entry->description));
+		
+		return view('entries.confirmdelete', $this->getViewData([
+				'entry' => $entry,
+				'referer' => '/sections',
+			])
+		);
+    }
 }

@@ -14,6 +14,7 @@
 			<input type="hidden" name="type_flag" value="{{$record->type_flag}}" />
 			<input type="hidden" name="site_id" value="{{$record->site_id}}">
 			<input type="hidden" name="approved_flag" value="1">
+			<input type="hidden" name="referer" value="{{$referer}}">
 
 			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 			
@@ -34,6 +35,10 @@
 			
 			<div class="entry-description-div">
 				<textarea name="description" rows="12" class="form-control" placeholder="Optional: Extra Information" >{{ $record->description }}</textarea>
+			</div>
+			
+			<div class="entry-description-div">
+				<textarea rows="12" name="description_short" class="form-control"  placeholder="Optional: More Extra Information" >{{$record->description_short}}</textarea>	
 			</div>
 	
 			<div style="clear:both;">				

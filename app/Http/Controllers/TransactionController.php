@@ -24,6 +24,8 @@ class TransactionController extends Controller
 	{
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
+		
+		parent::__construct();
 	}
 	
     public function summary(Request $request, $showAll = null)
@@ -385,7 +387,7 @@ class TransactionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 			
-		$filter = Controller::getFilter($request); // defaults to current month		
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
 		$records = null;
 			
 		try

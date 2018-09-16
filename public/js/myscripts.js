@@ -141,20 +141,26 @@ function pad(number, length)
     return str;
 }
 
-function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
+function changeDate(inc, fromYearId, fromMonthId, fromDayId)
 {	
     var fromDay = document.getElementById(fromDayId);
+	if (fromDay && parseInt(fromDay.value) == 0)
+		fromDay = null;
+	
     var fromMonth = document.getElementById(fromMonthId);
     var fromYear = document.getElementById(fromYearId);
-	if (fromDay && fromMonth && fromYear)
+	
+//	var lastDayOfTheMonth = getLastDayOfMonth(parseInt(fromMonth.value));
+	
+	if (fromDay && fromMonth && fromYear) // using month/day/year
 	{
-		if (addDays == 0) // this means clear the date
+		if (inc == 0) // this means clear the date
 		{
 			fromDay.value = 0;
 			fromMonth.value = 0;
 			fromYear.value = 0;
 		}
-		else if (addDays == 99) // this means set to current day
+		else if (inc == 99) // this means set to current day
 		{
 			var today = new Date();
 			
@@ -164,8 +170,11 @@ function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
 		}
 		else
 		{
-			var newDate = parseInt(fromDay.value) + addDays;
+			var newDate = parseInt(fromDay.value) + inc;
 			
+			// get last day of current month
+			var lastDayOfMonth = new Date(parseInt(fromYear.value), parseInt(fromMonth.value), 0).getDate();
+
 			if (newDate == 0) // roll to previous month
 			{
 				newMonth = parseInt(fromMonth.value) - 1;
@@ -180,9 +189,11 @@ function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
 					fromYear.value = parseInt(fromYear.value) - 1;
 				}
 				
-				fromDay.value = 31;
+				// get last day of new month
+				lastDayOfMonth = new Date(parseInt(fromYear.value), parseInt(fromMonth.value), 0).getDate();
+				fromDay.value = lastDayOfMonth;
 			}
-			else if (newDate > 31) // roll to next month
+			else if (newDate > lastDayOfMonth) // roll to next month
 			{
 				fromDay.value = 1;
 				newMonth = parseInt(fromMonth.value) + 1;
@@ -201,6 +212,41 @@ function changeDate(addDays, fromYearId, fromMonthId, fromDayId)
 			else
 			{
 				fromDay.value = newDate;
+			}
+		}
+	}
+	else if (fromMonth && fromYear) // using month/year only so attempt to switch months
+	{
+		if (inc == 0) // this means clear the date
+		{
+			fromMonth.value = 0;
+			fromYear.value = 0;
+		}
+		else if (inc == 99) // this means set to current day
+		{
+			var today = new Date();
+			
+			fromMonth.value = today.getMonth() + 1;
+			fromYear.value = today.getFullYear();
+		}
+		else
+		{
+			var newDate = parseInt(fromMonth.value) + inc;
+			
+			if (newDate == 0) // roll to previous year
+			{
+				fromMonth.value = 12;
+				fromYear.value = parseInt(fromYear.value) - 1;
+			}
+			else if (newDate > 12) // roll to next year
+			{
+				fromMonth.value = 1;
+				fromYear.value = parseInt(fromYear.value) + 1;
+			}
+			else
+			{
+				// just change month
+				fromMonth.value = newDate;
 			}
 		}
 	}

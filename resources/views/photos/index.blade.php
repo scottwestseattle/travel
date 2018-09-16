@@ -18,7 +18,7 @@
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)
-			<?php $fullpath = $path . $photo->filename; //dd($fullpath); ?>
+			<?php $fullpath = $path . $photo->filename; ?>
 				<tr>
 					<td>
 						<?php

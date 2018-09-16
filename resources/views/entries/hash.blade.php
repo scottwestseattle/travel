@@ -7,7 +7,6 @@
                
 <form method="POST" action="/hasher">
 
-	<?php //dd($hash); ?>
 	<div class="form-group">
 		<label name="" class="">Enter Text:</label>	
 		<input type="text" name="hash" class="form-control" style="width: 90%; max-width:200px;" value="{{ $hash }}" />

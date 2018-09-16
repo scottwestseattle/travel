@@ -182,6 +182,8 @@ class EntryController extends Controller
 			$request->session()->flash('message.level', 'success');
 			$request->session()->flash('message.content', $msg);
 
+			$redirect = $this->getReferer($request, '/entries/show/' . $entry->id);
+			
 			return redirect($this->getReferer($request, '/entries/show/' . $entry->id)); 
 		}
 		catch (\Exception $e) 
@@ -191,6 +193,7 @@ class EntryController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 
+return redirect('/sections'); 
 			return redirect($this->getReferer($request, '/entries/indexadmin/'));
 		}						
     }
@@ -315,7 +318,7 @@ class EntryController extends Controller
 	}
 
     public function show(Request $request, $id)
-    {		
+    {				
 		$id = intval($id);
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SHOW, $id);
 		
@@ -504,7 +507,7 @@ class EntryController extends Controller
         {			
 			$entry->deleteSafe();
 			
-			return redirect('/entries/index');
+			return redirect($this->getReferer($request, '/entries/index')); 
 		}
 		
 		return redirect('/');
@@ -568,8 +571,7 @@ class EntryController extends Controller
 			
 			$entry->save();
 			
-			//return redirect(route('entry.permalink', [$entry->permalink]));
-			return redirect('/entries/show/' . $entry->id);
+			return redirect($this->getReferer($request, '/entries/show' . $entry->id)); 
 		}
 		else
 		{
@@ -812,8 +814,6 @@ class EntryController extends Controller
 
 		$search = null;
 		$records = null;
-		
-		//dd($request);
 		
 		if (isset($request->searchText))
 		{

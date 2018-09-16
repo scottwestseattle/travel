@@ -48,7 +48,6 @@ function setTemplate(url)
 		<?php 
 			/*
 				echo 'search: <br/>';
-				dd($templates); 
 				window.location.href = parms + cat;
 				this.value
 				

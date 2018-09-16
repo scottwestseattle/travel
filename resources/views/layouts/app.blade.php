@@ -32,7 +32,9 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+	@if (!isset($localhost))
+		<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+	@endif
 		
 	<!-- google fonts
 	font-family: 'Raleway', sans-serif;

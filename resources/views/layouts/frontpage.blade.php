@@ -45,7 +45,9 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+	@if (!isset($localhost))
+		<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+	@endif
 	
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	

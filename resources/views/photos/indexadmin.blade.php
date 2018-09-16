@@ -34,7 +34,7 @@
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)
-			<?php $fullpath = $path . $photo->parent_id . '/' . $photo->filename; //dd($fullpath); ?>
+			<?php $fullpath = $path . $photo->parent_id . '/' . $photo->filename; ?>
 				<tr>
 					<td>
 						<?php

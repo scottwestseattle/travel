@@ -4,7 +4,6 @@
 		<!-- li class="topMenuLiCenter"><a href='/tags'>Tags</a></li -->
 		<li class="topMenuLiCenter">
 			<?php 
-				//dd($data); 
 				$taskCount = (isset($data)) ? $data['taskCount'] : 0;
 			?>
 			

@@ -2,8 +2,6 @@
 
 @section('content')
 
-<?php //echo 'gendex<br/>'; // dd($templates); ?>
-
 @component('menu-submenu')
 	@component('menu-icons-start')@endcomponent
 	@component('menu-icons-entry') {{ $entry->id }} @endcomponent
@@ -25,7 +23,6 @@
 			<?php 
 				/*
 					echo 'search: <br/>';
-					dd($templates); 
 					window.location.href = parms + cat;
 					this.value
 					
