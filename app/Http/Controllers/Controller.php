@@ -1106,6 +1106,18 @@ class Controller extends BaseController
 		return $text;
 	}
 	
+	static protected function getSection($id, $array)
+	{
+		$section = null;
+		
+		if (array_key_exists($id, $array))
+		{
+			$section = $array[$id];
+		}
+		
+		return $section;
+	}
+
     protected function getSections()
     {		
 		$sections = null;
@@ -1114,7 +1126,8 @@ class Controller extends BaseController
 		{
 			$site_id = $this->getSiteId();
 			
-			$new_way = false;
+			$new_way = true;
+			
 			if ($new_way)
 			{
 				// new way: 
@@ -1805,25 +1818,7 @@ class Controller extends BaseController
 			
 		return $records;
 	}
-	
-	static protected function getLinksToTest($internal = false)
-	{			
-		$q = '
-			SELECT *
-			FROM entries
-			WHERE 1=1
-				AND (description like "%http%" OR description like "%](%")
-				AND site_id = ? 
-				AND deleted_flag = 0
-				AND published_flag = 1 AND approved_flag = 1
-			ORDER by id DESC
-		';
-
-		$records = DB::select($q, [SITE_ID]);
-					
-		return $records;
-	}
-	
+		
 	static protected function searchEntries($text)
 	{			
 		$q = '
@@ -1839,126 +1834,5 @@ class Controller extends BaseController
 		$records = DB::select($q, [SITE_ID]);
 					
 		return $records;
-	}
-
-    protected function getSiteMapEntries()
-    {
-		$urls = [];
-	
-		$q = '
-			SELECT *
-			FROM entries
-			WHERE 1=1
-				AND type_flag in (2,3,4,5,8)
-				AND site_id = ? 
-				AND deleted_flag = 0
-				AND published_flag = 1 AND approved_flag = 1
-			ORDER by id DESC
-		';
-
-		$records = DB::select($q, [SITE_ID]);
-		
-		if (isset($records))
-		{
-			$entryUrls = Controller::getEntryUrls();
-
-			foreach($records as $record)
-			{
-				$type = $entryUrls[$record->type_flag];
-
-				if (isset($type))
-				{
-					if ($record->type_flag == ENTRY_TYPE_BLOG) // blogs don't use permalink
-					{
-						$urls[] = '/' . $type . '/view/' . $record->id;	
-					}
-					else // everything else uses permalinks
-					{
-						$urls[] = '/' . $type . '/' . $record->permalink;
-					}
-				}
-			}
-		}
-		
-		return $urls;
-	}
-
-    protected function getSiteMapPhotos()
-    {	
-		$urls = [];
-
-		$q = '
-			SELECT *
-			FROM photos
-			WHERE 1=1
-				AND site_id = ? 
-				AND deleted_flag = 0
-				AND parent_id = 0
-			ORDER by id DESC
-		';
-
-		$records = DB::select($q, [SITE_ID]);
-		
-		if (isset($records))
-		{
-			foreach($records as $record)
-			{
-				$urls[] = '/photos/view/' . $record->id;	
-			}
-		}
-		
-		return $urls;
-	}
-	
-    protected function makeSiteMap()
-    {	
-		$urls = [
-			'/',
-			'/login',
-			'/register',
-			'/about',
-			'/articles',
-			'/blogs/index',
-			'/galleries',
-			'/tours/index',
-			'/photos/sliders',
-			'/tours/location/2',
-			'/tours/location/9',
-			'/tours/location/23',
-			'/tours/location/25',
-		];
-
-		$urls = array_merge($urls, Controller::getSiteMapPhotos());
-		$urls = array_merge($urls, Controller::getSiteMapEntries());
-		
-		if (isset($urls))
-		{
-			// write the sitemap file
-			$siteMap = [];
-			
-			$server = $this->domainName;
-			
-			// file name looks like: sitemap-domain.com.txt
-			$filename = 'sitemap-' . $server . '.txt';
-			$myfile = fopen($filename, "w") or die("Unable to open file!");
-			
-			$server = 'http://' . $server;
-			
-			foreach($urls as $url)
-			{
-				$line = $server . $url;
-				$siteMap[] = $line;
-				fwrite($myfile, utf8_encode($line . PHP_EOL));
-			}
-
-			fclose($myfile);
-		}
-		
-		$rc = [];
-		$rc['sitemap'] = $siteMap;
-		$rc['filename'] = $filename;
-		$rc['server'] = $server;
-		
-		return $rc;
 	}
 }

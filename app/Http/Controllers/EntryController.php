@@ -838,18 +838,5 @@ return redirect('/sections');
 			'entryTypes' => Controller::getEntryTypes(),
 		]));		
 	}
-
-    public function sitemap(Request $request)
-    {			
-		$siteMap = $this->makeSiteMap();
-		
-		return view('entries.sitemap', $this->getViewData([
-			'records' => $siteMap['sitemap'],
-			'server' => $siteMap['server'],
-			'filename' => $siteMap['filename'],
-			'executed' => null,
-			'sitemap' => true,
-		]));
-	}
 	
 }

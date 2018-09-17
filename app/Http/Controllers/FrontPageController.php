@@ -237,7 +237,7 @@ class FrontPageController extends Controller
 		//
 		$todo = Controller::getPhotosWithShortNames();
 		$linksToFix = Controller::getLinksToFix();
-		$linksToTest = null; //Controller::getLinksToTest();
+		$linksToTest = null; //ToolController::getLinksToTest();
 
 		//
 		// get latest events

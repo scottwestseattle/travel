@@ -13,7 +13,7 @@ use App\Photo;
 use App\Location;
 
 
-class TestController extends Controller
+class ToolController extends Controller
 {
 	private $tests = [
 		['EXPECTED NOT FOUND', '/', ''],
@@ -54,7 +54,7 @@ class TestController extends Controller
 		//$server = 'http://hikebikeboat.com';
 		//$server = 'http://scotthub.com';
 
-		$tests = array_merge($this->tests, TestController::getTestEntries());
+		$tests = array_merge($this->tests, ToolController::getTestEntries());
 
 		if (isset($request->test_server))
 		{
@@ -76,7 +76,7 @@ class TestController extends Controller
 			$tests = $executedTests;
 		}
 
-		return view('tests.test', $this->getViewData([
+		return view('tools.test', $this->getViewData([
 			'records' => $tests,
 			'test_server' => $server,
 			'executed' => $executed,
@@ -172,4 +172,181 @@ class TestController extends Controller
 		return $data;
 	}
 
+
+    protected function getSiteMapEntries($type_flag)
+    {
+		$urls = [];
+	
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND type_flag = ?
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND published_flag = 1 AND approved_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [$type_flag, SITE_ID]);
+		
+		if (isset($records))
+		{
+			$entryUrls = Controller::getEntryUrls();
+
+			foreach($records as $record)
+			{
+				$type = $entryUrls[$record->type_flag];
+
+				if (isset($type))
+				{
+					if ($record->type_flag == ENTRY_TYPE_BLOG) // blogs don't use permalink
+					{
+						$urls[] = '/' . $type . '/view/' . $record->id;	
+					}
+					else // everything else uses permalinks
+					{
+						$urls[] = '/' . $type . '/' . $record->permalink;
+					}
+				}
+			}
+		}
+		
+		return $urls;
+	}
+
+    protected function getSiteMapPhotos()
+    {	
+		$urls = [];
+
+		$q = '
+			SELECT *
+			FROM photos
+			WHERE 1=1
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND parent_id = 0
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+		
+		if (isset($records))
+		{
+			foreach($records as $record)
+			{
+				$urls[] = '/photos/view/' . $record->id;	
+			}
+		}
+		
+		return $urls;
+	}
+	
+    protected function makeSiteMap()
+    {	
+		$urls = [
+			'/',
+			'/login',
+			'/register',
+			'/about',
+		];
+
+		$sections = Controller::getSections();
+		
+		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
+		{
+			$urls[] = '/photos/sliders';
+			$urls = array_merge($urls, ToolController::getSiteMapPhotos());
+		}
+		
+		if (Controller::getSection(SECTION_ARTICLES, $sections) != null)
+		{
+			$urls[] = '/articles';
+			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_ARTICLE));
+		}
+		
+		if (Controller::getSection(SECTION_BLOGS, $sections) != null)
+		{
+			$urls[] = '/blogs/index';
+			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_BLOG));
+			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_BLOG_ENTRY));
+		}
+		
+		if (Controller::getSection(SECTION_TOURS, $sections) != null)
+		{
+			$urls[] = '/tours/location/2';
+			$urls[] = '/tours/location/9';
+			$urls[] = '/tours/location/23';
+			$urls[] = '/tours/location/25';
+			$urls[] = '/tours/index';
+			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_TOUR));
+		}
+		
+		if (Controller::getSection(SECTION_GALLERY, $sections) != null)
+		{
+			$urls[] = '/galleries';
+			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_GALLERY));
+		}
+		
+		if (isset($urls))
+		{
+			// write the sitemap file
+			$siteMap = [];
+			
+			$server = $this->domainName;
+			
+			// file name looks like: sitemap-domain.com.txt
+			$filename = 'sitemap-' . $server . '.txt';
+			$myfile = fopen($filename, "w") or die("Unable to open file!");
+			
+			$server = 'http://' . $server;
+			
+			foreach($urls as $url)
+			{
+				$line = $server . $url;
+				$siteMap[] = $line;
+				fwrite($myfile, utf8_encode($line . PHP_EOL));
+			}
+
+			fclose($myfile);
+		}
+		
+		$rc = [];
+		$rc['sitemap'] = $siteMap;
+		$rc['filename'] = $filename;
+		$rc['server'] = $server;
+		
+		return $rc;
+	}
+	
+	static protected function getLinksToTest($internal = false)
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND (description like "%http%" OR description like "%](%")
+				AND site_id = ? 
+				AND deleted_flag = 0
+				AND published_flag = 1 AND approved_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+					
+		return $records;
+	}
+
+    public function sitemap(Request $request)
+    {			
+		$siteMap = $this->makeSiteMap();
+		
+		return view('tools.sitemap', $this->getViewData([
+			'records' => $siteMap['sitemap'],
+			'server' => $siteMap['server'],
+			'filename' => $siteMap['filename'],
+			'executed' => null,
+			'sitemap' => true,
+		]));
+	}
 }

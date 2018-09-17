@@ -36,9 +36,9 @@ Route::get('/gallery', 'EntryController@gallery');
 Route::get('/first', 'FrontPageController@first');
 Route::get('/search', 'EntryController@search');
 Route::post('/search', 'EntryController@search');
-Route::get('/sitemap', 'EntryController@sitemap')->middleware('auth');
-Route::get('/test', 'TestController@test')->middleware('auth');
-Route::post('/test', 'TestController@test')->middleware('auth');
+Route::get('/sitemap', 'ToolController@sitemap')->middleware('auth');
+Route::get('/test', 'ToolController@test')->middleware('auth');
+Route::post('/test', 'ToolController@test')->middleware('auth');
 
 
 // crypt / encrypt
