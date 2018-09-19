@@ -110,7 +110,7 @@
 	
 	@if (strlen(trim($record->description_short)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
-		<h3>Highlights</h3>
+		<h3>More Extra Info</h3>
 		<div>{{$record->description_short}}</div>
 	</div>
 	@endif

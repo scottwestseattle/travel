@@ -18,9 +18,10 @@
 			@foreach($records as $record)
 				<tr>
 					<td style="width:20px;"><a href='/sections/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td style="width:20px;"><a href='/sections/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td>
-						<a href="/sections/show/{{$record->id}}">{{$record->title}} ({{$record->permalink}})</a>
+						<a href="/sections/view/{{$record->id}}">{{$record->title}} ({{$record->permalink}})</a>
 						@if (!($record->published_flag == 1 && $record->approved_flag == 1))
 						<div><a href="/sections/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
 						@endif

@@ -85,14 +85,11 @@ class PhotoController extends Controller
 			$path = $this->getPhotosWebPath($subfolder);
 			
 			$entry = Entry::select()
-				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('id', $parent_id)
 				->first();
 							
 			$photos = Photo::select()
-				//->where('site_id', SITE_ID)
-				//->where('user_id', '=', Auth::id())
 				->where('deleted_flag', 0)
 				->where('parent_id', '=', $parent_id)
 				->orderByRaw('photos.main_flag DESC, photos.id DESC')

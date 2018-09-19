@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use App\Entry;
 use App\Event;
+use App\Photo;
 
 define('PREFIX', 'sections');
 define('LOG_MODEL', 'sections');
@@ -51,20 +52,18 @@ class SectionController extends Controller
 		return view('sections.add', $vdata);
 	}
 
-    public function view($title, $id)
+    public function view($id)
     {
 		$id = intval($id);
 		
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $id);
 	
 		$entry = Entry::select()
-			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('id', $id)
 			->first();
 		
 		$photos = Photo::select()
-			->where('site_id', SITE_ID)
 			->where('deleted_flag', '<>', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
