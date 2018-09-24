@@ -330,20 +330,57 @@ class FrontPageController extends Controller
 		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
 			$entry[0]->description = Controller::fixSiteInfo($entry[0]->description, Controller::getSite());
 		
-		$entryStats = Entry::getStats();
-		$photoStats = Photo::getStats();
+		$stats = [];
+		$stats['photos_content'] = 0;
+		$stats['total_pages'] = 0;
+		$stats['total_photos'] = 0;
 		
-		$stats = array_merge($entryStats, $photoStats);
+		$stats['sliders'] = 0;
+		$stats['articles'] = 0;
+		$stats['photos_article'] = 0;
+		$stats['blogs'] = 0;
+		$stats['blog_entries'] = 0;
+		$stats['photos_blog'] = 0;
+		$stats['photos_post'] = 0;
+		$stats['tours'] = 0;
+		$stats['photos_tour'] = 0;
+		$stats['photos_gallery'] = 0;
 		
-		$stats['photos_content'] 
-			= $stats['photos_article']
-			+ $stats['photos_blog']
-			+ $stats['photos_post']
-			+ $stats['photos_tour']
-			;
+		$sections = Controller::getSections();
+		
+		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
+		{
+			$stats['sliders'] = Photo::getCountSliders();
+		}
+		
+		if (Controller::getSection(SECTION_ARTICLES, $sections) != null)
+		{
+			$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
+			$stats['photos_article'] = Photo::getCount(ENTRY_TYPE_ARTICLE);
+		}
+		
+		if (Controller::getSection(SECTION_BLOGS, $sections) != null)
+		{
+			$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
+			$stats['blog_entries'] = Entry::getEntryCount(ENTRY_TYPE_BLOG_ENTRY, /* allSites = */ false);
+			$stats['photos_blog'] = Photo::getCount(ENTRY_TYPE_BLOG);
+			$stats['photos_post'] = Photo::getCount(ENTRY_TYPE_BLOG_ENTRY);
+		}
+		
+		if (Controller::getSection(SECTION_TOURS, $sections) != null)
+		{
+			$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);
+			$stats['photos_tour'] = Photo::getCount(ENTRY_TYPE_TOUR);
+		}
+		
+		if (Controller::getSection(SECTION_GALLERY, $sections) != null)
+		{
+			$stats['photos_gallery'] = Photo::getCount(ENTRY_TYPE_GALLERY);		
+		}
 
-		$stats['total-pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog-entries'] + $stats['tours'];
-		$stats['total-photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
+		$stats['photos_content'] = $stats['photos_article'] + $stats['photos_blog'] + $stats['photos_post'] + $stats['photos_tour'];
+		$stats['total_pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog_entries'] + $stats['tours'];
+		$stats['total_photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
 		
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,

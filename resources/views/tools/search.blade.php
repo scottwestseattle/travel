@@ -21,15 +21,32 @@
 		</div>
 	</form>
 	
-	@if (isset($records))
+	@if (isset($records) || isset($photos))
 		<table class="table table-striped">
 			<tbody>
-			@foreach($records as $record)
-				<tr>
-					<td><a href="{{ route('entry.permalink', [$record->permalink]) }}" target="_blank">{{$record->title}}</a></td>
-					<td>{{$entryTypes[$record->type_flag]}}</td>
-				</tr>
-			@endforeach
+			
+			@if (isset($records))
+				@foreach($records as $record)
+					<tr>
+						<td><a href="{{ route('entry.permalink', [$record->permalink]) }}" target="_blank">{{$record->title}}</a></td>
+						<td>{{$entryTypes[$record->type_flag]}}</td>
+					</tr>
+				@endforeach
+			@endif
+
+			@if (isset($photos))
+				@foreach($photos as $record)
+					<tr>
+						<td><a href="/photos/edit/{{$record->id}}" target="_blank">{{$record->alt_text}}</a></td>
+						@if ($record->parent_id > 0)
+							<td>Photo</td>
+						@else
+							<td>Slider</td>
+						@endif
+					</tr>
+				@endforeach
+			@endif
+			
 			</tbody>
 		</table>
 	@endif

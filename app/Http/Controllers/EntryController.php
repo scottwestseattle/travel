@@ -806,37 +806,4 @@ return redirect('/sections');
 		
 		return view('entries.gallery', $vdata);
     }
-
-    public function search(Request $request)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-
-		$search = null;
-		$records = null;
-		
-		if (isset($request->searchText))
-		{
-			$search = trim($request->searchText);
-			
-			if (strlen($search) > 1)
-			{
-				try
-				{
-					$records = Controller::searchEntries($search);
-
-				}
-				catch (\Exception $e) 
-				{
-				}
-			}
-		}
-
-		return view('entries.search', $this->getViewData([
-			'search' => $search,
-			'records' => $records,
-			'entryTypes' => Controller::getEntryTypes(),
-		]));		
-	}
-	
 }

@@ -1790,7 +1790,7 @@ class Controller extends BaseController
 				ON entries.id = photos.parent_id 
 				AND entries.deleted_flag = 0 
 			WHERE 1=1
-				AND length(filename) < 20
+				AND (length(filename) < 23 OR filename like "PSX%" OR filename like "20%")
 				AND photos.site_id = ? 
 				AND photos.deleted_flag = 0
 				AND photos.type_flag <> ?
@@ -1798,7 +1798,7 @@ class Controller extends BaseController
 		';
 
 		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
-					
+
 		return $records;
 	}
 	
@@ -1818,21 +1818,5 @@ class Controller extends BaseController
 			
 		return $records;
 	}
-		
-	static protected function searchEntries($text)
-	{			
-		$q = '
-			SELECT *
-			FROM entries
-			WHERE 1=1
-				AND (title like "%' . $text . '%" OR description like "%' . $text . '%")
-				AND site_id = ? 
-			ORDER by id DESC
-		';
-		//AND type_flag in (2,3,4,5,8)
 
-		$records = DB::select($q, [SITE_ID]);
-					
-		return $records;
-	}
 }
