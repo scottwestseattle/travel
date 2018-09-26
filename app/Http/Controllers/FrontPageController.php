@@ -235,10 +235,11 @@ class FrontPageController extends Controller
 		//
 		// get todo list
 		//
-		$todo = Controller::getPhotosWithShortNames();
-		$linksToFix = Controller::getLinksToFix();
+		$todo = ToolController::getPhotosWithShortNames();
+		$linksToFix = ToolController::getLinksToFix();
 		$linksToTest = null; //ToolController::getLinksToTest();
-
+		$shortEntries = ToolController::getShortEntries();
+		
 		//
 		// get latest events
 		//
@@ -286,6 +287,8 @@ class FrontPageController extends Controller
 			'new_visitor' => $this->isNewVisitor(),
 			'linksToFix' => $linksToFix,
 			'linksToTest' => $linksToTest,
+			'shortEntries' => $shortEntries,
+			'entryTypes' => Controller::getEntryTypes(),
 		], 'Admin Page'));
     }
 	

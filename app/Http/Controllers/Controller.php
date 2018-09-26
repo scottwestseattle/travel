@@ -396,7 +396,6 @@ class Controller extends BaseController
 		
 		// orig: https://www.google.com/search?q=$1.$2,$3.$4
 		$link = 'https://maps.google.com/maps?q=$1.$2,$3.$4'; //new
-		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: $1.$2, $3.$4</a>', $text);
 				
 		return $text;
 	}
@@ -1780,43 +1779,4 @@ class Controller extends BaseController
 		
 		return $this->viewData;
 	}
-	
-	static protected function getPhotosWithShortNames()
-	{			
-		$q = '
-			SELECT photos.*, DATE_FORMAT(photos.created_at, "%Y-%m-%d") as date, entries.permalink, entries.title as entry_title
-			FROM photos
-			JOIN entries 
-				ON entries.id = photos.parent_id 
-				AND entries.deleted_flag = 0 
-			WHERE 1=1
-				AND (length(filename) < 23 OR filename like "PSX%" OR filename like "20%")
-				AND photos.site_id = ? 
-				AND photos.deleted_flag = 0
-				AND photos.type_flag <> ?
-			ORDER by photos.id DESC
-		';
-
-		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
-
-		return $records;
-	}
-	
-	static protected function getLinksToFix()
-	{			
-		$q = '
-			SELECT *
-			FROM entries
-			WHERE 1=1
-				AND description like "%epictravelguide.com%"				
-				AND site_id = ? 
-				AND deleted_flag = 0
-			ORDER by id DESC
-		';
-
-		$records = DB::select($q, [SITE_ID]);
-			
-		return $records;
-	}
-
 }

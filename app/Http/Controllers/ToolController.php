@@ -416,4 +416,62 @@ class ToolController extends Controller
 					
 		return $records;
 	}
+
+	static public function getPhotosWithShortNames()
+	{			
+		$q = '
+			SELECT photos.*, DATE_FORMAT(photos.created_at, "%Y-%m-%d") as date, entries.permalink, entries.title as entry_title
+			FROM photos
+			JOIN entries 
+				ON entries.id = photos.parent_id 
+				AND entries.deleted_flag = 0 
+			WHERE 1=1
+				AND (length(filename) < 23 OR filename like "PSX%" OR filename like "20%")
+				AND photos.site_id = ? 
+				AND photos.deleted_flag = 0
+				AND photos.type_flag <> ?
+			ORDER by photos.id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID, PHOTO_TYPE_RECEIPT]);
+
+		return $records;
+	}
+	
+	static public function getLinksToFix()
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND description like "%epictravelguide.com%"				
+				AND site_id = ? 
+				AND deleted_flag = 0
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+			
+		return $records;
+	}
+
+	static public function getShortEntries()
+	{			
+		$q = '
+			SELECT *
+			FROM entries
+			WHERE 1=1
+				AND (CHAR_LENGTH(description) < 100 OR description IS NULL)  				
+				AND deleted_flag = 0
+				AND type_flag in (2,3,4,5)
+				AND approved_flag = 1 
+				AND published_flag = 1
+			ORDER by id DESC
+		';
+
+		$records = DB::select($q);
+			
+		return $records;
+	}
+	
 }
