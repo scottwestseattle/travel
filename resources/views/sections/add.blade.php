@@ -19,6 +19,9 @@
 			<div class="entry-title-div">
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />
 			</div>
+			
+			<div>@component('control-dropdown-menu', ['prompt' => 'Background Color:', 'field_name' => 'color_background', 'options' => $colors, 'selected_option' => null])@endcomponent</div>
+			<div>@component('control-dropdown-menu', ['prompt' => 'Text Color:', 'field_name' => 'color_foreground', 'options' => $colors, 'selected_option' => null])@endcomponent</div>
 
 			<div class="entry-title-div">
 				<input type="text" id="permalink" name="permalink" placeholder="Permalink: section-name" class="form-control" />

@@ -331,7 +331,10 @@ class FrontPageController extends Controller
 		$entry = Entry::getAboutPage();
 
 		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
+		{
 			$entry[0]->description = Controller::fixSiteInfo($entry[0]->description, Controller::getSite());
+			$entry[0]->description = Controller::formatLinks($entry[0]->description);
+		}
 		
 		$stats = [];
 		$stats['photos_content'] = 0;

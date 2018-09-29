@@ -35,11 +35,23 @@ class SectionController extends Controller
     	return view('sections.index', $vdata);
     }
 	
+	private $colors = [
+		'(Select)',
+		'sectionGray',
+		'powerBlue',
+		'sectionWhite',
+		'sectionGreen',
+		'sectionGray',
+		'sectionOrange',
+		'sectionGray',
+		'sectionWhite',
+	];	
+
     public function add(Request $request)
     {
 		if (!$this->isAdmin())
              return redirect('/');
-
+			 
 		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
@@ -47,6 +59,7 @@ class SectionController extends Controller
 			'type_flag' => ENTRY_TYPE_SECTION,
 			'site_id' => $this->getSiteId(),
 			'referer' => '/sections',
+			'colors' => $this->colors,
 		]);
 		
 		return view('sections.add', $vdata);
@@ -160,13 +173,14 @@ class SectionController extends Controller
 		$dates = null;
 		if (isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);
-		
+
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
 			'referer' => '/sections',
+			'colors' => $this->colors,
 		]);
 		
 		return view('sections.edit', $vdata);

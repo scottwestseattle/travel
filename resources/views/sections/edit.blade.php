@@ -17,7 +17,7 @@
 			<input type="hidden" name="referer" value="{{$referer}}">
 
 			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
-			
+		
 			<div class="entry-title-div">
 				<input type="text" id="permalink" name="permalink" value="{{$record->permalink}}" placeholder="Permalink: section-name" class="form-control" />
 			</div>

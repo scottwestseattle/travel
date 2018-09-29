@@ -396,8 +396,9 @@ class Controller extends BaseController
 		
 		// orig: https://www.google.com/search?q=$1.$2,$3.$4
 		$link = 'https://maps.google.com/maps?q=$1.$2,$3.$4'; //new
-		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: $1.$2, $3.$4</a>&nbsp;<a href="#"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
-				
+		
+		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: <span id="copy$1$2$3$4">$1.$2, $3.$4</span></a>&nbsp;<a href="#" onclick="javascript:clipboardCopy(event, \'copy$1$2$3$4\', \'copy$1$2$3$4\')"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
+
 		return $text;
 	}
 	

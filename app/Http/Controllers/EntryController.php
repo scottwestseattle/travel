@@ -418,6 +418,18 @@ return redirect('/sections');
 		
 		return view('entries.edit', $vdata);
     }
+
+    public function getColorCode($index, $colors)
+    {
+		if ($index > 0)
+		{
+			return $colors[$index];
+		}
+		else
+		{
+			return null;
+		}
+	}
 	
     public function update(Request $request, Entry $entry)
     {
@@ -438,6 +450,14 @@ return redirect('/sections');
 			$record->description_short	= $this->trimNull($request->description_short);
 			$record->description		= $this->trimNull($request->description);
 			$record->display_date 		= Controller::getSelectedDate($request);
+			
+			//todo: finish the colors
+			if (false && isset($request->color_foreground) && isset($request->colors))
+				$record->color_foreground = EntryController::getColorCode($request->color_foreground, $request->colors);
+			if (false && isset($request->color_background) && isset($request->colors))
+				$record->color_background = EntryController::getColorCode($request->color_background, $request->colors);
+				
+			//$record->color_background = $request->color_background;
 			
 			//todo: turned off for now: $record->approved_flag = 0;
 			

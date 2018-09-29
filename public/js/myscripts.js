@@ -1,17 +1,22 @@
 
-function clipboardCopy(idFlash, id)
+function clipboardCopy(event, idFlash, id)
 {
+	event.preventDefault();
+	
 	var text = document.getElementById(id).innerHTML;
+	
+	// create an input field that can be selected
 	var target = document.createElement("textarea");
-	target.style.position = "absolute";
+	target.style.position = "absolute"; // keep it off of the screen
 	target.style.left = "-9999px";
     target.style.top = "0";
     target.id = "_hiddenCopyText_";
-    document.body.appendChild(target);
+	target.setAttribute('readonly', ''); // keeps focus from going to it
+    document.body.appendChild(target); // add it to the page
 
-	//var elem = document.getElementById(id);
-	$("#" + idFlash + ' p').fadeTo('slow', 0.1).fadeTo('slow', 1.0);
-	$("#" + idFlash).fadeTo('slow', 0.1).fadeTo('slow', 1.0);
+	// do the flash affect
+	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
+	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
 
 	// remove the <br>'s and <p>'s and <span>'s
 	text = text.replace(/(\r\n|\n|\r)/gm, "");
@@ -24,13 +29,9 @@ function clipboardCopy(idFlash, id)
     text = text.trim().replace(/<span style="color:green;">/gi, "");
     text = text.trim().replace(/<\/span>/gi, "");
 
+	// put the stripped text into the hidden field and select it
     target.textContent = text;
-    //target.textContent = text.replace(/<br\s*[\/]?>/gi, "\n");
- 		
-    // select the content
-    var currentFocus = document.activeElement;
-    target.focus();
-    target.setSelectionRange(0, target.value.length);
+	target.select();
     
     // copy the selection
     var succeed;
@@ -39,6 +40,9 @@ function clipboardCopy(idFlash, id)
     } catch(e) {
         succeed = false;
 	}
+	
+	// remove the temporary input field
+	document.body.removeChild(target);
 }
 
 function save()

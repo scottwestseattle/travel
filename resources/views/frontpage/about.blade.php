@@ -10,15 +10,7 @@
 
 	<h1>About</h1>
 	
-	@if (isset($record))
-	<div class="entry-div" style="margin-top:30px;">
-		<div class="entry" style="">
-			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
-		</div>
-	</div>
-	@endif
-	
-	<h3>Stats</h3>
+	<h3>Content Stats</h3>
 	<table>
 		<tbody>
 			@if ($stats['tours'] > 0)
@@ -52,6 +44,14 @@
 			@endif
 		</tbody>
 	</table>
+	
+	@if (isset($record))
+	<div class="entry-div" style="margin-top:30px;">
+		<div class="entry" style="">
+			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
+		</div>
+	</div>
+	@endif
 
 	@if (isset($record->photo))
 	<div class="text-center" style="margin-top:50px;">
