@@ -29,8 +29,12 @@ ALTER TABLE `entries` ADD `photo_id` INT NULL AFTER `parent_id`;
 
 09/28
 ALTER TABLE `entries` ADD `color_foreground` VARCHAR(20) NULL DEFAULT NULL AFTER `display_date`, ADD `color_background` VARCHAR(20) NULL DEFAULT NULL AFTER `color_foreground`;
+ALTER TABLE `activities` ADD `map_label` VARCHAR(100) NULL AFTER `map_link`, ADD `map_labelalt` VARCHAR(100) NULL AFTER `map_label`;
+ALTER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelalt`, ADD `map_label2` VARCHAR(100) NULL AFTER `map_link2`, ADD `map_labelalt2` VARCHAR(100) NULL AFTER `map_label2`;
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
@@ -72,3 +76,69 @@ Windows 7 path:
 C:\app\scott\product\11.2.0\client_1;C:\app\scott\product\11.2.0\client_1\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Users\scott\AppData\Roaming\npm;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Microsoft\Web Platform Installer\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\11;C:\Program Files (x86)\MySQL\MySQL Utilities 1.3.6\;C:\wamp64\bin\php\php7.1.9;C:\Users\scott\AppData\Roaming\Composer\vendor\bin;C:\ProgramData\ComposerSetup\bin;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;c:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+JAVASCRIPT FILE UPLOAD
+
+var data = new FormData();
+data.append("", "filename.ext"); //append file here
+ 
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+ 
+xhr.addEventListener("readystatechange", function () {
+  if (this.readyState === 4) {
+    console.log(this.responseText);
+  }
+});
+ 
+xhr.open("POST", "http://example.com"); // URL where you want to upload
+xhr.setRequestHeader("cache-control", "no-cache");
+ 
+xhr.send(data);
+
+~~~~~~~~~~~~~~~~~~~~~~
+
+<!DOCTYPE html>
+<html>
+<body onload="myFunction()">
+
+<input type="file" id="myFile" multiple size="50" onchange="myFunction()">
+
+<p id="demo"></p>
+    
+<script>
+function myFunction(){
+    var x = document.getElementById("myFile");
+    var txt = "";
+    if ('files' in x) {
+        if (x.files.length == 0) {
+            txt = "Select one or more files.";
+        } else {
+            for (var i = 0; i < x.files.length; i++) {
+                txt += "<br><strong>" + (i+1) + ". file</strong><br>";
+                var file = x.files[i];
+                if ('name' in file) {
+                    txt += "name: " + file.name + "<br>";
+                }
+                if ('size' in file) {
+                    txt += "size: " + file.size + " bytes <br>";
+                }
+            }
+        }
+    } 
+    else {
+        if (x.value == "") {
+            txt += "Select one or more files.";
+        } else {
+            txt += "The files property is not supported by your browser!";
+            txt  += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
+        }
+    }
+    document.getElementById("demo").innerHTML = txt;
+}
+</script>
+
+<p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
+
+</body>
+</html>

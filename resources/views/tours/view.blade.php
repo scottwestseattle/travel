@@ -70,7 +70,7 @@
 		}
 		
 		// map size
-		$mapWidth = 500;
+		$mapWidth = 400;
 	?>
 
 	@if ($record->photo_gallery !== null)
@@ -165,27 +165,35 @@
 		@endif			
 		
 		@if (!empty(trim($activity->map_link)))
-			<div class="entry-div">
+			<div style="float:left;" class="entry-div">
 				<div class="entry amenity-item">
-					<h3>MAP</h3>
+					<h3>{{$activity->map_label}}</h3>
 					<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
-						<iframe id="xttd-map" src="{{ $activity->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
+						<iframe id="xttd-map" src="{{$activity->map_link}}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
 					</div>
 					
-					<p><a target="_blank" href="{{$activity->map_link}}">Open Map to Navigate</a></p>
+					<p><a target="_blank" href="{{$activity->map_link}}">{{$activity->map_labelalt}}</a></p>
 					
 				</div>
 			</div>
 		@endif	
 
-		@if (false && strlen($activity->map_link) > 0)
-			<div class="col-md-4 col-sm-6">
-				<div class="amenity-item">
-					<h3>LOCATION</h3>
-					<p><a target="_blank" href="{{$activity->map_link}}">Show Map</a></p>
+		@if (!empty(trim($activity->map_link2)))
+			<div style="float:left;" class="xentry-div">
+				<div class="entry amenity-item">
+					<h3>{{$activity->map_label2}}</h3>
+					<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
+						<iframe id="xttd-map" src="{{$activity->map_link2}}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
+					</div>
+					
+					<p><a target="_blank" href="{{$activity->map_link2}}">{{$activity->map_labelalt2}}</a></p>
+					
 				</div>
 			</div>
 		@endif	
+		
+		<div style="clear:both;"></div>
+
 		
 		@if (strlen($activity->parking) > 0)
 			<div class="entry-div">

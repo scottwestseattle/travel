@@ -65,8 +65,24 @@
 			</div>
 					
 			<div style="clear:both;" class="entry-title-div">
-				<label for="map_link">Map Embed Link:</label>
-				<input type="text" name="map_link" class="form-control" value="{{ $record->map_link }}" />
+				<label for="map_label">Map Label:</label>
+				<input type="text" name="map_label" class="form-control" value="{{$record->map_label}}" />
+
+				<label for="map_link">Map Link:</label>
+				<input type="text" name="map_link" class="form-control" value="{{$record->map_link}}" />
+
+				<label for="map_labelalt">Map Alt Label:</label>
+				<input type="text" name="map_labelalt" class="form-control" value="{{ $record->map_labelalt }}" />
+
+				<label for="map_label2">Map 2 Label:</label>
+				<input type="text" name="map_label2" class="form-control" value="{{$record->map_label2}}" />
+
+				<label for="map_link2">Map 2 Link:</label>
+				<input type="text" name="map_link2" class="form-control" value="{{$record->map_link2}}" />
+
+				<label for="map_labelalt2">Map 2 Alt Label:</label>
+				<input type="text" name="map_labelalt2" class="form-control" value="{{$record->map_labelalt2}}" />
+				
 				@if (false)
 				<label for="info_link">More Info Link:</label>
 				<input type="text" name="info_link" class="form-control" value="{{ $record->info_link }}" />

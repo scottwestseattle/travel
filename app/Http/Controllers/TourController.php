@@ -116,8 +116,15 @@ class TourController extends Controller
 			$activity->user_id = Auth::id();
 			$activity->site_id = SITE_ID;
 			
-			$activity->map_link	 = trim($request->map_link);
-			$activity->info_link = trim($request->info_link);
+			$activity->map_link	 	= trim($request->map_link);
+			$activity->map_label	= trim($request->map_label);
+			$activity->map_labelalt	= trim($request->map_labelalt);
+			
+			$activity->map_link2	 = trim($request->map_link2);
+			$activity->map_label2	 = trim($request->map_label2);
+			$activity->map_labelalt2 = trim($request->map_labelalt2);
+			
+			$activity->info_link 	= trim($request->info_link);
 				
 			$activity->cost = trim($request->cost);
 			$activity->parking = trim($request->parking);
@@ -350,7 +357,9 @@ class TourController extends Controller
 		$record = DB::table('entries')
 			->leftJoin('activities', 'activities.parent_id', '=', 'entries.id')
 			->select('entries.*', 'entries.description_short as highlights',
-				'activities.map_link', 'activities.location_id', 'activities.season', 'activities.wildlife', 
+				'activities.map_link', 'activities.map_label', 'activities.map_labelalt',
+				'activities.map_link2', 'activities.map_label2', 'activities.map_labelalt2',
+				'activities.location_id', 'activities.season', 'activities.wildlife', 
 				'activities.public_transportation', 'activities.facilities', 'activities.parking', 'activities.cost', 
 				'activities.distance', 'activities.difficulty', 'activities.elevation', 'activities.trail_type'
 				)
@@ -402,7 +411,14 @@ class TourController extends Controller
 			}
 
 			$isDirty = false;
+
 			$activity->map_link = $this->copyDirty($activity->map_link, $request->map_link, $isDirty);
+			$activity->map_label = $this->copyDirty($activity->map_label, $request->map_label, $isDirty);
+			$activity->map_labelalt = $this->copyDirty($activity->map_lablealt, $request->map_labelalt, $isDirty);
+			$activity->map_link2 = $this->copyDirty($activity->map_link2, $request->map_link2, $isDirty);
+			$activity->map_label2 = $this->copyDirty($activity->map_label2, $request->map_label2, $isDirty);
+			$activity->map_labelalt2 = $this->copyDirty($activity->map_lablealt2, $request->map_labelalt2, $isDirty);
+
 			$activity->info_link = $this->copyDirty($activity->info_link, $request->info_link, $isDirty);
 			$activity->cost = $this->copyDirty($activity->cost, $request->cost, $isDirty);
 			$activity->parking = $this->copyDirty($activity->parking, $request->parking, $isDirty);
