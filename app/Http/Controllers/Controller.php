@@ -1784,7 +1784,14 @@ class Controller extends BaseController
 	
     protected function countView(Entry $entry)
     {		
-		$entry->view_count++;
-		$entry->save();	
+		if (Auth::check())
+		{
+			// only count non-logged in views
+		}
+		else
+		{
+			$entry->view_count++;
+			$entry->save();	
+		}
 	}
 }

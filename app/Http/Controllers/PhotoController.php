@@ -151,6 +151,36 @@ class PhotoController extends Controller
 						
 		return view('photos.sliders', $vdata);	
 	}
+
+	public function featured()
+	{			
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
+
+		$q = '
+			SELECT id, filename, alt_text, location, main_flag, parent_id, site_id 
+				, CONCAT(alt_text, " - ", location) as photo_title
+				, CONCAT("' . PHOTO_SLIDER_PATH . '") as path
+			FROM photos
+			WHERE 1=1
+				AND deleted_flag = 0
+				AND (parent_id is null OR parent_id = 0)
+			ORDER BY id DESC
+		';
+		
+		// get the list with the location included
+		$records = DB::select($q, [SITE_ID]);
+		
+		$sliderPath = '/img/sliders/';
+		$sliderPath = count($records) > 0 ? Controller::getPhotoPathRemote($sliderPath, $records[0]->site_id) : $sliderPath;
+		
+		$vdata = $this->getViewData([
+			'photos' => $records, 
+			'page_title' => 'Featured Photos',
+			'slider_path' => $sliderPath,
+		]);
+						
+		return view('photos.featured', $vdata);	
+	}
 	
     public function indexadmin()
     {
