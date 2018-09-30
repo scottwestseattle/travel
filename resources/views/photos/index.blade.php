@@ -35,8 +35,10 @@
 						<table>
 						
 							@if (Auth::user()->user_type >= 100)
+								@if ($photo->gallery_flag <> 1)
+									<tr><td><span style="color:red;">Not in Gallery</span></td></tr>
+								@endif																	
 								<tr><td>{{ $photo->filename }}</td></tr>
-								<!-- tr><td>{{ number_format($photo->size) }} bytes</td></tr -->
 							@endif					
 						
 							<tr><td>{{ $photo->alt_text }}</td></tr>
@@ -85,8 +87,7 @@
 						
 							@if (Auth::user()->user_type >= 100)
 								<tr><td>{{ $photo->filename }} <a href="/photos/entries/{{$photo->parent_id}}">(Gallery)</a></td></tr>
-								<!-- tr><td>{{ number_format($photo->size) }} bytes</td></tr -->
-							@endif					
+							@endif									
 						
 							<tr><td>{{ $photo->alt_text }}</td></tr>
 							<tr><td>{{ $photo->location }}</td></tr>

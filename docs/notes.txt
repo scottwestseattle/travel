@@ -32,7 +32,8 @@ ALTER TABLE `entries` ADD `color_foreground` VARCHAR(20) NULL DEFAULT NULL AFTER
 ALTER TABLE `activities` ADD `map_label` VARCHAR(100) NULL AFTER `map_link`, ADD `map_labelalt` VARCHAR(100) NULL AFTER `map_label`;
 ALTER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelalt`, ADD `map_label2` VARCHAR(100) NULL AFTER `map_link2`, ADD `map_labelalt2` VARCHAR(100) NULL AFTER `map_label2`;
 
-
+09/29
+ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permalink` VARCHAR(255) NULL AFTER `gallery_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

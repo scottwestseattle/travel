@@ -46,6 +46,10 @@
 					<input type="checkbox" name="main_flag" id="main_flag" class="" />
 					<label for="main_flag" class="checkbox-big-label">Main Photo</label>
 				</div>			
+				<div>
+					<input type="checkbox" name="gallery_flag" id="gallery_flag" class="" checked />
+					<label for="gallery_flag" class="checkbox-big-label">Show in Gallery</label>
+				</div>			
 			@endif
 			
 			<div class="">

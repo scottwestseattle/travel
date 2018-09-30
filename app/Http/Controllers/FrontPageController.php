@@ -275,7 +275,7 @@ class FrontPageController extends Controller
 			->get();
 			
 		$ip = Event::getVisitorIp();
-			
+						
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,

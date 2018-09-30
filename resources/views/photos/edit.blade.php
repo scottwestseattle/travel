@@ -30,10 +30,14 @@
 			</div>
 			
 			@if (intval($record->parent_id) !== 0)
-			<div style="clear: both;" class="">
-				<input type="checkbox" name="main_flag" id="main_flag" class="" value="{{ intval($record->main_flag) }}" {{ (intval($record->main_flag)) ? 'checked' : '' }} />
-				<label for="main_flag" class="checkbox-big-label">Main Photo</label>
-			</div>	
+				<div style="clear: both;" class="">
+					<input type="checkbox" name="main_flag" id="main_flag" class="" value="{{ intval($record->main_flag) }}" {{ (intval($record->main_flag)) ? 'checked' : '' }} />
+					<label for="main_flag" class="checkbox-big-label">Main Photo</label>
+				</div>
+				<div>
+					<input type="checkbox" name="gallery_flag" id="gallery_flag" class="" value="{{ intval($record->gallery_flag) }}" {{ (intval($record->gallery_flag)) ? 'checked' : '' }} />
+					<label for="gallery_flag" class="checkbox-big-label">Show in Gallery</label>
+				</div>	
 			@endif
 
 			<div style="margin:20px 0;">				

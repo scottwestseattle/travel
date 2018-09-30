@@ -83,7 +83,8 @@ class GalleryController extends Controller
 			
 		$photos = Photo::select()
 			//->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
+			->where('deleted_flag', 0)
+			->where('gallery_flag', 1)
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();

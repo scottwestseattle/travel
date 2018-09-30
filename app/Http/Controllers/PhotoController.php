@@ -75,7 +75,7 @@ class PhotoController extends Controller
 
 		$parent_id = intval($parent_id);		 
 		
-    	if ($parent_id > 0)
+    	if ($parent_id > 0) // if parent_id is set and is not a slider
         {
 			$info = Controller::getPhotoInfo($type_flag);
 			$folder = $info['folder'];
@@ -92,8 +92,14 @@ class PhotoController extends Controller
 			$photos = Photo::select()
 				->where('deleted_flag', 0)
 				->where('parent_id', '=', $parent_id)
-				->orderByRaw('photos.main_flag DESC, photos.id DESC')
+				->orderByRaw('photos.main_flag DESC, photos.gallery_flag DESC, photos.id DESC')
 				->get();
+				
+			foreach($photos as $photo)
+			{
+				if (!isset($photo->permalink))
+					$photo->permalink = str_replace(".jpg", "", $photo->filename);
+			}
 				
 			$galleries = Photo::getGalleryMenuOptions();
 
@@ -394,9 +400,11 @@ class PhotoController extends Controller
 			$photo = new Photo();
 			$photo->site_id = SITE_ID;
 			$photo->filename = $filename;
+			$photo->permalink = str_replace(".jpg", "", $filename);
 			$photo->alt_text = $alt_text;
 			$photo->location = trim($request->location);
 			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
+			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->parent_id = $id;
 			$photo->user_id = Auth::id();
 			$photo->type_flag = $type_flag;
@@ -475,6 +483,56 @@ class PhotoController extends Controller
 	
     public function view(Photo $photo)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
+
+		$path = Controller::getPhotoPath($photo);
+		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
+		
+		$vdata = $this->getViewData([
+			'photo' => $photo, 
+			'path' => $path, 
+			'page_title' => 'Photo of ' . $photo->alt_text
+		]);		
+		
+		return view('photos.view', $vdata);
+	}
+
+    public function permalinkParent(Request $request, $parent_id, $permalink)
+    {
+		$parent_id = intval($parent_id);
+		$permalink = trim($permalink);
+		
+		$photo = Photo::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('parent_id', $parent_id)
+			->where('permalink', $permalink)
+			->first();
+
+		if (!isset($photo))
+		{
+			$msg = 'Specified Photo Not Found: ' . $permalink;
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
+			return redirect($parent_id > 0 ? '/photos/entries/' . $parent_id : '/error');
+		}
+		
+		if (!isset($photo))
+		{
+			$permalink .= '.jpg';
+			
+			$photo = Photo::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('parent_id', $parent_id)
+				->where('filename', $permalink)
+				->first();
+		}
+		
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
 
 		$path = Controller::getPhotoPath($photo);
@@ -603,8 +661,10 @@ class PhotoController extends Controller
 			// update the db record
 			//
 			$photo->filename = $filename;
+			$photo->permalink = str_replace(".jpg", "", $filename);
 			$photo->alt_text = $alt_text;
 			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
+			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
 			$photo->save();
 				
