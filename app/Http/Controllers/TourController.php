@@ -169,6 +169,11 @@ class TourController extends Controller
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
+			
+		if (isset($entry))
+		{
+			$this->countView($entry);
+		}
 		
 		// get the entry the mysql way so we can have all the main photo and location info
 		$entry2 = Entry::getEntry($permalink);		

@@ -66,6 +66,7 @@ class GalleryController extends Controller
 						
 		if (isset($entry))
 		{
+			$this->countView($entry);
 			$entry->description = nl2br($entry->description);
 			$entry->description = $this->formatLinks($entry->description);		
 		}

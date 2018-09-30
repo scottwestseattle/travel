@@ -30,6 +30,7 @@ foreach($photos as $photo)
 				@elseif ($record->approved_flag === 0)
 					<li class="active"><a href="/entries/publish/{{$record->id}}">Pending Approval</a></li>
 				@endif
+				<li>View Count: {{$record->view_count}}</li>
 			</ul>
 		</div>
 		@endif

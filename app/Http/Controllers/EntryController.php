@@ -210,7 +210,13 @@ return redirect('/sections');
 			->where('deleted_flag', 0)
 			->where('permalink', $permalink)
 			->first();
-		$gallery = isset($entry) ? $entry->photos : null;
+			
+		$gallery = null;
+		if (isset($entry))
+		{
+			$this->countView($entry);
+			$gallery = $entry->photos;
+		}
 		
 		// get the entry the mysql way so we can have all the main photo and location info
 		$entry = Entry::getEntry($permalink);
@@ -535,8 +541,8 @@ return redirect('/sections');
 	
     public function viewcount(Entry $entry)
     {		
-    	$entry->view_count++;
-    	$entry->save();	
+		$this->countView($entry);
+		
     	return view('entries.viewcount');
 	}
 

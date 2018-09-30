@@ -40,11 +40,10 @@
 	</div>		
 		
 	<div class="form-group">
-		<h1 name="title" class="">{{$record->title }}
-			@if (false)
-				{{' (' . $main_photo->filename . ')'}}
-			@endif
-		</h1>
+		<h1 name="title" class="">{{$record->title }}</h1>
+		@if (null !== Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+			<p>View Count: {{$record->view_count}}</p>
+		@endif
 	</div>
 	
 	<?php 

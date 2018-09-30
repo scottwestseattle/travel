@@ -56,7 +56,7 @@
 		</div>
 		@endif
 		
-		<h1 name="title" class="">{{$record->title }}</h1>
+		<h1 name="title" class="">{{$record->title}}</h1>
 		<strong>
 
 		@if (isset($record->location) && is_string($record->location))
@@ -68,7 +68,10 @@
 		@endif
 		
 		@if (isset($record->display_date))
-			<p><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?></p>
+			<br/><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?>
+		@endif
+		@if (null !== Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+			<br/>View Count: {{$record->view_count}}<br/>
 		@endif
 		</strong>
 	</div>

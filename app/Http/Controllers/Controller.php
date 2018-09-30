@@ -1781,4 +1781,10 @@ class Controller extends BaseController
 		
 		return $this->viewData;
 	}
+	
+    protected function countView(Entry $entry)
+    {		
+		$entry->view_count++;
+		$entry->save();	
+	}
 }
