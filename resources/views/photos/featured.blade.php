@@ -17,11 +17,11 @@
 		@endif
 	</h1>
 	
-	<div class="{{SHOW_NON_XS}}">	
+	<div class="{{SHOW_NON_XS}}" style="">	
 		@foreach($photos as $photo)
-		<div style="float:left; margin:2px;">
+		<div class="" style="float:left; margin:2px; width:18%">
 			<a href="/photos/view/{{$photo->id}}">
-				<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="height: 140px;"/>
+				<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="width: 100%;"/>
 			</a>
 		</div>
 		@endforeach

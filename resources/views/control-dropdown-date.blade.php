@@ -51,7 +51,7 @@
 	<a href='#' onclick="event.preventDefault(); javascript:changeDate(0, 'year', 'month', 'day')";>
 		<span id="" class="glyphCustom glyphicon glyphicon-remove" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
-	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day')";>
+	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day', true)";>
 		<span id="" class="glyphCustom glyphicon glyphicon-calendar" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
 

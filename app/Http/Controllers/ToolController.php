@@ -242,16 +242,28 @@ class ToolController extends Controller
 		return $urls;
 	}
 	
-    protected function makeSiteMap()
+    protected function makeSiteMap($domainName)
     {	
+		$filename = 'sitemap-' . $domainName . '.txt';
+
 		$urls = [
 			'/',
 			'/login',
 			'/register',
 			'/about',
 		];
+		
+		$site = Controller::getSiteByDomainName($domainName);
+		if (!isset($site->id))
+		{
+			$siteMap['sitemap'] = null; // no records
+			$siteMap['server'] = $domainName;
+			$siteMap['filename'] = $filename;
 
-		$sections = Controller::getSections();
+			return $siteMap;
+		}
+			
+		$sections = Controller::getSections($site->id);
 		
 		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
 		{
@@ -293,10 +305,9 @@ class ToolController extends Controller
 			// write the sitemap file
 			$siteMap = [];
 			
-			$server = $this->domainName;
+			$server = $domainName;
 			
 			// file name looks like: sitemap-domain.com.txt
-			$filename = 'sitemap-' . $server . '.txt';
 			$myfile = fopen($filename, "w") or die("Unable to open file!");
 			
 			$server = 'http://' . $server;
@@ -338,13 +349,29 @@ class ToolController extends Controller
 	}
 
     public function sitemap(Request $request)
-    {			
-		$siteMap = $this->makeSiteMap();
+    {
+		$sites = [
+			'scotthub.com',
+			'hikebikeboat.com',
+			'epictravelguide.com',
+			'grittytravel.com',
+		];
+		
+		$siteMaps = [];
+
+		foreach($sites as $site)
+		{
+			$siteMap = $this->makeSiteMap($site);
+			
+			if (isset($siteMap))
+				$siteMaps[] = $siteMap;
+		}
 		
 		return view('tools.sitemap', $this->getViewData([
-			'records' => $siteMap['sitemap'],
-			'server' => $siteMap['server'],
-			'filename' => $siteMap['filename'],
+			'siteMaps' => $siteMaps,
+			//'records' => $siteMap['sitemap'],
+			//'server' => $siteMap['server'],
+			//'filename' => $siteMap['filename'],
 			'executed' => null,
 			'sitemap' => true,
 		]));

@@ -373,7 +373,7 @@ class Entry extends Base
 		return $record;
 	}
 	
-	static public function getAboutPage()
+	static public function getAboutPage($site_id)
 	{
 		$q = '
 			SELECT entries.id, entries.title, entries.description, entries.permalink, entries.published_flag, entries.approved_flag 
@@ -394,7 +394,7 @@ class Entry extends Base
 			LIMIT 1
 		';
 		
-		$record = DB::select($q, [SITE_ID, SITE_ID]);
+		$record = DB::select($q, [$site_id, $site_id]);
 		
 		return $record;
 	}

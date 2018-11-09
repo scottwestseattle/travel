@@ -44,11 +44,17 @@ else
 			<a href="/blogs/index"><button type="button" class="btn btn-blog-nav">Back to Blog List<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>			
 		</div>	
 	@endif
-			
+	
+	<div style="margin-top: 10px;">
+		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+			<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-blog-nav">Add New Post</button></a>	
+		@endif	
+	</div>
+	
 	<div class="form-group">
 		<h1 name="title" class="">{{$record->title }}</h1>
 	</div>
-	
+		
 	<?php 
 		//
 		// show main photo

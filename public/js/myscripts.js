@@ -145,11 +145,20 @@ function pad(number, length)
     return str;
 }
 
-function changeDate(inc, fromYearId, fromMonthId, fromDayId)
+function changeDate(inc, fromYearId, fromMonthId, fromDayId, useCurrentDate = false)
 {	
     var fromDay = document.getElementById(fromDayId);
 	if (fromDay && parseInt(fromDay.value) == 0)
-		fromDay = null;
+	{
+		if (useCurrentDate)
+		{
+			var today = new Date();
+			fromDay.value = today.getDate();		}
+		else
+		{
+			fromDay = null;
+		}
+	}
 	
     var fromMonth = document.getElementById(fromMonthId);
     var fromYear = document.getElementById(fromYearId);

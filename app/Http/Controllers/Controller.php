@@ -1053,21 +1053,18 @@ class Controller extends BaseController
 	}
 
 	// this is the new version that uses the php server_name
-    protected function getSiteNew()
+    protected function getSiteByDomainName($domainName)
     {		
-		if (isset($this->site))
-			return $this->site;
-
 		try 
 		{
 			$site = Site::select()
-				->where('site_url', strtolower($this->domainName))
+				->where('site_url', strtolower($domainName))
 				->where('deleted_flag', 0)
 				->first();
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error loading Front Page Sites';
+			$msg = 'Error loading Sites';
 			Event::logException(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg, null, $e->getMessage());
 		}
 		
@@ -1077,7 +1074,7 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$msg = 'Front Page: Site Not Found, Site: ' . $this->domainName;
+			$msg = 'Site Not Found, Site: ' . $domainName;
 			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
 			
 			// create a dummy site so everything will work
@@ -1085,9 +1082,7 @@ class Controller extends BaseController
 			$site->site_name = 'Site Not Found - Check Event Log For Errors';
 			$site->site_url = 'not found';
 		}
-		
-		$this->domainName = $site->site_url;
-			
+
 		return $site;
 	}	
 
@@ -1119,13 +1114,14 @@ class Controller extends BaseController
 		return $section;
 	}
 
-    protected function getSections()
+    protected function getSections($site_id = null)
     {		
 		$sections = null;
 		
 		try 
 		{
-			$site_id = $this->getSiteId();
+			if (!isset($site_id))
+				$site_id = $this->getSiteId();
 			
 			$new_way = true;
 			

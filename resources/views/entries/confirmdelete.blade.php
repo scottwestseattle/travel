@@ -11,6 +11,10 @@
 	<form method="POST" action="/entries/delete/{{ $entry->id }}">
 
 		@if (isset($referer))<input type="hidden" name="referer" value="{{$referer}}">@endif
+
+		<div class="form-group">
+			<button type="submit" class="btn btn-primary">Confirm Delete</button>
+		</div>
 		
 		<div class="form-group">
 			<h3 name="title" class="">{{$entry->title }}</h3>

@@ -328,7 +328,9 @@ class FrontPageController extends Controller
     {
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ABOUT);
 		
-		$entry = Entry::getAboutPage();
+		$site_id = $this->getSiteId();
+
+		$entry = Entry::getAboutPage($site_id);
 
 		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
 		{
