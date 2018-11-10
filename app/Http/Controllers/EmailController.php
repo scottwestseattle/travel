@@ -57,9 +57,23 @@ class EmailController extends Controller
 		// To connect to imap server on port 993
 		$address = '{' . $email_server . ':' . $email_port . '/' . $email_driver . '/' . $email_encryption . '}INBOX';
 		
-		//$mbox = imap_open("{imap.gmail.com:993/imap/ssl}INBOX", $email_account, $email_password);		
-		$mbox = imap_open($address, $email_account, $email_password);
-
+		//$mbox = imap_open("{imap.gmail.com:993/imap/ssl}INBOX", $email_account, $email_password);	
+		$mbox = null;
+		try 
+		{
+			$mbox = imap_open($address, $email_account, $email_password);
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Could not open imap stream';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'imap', null, $msg);
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			return redirect('/transactions/filter');
+		}
+			
 		if ($mbox != NULL)
 		{
 			try 
@@ -278,7 +292,7 @@ class EmailController extends Controller
 			$date = DateTime::createFromFormat('m/d', $parts[0]);
 			if ($date == NULL)
 			{
-				die("Date conversion failed, from text: " . $date);
+				die("Date conversion 1 failed, from text: " . $parts[0]);
 			}
 									
 			// get the description
@@ -338,13 +352,19 @@ class EmailController extends Controller
 			$amount = floatval(trim($amount, '$'));
 			$amount = -$amount;
 						
-			// get the date
+			// date looks like: SEP 30, 2016
 			$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 12, -1); 
 			$date2 = str_replace(',', '', $date_raw);
 			$date = DateTime::createFromFormat('M d Y', $date2);
 			if ($date == NULL)
 			{
-				die("Date conversion failed, from text: " . $date2);
+				// try this format: 11/08/2018
+				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 10, -1); 
+				$date = DateTime::createFromFormat('m/d/Y', $date_raw);
+				if ($date == NULL)
+				{
+					die("Date conversion 2 failed, from text: " . $date_raw);
+				}
 			}
 									
 			// get the account number, last four digits
@@ -413,7 +433,7 @@ class EmailController extends Controller
 			//debug($date);die;
 			if ($date == NULL)
 			{
-				die("Date conversion failed, from text: " . $date2);
+				die("Date conversion 3 failed, from text: " . $date2);
 			}
 									
 			// get the account number, last four digits
