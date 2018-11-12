@@ -456,7 +456,7 @@ $sectionCount = 0;
 				
 		@if (isset($site->current_location_map_link))
 			<iframe src="{{$site->current_location_map_link}}" width="90%" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
-		@elseif (isset($section->photo))
+		@elseif (isset($section->photo) && strpos($section->photo, PHOTOS_PLACEHOLDER_PREFIX) === false)
 			<img src="{{$section->photo_path}}/{{$section->photo}}" title="{{$section->photo_title}}" width="100%" style="max-width:700px" />
 		@endif
 

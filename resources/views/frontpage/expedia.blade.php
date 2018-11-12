@@ -545,8 +545,12 @@ Important Information        </td>
 
 
 
-
+@if (false)
 <li id="travelingToUS">All passengers traveling to the US must provide valid travel documents and details of their full US destination address for US Immigration.</li>
+@else
+<li id="travelingToUS">Tickets are nonrefundable, nontransferable and name changes are not allowed.</li>
+@endif
+
 <li id="internationalPassportNote">Proof of citizenship is required for international travel.  Be sure to bring all necessary documentation (e.g. passport, visa, transit permit). To learn more, visit our <a href="http://visacentral.com/index.php?login=85001&utm_campaign=Expedia&utm_medium=1&utm_source=US&rfrr=FLT.Itin.VisaSite" class="tooltip" >Visa and Passport page <span class="visually-hidden" style="display:none;" >(Opens a new window) </span></a>.</li>
 
 

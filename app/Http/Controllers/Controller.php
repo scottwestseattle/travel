@@ -33,6 +33,7 @@ define('SLIDER_PHOTOS_PATH', '/public/img/sliders/');
 define('PHOTOS_FULL_PATH', '/public/img/');
 define('PHOTOS_WEB_PATH', '/img/');
 define('PHOTOS_THUMBNAIL_FOLDER', 'tn');
+define('PHOTOS_PLACEHOLDER_PREFIX', 'placeholder-');
 
 // -1=not set, 0=slider, 1=entry, 2=receipt, 99=other 
 define('PHOTO_TYPE_NOTSET',		-1);
@@ -1476,7 +1477,7 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$record->photo = 'img/theme1/placeholder-' . $this->domainName . '.jpg';
+			$record->photo = 'img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $this->domainName . '.jpg';
 			$record->photo_path = '';
 			//todo: $record->photo_title = $this->;
 		}
