@@ -31,7 +31,7 @@
 			</div>			
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">
-				<input type="text" name="location" id="location" class="form-control" placeholder="Required: location"/>
+				<input type="text" name="location" id="location" class="form-control" value="{{$location}}" placeholder="Required: location"/>
 			</div>	
 
 			<div style="clear:both; margin:20px 0; font-size:20px;" class="">

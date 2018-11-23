@@ -226,12 +226,16 @@ class PhotoController extends Controller
 				->where('parent_id', $parent_id)
 				->get();	
 		
+		// check if location has been saved in the session so we can pre-populate it
+		$location = session('location', '');
+
 		$vdata = $this->getViewData([
 			'parent_id' => $parent_id,
 			'type_flag' => $type_flag,
 			'type' => $type,
 			'photos' => $photos,
 			'path' => $info['path'],
+			'location' => $location,
 		]);
 		
 		return view('photos.add', $vdata);      
@@ -241,20 +245,21 @@ class PhotoController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-
+			 
 		$type = Controller::getPhotoInfo($request->type_flag)['type'];
 			 
 		$vdata = $this->getViewData([
 			'parent_id' => $request->parent_id,
 			'type_flag' => $request->type_flag,
 			'type' => $type,
+			'location' => session('location', ''),
 		]);	
 		
  		//
 		// get file to upload
 		//
 		$file = $request->file('image');
-			
+
 		if (!isset($file))
 		{
 			$msg = 'Image to upload must be set using the [Browse] button';
@@ -285,7 +290,7 @@ class PhotoController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);	
 
-			return view('photos.add', $vdata);					
+			return view('photos.add', $vdata);
 		}
 					
 		//
@@ -432,11 +437,14 @@ class PhotoController extends Controller
 			$photo->filename = $filename;
 			$photo->permalink = str_replace(".jpg", "", $filename);
 			$photo->alt_text = $alt_text;
-			$photo->location = trim($request->location);
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->parent_id = $id;
 			$photo->user_id = Auth::id();
 			$photo->type_flag = $type_flag;
+
+			// save the location for next time
+			$photo->location = trim($request->location);
+			session(['location' => $photo->location]); 
 			
 			// if photo is being set to main, unset any other main photo
 			if (isset($request->main_flag))
@@ -701,7 +709,7 @@ class PhotoController extends Controller
 			$photo->alt_text = $alt_text;
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
-			
+
 			// if photo is being set to main, unset any other main photo
 			if (isset($request->main_flag) && !$photo->main_flag)
 			{
