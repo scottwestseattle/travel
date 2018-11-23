@@ -32,7 +32,7 @@ class LocationsController extends Controller
 		
 		$locations = Location::select()
 			//->where('user_id', '=', Auth::id())
-			->orderByRaw('locations.location_type ASC')
+			->orderByRaw('locations.name ASC')
 			->get();
 		
     	return view('locations.indexadmin', ['records' => $locations]);
