@@ -31,6 +31,9 @@
 			@if ($stats['articles'] > 0)
 				<tr><td>Articles:</td><td>{{$stats['articles']}}</td></tr>
 			@endif
+			@if ($stats['galleries'] > 0)
+				<tr><td>Galleries:</td><td>{{$stats['galleries']}}</td></tr>
+			@endif
 			@if ($stats['total_pages'] > 0)
 				<tr><td><b>Total Content Pages:</b></td><td><b>{{$stats['total_pages']}}</b></td></tr>
 				<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
@@ -48,6 +51,13 @@
 			@if ($stats['total_photos'] > 0)
 				<tr><td><b>Total Photos:</b></td><td><b>{{$stats['total_photos']}}</b></td></tr>
 			@endif
+			
+			<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+			<tr><td>Content Pages:</td><td>{{$stats['total_pages']}}</td></tr>
+			<tr><td>Photo Pages:</td><td>{{$stats['sliders']}}</td></tr>
+			<tr><td>Static Pages:</td><td>{{$stats['static_pages']}}</td></tr>
+			<tr><td><b>Site Map Pages:</b></td><td><b>{{$stats['total_sitemap']}}</b></td></tr>
+			
 		</tbody>
 	</table>
 	

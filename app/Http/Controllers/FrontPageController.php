@@ -330,7 +330,7 @@ class FrontPageController extends Controller
 		
 		$site_id = $this->getSiteId();
 
-		$entry = Entry::getAboutPage($site_id);
+		$entry = Entry::getAboutPage(SITE_ID);
 
 		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
 		{
@@ -383,12 +383,15 @@ class FrontPageController extends Controller
 		
 		if (Controller::getSection(SECTION_GALLERY, $sections) != null)
 		{
+			$stats['galleries'] = Entry::getEntryCount(ENTRY_TYPE_GALLERY, /* allSites = */ false);
 			$stats['photos_gallery'] = Photo::getCount(ENTRY_TYPE_GALLERY);		
 		}
 
 		$stats['photos_content'] = $stats['photos_article'] + $stats['photos_blog'] + $stats['photos_post'] + $stats['photos_tour'];
-		$stats['total_pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog_entries'] + $stats['tours'];
+		$stats['total_pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog_entries'] + $stats['tours'] + $stats['galleries'];
 		$stats['total_photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
+		$stats['static_pages'] = 13;
+		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] ; 
 		
 		$vdata = $this->getViewData([
 			'record' => count($entry) > 0 ? $entry[0] : null,

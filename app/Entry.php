@@ -388,7 +388,7 @@ class Entry extends Base
 				AND entries.deleted_flag = 0
 				AND entries.published_flag = 1
 				AND entries.approved_flag = 1
-				AND entries.title = \'page-about\' 
+				AND entries.permalink = \'page-about\' 
 			GROUP BY 
 				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path, entries.published_flag, entries.approved_flag 
 			LIMIT 1
