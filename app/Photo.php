@@ -115,4 +115,11 @@ class Photo extends Base
 					
 		return $array;
 	}
+	
+	static protected function clearMainPhoto($parentId)
+	{	
+		DB::table('photos')
+            ->where('parent_id', $parentId)
+            ->update(['main_flag' => 0]);
+	}
 }

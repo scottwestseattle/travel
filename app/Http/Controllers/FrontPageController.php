@@ -536,7 +536,8 @@ priceTaxes=$59.50
 		$request->session()->flash('message.level', 'success');
 		$request->session()->flash('message.content', 'Spy mode is ' . $spy);
 
-		return view('frontpage.spy', $vdata);
+		//return view('frontpage.spy', $vdata);
+		return redirect('/');
     }	
 
     public function spyoff(Request $request)

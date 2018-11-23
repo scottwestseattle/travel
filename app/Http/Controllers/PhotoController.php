@@ -433,11 +433,17 @@ class PhotoController extends Controller
 			$photo->permalink = str_replace(".jpg", "", $filename);
 			$photo->alt_text = $alt_text;
 			$photo->location = trim($request->location);
-			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->parent_id = $id;
 			$photo->user_id = Auth::id();
 			$photo->type_flag = $type_flag;
+			
+			// if photo is being set to main, unset any other main photo
+			if (isset($request->main_flag))
+			{
+				Photo::clearMainPhoto($photo->parent_id);
+			}
+			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
 						
 			$photo->save();
 			
@@ -693,9 +699,17 @@ class PhotoController extends Controller
 			$photo->filename = $filename;
 			$photo->permalink = str_replace(".jpg", "", $filename);
 			$photo->alt_text = $alt_text;
-			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
+			
+			// if photo is being set to main, unset any other main photo
+			if (isset($request->main_flag) && !$photo->main_flag)
+			{
+				Photo::clearMainPhoto($photo->parent_id);
+			}
+			
+			$photo->main_flag = isset($request->main_flag) ? 1 : 0;
+			
 			$photo->save();
 				
 			return redirect($redirect); 
