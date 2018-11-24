@@ -19,13 +19,14 @@ function getSection($id, $array)
 	return $section;
 }
 
-if (SITE_ID == 1)
+//echo '<p>site: ' . $site->site_url . '</p>';
+if (strtolower($site->site_url) == 'scotthub.com')
 {
 	$colors = [
-		'sectionGray',
-		'powerBlue',
 		'sectionWhite',
-		'sectionGreen',
+		'sectionGray',
+		'sectionOrange',
+		'sectionGray',
 		'sectionGray',
 		'sectionOrange',
 		'sectionGray',
@@ -34,13 +35,13 @@ if (SITE_ID == 1)
 	
 	$colorAlt = 'DarkBlue';
 }
-else if (SITE_ID == 2)
+else if (strtolower($site->site_url) == 'hikebikeboat.com')
 {
 	$colors = [
 		'sectionGray',
 		'powerBlue',
+		'sectionGray',
 		'sectionWhite',
-		'sectionGreen',
 		'sectionGray',
 		'sectionOrange',
 		'sectionGray',
@@ -49,21 +50,20 @@ else if (SITE_ID == 2)
 	
 	$colorAlt = 'DarkBlue';
 }
-else if (SITE_ID == 3)
+else
 {
 	$colors = [
-		'sectionPurple',
 		'sectionGray',
-		'sectionOrange',
 		'powerBlue',
+		'sectionGray',
 		'sectionGreen',
 		'sectionGray',
+		'sectionOrange',
 		'sectionGray',
 		'sectionWhite',
 	];
-
-	$colorAlt = 'DarkPurple';
-
+	
+	$colorAlt = 'DarkBlue';
 }
 
 $sectionCount = 0;
