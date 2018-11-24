@@ -7,7 +7,12 @@
 	@if (isset($entry))
 		@component('entries.menu-submenu', ['record' => $entry])@endcomponent
 	@endif
-	<h3>{{isset($entry) ? $entry->title : 'No Title'}}</h3>
+	
+	<h3>{{$record_title}}</h3>
+	
+	@if (isset($redirect))
+	<p><a href="{{$redirect}}">Back to Transactions</a></p>
+	@endif
 	
 	@if (Auth::user()->user_type >= 100)
 	<h3>

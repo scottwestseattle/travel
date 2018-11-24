@@ -8,6 +8,7 @@ use DB;
 use App\Photo;
 use App\Event;
 use App\Entry;
+use App\Transaction;
 
 define('PREFIX', 'photos');
 define('LOG_MODEL', 'photos');
@@ -83,12 +84,28 @@ class PhotoController extends Controller
 
 			$subfolder = $folder . '/' . $parent_id . '/';			
 			$path = $this->getPhotosWebPath($subfolder);
+			$redirect = null;
 			
-			$entry = Entry::select()
-				->where('deleted_flag', 0)
-				->where('id', $parent_id)
-				->first();
-							
+			if ($type_flag == 2)
+			{
+				$entry = Transaction::select()
+					->where('deleted_flag', 0)
+					->where('id', $parent_id)
+					->first();
+
+				$redirect = '/transactions/filter';
+				$title = isset($entry) ? $entry->description : 'No Title';
+			}			
+			else
+			{
+				$entry = Entry::select()
+					->where('deleted_flag', 0)
+					->where('id', $parent_id)
+					->first();
+				
+				$title = isset($entry) ? $entry->title : 'No Title';
+			}
+						
 			$photos = Photo::select()
 				->where('deleted_flag', 0)
 				->where('parent_id', '=', $parent_id)
@@ -112,6 +129,8 @@ class PhotoController extends Controller
 				'type' => $type,
 				'entry' => $entry,
 				'galleries' => $galleries,
+				'record_title' => $title,
+				'redirect' => $redirect,
 			]);				
 				
 			return view('photos.index', $vdata);
