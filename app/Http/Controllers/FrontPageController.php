@@ -48,6 +48,9 @@ class FrontPageController extends Controller
 		}
 
 		$posts = null;
+		
+		$site = Controller::getSite();		
+		$showFullGallery = (strtolower($site->site_url) == 'scotthub.com') ? true : false;
 				
 		//
 		// Set up the sections
@@ -94,7 +97,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ 10);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ ($showFullGallery) ? PHP_INT_MAX : 10);
 		
 		//
 		// save visitor stats
@@ -102,7 +105,7 @@ class FrontPageController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 		
 		$vdata = $this->getViewData([
-			'site' => Controller::getSite(),
+			'site' => $site,
 			'posts' => $posts, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
@@ -116,6 +119,7 @@ class FrontPageController extends Controller
 			'articles' => $articles,
 			'gallery' => $gallery,
 			'firstslider' => $firstslider,
+			'showFullGallery' => $showFullGallery,
 		]);
 		
     	return view('frontpage.index', $vdata);

@@ -23,10 +23,9 @@ function getSection($id, $array)
 if (strtolower($site->site_url) == 'scotthub.com')
 {
 	$colors = [
-		'sectionWhite',
+		'sectionGray',
 		'sectionGray',
 		'sectionOrange',
-		'sectionGray',
 		'sectionGray',
 		'sectionOrange',
 		'sectionGray',
@@ -217,6 +216,7 @@ $sectionCount = 0;
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
+	@if (strlen($section->description) > 0)
 		<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 			<!-- xs only -->
 			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{$section->description}} </h3>
@@ -225,10 +225,17 @@ $sectionCount = 0;
 			<!-- all other sizes -->
 			<h3 class="welcome-text main-font">{{ $section->description }} </h3>
 		</div>
+	@endif
 		
+	@if ($showFullGallery)
+		<div style="margin-top:10px;">
+			<img style="width:95%; max-width:200px;" src="/img/theme1/logo-{{$domainName}}.png" />
+		</div>
+	@else
 		<div style="margin-top:40px;">
 			<img style="width:95%; max-width:400px;" src="/img/theme1/logo-{{$domainName}}.png" />
 		</div>
+	@endif
 	
 	</div>	
 
@@ -246,9 +253,11 @@ $sectionCount = 0;
 	<!--------------------------------------------------------------------------------------->
 	<!-- The charming Quote -->
 	<!--------------------------------------------------------------------------------------->		
+@if (strlen($section->description_short) > 0)
 	<div class="sectionHeader text-center" style="margin-top:20px;">
 		<h3 style="font-size:1.2em;" class="welcome-text main-font"><i>{{$section->description_short}}</i></h3>
 	</div>
+@endif
 	
 </div>
 </section>
@@ -262,6 +271,7 @@ $sectionCount = 0;
 
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
+@if (!$showFullGallery)
 	<div class="text-center main-font">
 		<h1 style="margin:0;padding: 50px 0 30px 0">
 			@if (isset($section->title))
@@ -271,12 +281,13 @@ $sectionCount = 0;
 			@endif
 		</h1>
 	</div>
+@endif
 
 	<!------------------------------------------------------------------------------------------------------------->
 	<!-- Content -------------------------------------------------------------------------------------------------->
 	<!------------------------------------------------------------------------------------------------------------->
 	
-	<div id="content" style='margin:0; padding: 0 0 30px 0; min-height: 200px; text-align: center;'>
+	<div id="content" style='margin:0; padding: 0 0 {{$showFullGallery ? '5px' : '30px'}} 0; min-height: 200px; text-align: center;'>
 		@foreach($gallery as $record)
 			<div class='frontpage-box' style="" >
 				<!-- BACKGROUND PHOTO LINK -->
@@ -289,11 +300,13 @@ $sectionCount = 0;
 		@endforeach			
 	</div>
 	
+@if (!$showFullGallery)
 	<div class='text-center'>
 		<a href="/galleries">
 			<button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Galleries</button>
 		</a>
 	</div>
+@endif
 	
 	<span id="debug"></span>
 		
