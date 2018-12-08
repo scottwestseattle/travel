@@ -37,7 +37,7 @@
 
 		<div class="clear"></div>
 		
-		<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{$totals['total']}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . $totals['reconciled'] . '' : '' }}</h3>
+		<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{round($totals['total'], 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . round($totals['reconciled'], 2) . '' : '' }}</h3>
 
 		<table class="table">
 			<tbody>

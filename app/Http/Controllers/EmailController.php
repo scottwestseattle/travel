@@ -35,7 +35,7 @@ class EmailController extends Controller
 			$accountId = EMAIL_CAPGRAY_ID;
 		else if ($account === EMAIL_CAPBLUE_ACCOUNT)
 			$accountId = EMAIL_CAPBLUE_ID;
-			
+
 		return $accountId;
 	}	
 
@@ -344,7 +344,8 @@ class EmailController extends Controller
 				echo 'sample = ' . substr($sample, 0, 30) . '<br/>';
 				die('*** DEBUG, parse: info text not found in body raw ***');
 			}
-						
+				
+			$body_full = $body_raw; // the account number is getting filtered for some reason but it is still deep in the body, so use the full body to search for it later
 			$body_raw = substr($body_raw, $pos, strlen($sample));
 												
 			// get the amount
@@ -368,7 +369,7 @@ class EmailController extends Controller
 			}
 									
 			// get the account number, last four digits
-			$account = $this->parseTag($body_raw, 'RE: Account ending in ', 4, -1); 
+			$account = $this->parseTag($body_full, 'RE: Account ending in ', 4, -1); 
 			$accountId = $this->getAccountId($account);
 
 			// get the description

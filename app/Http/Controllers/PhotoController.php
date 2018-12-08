@@ -728,6 +728,7 @@ class PhotoController extends Controller
 			$photo->alt_text = $alt_text;
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
+			session(['location' => $photo->location]); 
 
 			// if photo is being set to main, unset any other main photo
 			if (isset($request->main_flag) && !$photo->main_flag)
