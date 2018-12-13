@@ -1267,41 +1267,44 @@ class Controller extends BaseController
 		$filter['unreconciled_flag'] = false;
 		$filter['unmerged_flag'] = false;
 		
-		if (isset($request->account_id))
+		if (isset($request))
 		{
-			$id = intval($request->account_id);
-			if ($id > 0)
-				$filter['account_id'] = $id;
-		}
-		
-		if (isset($request->category_id))
-		{
-			$id = intval($request->category_id);
-			if ($id > 0)
-				$filter['category_id'] = $id;
-		}
-		
-		if (isset($request->subcategory_id))
-		{
-			$id = intval($request->subcategory_id);
-			if ($id > 0)
-				$filter['subcategory_id'] = $id;
-		}
+			if (isset($request->account_id))
+			{
+				$id = intval($request->account_id);
+				if ($id > 0)
+					$filter['account_id'] = $id;
+			}
+			
+			if (isset($request->category_id))
+			{
+				$id = intval($request->category_id);
+				if ($id > 0)
+					$filter['category_id'] = $id;
+			}
+			
+			if (isset($request->subcategory_id))
+			{
+				$id = intval($request->subcategory_id);
+				if ($id > 0)
+					$filter['subcategory_id'] = $id;
+			}
 
-		if (isset($request->search))
-		{
-			if (strlen($request->search) > 0)
-				$filter['search'] = $request->search;
-		}
+			if (isset($request->search))
+			{
+				if (strlen($request->search) > 0)
+					$filter['search'] = $request->search;
+			}
 
-		if (isset($request->unreconciled_flag))
-		{
-			$filter['unreconciled_flag'] = $request->unreconciled_flag;
-		}
+			if (isset($request->unreconciled_flag))
+			{
+				$filter['unreconciled_flag'] = $request->unreconciled_flag;
+			}
 
-		if (isset($request->unmerged_flag))
-		{
-			$filter['unmerged_flag'] = $request->unmerged_flag;
+			if (isset($request->unmerged_flag))
+			{
+				$filter['unmerged_flag'] = $request->unmerged_flag;
+			}
 		}
 		
 		return $filter;

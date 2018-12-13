@@ -314,16 +314,95 @@ class TransactionController extends Controller
 			
 		return redirect('/' . PREFIX . '/filter/');
     }	
-	
+		
     public function filter(Request $request)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 		 
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
-		$categories = Controller::getCategories(LOG_ACTION_ADD);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
+		//todo: session(['account_id' => null]);
+
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$categories = Controller::getCategories(LOG_ACTION_SELECT);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT);
+	 
+		$records = null;
+		$total = 0.0;
+		try
+		{
+			$records = Transaction::getFilter($filter);
+			$totals = Transaction::getTotal($records);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());
+		
+			return redirect('/error');
+		}	
+						
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'totals' => $totals,
+			'accounts' => $accounts,
+			'categories' => $categories,
+			'subcategories' => $subcategories,			
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $filter,
+		]);
+							
+		return view(PREFIX . '.filter', $vdata);
+    }	
+
+    public function show(Request $request, $query, $id)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+
+/*
+		$filter = [
+		  "selected_month" => 12,
+		  "selected_day" => false,
+		  "selected_year" => 2018,
+		  "from_date" => "2018-12-1",
+		  "to_date" => "2018-12-31",
+		  "account_id" => session('account_id', false),
+		  "category_id" => false,
+		  "subcategory_id" => false,
+		  "search" => false,
+		  "unreconciled_flag" => false,
+		  "unmerged_flag" => false,
+		];
+*/
+
+		switch($query)
+		{
+			case 'account':
+				$filter['account_id'] = $id;
+				//session(['account_id' => $id]);
+				break;
+			case 'category':
+				$filter['category_id'] = $id;
+				//session(['category_id' => $id]);
+				break;
+			case 'subcategory':
+				$filter['subcategory_id'] = $id;
+				//session(['subcategory_id' => $id]);
+				break;
+			default;
+				break;
+		}
+	
+		//dump($filter);
+		
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$categories = Controller::getCategories(LOG_ACTION_SELECT);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT);
 	 
 		$records = null;
 		$total = 0.0;

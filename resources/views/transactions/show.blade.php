@@ -70,8 +70,8 @@
 						
 						<td style="color:{{$color}};">{{$record->notes}}</td>
 						<td style="color:{{$color}};">{{$record->vendor_memo}}</td>
-						<td><a href="/{{$prefix}}/show/account/{{$record->parent_id}}">{{$record->account}}</a></td>
-						<td><a href="/{{$prefix}}/show/category/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/show/subcategory/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
+						<td><a href="/{{$prefix}}/view/{{$record->parent_id}}">{{$record->account}}</a></td>
+						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/indexadmin/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
 
 						<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 					</tr>

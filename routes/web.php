@@ -162,6 +162,8 @@ Route::group(['prefix' => 'categories'], function () {
 
 // Transactions
 Route::group(['prefix' => 'transactions'], function () {
+
+	Route::get('/show/{filter}/{id}', 'TransactionController@show')->middleware('auth');
 	
 	Route::get('/expenses', 'TransactionController@expenses')->middleware('auth');
 	Route::post('/expenses', 'TransactionController@expenses')->middleware('auth');

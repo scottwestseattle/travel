@@ -30,7 +30,7 @@
 				<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td class="glyphCol"><a href='/{{$prefix}}/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 				
-				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->name}}</a></td>
+				<td><a href="/transactions/show/account/{{$record->id}}">{{$record->name}}</a></td>
 				<td>{{$record->balance}}</td>
 				<td>{{$record->notes}}</td>
 				<td>{{$record->hidden_flag ? 'Hidden' : 'Visible'}}</td>
