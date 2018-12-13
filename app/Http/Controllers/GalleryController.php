@@ -325,8 +325,8 @@ class GalleryController extends Controller
 			->where('id', $entry_id)
 			->first();
 			
-		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, /* published = */ false);
-		
+		$galleries = Entry::getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ false, /* limit = */ 0, /* site_id = */ null, /* orderBy = */ ORDERBY_DATE);
+
 		$vdata = $this->getViewData([
 			'entry' => $entry,
 			'galleries' => $galleries,

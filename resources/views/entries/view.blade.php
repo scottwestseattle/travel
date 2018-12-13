@@ -129,18 +129,39 @@
 		</div>
 	</div>
 
-	@if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0)
+	<!-- if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0) -->
+	@if (count($photos) > 0 || count($gallery) > 0)
+	
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PHOTOS <!-- a style="font-size:.65em;" href="/photos/slideshow/{{$record->id}}">(Slideshow)</a --></h3>
-				
+				<h3>PHOTOS<!-- a style="font-size:.65em;" href="/photos/slideshow/{{$record->id}}">(Slideshow)</a --></h3>
 			</div>
 		</div>
 			
-	<div class="text-center" style="display:default; margin-top:5px;">
-		@if (isset($photos))
-		@foreach($photos as $photo)		
-			@if ($photo->main_flag !== 1)
+		<div class="text-center" style="display:default; margin-top:5px;">
+			@if (isset($photos))
+			@foreach($photos as $photo)		
+				@if ($photo->main_flag !== 1)
+					<?php 
+						$title = $photo->filename;  // just in case the others are empty
+						
+						if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
+							$title = $photo->alt_text;
+						
+						if (isset($photo->location) && strlen($photo->location) > 0)
+							$title .= ', ' . $photo->location;
+					?>
+					
+					<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', {{$photo->id}})">
+						<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+						<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+					</span>
+				@endif
+			@endforeach	
+			@endif
+			
+			@if (isset($gallery))
+			@foreach($gallery as $photo)
 				<?php 
 					$title = $photo->filename;  // just in case the others are empty
 					
@@ -150,36 +171,16 @@
 					if (isset($photo->location) && strlen($photo->location) > 0)
 						$title .= ', ' . $photo->location;
 				?>
-				
-				<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', {{$photo->id}})">
-					<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
-					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$record->id}}/{{$photo->filename}}" />
+			
+				@if ($record->photo_id != $photo->id)
+				<span style="cursor:pointer;" onclick="popup({{$photo->parent_id}}, '{{$photo->filename}}', {{$photo->id}})">
+					<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
+					<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
 				</span>
+				@endif
+			@endforeach
 			@endif
-		@endforeach	
-		@endif
-		
-		@if (isset($gallery))
-		@foreach($gallery as $photo)
-			<?php 
-				$title = $photo->filename;  // just in case the others are empty
-				
-				if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
-					$title = $photo->alt_text;
-				
-				if (isset($photo->location) && strlen($photo->location) > 0)
-					$title .= ', ' . $photo->location;
-			?>
-		
-			@if ($record->photo_id != $photo->id)
-			<span style="cursor:pointer;" onclick="popup({{$photo->parent_id}}, '{{$photo->filename}}', {{$photo->id}})">
-				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
-				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="/img/entries/{{$photo->parent_id}}/{{$photo->filename}}" />
-			</span>
-			@endif
-		@endforeach
-		@endif
-	</div>
+		</div>
 
 	@endif
 

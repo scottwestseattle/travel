@@ -77,7 +77,7 @@ class Entry extends Base
 	}
 	
 	// get all entries for specified type
-	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $orderAlpha = false)
+	static public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $orderBy = ORDERBY_APPROVED)
 	{
 		if (!isset($type_flag))
 			return(Entry::getEntries($approved_flag));
@@ -127,18 +127,25 @@ class Entry extends Base
 				, blog_title, blog_id
 		';
 		
-		if ($orderAlpha)
+		$orderByPhrase = 'ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC';
+		
+		switch($orderBy)
 		{
-			$q .= '
-				ORDER BY entries.title ASC 
-			';
+			case ORDERBY_APPROVED:
+				// already set above
+				break;
+			case ORDERBY_TITLE:
+				$orderByPhrase = 'ORDER BY entries.title ASC';
+				break;
+			case ORDERBY_DATE:
+				$orderByPhrase = 'ORDER BY entries.display_date DESC, entries.id DESC';
+				break;
+			default:
+				// already set above
+				break;
 		}
-		else
-		{
-			$q .= '
-				ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC
-			';
-		}
+		
+		$q .= ' ' . $orderByPhrase . ' ';
 		
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';

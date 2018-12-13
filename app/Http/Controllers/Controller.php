@@ -141,6 +141,11 @@ define('LOG_PAGE_LOCATION', 'location');
 define('LOG_PAGE_ABOUT', 'about');
 define('LOG_PAGE_CONFIRM', 'confirm login');
 
+// query sorting
+define('ORDERBY_APPROVED', 0);
+define('ORDERBY_TITLE', 1);
+define('ORDERBY_DATE', 2);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
