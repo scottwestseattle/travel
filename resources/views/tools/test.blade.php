@@ -28,12 +28,16 @@
 					
 			<?php $count = 0; ?>
 			@foreach ($records as $record)
+				@if (!isset($record[2]['success']) || $record[2]['success'] === false)
 				<tr>
 					<td><input type="checkbox" name="test{{$count}}" id="test{{$count}}" style="margin:0;padding:0;" /></td>
 					<td><a target="_blank" href="{{$test_server}}{{$record[1]}}">{{$test_server}}{{$record[1]}}</a></td>
 					<td>{{$record[0]}}</td>
-					<td>{{$record[2]}}</td>
+					@if (isset($record[2]['results']))
+						<td>{{$record[2]['results']}}</td>
+					@endif
 				</tr>
+				@endif
 				<?php $count++; ?>
 			@endforeach
 			</table>

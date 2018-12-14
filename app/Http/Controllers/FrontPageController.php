@@ -176,8 +176,6 @@ class FrontPageController extends Controller
 				
 				if (stripos($agent, 'Googlebot') !== FALSE)
 					$new = 'GoogleBot';
-				else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
-					$new = 'GoogleUserContent';
 				else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
 					$new = 'GoogleSiteVerification';
 				else if (stripos($agent, 'bingbot') !== FALSE)
@@ -192,6 +190,10 @@ class FrontPageController extends Controller
 					$new = 'YandexBot';					
 				else if (stripos($agent, 'alphaseobot') !== FALSE)
 					$new = 'AlphaSeoBot';
+				else if (stripos($agent, 'uptimebot') !== FALSE)
+					$new = 'UptimeBot';
+				else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
+					$new = 'GoogleUserContent';
 				else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
 					$new = 'AmazonAWS';
 				else if (stripos($record->referrer, 'localhost') !== FALSE)
