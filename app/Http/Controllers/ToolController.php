@@ -19,7 +19,7 @@ class ToolController extends Controller
 		['EXPECTED NOT FOUND', '/', ''],
 		['Affiliates', '/', ''],
 		['Buddha', '/', ''],
-		['Exploring', '/', ''],
+		['Show All Galleries', '/', ''],
 		['Tours, Hikes, Things To Do', '/', ''],
 		['USA', '/', ''],
 		['Show All Articles', '/', ''],
@@ -48,9 +48,10 @@ class ToolController extends Controller
     {	
 		$executed = null;
 		
+		$server = 'http://' . strtolower(Controller::getSite()->site_url);
+
 		//$server = 'http://epictravelguide.com';
-		$server = 'http://localhost';
-		$server = 'http://grittytravel.com';
+		//$server = 'http://grittytravel.com';
 		//$server = 'http://hikebikeboat.com';
 		//$server = 'http://scotthub.com';
 
@@ -61,14 +62,18 @@ class ToolController extends Controller
 			$executed = true;
 			$executedTests = [];
 			$count = 0;
+			
 			for ($i = 0; $i < count($tests); $i++)
 			{			
 				// if item is checked
 				if (isset($request->{'test'.$i}))
 				{
+					$results = $this->testPage($request->test_server . $tests[$i][1], $tests[$i][0]);
+					
 					$executedTests[$count][0] = $tests[$i][0];
 					$executedTests[$count][1] = $tests[$i][1];
-					$executedTests[$count][2] = $this->testPage($request->test_server . $tests[$i][1], $tests[$i][0])['results'];
+					$executedTests[$count][2] = $results;
+					
 					$count++;
 				}
 			}
@@ -107,13 +112,16 @@ class ToolController extends Controller
 
 			if (isset($type))
 			{
+				//$expectedText = htmlspecialchars(substr($record->title, 0, 10));
+				$expectedText = substr($record->title, 0, 10);
+
 				if ($record->type_flag == ENTRY_TYPE_BLOG) // blogs don't use permalink
 				{
-					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/view/' . $record->id, ''];	
+					$tests[] = [$expectedText, '/' . $type . '/view/' . $record->id, ''];		
 				}
 				else // everything else uses permalinks
 				{
-					$tests[] = [substr($record->title, 0, 10), '/' . $type . '/' . $record->permalink, ''];
+					$tests[] = [$expectedText, '/' . $type . '/' . $record->permalink, ''];
 				}
 			}
 		}
@@ -149,7 +157,18 @@ class ToolController extends Controller
 		try
 		{
 			$text = $this->file_get_contents_curl($url);
-			$results['results'] = strpos($text, $expected) === false ? 'EXPECTED NOT FOUND' : 'success';
+			
+			if (strpos($text, $expected) === false)
+			{
+//dd('expected: ' . $expected . '|' . $text);
+				$results['results'] = 'EXPECTED NOT FOUND';
+				$results['success'] = false;
+			}
+			else
+			{
+				$results['results'] = 'Success';
+				$results['success'] = true;
+			}
 		}
 		catch (\Exception $e) 
 		{
