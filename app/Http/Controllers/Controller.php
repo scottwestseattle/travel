@@ -1191,9 +1191,15 @@ class Controller extends BaseController
 		
 		$records = Category::getSubcategoryOptions($category_id);
 		
-		if (count($records) == 0)
+		if (!isset($category_id))
+		{
+			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List, category id not set', null, null, $error);
+		}
+		else if (count($records) == 0)
+		{
 			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List', null, null, $error);
-		
+		}
+
 		return $records;
 	}
 	

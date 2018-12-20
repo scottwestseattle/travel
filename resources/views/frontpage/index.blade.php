@@ -590,6 +590,12 @@ $sectionCount = 0;
 		<h1>{{$section->title}}</h1>
 		<!-- h1>Affiliate Partners</h1 -->	
 		
+		<!-- AMAZON ADS -->
+		<div style="float:left; margin:20px;">
+			<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=12&l=ur1&category=amazonhomepage&f=ifr&linkID=19442e58f18ebdac206c630f92678c97&t=travelwebs024-20&tracking_id=travelwebs024-20" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		</div>
+		
+		@if (false)
 		<!-- AGODA AFFILIATE -->
 		<div style="float:left; margin:20px;">
 		
@@ -599,6 +605,7 @@ $sectionCount = 0;
 			</script>
 			
 		</div>
+		@endif
 		
 		<!-- BOOKING AFFILIATE -->
 		<div style="float:left; margin:20px;">
@@ -633,7 +640,28 @@ $sectionCount = 0;
 			</script>
 
 		</div>
-				
+
+		@if (false)
+		<!-- AMAZON BANNER -->		
+		<div style="clear:both; display:block;">
+
+			<script type="text/javascript">
+			amzn_assoc_placement = "adunit0";
+			amzn_assoc_tracking_id = "travelwebs024-20";
+			amzn_assoc_ad_mode = "search";
+			amzn_assoc_ad_type = "smart";
+			amzn_assoc_marketplace = "amazon";
+			amzn_assoc_region = "US";
+			amzn_assoc_default_search_phrase = "last minute deals";
+			amzn_assoc_default_category = "All";
+			amzn_assoc_linkid = "d2d59fc32979ade8cd0bea9018e29981";
+			amzn_assoc_design = "in_content";
+			</script>
+			<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+
+		</div>	
+		@endif
+		
 	</div>
 </div>
 </section>

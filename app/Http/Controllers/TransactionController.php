@@ -325,7 +325,7 @@ class TransactionController extends Controller
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
 	 
 		$records = null;
 		$total = 0.0;

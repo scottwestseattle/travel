@@ -96,6 +96,10 @@
 						<div style="margin-top:15px;" class="col-md-4">
 
 						@if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
+
+						<div style="margin-bottom: 20px;">
+							<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=9&l=ur1&category=amazonhomepage&f=ifr&linkID=4627171e16328e646bff9ccbaff6ae18&t=travelwebs024-20&tracking_id=travelwebs024-20" width="180" height="150" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+						</div>
 						
 <a href="https://www.agoda.com/partners/partnersearch.aspx?cid=1729782&pcs=8" target="_blank"><img src="//sherpa.agoda.com/Badge/GetBadge?badgetype=1&refkey=eQRoFwsbQxjYbmldH%2B6nvQ%3D%3D" /></a>
 
