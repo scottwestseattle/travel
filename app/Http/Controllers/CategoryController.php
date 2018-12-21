@@ -225,14 +225,15 @@ class CategoryController extends Controller
 			
 		return redirect('/' . PREFIX . '/index');
     }	
-	
+
+	// this is called by ajax to get subcats when cat is changed
     public function subcategories(Request $request, $category_id)
     {
 		$records = Category::getSubcategoryOptions($category_id);
 		
-		$vdata = $this->getViewData([
+		$vdata = $this->getViewDataAjax([
 			'records' => $records,
-		]);				
+		]);		
 		
 		return view(PREFIX . '.subcategories', $vdata);
 	}

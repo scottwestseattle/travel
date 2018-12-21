@@ -365,6 +365,13 @@ class Controller extends BaseController
 		return $this->viewData;
 	}
 	
+	protected function getViewDataAjax($vdata = null)
+	{			
+		$this->viewData = isset($vdata) ? $vdata : [];
+		
+		return $this->viewData;
+	}
+	
 	protected function formatLinksOLD($text)
 	{
 		$lines = explode("\r\n", $text);
@@ -1046,7 +1053,7 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID;
+			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID . ', domain: ' . $this->domainName;
 			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
 			
 			// create a dummy site so everything will still work
@@ -1188,16 +1195,21 @@ class Controller extends BaseController
     public function getSubcategories($action, $category_id = null)
     {
 		$error = '';
+		$records = [];
+		$category_id = intval($category_id);
 		
-		$records = Category::getSubcategoryOptions($category_id);
-		
-		if (!isset($category_id))
+		if ($category_id > 0)
 		{
-			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List, category id not set', null, null, $error);
+			$records = Category::getSubcategoryOptions($category_id);
+		
+			if (count($records) == 0)
+			{
+				Event::logError(LOG_MODEL, $action, 'Error Getting Subcategories for Category: ' . $category_id, null, null, $error);
+			}
 		}
-		else if (count($records) == 0)
+		else
 		{
-			Event::logError(LOG_MODEL, $action, 'Error Getting Subcategory List', null, null, $error);
+			// $category_id of 0 (false or null) is ok and means return an empty subcategory array
 		}
 
 		return $records;

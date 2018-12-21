@@ -17,11 +17,11 @@
 		</div>
 			
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'category_id', 'options' => $categories, 'selected_option' => $filter['category_id'], 'empty' => 'category', 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
+			@component('control-dropdown-menu', ['field_name' => 'category_id', 'options' => $categories, 'selected_option' => $filter['category_id'], 'empty' => 'all categories', 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
 		</div>
 
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => $filter['subcategory_id'], 'empty' => 'subcategory'])@endcomponent									
+			@component('control-dropdown-menu', ['field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => $filter['subcategory_id'], 'empty' => 'all subcategories'])@endcomponent									
 		</div>
 		
 		<input style="font-size:16px; height:24px; width:200px;" type="text" name="search" class="form-control" value="{{$filter['search']}}"></input>		

@@ -32,6 +32,9 @@ class Category extends Base
 
 			if (isset($records) && count($records) > 0)
 			{
+//				if (!isset($array[0]))
+//					$array[0] = '(choose subcategory)';
+				
 				foreach($records as $record)
 				{
 					$array[$record->id] = $record->name;					
@@ -41,7 +44,7 @@ class Category extends Base
 		catch (\Exception $e) 
 		{
 		}			
-					
+			
 		return $array;
 	}
 	
