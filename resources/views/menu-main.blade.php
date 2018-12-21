@@ -35,6 +35,15 @@
                     <!-- Search -->
                     <a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
 					@endif
+
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@LANG('ui.' . App::getLocale()) <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/language/en">@lang('ui.English')</a></li>
+							<li><a href="/language/es">@lang('ui.Spanish')</a></li>
+							<li><a href="/language/zh">@lang('ui.Chinese')</a></li>
+						</ul>
+					</li>
 					
                 </div>
 
@@ -48,19 +57,19 @@
                     <ul class="nav navbar-nav navbar-right">
                         @guest
 							@if (null !== (session('spy', null)))
-								<li><a href="/spy">Turn Spy Off</a></li>
+								<li><a href="/spy">@LANG('ui.Turn Spy Off')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
+							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@lang('ui.Blogs')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
-								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Galleries</a></li>
+								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@lang('ui.Galleries')</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
@@ -68,74 +77,73 @@
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 							@endif	
-							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
-                            <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
+							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@lang('ui.Login')</a></li>
+                            <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@lang('ui.Register')</a></li>
                         @else							
 							@if ($user_type >= 100)
-								<li><a href="/about">About</a></li>
-								<li><a href="/admin">Admin</a></li>
-								<li><a href="/articles">Articles</a></li>
-								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">Entries</a></li>
+								<li><a href="/about">@lang('ui.About')</a></li>
+								<li><a href="/admin">@lang('ui.Admin')</a></li>
+								<li><a href="/articles">@lang('ui.Articles')</a></li>
+								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">@lang('ui.Entries')</a></li>
 								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-									<li><a href="/tours/index">Tours</a></li>
+									<li><a href="/tours/index">@lang('ui.Tours')</a></li>
 								@endif
-								<li><a href="/visitors/">Visitors</a></li>
+								<li><a href="/visitors/">@lang('ui.Visitors')</a></li>
 
 								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">More <span class="caret"></span></a>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.More') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-											<li><a href="/blogs/indexadmin">Blogs</a></li>
+											<li><a href="/blogs/indexadmin">@lang('ui.Blogs')</a></li>
 										@endif
-										<li><a href="/events/index">Events</a></li>
+										<li><a href="/events/index">@lang('ui.Events')</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
-											<li><a href="/galleries">Galleries</a></li>
+											<li><a href="/galleries">@lang('ui.Galleries')</a></li>
 										@endif
-										<li><a href="/locations/indexadmin">Locations</a></li>
-										<li><a href="/photos/indexadmin">Photos</a></li>
-										<li><a href="/search/">Search</a></li>
-										<li><a href="/sections">Sections</a></li>
-										<li><a href="/sites/index">Sites</a></li>
-										<li><a href="/sitemap/">Site Map</a></li>
-										<li><a href="/photos/sliders">Sliders</a></li>
-										<li><a href="/test/">Tests</a></li>
+										<li><a href="/locations/indexadmin">@lang('ui.Locations')</a></li>
+										<li><a href="/photos/indexadmin">@lang('ui.Photos')</a></li>
+										<li><a href="/sections">@lang('ui.Sections')</a></li>
+										<li><a href="/sites/index">@lang('ui.Sites')</a></li>
+										<li><a href="/sitemap/">@lang('ui.Site Map')</a></li>
+										<li><a href="/photos/sliders">@lang('ui.Sliders')</a></li>
+										<li><a href="/test/">@lang('ui.Tests')</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-											<li><a href="/tours/indexadmin">Tours</a></li>
+											<li><a href="/tours/indexadmin">@lang('ui.Tours')</a></li>
 										@endif
 									</ul>
 								</li>
 								
 								@if (isset($sections) && array_key_exists(SECTION_CASH, $sections))
 								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">Cash <span class="caret"></span></a>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.Cash') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
-										<li><a href="/transactions/summary">Summary</a></li>
-										<li><a href="/transactions/filter">Transactions</a></li>
-										<li><a href="/accounts/index">Accounts</a></li>
-										<li><a href="/categories/indexadmin">Categories</a></li>
-										<li><a href="/email/check">Email</a></li>
-										<li><a href="/transactions/expenses">Expenses</a></li>
-										<li><a href="/subcategories/indexadmin">Subcategories</a></li>
+										<li><a href="/transactions/summary">@lang('ui.Summary')</a></li>
+										<li><a href="/transactions/filter">@lang('ui.Transactions')</a></li>
+										<li><a href="/accounts/index">@lang('ui.Accounts')</a></li>
+										<li><a href="/categories/indexadmin">@lang('ui.Categories')</a></li>
+										<li><a href="/email/check">@lang('ui.Email')</a></li>
+										<li><a href="/transactions/expenses">@lang('ui.Expenses')</a></li>
+										<li><a href="/subcategories/indexadmin">@lang('ui.Subcategories')</a></li>
 									</ul>
 								</li>
 								@endif
 							@else
 								@if (null !== (session('spy', null)))
-									<li><a href="/spy">Turn Spy Off</a></li>
+									<li><a href="/spy">@LANG('ui.Turn Spy Off')</a></li>
 								@endif
 								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-									<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+									<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
 								@endif
 								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-									<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>Tours/Hikes</a></li>
+									<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
 								@endif
 								@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
+								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@lang('ui.Blogs')</a></li>
 								@endif
 								@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
-									<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+									<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@lang('ui.Photos')</a></li>
 								@endif
-								<li><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>About</a></li>
+								<li><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-question-sign"></span>@lang('ui.About')</a></li>
 							@endif
 														
                             <li class="dropdown">
@@ -148,9 +156,9 @@
 									@if (Auth::check())
 										<li><a href="/users/">Settings ({{$user_type_name}})</a></li>
 										@if (Auth::user()->user_type >= 1000)
-											<li><a href="/activities/indexadmin">Activities</a></li>
-											<li><a href="/tasks/index">Tasks</a></li>
-											<li><a href="/templates/indexadmin">Templates</a></li>
+											<li><a href="/activities/indexadmin">@LANG('ui.Activities')</a></li>
+											<li><a href="/tasks/index">@LANG('ui.Tasks')</a></li>
+											<li><a href="/templates/indexadmin">@LANG('ui.Templates')</a></li>
 										@endif
 									@endif
 
@@ -158,7 +166,7 @@
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            Logout
+                                            @LANG('ui.Logout')
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

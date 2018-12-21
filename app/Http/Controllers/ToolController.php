@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 
 use DB;
 use Auth;
+use App;
 use App\Entry;
 use App\Event;
 use App\Photo;
@@ -518,6 +519,16 @@ class ToolController extends Controller
 		$records = DB::select($q);
 			
 		return $records;
+	}
+
+	public function language($locale)
+	{
+		if (ctype_alpha($locale))
+		{
+			session(['locale' => $locale]);
+		}
+
+		return redirect()->back();
 	}
 	
 }

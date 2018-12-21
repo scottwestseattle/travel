@@ -10,7 +10,7 @@
 				<!---------------------------------------------------->
 				<!-- Small Description -->
 				<!---------------------------------------------------->
-				<h4 class="letter-spacing-1">CONTACT INFORMATION</h4>
+				<h4 class="letter-spacing-1">@LANG('ui.CONTACT INFORMATION')</h4>
 
 				<!---------------------------------------------------->
 				<!-- Contact Address -->
@@ -18,8 +18,8 @@
 				<address>
 					<ul class="FooterListButton list-unstyled">
 						<li class="address"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>{{isset($site) ? $site->site_url : ''}}<br></li>
-						<li class="phone"><button id='phoneButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-earphone"></span>Show Phone Number</button></li>
-						<li class="email"><button id='emailButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>Show Email Address</button></li>
+						<li class="phone"><button id='phoneButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-earphone"></span>@lang('ui.Show Phone Number')</button></li>
+						<li class="email"><button id='emailButton' class="btn btn-success"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-envelope"></span>@lang('ui.Show Email Address')</button></li>
 					</ul>
 				</address>
 				<!-- /Contact Address -->
@@ -53,40 +53,40 @@
 							<!---------------------------------------------------->
 							<!-- Links -->
 							<!---------------------------------------------------->
-							<h4 class="letter-spacing-1">SITE MAP</h4>
+							<h4 class="letter-spacing-1">@LANG('ui.SITE MAP')</h4>
 							<ul class="FooterList list-unstyled">
-								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>Home</a></li>
+								<li><a href="/"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-home"></span>@LANG('ui.Home')</a></li>
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>Articles</a></li>
+								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@LANG('ui.Articles')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>Blogs</a></li>
+								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@LANG('ui.Blogs')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>Tours/Hikes</a></li>
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>@LANG('ui.Tours/Hikes')</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<!-- this still uses Activities instead of tours -->
-								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>@LANG('ui.Locations')</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
+								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>@LANG('ui.Maps')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
-								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Photos</a></li>
+								<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@LANG('ui.Photos')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
-								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>Gallery</a></li>
+								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@LANG('ui.Gallery')</a></li>
 							@endif
-								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>Login</a></li>
-								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>Register</a></li>
+								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@LANG('ui.Login')</a></li>
+								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@LANG('ui.Register')</a></li>
 						
 							@if (true)
-								<li id="debug-tag-xl"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (XL)</a></li>
-								<li id="debug-tag-lg"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (L)</a></li>
-								<li id="debug-tag-md"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (M)</a></li>
-								<li id="debug-tag-sm"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (S)</a></li>
-								<li id="debug-tag-xs"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>About (XS)</a></li>
+								<li id="debug-tag-xl"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (XL)</a></li>
+								<li id="debug-tag-lg"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (L)</a></li>
+								<li id="debug-tag-md"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (M)</a></li>
+								<li id="debug-tag-sm"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (S)</a></li>
+								<li id="debug-tag-xs"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (XS)</a></li>
 							@endif
 							
 							</ul>
@@ -125,7 +125,7 @@
 							<li><a href="#">Privacy</a></li>
 						</ul -->
 						<div class="text-center">
-							&copy; <?= date("Y"); ?> - All Rights Reserved - Todos Derechos Reservados - &copy; <?= date("Y"); ?>
+							&copy; {{ date("Y") }} - @LANG('ui.All Rights Reserved')
 						</div>
 						<div class="text-center">
 							<a href="https://info.flagcounter.com/ASyl" target="_blank"><img style="width:100px;" src="https://s01.flagcounter.com/mini/ASyl/bg_252525/txt_FFFFFF/border_252525/flags_0/" alt="Flag Counter" border="0"></a>			

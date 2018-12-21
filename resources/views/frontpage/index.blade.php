@@ -303,7 +303,7 @@ $sectionCount = 0;
 @if (!$showFullGallery)
 	<div class='text-center'>
 		<a href="/galleries">
-			<button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Galleries</button>
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>
 		</a>
 	</div>
 @endif
@@ -364,7 +364,7 @@ $sectionCount = 0;
 					
 			</div><!-- row -->	
 
-				<a href="/articles"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Articles
+				<a href="/articles"><button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Articles')
 					@if (false)
 					&nbsp;<span class="badge badge-light">{{$tourCount}}</span>
 					@endif
@@ -414,7 +414,7 @@ $sectionCount = 0;
 			@endforeach		
 
 			<div class="text-center">
-				<a href="/blogs/index/" style=""><button style="margin-top:20px;" type="button" class="btn btn-info">Show All Blogs&nbsp;<span class="badge badge-light">{{$blogCount}}</span></button></a>			
+				<a href="/blogs/index/" style=""><button style="margin-top:20px;" type="button" class="btn btn-info">@lang('ui.Show All Blogs')&nbsp;<span class="badge badge-light">{{$blogCount}}</span></button></a>			
 			</div>
 
 		</div><!-- row -->									
@@ -567,7 +567,7 @@ $sectionCount = 0;
 					
 				</div><!-- row -->	
 				
-				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">Show All Tours&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
+				<a href="/tours/index/"><button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Tours')&nbsp;<span class="badge badge-light">{{$tourCount}}</span></button></a>
 
 			</div>
 						

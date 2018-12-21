@@ -13,6 +13,7 @@ define('PHOTO_SERVER', env('PHOTO_SERVER'));
 
 use DB;
 use Auth;
+use App;
 use App\Entry;
 use App\Event;
 use App\Location;
@@ -194,6 +195,18 @@ class Controller extends BaseController
 			
 			$this->domainName = $dn;
 		}
+
+		// session don't work in constructors, work arround:
+		$this->middleware(function ($request, $next){
+			$locale = session('locale');
+			if (isset($locale))
+				App::setLocale($locale);
+			return $next($request);
+		});
+	
+
+		
+		//dump($locale);
 	}
 	
 	static public function getEntryTypes()
