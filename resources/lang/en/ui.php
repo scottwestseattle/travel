@@ -71,6 +71,25 @@ return [
     'Gallery' => 'Gallery',
 	'All Rights Reserved' => 'All Rights Reserved',
 		
+	/* views */
+	'Tours, Hikes, Things To Do' => 'Tours, Hikes, Things To Do',
+	'posts' => 'posts',
+	'Highlights' => 'Highlights',
+	'DISTANCE' => 'DISTANCE',
+	'DIFFICULTY' => 'DIFFICULTY',
+	'TRAIL TYPE' => 'TRAIL TYPE',
+	'SEASON' => 'SEASON',
+	'ELEVATION' => 'ELEVATION',
+	'MAP' => 'MAP',
+	'LOCATION' => 'LOCATION',
+	'PARKING' => 'PARKING',
+	'COST / ENTRY FEE' => 'COST / ENTRY FEE',
+	'FACILITIES' => 'FACILITIES',
+	'PUBLIC TRANSPORTATION' => 'PUBLIC TRANSPORTATION',
+	'WILDLIFE' => 'WILDLIFE',
+	'PHOTOS' => 'PHOTOS',
+	'PARTNERS' => 'PARTNERS',	
+		
 	/*
 	'' => '',
 	*/

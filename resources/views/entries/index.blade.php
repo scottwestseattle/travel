@@ -21,7 +21,7 @@ if (isset($title))
 				</tr></table>
 			</div>			
 
-	<h1 style="font-size:1.3em;">{{ $header }} ({{ count($records) }})</h1>
+	<h1 style="font-size:1.3em;">@LANG('ui.' . $header) ({{ count($records) }})</h1>
 	@if (Auth::check())
 		<table class="table table-striped">
 			<tbody>

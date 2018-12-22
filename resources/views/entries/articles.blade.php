@@ -13,7 +13,7 @@
 			</div>			
 		@endif
 
-	<h1 style="font-size:1.3em;">Articles ({{ count($records) }})</h1>
+	<h1 style="font-size:1.3em;">@LANG('ui.Articles') ({{ count($records) }})</h1>
 
 			<div class="row clearfix text-left">
 				

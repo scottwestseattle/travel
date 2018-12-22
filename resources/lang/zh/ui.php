@@ -71,6 +71,25 @@ return [
     'Gallery' => '画廊',
 	'All Rights Reserved' => '版权所有',
 	
+	/* views */
+	'Tours, Hikes, Things To Do' => '旅游 远足 要做的事情',
+	'posts' => '博客帖子',
+	'Highlights' => '强调',
+	'DISTANCE' => '距离',
+	'DIFFICULTY' => '困难',
+	'TRAIL TYPE' => '徒步旅行的类型',
+	'SEASON' => '季节',
+	'ELEVATION' => '海拔',
+	'MAP' => '地图',
+	'LOCATION' => '地点',
+	'PARKING' => '停车处',
+	'COST / ENTRY FEE' => '入场费',
+	'FACILITIES' => '设备',
+	'PUBLIC TRANSPORTATION' => '公共交通工具',
+	'WILDLIFE' => '野生动物',
+	'PHOTOS' => '相片',
+	'PARTNERS' => '联盟合作伙伴',	
+	
 	/*
 	'' => '',
 	*/

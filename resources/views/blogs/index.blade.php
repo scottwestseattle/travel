@@ -4,7 +4,7 @@
 
 	<div class="container main-font page-size ">	
 	
-		<div class="text-center"><h1>Blogs ({{ count($records) }})</h1></div>
+		<div class="text-center"><h1>@LANG('ui.Blogs') ({{ count($records) }})</h1></div>
 
 		<div class="row" style="margin-bottom:10px;">
 				
@@ -23,7 +23,7 @@
 					<!-- blog text -->
 					<div class="" style="padding:10px;">	
 
-						<p><a href="/blogs/show/{{$record->id}}/all" style="color:green; text-decoration:none;">{{$record->post_count}} posts</a></p>
+						<p><a href="/blogs/show/{{$record->id}}/all" style="color:green; text-decoration:none;">{{$record->post_count}} @LANG('ui.posts')</a></p>
 					
 						<a style="font-family: 'Volkhov', serif; color: black; font-size:1.4em; font-weight:bold; text-decoration: none; " href="/blogs/show/{{$record->id}}">{{ $record->title }}</a>						
 						

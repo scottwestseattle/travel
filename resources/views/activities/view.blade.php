@@ -96,7 +96,7 @@ foreach($photos as $photo)
 	
 	@if (strlen(trim($record->highlights)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
-		<h3>Highlights</h3>
+		<h3>@LANG('ui.Highlights')</h3>
 		<div>{{$record->highlights}}</div>
 	</div>
 	@endif
@@ -106,7 +106,7 @@ foreach($photos as $photo)
 			@if (strlen($record->distance) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3>DISTANCE</h3>
+							<h3>@LANG('ui.DISTANCE')</h3>
 							<p>{{$record->distance}}</p>
 						</div>
 					</div>
@@ -115,7 +115,7 @@ foreach($photos as $photo)
 			@if (strlen($record->difficulty) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3>DIFFICULTY</h3>
+							<h3>@LANG('ui.DIFFICULTY')</h3>
 							<p>{{$record->difficulty}}</p>
 						</div>
 					</div>
@@ -124,7 +124,7 @@ foreach($photos as $photo)
 			@if (strlen($record->trail_type) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3>TRAIL TYPE</h3>
+							<h3>@LANG('ui.TRAIL TYPE')</h3>
 							<p>{{$record->trail_type}}</p>
 						</div>
 					</div>
@@ -133,7 +133,7 @@ foreach($photos as $photo)
 			@if (strlen($record->season) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3></span>SEASON</h3>
+							<h3></span>@LANG('ui.SEASON')</h3>
 							<p>{{$record->season}}</p>
 						</div>
 					</div>
@@ -142,7 +142,7 @@ foreach($photos as $photo)
 			@if (strlen($record->elevation) > 0)
 					<div class="col-md-4 col-sm-6">
 						<div class="amenity-item">
-							<h3>ELEVATION</h3>
+							<h3>@LANG('ui.ELEVATION')</h3>
 							<p>{{$record->elevation}}</p>
 						</div>
 					</div>
@@ -173,7 +173,7 @@ foreach($photos as $photo)
 	@if (!empty(trim($record->map_link)))
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>MAP</h3>
+				<h3>@LANG('ui.MAP')</h3>
 				<div id="" style="display:default; margin-top:20px; margin-bottom:10px;">				
 					<iframe id="xttd-map" src="{{ $record->map_link }}" style="max-width:100%;" width="{{ $mapWidth }}" height="{{ floor($mapWidth * .75) }}"></iframe>
 				</div>
@@ -187,7 +187,7 @@ foreach($photos as $photo)
 	@if (false && strlen($record->map_link) > 0)
 		<div class="col-md-4 col-sm-6">
 			<div class="amenity-item">
-				<h3>LOCATION</h3>
+				<h3>@LANG('ui.LOCATION')</h3>
 				<p><a target="_blank" href="{{$record->map_link}}">Show Map</a></p>
 			</div>
 		</div>
@@ -196,7 +196,7 @@ foreach($photos as $photo)
 	@if (strlen($record->parking) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PARKING</h3>
+				<h3>@LANG('ui.PARKING')</h3>
 				<span name="parking" class="">{{$record->parking}}</span>	
 			</div>
 		</div>
@@ -205,7 +205,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->cost)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>COST / ENTRY FEE</h3>
+				<h3>@LANG('ui.COST / ENTRY FEE')</h3>
 				<span name="cost" class="">{{$record->cost}}</span>	
 			</div>
 		</div>
@@ -214,7 +214,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->facilities)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>FACILITIES</h3>
+				<h3>@LANG('ui.FACILITIES')</h3>
 				<span name="facilities" class="">{{$record->facilities}}</span>	
 			</div>
 		</div>
@@ -223,7 +223,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->public_transportation)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PUBLIC TRANSPORTATION</h3>
+				<h3>@LANG('ui.PUBLIC TRANSPORTATION')</h3>
 				<span name="facilities" class="">{{$record->public_transportation}}</span>	
 			</div>
 		</div>
@@ -232,7 +232,7 @@ foreach($photos as $photo)
 	@if (strlen(trim($record->wildlife)) > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>WILDLIFE</h3>
+				<h3>@LANG('ui.WILDLIFE')</h3>
 				<span name="facilities" class="">{{$record->wildlife}}</span>	
 			</div>
 		</div>
@@ -241,7 +241,7 @@ foreach($photos as $photo)
 	@if ($regular_photos > 0)
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PHOTOS</h3>
+				<h3>@LANG('ui.PHOTOS')</h3>
 			</div>
 		</div>
 	@endif
@@ -269,7 +269,7 @@ foreach($photos as $photo)
 	
 	<div class="entry-div">
 		<div class="entry amenity-item">
-			<h3>PARTNERS</h3>
+			<h3>@LANG('ui.PARTNERS')</h3>
 		</div>
 	</div>	
 	

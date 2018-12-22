@@ -18,7 +18,7 @@ return [
 	'Chinese' => '中文',
 	
     'Turn Spy Off' => 'Apagar Espia',	
-    'About' => 'Cerca De',
+    'About' => 'Acerca de',
     'Visitors' => 'Visitantes',
     'Articles' => 'Articulos',
     'Tours/Hikes' => 'Tours/Caminatas',
@@ -71,6 +71,25 @@ return [
     'Gallery' => 'Galleria',
 	'All Rights Reserved' => 'Todos Los Derechos Reservados',
 	
+	/* views */
+	'Tours, Hikes, Things To Do' => 'Tours, Caminatas, Cosas Para Hacer',
+	'posts' => 'publicaciones',
+	'Highlights' => 'Destacados',
+	'DISTANCE' => 'DISTANCIA',
+	'DIFFICULTY' => 'DIFICULTAD',
+	'TRAIL TYPE' => 'TIPO DE CAMINO',
+	'SEASON' => 'TEMPORADA',
+	'ELEVATION' => 'ELEVACIÓN',
+	'MAP' => 'MAPA',
+	'LOCATION' => 'UBICACIÓN',
+	'PARKING' => 'ESTACIONAMIENTO',
+	'COST / ENTRY FEE' => 'CUOTA DE ENTRADA',
+	'FACILITIES' => 'INSTALACIONES',
+	'PUBLIC TRANSPORTATION' => 'TRANSPORTE PÚBLICO',
+	'WILDLIFE' => 'FAUNA SILVESTRE',
+	'PHOTOS' => 'FOTOS',
+	'PARTNERS' => 'ASOCIADOS',	
+		
 	/*
 	'' => '',
 	*/
