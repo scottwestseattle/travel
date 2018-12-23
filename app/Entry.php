@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
+use App;
 
 class Entry extends Base
 {
@@ -86,7 +87,7 @@ class Entry extends Base
 		$site_id = isset($site_id) && $site_id != false ? $site_id : SITE_ID;
 		
 		$q = '
-			SELECT entries.id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date, entries.site_id  
+			SELECT entries.id as id, entries.type_flag, entries.view_count, entries.title, entries.description, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.permalink, entries.display_date, entries.site_id  
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id) as photo_path
@@ -96,7 +97,8 @@ class Entry extends Base
 				, count(photos.id) as photo_count
 				, locations.name as location, locations.location_type as location_type
 				, locations_parent.name as location_parent
-				, blogs.title as blog_title, blogs.id as blog_id				
+				, blogs.title as blog_title, blogs.id as blog_id 
+				, translations.language, translations.medium_col1, translations.medium_col2, translations.large_col1, translations.large_col2
 			FROM entries
 			LEFT JOIN photos as photo_main
 				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 
@@ -110,6 +112,8 @@ class Entry extends Base
 				ON locations_parent.id = locations.parent_id AND locations_parent.deleted_flag = 0
 			LEFT JOIN entries as blogs
 				ON blogs.id = entries.parent_id AND blogs.deleted_flag = 0 AND blogs.published_flag = 1 AND blogs.approved_flag = 1
+			LEFT JOIN translations
+				ON entries.id = translations.parent_id AND translations.language = ? AND translations.parent_table = ? 
 			WHERE 1=1
 			AND entries.deleted_flag = 0
 			AND entries.type_flag = ?
@@ -125,6 +129,7 @@ class Entry extends Base
 				, photo_gallery, photo_title_gallery, photo_path_gallery
 				, location, location_parent, location_type
 				, blog_title, blog_id
+				, translations.language, translations.medium_col1, translations.medium_col2, translations.large_col1, translations.large_col2 
 		';
 		
 		$orderByPhrase = 'ORDER BY entries.published_flag ASC, entries.approved_flag ASC, entries.display_date DESC, entries.id DESC';
@@ -149,8 +154,8 @@ class Entry extends Base
 		
 		if ($limit > 0)
 			$q .= ' LIMIT ' . $limit . ' ';
-				
-		$records = DB::select($q, [$type_flag, $site_id]);
+
+		$records = DB::select($q, [App::getLocale(), 'entries', $type_flag, $site_id]);
 		
 		return $records;
 	}

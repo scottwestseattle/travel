@@ -1,4 +1,37 @@
 INSERT INTO `translations` 
+(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`,  `large_col2`, `created_at`, `updated_at`) 
+VALUES (
+'entries', 
+336, 
+'es', 
+'Welcome Section Spanish',
+'section-welcome', 
+'Bienvenido a [[site-name]], donde nuestro objetivo es documentar experiencias de viaje interesantes, proporcionar información detallada sobre el viaje y fotografiar lugares hermosos de todo el mundo. Nos encanta viajar y celebrar la belleza y diversidad de nuestro planeta.', 
+'No habites en el pasado, no sueñes con el futuro, concentra la mente en el momento presente - Buddha Gautama Siddhārtha',
+'2018-12-22 02:48:10',
+'2018-12-22 02:48:10'
+);
+
+INSERT INTO `translations` 
+(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`, `large_col2`, `created_at`, `updated_at`) 
+VALUES (
+'entries', 
+336, 
+'zh', 
+'Welcome Section Chinese',
+'section-welcome', 
+'欢迎来到 [[site-name]]我们的目标是记录有趣的旅行体验提供详细的旅行信息并拍摄世界各地的美丽景点。 我们喜欢旅行和庆祝地球的美丽和多样性。', 
+'不要沉溺于过去不要梦想未来，把精力集中在现在的时刻 - 佛陀 Gautama Siddhārtha',
+'2018-12-22 02:48:10',
+'2018-12-22 02:48:10'
+);
+
+
+
+
+
+
+INSERT INTO `translations` 
 (`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`, `large_col2`, `created_at`, `updated_at`) 
 VALUES (
 'entries', 

@@ -1526,6 +1526,18 @@ class Controller extends BaseController
 	{
 		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $site_id);
 		
+		// fix-up the translations
+		foreach($records as $record)
+		{
+			if (isset($record->language))
+			{
+				$record->title = $record->medium_col1;
+				$record->permalink = $record->medium_col2;
+				$record->description = $record->large_col1;
+				$record->description_short = $record->large_col2;
+			}
+		}		
+		
 		$records = $this->fixPhotoPaths($records, $makeThumbnail);
 		
 		return $records;
