@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App;
 use App\Entry;
 use App\Activity;
 use App\Photo;
@@ -164,12 +165,16 @@ class TourController extends Controller
     public function permalink($permalink)
     {
 		// get the entry the Laravel way so we can access the gallery photo list
-		$entry = Entry::select()
-			//->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('permalink', $permalink)
+		$entry = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+			->leftJoin('translations', function ($join) {
+				$join->on('entries.id', '=', 'translations.parent_id')
+					 ->where('translations.language', '=', App::getLocale())
+					 ->where('translations.parent_table', '=', 'entries');
+			})
+			->where('entries.deleted_flag', 0)
+			->where('entries.permalink', $permalink)
 			->first();
-			
+
 		if (isset($entry))
 		{
 			$this->countView($entry);
@@ -177,7 +182,6 @@ class TourController extends Controller
 		
 		// get the entry the mysql way so we can have all the main photo and location info
 		$entry2 = Entry::getEntry($permalink);		
-		
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK, $id);
 		
@@ -211,12 +215,37 @@ class TourController extends Controller
 		}
 		
 		$gallery = isset($entry) ? $entry->photos : null;
-				
-		$activity = Activity::select()
-			//->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
-			->where('parent_id', $entry->id)
+
+		$activity = Activity::select(DB::raw('activities.*, translations.*, activities.id as id'))
+			->leftJoin('translations', function ($join) {
+				$join->on('activities.id', '=', 'translations.parent_id')
+					 ->where('translations.language', '=', App::getLocale())
+					 ->where('translations.parent_table', '=', 'activities');
+			})				
+			->where('activities.deleted_flag', '=', 0)
+			->where('activities.parent_id', $entry->id)
 			->first();
+
+		if (isset($activity))
+		{
+			if (isset($activity->language))
+			{
+				$activity->map_label = $activity->small_col1;
+				$activity->map_labelalt = $activity->small_col2;
+				$activity->map_label2 = $activity->small_col3;
+				$activity->map_labelalt2 = $activity->small_col4;
+				$activity->cost = $activity->small_col5;
+				$activity->distance = $activity->small_col6;
+				$activity->difficulty = $activity->small_col7;
+				$activity->elevation = $activity->small_col8;
+				$activity->season = $activity->small_col9;
+				$activity->trail_type = $activity->small_col10;
+				$activity->facilities = $activity->medium_col1;
+				$activity->public_transportation = $activity->medium_col2;
+				$activity->parking = $activity->medium_col3;
+				$activity->wildlife = $activity->large_col1;
+			}			
+		}
 					
 		$location = array();
 		if (isset($entry))
@@ -323,6 +352,14 @@ class TourController extends Controller
 		
 		if (isset($entry2))
 		{
+			if (isset($entry->language))
+			{
+				$entry2->title = $entry->medium_col1;
+				$entry2->permalink = $entry->medium_col2;
+				$entry2->description = $entry->large_col1;
+				$entry2->description_short = $entry->large_col2;
+			}
+			
 			$entry2->description = nl2br($entry2->description);
 			$entry2->description = $this->formatLinks($entry2->description);		
 		}

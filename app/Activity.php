@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Activity extends Base
 {
@@ -27,5 +28,29 @@ class Activity extends Base
 	public function photos()
     {
 		return $this->hasMany('App\Photo', 'parent_id');
-    }	
+    }
+
+	static protected function get($parent_id)
+	{
+/*		
+*/
+	
+		$q = '
+			SELECT *
+			FROM `activities`
+			WHERE 1=1
+				AND activities.deleted_flag = 0
+				AND activities.parent_id = ?
+			LIMIT 1
+			;
+		';
+		
+		// get the list with the location included
+		$record = DB::select($q, [$parent_id]);
+dd($parent_id);
+//dd('id: ' . $parent_id . ', ' . $record);
+		
+		return $record;
+	}	
+	
 }
