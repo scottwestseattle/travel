@@ -164,7 +164,7 @@ class PhotoController extends Controller
 		
 		$vdata = $this->getViewData([
 			'photos' => $records, 
-			'page_title' => 'Featured Photos',
+			'page_title' => __('ui.Featured Photos'),
 			'slider_path' => $sliderPath,
 		]);
 						
@@ -194,7 +194,7 @@ class PhotoController extends Controller
 		
 		$vdata = $this->getViewData([
 			'photos' => $records, 
-			'page_title' => 'Featured Photos',
+			'page_title' => __('ui.Featured Photos'),
 			'slider_path' => $sliderPath,
 		]);
 						

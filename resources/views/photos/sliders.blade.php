@@ -14,7 +14,7 @@
 		@if (Auth::user() && Auth::user()->user_type >= 100)
 			<a href="{{$add_link}}"><span class="glyphSliders glyphicon glyphicon-plus-sign" style="padding:5px;"></span></a>
 		@endif
-		<span style="margin: 0 5px;">Featured Photos ({{ count($photos) }})</span><span style="font-size:.6em;"><a href="/first">Show</a></span>
+		<span style="margin: 0 5px;">@LANG('ui.Featured Photos') ({{ count($photos) }})</span><span style="font-size:.6em;"><a href="/first">@LANG('ui.Show')</a></span>
 	</h1>
 	
 	<div class="{{SHOW_NON_XS}}">	

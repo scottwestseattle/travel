@@ -81,13 +81,13 @@ class TranslationController extends Controller
 		
 		App::setLocale('en');
 		$records[App::getLocale()] = Lang::get($filename);
-		
+
 		App::setLocale('es');
 		$records[App::getLocale()] = Lang::get($filename);
 		
 		App::setLocale('zh');
 		$records[App::getLocale()] = Lang::get($filename);
-		
+	
 		App::setLocale($locale);
 	
 		$vdata = $this->getViewData([
@@ -103,32 +103,79 @@ class TranslationController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-		 
-		$folder = TRANSLATIONS_FOLDER . App::getLocale() . '/';
+			 
+		$lines = [];
+		$i = 0;
+
+		$array = [];
+		for ($j = 0; $j < 100; $j++) // each language
+		{
+			if (isset($request->records[$j]))
+			{
+				for ($i = 0; $i < 100; $i++) // each translation in the language
+				{
+					if (isset($request->records[$j][$i]))
+					{
+						if (isset($request->records[$j+1][$i]))
+						{
+							$line = "'" . $request->records[0][$i] . "' => '" . $request->records[$j + 1][$i] . "'";
+						}
+						else
+						{
+							// key exists but not translation, put key in for the value
+							$line = "'" . $request->records[0][$i] . "' => '" . $request->records[0][$i] ."'";
+						}
+						
+						$array[$j][$i] = $line;
+					}
+				}				
+			}
+			else
+			{
+				break;
+			}
+		}
+			
+		$this->save('en', $filename, $array[0]);
+		$this->save('es', $filename, $array[1]);
+		$this->save('zh', $filename, $array[2]);
+		
+		return redirect($this->getReferer($request, '/translations')); 
+    }			
+
+    private function save($locale, $filename, $lines)
+    {
+		$folder = TRANSLATIONS_FOLDER . $locale . '/';
 		$path = $folder . $filename . '.php';
-		 
+
 		try
 		{
-dd($request->es1);				
-			$fp = fopen($path, "w");
+			$fp = fopen($path, "wb");
 
 			if ($fp) 
 			{
-				fwrite($myfile, utf8_encode($line . PHP_EOL));
+				fputs($fp, '<?php' . PHP_EOL);
+				fputs($fp, 'return [' . PHP_EOL);
+				
+				foreach($lines as $line)
+				{
+					fputs($fp, $line . ',' . PHP_EOL);
+				}
+					
+				fputs($fp, '];' . PHP_EOL);
 			}
 			
 			fclose($fp);			
 		}
 		catch (\Exception $e)
 		{
-			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_EDIT, 'Error opening translation file: ' . $path, null, $e->getMessage());
+			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_EDIT, 'Error accessing translation file: ' . $path, null, $e->getMessage());
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());
 		}
 		
-		return redirect($this->getReferer($request, '/translations')); 
-    }			
+	}
 	
     public function updateEntry(Request $request, Entry $entry)
     {
