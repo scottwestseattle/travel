@@ -25,33 +25,26 @@
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
 						<span class="glyphCustom glyphicon glyphicon-home"></span>
-						<!--
-						<img width="45px" src="/img/logo-top.png" />
-                        {{ config('app.name', 'Travel') }}
-						-->
                     </a>
 					
 					@if ($user_type >= 100)
-                    <!-- Search -->
-                    <a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+						<a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
 					@endif
 
-					<li class="dropdown">
+					<div style="float:left;" class="dropdown" >
 						<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@LANG('ui.' . App::getLocale()) <span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="/language/en">@lang('ui.English')</a></li>
 							<li><a href="/language/es">@lang('ui.Spanish')</a></li>
 							<li><a href="/language/zh">@lang('ui.Chinese')</a></li>
 						</ul>
-					</li>
+					</div>
 					
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">

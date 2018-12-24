@@ -50,7 +50,7 @@
 </head>
 <body onresize="onResize()" onload="onResize()">
     <div id="app" style="">
-        <nav class="navbar navbar-default navbar-static-top powerBlue" style="margin-bottom:0px; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default navbar-static-top powerBlue" style="padding-left:10px; padding-right:10px; margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
         </nav>
 
