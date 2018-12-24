@@ -477,7 +477,7 @@ $sectionCount = 0;
 			@if (isset($section->description_short))
 				<h3>{{$section->description_short}}</h3>
 			@else
-				<h3>Previous Locations:</h3>
+				<h3>@LANG('content.Previous Locations:')</h3>
 			@endif
 			<p style="font-size:1.2em;">{!!nl2br($section->description)!!}</p>
 		@endif

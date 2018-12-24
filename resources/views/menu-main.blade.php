@@ -110,6 +110,7 @@
 										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 											<li><a href="/tours/indexadmin">@lang('ui.Tours')</a></li>
 										@endif
+										<li><a href="/translations/">@lang('ui.Translations')</a></li>
 									</ul>
 								</li>
 								

@@ -118,7 +118,8 @@ define('LOG_MODEL_SITES', 'sites');
 define('LOG_MODEL_TOURS', 'tours');
 define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TEMPLATES', 'templates');
-	
+define('LOG_MODEL_TRANSLATIONS', 'translations');
+
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
 define('LOG_ACTION_EDIT', 'edit');
@@ -130,6 +131,7 @@ define('LOG_ACTION_UPLOAD', 'upload');
 define('LOG_ACTION_MKDIR', 'mkdir');
 define('LOG_ACTION_RESIZE', 'resize');
 define('LOG_ACTION_OTHER', 'other');
+define('LOG_ACTION_INDEX', 'index');
 
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
@@ -146,6 +148,9 @@ define('LOG_PAGE_CONFIRM', 'confirm login');
 define('ORDERBY_APPROVED', 0);
 define('ORDERBY_TITLE', 1);
 define('ORDERBY_DATE', 2);
+
+// translations
+define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
 class Controller extends BaseController
 {

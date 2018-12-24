@@ -165,13 +165,15 @@ class SectionController extends Controller
         return redirect('/error');
 	}
 	
-    public function edit(Request $request, Entry $entry)
-    {		
+    public function edit(Request $request, $id)
+    {
 		if (!$this->isAdmin())
              return redirect('/');
 		
+		$entry = Entry::get($id);
+		
 		$dates = null;
-		if (isset($entry->display_date))
+		if (isset($entry) && isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);
 
 		$vdata = $this->getViewData([

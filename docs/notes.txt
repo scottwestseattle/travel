@@ -1,5 +1,7 @@
 INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`,  `large_col2`, `created_at`, `updated_at`) 
+(`parent_table`, `parent_id`, `language`, 
+`medium_col1`, `medium_col2`, `large_col1`, `large_col2`, 
+`created_at`, `updated_at`) 
 VALUES (
 'entries', 
 336, 

@@ -45,6 +45,20 @@ Route::get('/language/{locale}', 'ToolController@language');
 Route::get('/hash', 'EntryController@hash')->middleware('auth');
 Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
 
+// Translations
+Route::group(['prefix' => 'translations'], function () {
+	// index
+	Route::get('/', 'TranslationController@index')->middleware('auth');
+
+	// add
+	Route::get('/add','TranslationController@add')->middleware('auth');
+	Route::post('/create','TranslationController@create')->middleware('auth');
+
+	// edit
+	Route::get('/edit/{filename}','TranslationController@edit')->middleware('auth');
+	Route::post('/update/{filename}','TranslationController@update')->middleware('auth');
+});
+
 // sections
 Route::group(['prefix' => 'sections'], function () {
 	
@@ -61,8 +75,9 @@ Route::group(['prefix' => 'sections'], function () {
 	Route::post('/create','EntryController@create')->middleware('auth');
 
 	// edit/update
-	Route::get('/edit/{entry}','SectionController@edit')->middleware('auth');
+	Route::get('/edit/{id}','SectionController@edit')->middleware('auth');
 	Route::post('/update/{entry}','EntryController@update')->middleware('auth');
+	Route::post('/updatetrx/{entry}','TranslationController@updateEntry')->middleware('auth');
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{entry}','SectionController@confirmdelete')->middleware('auth');
