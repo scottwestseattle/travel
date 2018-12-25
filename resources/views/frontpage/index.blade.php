@@ -96,13 +96,13 @@ $sectionCount = 0;
 				<!------------------------------------------------------->
 				<!-- these are the slider mover arrows -->
 				<!------------------------------------------------------->
-				<div id="slider-arrow-left" style="font-size: 200px; position:absolute; top:0; left:0">
+				<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
 					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
 					
-				<div id="slider-arrow-right" style="font-size:200px; position:absolute; top:0; right:0;">
+				<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
 					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>

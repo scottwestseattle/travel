@@ -50,7 +50,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         @guest
 							@if (null !== (session('spy', null)))
-								<li><a href="/spy">@LANG('ui.Turn Spy Off')</a></li>
+								<li><a href="/spyoff">@LANG('ui.Turn Spy Off')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
@@ -123,7 +123,7 @@
 								@endif
 							@else
 								@if (null !== (session('spy', null)))
-									<li><a href="/spy">@LANG('ui.Turn Spy Off')</a></li>
+									<li><a href="/spyoff">@LANG('ui.Turn Spy Off')</a></li>
 								@endif
 								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 									<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
