@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use App;
 use App\Entry;
 use App\Event;
 use App\Photo;
@@ -265,8 +266,8 @@ return redirect('/sections');
 		else if ($entry->type_flag == ENTRY_TYPE_ARTICLE)
 		{
 			$backLink = '/articles';
-			$backLinkText = 'Back to Article List';
-			$page_title = 'Article - ' . $page_title;
+			$backLinkText = __('content.Back to Article List');
+			$page_title = __('ui.Article') . ' - ' . $page_title;
 			
 			if (isset($entry->display_date))
 			{
@@ -281,7 +282,7 @@ return redirect('/sections');
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
-			
+
 		$vdata = $this->getViewData([
 			'record' => $entry, 
 			'next' => $next,
@@ -291,6 +292,7 @@ return redirect('/sections');
 			'backLink' => $backLink,
 			'backLinkText' => $backLinkText,
 			'page_title' => $page_title,
+			'display_date' => Controller::translateDate($entry->display_date),
 		]);
 		
 		return view('entries.view', $vdata);

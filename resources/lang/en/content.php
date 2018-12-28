@@ -9,4 +9,5 @@ return [
 'Chinese' => 'Chinese',
 'Translations' => 'Translations',
 'Back to Articles' => 'Back to Articles',
+'Map Location:' => 'Map Location:',
 ];

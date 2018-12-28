@@ -72,9 +72,10 @@
 			@endif
 		@endif
 		
-		@if (isset($record->display_date))
-			<br/><?php $date = date_create($record->display_date); echo date_format($date, "l, F d, Y"); ?>
+		@if (isset($display_date))
+			<br/>{{$display_date}}
 		@endif
+		
 		@if (null !== Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			<br/>View Count: {{$record->view_count}}<br/>
 		@endif
@@ -118,7 +119,7 @@
 	
 	@if (strlen(trim($record->description_short)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
-		<h3>Highlights</h3>
+		<h3>@LANG('ui.Highlights')</h3>
 		<div>{{$record->description_short}}</div>
 	</div>
 	@endif
@@ -134,7 +135,7 @@
 	
 		<div class="entry-div">
 			<div class="entry amenity-item">
-				<h3>PHOTOS<!-- a style="font-size:.65em;" href="/photos/slideshow/{{$record->id}}">(Slideshow)</a --></h3>
+				<h3>@LANG('ui.PHOTOS')<!-- a style="font-size:.65em;" href="/photos/slideshow/{{$record->id}}">(Slideshow)</a --></h3>
 			</div>
 		</div>
 			

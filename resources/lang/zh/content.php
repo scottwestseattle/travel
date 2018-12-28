@@ -9,4 +9,5 @@ return [
 'Chinese' => '中文',
 'Translations' => '翻译',
 'Back to Articles' => '回到文章',
+'Map Location:' => '地图位置',
 ];

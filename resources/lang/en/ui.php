@@ -76,4 +76,6 @@ return [
 'Key' => 'Key',
 'Edit' => 'Edit',
 'Add' => 'Add',
+'Article' => 'Article',
+'of' => 'of',
 ];

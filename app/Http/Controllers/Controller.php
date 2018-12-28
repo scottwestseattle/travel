@@ -427,8 +427,10 @@ class Controller extends BaseController
 		
 		// orig: https://www.google.com/search?q=$1.$2,$3.$4
 		$link = 'https://maps.google.com/maps?q=$1.$2,$3.$4'; //new
-		
-		$text = preg_replace('/Map Location: ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">Map Location: <span id="copy$1$2$3$4">$1.$2, $3.$4</span></a>&nbsp;<a href="#" onclick="javascript:clipboardCopy(event, \'copy$1$2$3$4\', \'copy$1$2$3$4\')"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
+
+		$key = 'Map Location:';
+		$trx = __('content.' . $key);
+		$text = preg_replace('/' . $key . ' ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">' . $trx . ' <span id="copy$1$2$3$4">$1.$2, $3.$4</span></a>&nbsp;<a href="#" onclick="javascript:clipboardCopy(event, \'copy$1$2$3$4\', \'copy$1$2$3$4\')"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
 
 		return $text;
 	}
@@ -1847,4 +1849,29 @@ class Controller extends BaseController
 			$entry->save();	
 		}
 	}
+	
+    protected function translateDate($date)
+    {		
+		$saveTz = date_default_timezone_get(); // save the current timezone
+		$dateFormat = "%A, %B %e, %Y";
+				
+		if (App::getLocale() == 'es')
+		{
+			date_default_timezone_set('Europe/Madrid');
+			setlocale(LC_ALL, 'es_ES.utf8');		
+			$dateFormat = "%A, %e " . __('ui.of') . " %B, %Y";
+		}
+		else if (App::getLocale() == 'zh')
+		{
+			date_default_timezone_set('Asia/Shanghai');
+			setlocale(LC_ALL, 'zh_ZH.utf8');		
+		}
+		
+		$date = strftime($dateFormat, strtotime($date));
+		
+		date_default_timezone_set($saveTz); // set the timezone back to where it was
+		
+		return $date;
+	}
+			
 }

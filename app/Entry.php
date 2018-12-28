@@ -433,28 +433,47 @@ class Entry extends Base
 
 	static protected function getNextPrevEntry($display_date, $id, $next = true)
 	{
-		$record = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('published_flag', 1)
-			->where('approved_flag', 1)
-			->where('type_flag', ENTRY_TYPE_ARTICLE)
-			->where('display_date', $next ? '=' : '=', $display_date)
-			->where('id', $next ? '>' : '<', $id)
-			->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC') . ', id ' . ($next ? 'ASC' : 'DESC '))			
+		$record = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+			->leftJoin('translations', function ($join) {
+				$join->on('entries.id', '=', 'translations.parent_id')
+					 ->where('translations.language', '=', App::getLocale())
+					 ->where('translations.parent_table', '=', 'entries');
+			})					 
+			->where('entries.site_id', SITE_ID)
+			->where('entries.deleted_flag', 0)
+			->where('entries.published_flag', 1)
+			->where('entries.approved_flag', 1)
+			->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
+			->where('entries.display_date', $next ? '=' : '=', $display_date)
+			->where('entries.id', $next ? '>' : '<', $id)
+			->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
 			->first();
 
 		if (!isset($record))
-			$record = Entry::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('type_flag', ENTRY_TYPE_ARTICLE)
-				->where('display_date', $next ? '>' : '<', $display_date)
-				->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC') . ', id ' . ($next ? 'ASC' : 'DESC '))			
+			$record = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+				->leftJoin('translations', function ($join) {
+					$join->on('entries.id', '=', 'translations.parent_id')
+						 ->where('translations.language', '=', App::getLocale())
+						 ->where('translations.parent_table', '=', 'entries');
+				})					 		
+				->where('entries.site_id', SITE_ID)
+				->where('entries.deleted_flag', 0)
+				->where('entries.published_flag', 1)
+				->where('entries.approved_flag', 1)
+				->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
+				->where('entries.display_date', $next ? '>' : '<', $display_date)
+				->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
 				->first();
 
+		// translate
+		if (isset($record->language))
+		{
+			$record->title = $record->medium_col1;
+			$record->permalink = $record->medium_col2;
+			$record->description = $record->large_col1;
+			$record->description_short = $record->large_col2;
+		}			
+				
 		return $record;
 	}
 	
