@@ -1537,7 +1537,7 @@ class Controller extends BaseController
 			if (isset($record->language))
 			{
 				$record->title = $record->medium_col1;
-				$record->permalink = $record->medium_col2;
+//todo: fix				$record->permalink = $record->medium_col2;
 				$record->description = $record->large_col1;
 				$record->description_short = $record->large_col2;
 			}

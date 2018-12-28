@@ -71,4 +71,9 @@ return [
 'Translations' => 'Translations',
 'Show' => 'Show',
 'Featured Photos' => 'Featured Photos',
+'Prev' => 'Prev',
+'Next' => 'Next',
+'Key' => 'Key',
+'Edit' => 'Edit',
+'Add' => 'Add',
 ];

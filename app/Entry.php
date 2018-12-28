@@ -160,9 +160,14 @@ class Entry extends Base
 		return $records;
 	}
 	
-	static public function get($id)
-	{		
-		$id = intval($id);
+	static public function get($permalink, $id = null)
+	{
+		if (isset($permalink)) // clean the permalink
+			$permalink = preg_replace("/[^a-zA-Z0-9\-]/", "", $permalink);
+		
+		$id = intval($id); // clean the id
+		
+		$record = null;
 		
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description
@@ -194,8 +199,11 @@ class Entry extends Base
 				ON entries.id = translations.parent_id AND translations.language = ? AND translations.parent_table = ? 
 			WHERE 1=1
 			AND entries.deleted_flag = 0
-			AND entries.id = ?
+			';
+		
+		$q .= isset($permalink) ? 'AND entries.permalink = ? ' : 'AND entries.id = ? ';
 
+		$q .= '
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description
 				, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date
 				, entries.photo_id, entries.parent_id, entries.site_id
@@ -206,11 +214,23 @@ class Entry extends Base
 				LIMIT 1
 		';
 						
-		$records = DB::select($q, [App::getLocale(), 'entries', $id]);
+		$records = DB::select($q, [App::getLocale(), 'entries', isset($permalink) ? $permalink : $id]);
 		
-		$records = count($records) > 0 ? $records[0] : null;
+		if (count($records) == 1) // expected result
+		{
+			$record = $records[0];
 			
-		return $records;
+			// translate
+			if (isset($record->language))
+			{
+				$record->title = $record->medium_col1;
+				$record->permalink = $record->medium_col2;
+				$record->description = $record->large_col1;
+				$record->description_short = $record->large_col2;
+			}
+		}
+			
+		return $record;
 	}
 	
 	static public function getEntry($permalink)

@@ -71,4 +71,9 @@ return [
 'Translations' => '翻译',
 'Show' => '显示',
 'Featured Photos' => '精选照片',
+'Prev' => '以前',
+'Next' => '下面',
+'Key' => '钥匙',
+'Edit' => '编辑',
+'Add' => '加',
 ];

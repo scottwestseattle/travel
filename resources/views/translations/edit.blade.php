@@ -6,15 +6,18 @@
 
 	@component('translations.menu-submenu', ['prefix' => $prefix])@endcomponent
 
-	<h1>@LANG('content.Edit Translations')</h1>
+	<h1>@LANG('content.Translations')</h1>
 
 	<form method="POST" action="/translations/update/{{$filename}}">
 					
 		<div class="form-group">		
 
 		<?php $cnt = 0; $recs = $records['en']; ?>
+				
+		<h3>@LANG('ui.Edit')</h3>
+		
 		<table>
-			<tr><th>@LANG('content.Key')</th><th>@LANG('content.English')</th><th>@LANG('content.Spanish')</th><th>@LANG('content.Chinese')</th></tr>
+			<tr><th>@LANG('ui.Key')</th><th>@LANG('ui.English')</th><th>@LANG('ui.Spanish')</th><th>@LANG('ui.Chinese')</th></tr>
 		@foreach($recs as $key => $value)
 			<tr>
 			<td style=""><input type="text" name="records[0][{{$cnt}}]" class="form-control" value="{{$key}}"></input></td>
@@ -23,11 +26,12 @@
 			<td style=""><input type="text" name="records[3][{{$cnt++}}]" class="form-control" value="{{$records['zh'][$key]}}"></input></td>
 			<tr>
 		@endforeach
-		</table>
-
-		<h3>@LANG('content.Add Translations')</h3>
+		</table>		
+		
+		<h3>@LANG('ui.Add')</h3>
+		
 		<table>
-			<tr><th>@LANG('content.Key')</th><th>@LANG('content.English')</th><th>@LANG('content.Spanish')</th><th>@LANG('content.Chinese')</th></tr>
+			<tr><th>@LANG('ui.Key')</th><th>@LANG('ui.English')</th><th>@LANG('ui.Spanish')</th><th>@LANG('ui.Chinese')</th></tr>
 		@for($i = $cnt; $i < ($cnt + 5); $i++)
 			<tr>
 			<td style=""><input type="text" name="records[0][{{$i}}]" class="form-control"></input></td>

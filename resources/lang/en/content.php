@@ -7,4 +7,6 @@ return [
 'Edit Translations' => 'Edit Translations',
 'Add Translations' => 'Add Translations',
 'Chinese' => 'Chinese',
+'Translations' => 'Translations',
+'Back to Articles' => 'Back to Articles',
 ];

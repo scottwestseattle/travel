@@ -71,4 +71,9 @@ return [
 'Translations' => 'Traducciones',
 'Show' => 'Mostrar',
 'Featured Photos' => 'Fotos Destacadas',
+'Prev' => 'Anterior',
+'Next' => 'Siguiente',
+'Key' => 'Clave',
+'Edit' => 'Editar',
+'Add' => 'Añadir',
 ];

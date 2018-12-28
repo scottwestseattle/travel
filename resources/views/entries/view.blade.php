@@ -34,20 +34,20 @@
 		@if (isset($prev) || isset($record->parent_id) || isset($next))
 		<div style="margin-top: 10px;">
 			@if (isset($prev))
-				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>Prev</button></button></a>
+				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
 			@endif
 			@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
-				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">Back to Blog<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
+				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Blog')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 				
 			@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-				<a href="/blogs/addpost/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">Add New Post<span style="margin-left:5px;" class="glyphicon glyphicon-plus-sign"></span></button></a>	
+				<a href="/blogs/addpost/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Add New Post')<span style="margin-left:5px;" class="glyphicon glyphicon-plus-sign"></span></button></a>	
 			@endif				
 				
 			@elseif($record->type_flag == ENTRY_TYPE_ARTICLE)
-				<a href="/articles"><button type="button" class="btn btn-blog-nav">Back to Articles<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
+				<a href="/articles"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Articles')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 			@endif
 			@if (isset($next))
-				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-blog-nav">Next<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
+				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
 			@endif	
 
 		</div>

@@ -13,9 +13,14 @@
 		
 			<input type="hidden" name="referer" value={{array_key_exists('HTTP_REFERER', $_SERVER) ? $_SERVER["HTTP_REFERER"] : ''}} />
 
+			@if (App::getLocale() != 'en')
+			<div style="float:left; margin: 0 10px 10px 0;"><a href="/sections/edit/{{$record->id}}">Translate: {{App::getLocale()}}</a></div>
+			<div style="clear:both;"</div>
+			@endif
+			
 			@component('control-entry-types', ['current_type' => $record->type_flag, 'entryTypes' => $entryTypes])
-			@endcomponent			
-		
+			@endcomponent
+					
 			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 
 			<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />

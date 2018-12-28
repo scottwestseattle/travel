@@ -202,7 +202,6 @@ return redirect('/sections');
     {		
 		$next = null;
 		$prev = null;
-		$permalink = trim($permalink);
 		
 		// get the entry the Laravel way so we can access the gallery photo list
 		$entry = Entry::select()
@@ -219,8 +218,9 @@ return redirect('/sections');
 		}
 		
 		// get the entry the mysql way so we can have all the main photo and location info
-		$entry = Entry::getEntry($permalink);
-			
+		//$entry = Entry::getEntry($permalink);
+		$entry = Entry::get($permalink); // new way with translation included
+
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 						

@@ -7,4 +7,6 @@ return [
 'Edit Translations' => '编辑翻译',
 'Add Translations' => '添加翻译',
 'Chinese' => '中文',
+'Translations' => '翻译',
+'Back to Articles' => '回到文章',
 ];

@@ -170,8 +170,8 @@ class SectionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$entry = Entry::get($id);
-		
+		$entry = Entry::get(null, $id);
+
 		$dates = null;
 		if (isset($entry) && isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);

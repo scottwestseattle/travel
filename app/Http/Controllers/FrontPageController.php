@@ -192,6 +192,14 @@ class FrontPageController extends Controller
 					$new = 'AlphaSeoBot';
 				else if (stripos($agent, 'uptimebot') !== FALSE)
 					$new = 'UptimeBot';
+				else if (stripos($agent, 'crawl') !== FALSE)
+					$new = $agent;
+				else if (stripos($agent, 'bot') !== FALSE)
+					$new = $agent;
+				else if (stripos($record->host_name, 'crawl') !== FALSE)
+					$new = $record->host_name;
+				else if (stripos($record->host_name, 'bot') !== FALSE)
+					$new = $record->host_name;
 				else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
 					$new = 'GoogleUserContent';
 				else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
