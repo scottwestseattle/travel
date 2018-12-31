@@ -78,4 +78,5 @@ return [
 'Key' => '键',
 'Add' => '加',
 'Article' => '文章',
+'Blog Posts' => '博客帖子',
 ];

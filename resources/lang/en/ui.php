@@ -78,4 +78,5 @@ return [
 'Key' => 'Key',
 'Add' => 'Add',
 'Article' => 'Article',
+'Blog Posts' => 'Blog Posts',
 ];

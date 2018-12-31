@@ -160,7 +160,7 @@ class Entry extends Base
 		return $records;
 	}
 	
-	static public function get($permalink, $id = null)
+	static public function get($permalink, $id = null, $site_id = null)
 	{
 		if (isset($permalink)) // clean the permalink
 			$permalink = preg_replace("/[^a-zA-Z0-9\-]/", "", $permalink);
@@ -203,6 +203,8 @@ class Entry extends Base
 		
 		$q .= isset($permalink) ? 'AND entries.permalink = ? ' : 'AND entries.id = ? ';
 
+		$q .= isset($site_id) ? 'AND entries.site_id = ? ' : '';
+		
 		$q .= '
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description
 				, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date
@@ -214,20 +216,24 @@ class Entry extends Base
 				LIMIT 1
 		';
 						
-		$records = DB::select($q, [App::getLocale(), 'entries', isset($permalink) ? $permalink : $id]);
+		if (isset($site_id))
+			$records = DB::select($q, [App::getLocale(), 'entries', isset($permalink) ? $permalink : $id, $site_id]);
+		else			
+			$records = DB::select($q, [App::getLocale(), 'entries', isset($permalink) ? $permalink : $id]);
 		
 		if (count($records) == 1) // expected result
 		{
 			$record = $records[0];
-			
-			// translate
-			if (isset($record->language))
-			{
-				$record->title = $record->medium_col1;
+	
+			// copy translations in
+			if (isset($record->medium_col1))
+				$record->title = $record->medium_col1;			
+			if (isset($record->medium_col2))
 				$record->permalink = $record->medium_col2;
+			if (isset($record->large_col1))
 				$record->description = $record->large_col1;
+			if (isset($record->large_col2))
 				$record->description_short = $record->large_col2;
-			}
 		}
 			
 		return $record;
@@ -465,41 +471,16 @@ class Entry extends Base
 				->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
 				->first();
 
-		// translate
-		if (isset($record->language))
-		{
-			$record->title = $record->medium_col1;
+		// copy translations in
+		if (isset($record->medium_col1))
+			$record->title = $record->medium_col1;			
+		if (isset($record->medium_col2))
 			$record->permalink = $record->medium_col2;
+		if (isset($record->large_col1))
 			$record->description = $record->large_col1;
+		if (isset($record->large_col2))
 			$record->description_short = $record->large_col2;
-		}			
 				
-		return $record;
-	}
-	
-	static public function getAboutPage($site_id)
-	{
-		$q = '
-			SELECT entries.id, entries.title, entries.description, entries.permalink, entries.published_flag, entries.approved_flag 
-				, photo_main.filename as photo
-				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
-				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
-			FROM entries
-			LEFT JOIN photos as photo_main
-				ON photo_main.parent_id = entries.id AND photo_main.main_flag = 1 AND photo_main.deleted_flag = 0 AND photo_main.site_id = ?
-			WHERE 1=1
-				AND entries.site_id = ?
-				AND entries.deleted_flag = 0
-				AND entries.published_flag = 1
-				AND entries.approved_flag = 1
-				AND entries.permalink = \'page-about\' 
-			GROUP BY 
-				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path, entries.published_flag, entries.approved_flag 
-			LIMIT 1
-		';
-		
-		$record = DB::select($q, [$site_id, $site_id]);
-		
 		return $record;
 	}
 	

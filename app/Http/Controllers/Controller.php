@@ -1536,14 +1536,15 @@ class Controller extends BaseController
 		// fix-up the translations
 		foreach($records as $record)
 		{
-			if (isset($record->language))
-			{
-				$record->title = $record->medium_col1;
-//todo: fix				$record->permalink = $record->medium_col2;
+			if (isset($record->medium_col1))
+				$record->title = $record->medium_col1;			
+			if (isset($record->medium_col2))
+				$record->permalink = $record->medium_col2;
+			if (isset($record->large_col1))
 				$record->description = $record->large_col1;
-				$record->description_short = $record->large_col2;
-			}
-		}		
+			if (isset($record->large_col2))
+				$record->description_short = $record->large_col2;		
+		}
 		
 		$records = $this->fixPhotoPaths($records, $makeThumbnail);
 		

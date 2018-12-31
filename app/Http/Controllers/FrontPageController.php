@@ -344,12 +344,12 @@ class FrontPageController extends Controller
 		
 		$site_id = $this->getSiteId();
 
-		$entry = Entry::getAboutPage(SITE_ID);
+		$entry = Entry::get('page-about');
 
-		if (isset($entry) && isset($entry[0]) && isset($entry[0]->description))
+		if (isset($entry) && isset($entry->description))
 		{
-			$entry[0]->description = Controller::fixSiteInfo($entry[0]->description, Controller::getSite());
-			$entry[0]->description = Controller::formatLinks($entry[0]->description);
+			$entry->description = Controller::fixSiteInfo($entry->description, Controller::getSite());
+			$entry->description = Controller::formatLinks($entry->description);
 		}
 		
 		$stats = [];
@@ -408,7 +408,7 @@ class FrontPageController extends Controller
 		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] ; 
 		
 		$vdata = $this->getViewData([
-			'record' => count($entry) > 0 ? $entry[0] : null,
+			'record' => $entry,
 			'stats' => $stats,
 		], 'About Page');
 		
