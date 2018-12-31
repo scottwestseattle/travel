@@ -4,7 +4,7 @@ function clipboardCopy(event, idFlash, id)
 	event.preventDefault();
 	
 	var text = document.getElementById(id).innerHTML;
-	
+
 	// create an input field that can be selected
 	var target = document.createElement("textarea");
 	target.style.position = "absolute"; // keep it off of the screen
@@ -43,6 +43,28 @@ function clipboardCopy(event, idFlash, id)
 	
 	// remove the temporary input field
 	document.body.removeChild(target);
+}
+
+function clipboardCopyText(event, idFlash, id)
+{
+	event.preventDefault();
+
+	// do the flash affect
+	$("#" + idFlash + ' p').fadeTo('fast', 0.1).fadeTo('slow', 1.0);
+	$("#" + idFlash).fadeTo('fast', 0.1).fadeTo('slow', 1.0);
+
+	document.getElementById(id).select();
+
+    // copy the selection
+    var succeed;
+    try 
+	{
+		succeed = document.execCommand("copy");
+    } 
+	catch(e) 
+	{
+        succeed = false;
+	}
 }
 
 function save()

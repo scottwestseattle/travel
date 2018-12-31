@@ -10,6 +10,7 @@ use App\Entry;
 use App\Event;
 use App\Photo;
 use App\Location;
+use App\Translation;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -417,32 +418,32 @@ return redirect('/sections');
 		if (isset($entry->display_date))
 			$dates = Controller::getDateControlSelectedDate($entry->display_date);
 		
+		$translations = Translation::select()
+			->where('parent_id', $entry->id)
+			->where('parent_table', 'entries')
+			->get();
+
+//dd($translations);			
+		$languages = [];
+		$languages[] = 'es';
+		$languages[] = 'zh';
+			
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $dates,
+			'translations' => $translations,
+			'languages' => $languages,
 		]);
 		
 		return view('entries.edit', $vdata);
     }
-
-    public function getColorCode($index, $colors)
-    {
-		if ($index > 0)
-		{
-			return $colors[$index];
-		}
-		else
-		{
-			return null;
-		}
-	}
 	
     public function update(Request $request, Entry $entry)
     {
 		$record = $entry;
-		
+
 		if (!$this->isAdmin())
              return redirect('/');
 
@@ -469,6 +470,37 @@ return redirect('/sections');
 			
 			//todo: turned off for now: $record->approved_flag = 0;
 			
+			//
+			// write translation records
+			//
+			foreach($request->translations as $key => $value)
+			{
+				$rc = Translation::updateEntry(
+					$entry->id
+					, 'entries'
+					, $value						// language
+					, $request->medium_col1[$key]	// title
+					, $request->permalink			// permalink
+					, $request->large_col1[$key]	// description
+					, $request->large_col2[$key]	// description_short
+				);
+				
+				if ($rc['saved'])
+				{
+					Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
+					
+					$request->session()->flash('message.level', 'success');
+					$request->session()->flash('message.content', $rc['logMessage']);
+				}
+				else
+				{
+					Event::logException(LOG_MODEL_TRANSLATIONS, $rc['logAction'], $this->getTextOrShowEmpty($entry->title), null, $rc['exception']);
+					
+					$request->session()->flash('message.level', 'danger');
+					$request->session()->flash('message.content', $rc['exception']);
+				}			
+			}			
+			
 			try
 			{
 				$record->save();
@@ -492,7 +524,19 @@ return redirect('/sections');
 		{
 			return redirect('/');
 		}
-    }	
+    }
+
+    public function getColorCode($index, $colors)
+    {
+		if ($index > 0)
+		{
+			return $colors[$index];
+		}
+		else
+		{
+			return null;
+		}
+	}	
 	
     public function confirmdelete(Request $request, Entry $entry)
     {	

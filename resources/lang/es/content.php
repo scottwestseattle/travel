@@ -5,9 +5,10 @@ return [
 'English' => 'Inglés',
 'Spanish' => 'Español',
 'Edit Translations' => 'Editar Traducciones',
-'Add Translations' => 'Añadir traducciones',
-'Chinese' => 'Chino',
 'Translations' => 'Traducciones',
+'Chinese' => 'Chino',
 'Back to Articles' => 'Volver a Artículos',
 'Map Location:' => 'Ubicación del Mapa:',
+'Back to Blog' => 'Volver al blog',
+'Add New Post' => 'Añadir Nueva Publicación',
 ];

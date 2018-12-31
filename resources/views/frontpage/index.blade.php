@@ -406,7 +406,7 @@ $sectionCount = 0;
 						
 						<a style="font-family: 'Volkhov', serif; color: black; font-size:1.4em; font-weight:bold; text-decoration: none; " href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 						
-						<p style="color: gray; font-size:.9em;">{{date_format(date_create($record->display_date), "l, F d, Y")}}</p>
+						<p style="color: gray; font-size:.9em;">{{$record->display_date}}</p>
 					</div>
 					
 				</div><!-- inner col div -->

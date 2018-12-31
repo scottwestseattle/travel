@@ -5,9 +5,10 @@ return [
 'English' => 'English',
 'Spanish' => 'Spanish',
 'Edit Translations' => 'Edit Translations',
-'Add Translations' => 'Add Translations',
-'Chinese' => 'Chinese',
 'Translations' => 'Translations',
+'Chinese' => 'Chinese',
 'Back to Articles' => 'Back to Articles',
 'Map Location:' => 'Map Location:',
+'Back to Blog' => 'Back to Blog',
+'Add New Post' => 'Add New Post',
 ];
