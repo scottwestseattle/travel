@@ -195,7 +195,7 @@ class EntryController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 
-return redirect('/sections'); 
+			return redirect('/sections'); 
 			return redirect($this->getReferer($request, '/entries/indexadmin/'));
 		}						
     }
@@ -206,25 +206,39 @@ return redirect('/sections');
 		$prev = null;
 		
 		// get the entry the Laravel way so we can access the gallery photo list
-		$entry = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('permalink', $permalink)
-			->first();
+		
+		if ($this->isAdmin())
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('permalink', $permalink)
+				->first();
+		}
+		else
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('deleted_flag', 0)
+				->where('permalink', $permalink)
+				->first();
+		}
 			
 		$gallery = null;
 		if (isset($entry))
 		{
 			$this->countView($entry);
 			$gallery = $entry->photos;
-		}
 		
-		// get the entry the mysql way so we can have all the main photo and location info
-		//$entry = Entry::getEntry($permalink);
-		$entry = Entry::get($permalink); // new way with translation included
+			// get the entry the mysql way so we can have all the main photo and location info
+			//$entry = Entry::getEntry($permalink);
+			$entry = Entry::get($permalink); // new way with translation included
 
-		$id = isset($entry) ? $entry->id : null;
-		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+			$id = isset($entry) ? $entry->id : null;
+			$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+		}
 						
 		if (isset($entry))
 		{

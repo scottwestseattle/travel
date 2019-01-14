@@ -93,15 +93,28 @@ class BlogController extends Controller
 		try
 		{		
 			// get the blog
-			$record = Entry::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('id', $id)
-				->where('type_flag', ENTRY_TYPE_BLOG)
-				->first();
-			
+			if ($this->isAdmin())
+			{
+				// show all
+				$record = Entry::select()
+					->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('id', $id)
+					->where('type_flag', ENTRY_TYPE_BLOG)
+					->first();
+			}
+			else
+			{			
+				// only show published / approved
+				$record = Entry::select()
+					->where('site_id', SITE_ID)
+					->where('deleted_flag', 0)
+					->where('published_flag', 1)
+					->where('approved_flag', 1)
+					->where('id', $id)
+					->where('type_flag', ENTRY_TYPE_BLOG)
+					->first();
+			}
 			
 			if (!isset($record))
 			{
