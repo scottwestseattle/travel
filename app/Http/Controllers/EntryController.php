@@ -473,32 +473,35 @@ return redirect('/sections');
 			//
 			// write translation records
 			//
-			foreach($request->translations as $key => $value)
+			if (isset($request->translations))
 			{
-				$rc = Translation::updateEntry(
-					$entry->id
-					, 'entries'
-					, $value						// language
-					, $request->medium_col1[$key]	// title
-					, $request->permalink			// permalink
-					, $request->large_col1[$key]	// description
-					, $request->large_col2[$key]	// description_short
-				);
+				foreach($request->translations as $key => $value)
+				{
+					$rc = Translation::updateEntry(
+						$entry->id
+						, 'entries'
+						, $value						// language
+						, $request->medium_col1[$key]	// title
+						, $request->permalink			// permalink
+						, $request->large_col1[$key]	// description
+						, $request->large_col2[$key]	// description_short
+					);
 				
-				if ($rc['saved'])
-				{
-					Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
+					if ($rc['saved'])
+					{
+						Event::logEdit(LOG_MODEL_TRANSLATIONS, $entry->title, $entry->id);			
 					
-					$request->session()->flash('message.level', 'success');
-					$request->session()->flash('message.content', $rc['logMessage']);
+						$request->session()->flash('message.level', 'success');
+						$request->session()->flash('message.content', $rc['logMessage']);
+					}
+					else
+					{
+						Event::logException(LOG_MODEL_TRANSLATIONS, $rc['logAction'], $this->getTextOrShowEmpty($entry->title), null, $rc['exception']);
+					
+						$request->session()->flash('message.level', 'danger');
+						$request->session()->flash('message.content', $rc['exception']);
+					}			
 				}
-				else
-				{
-					Event::logException(LOG_MODEL_TRANSLATIONS, $rc['logAction'], $this->getTextOrShowEmpty($entry->title), null, $rc['exception']);
-					
-					$request->session()->flash('message.level', 'danger');
-					$request->session()->flash('message.content', $rc['exception']);
-				}			
 			}			
 			
 			try
