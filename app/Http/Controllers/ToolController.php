@@ -49,7 +49,7 @@ class ToolController extends Controller
     {	
 		$executed = null;
 		
-		$server = 'http://' . strtolower(Controller::getSite()->site_url);
+		$server = 'https://' . strtolower(Controller::getSite()->site_url);
 
 		//$server = 'http://epictravelguide.com';
 		//$server = 'http://grittytravel.com';
@@ -330,7 +330,7 @@ class ToolController extends Controller
 			// file name looks like: sitemap-domain.com.txt
 			$myfile = fopen($filename, "w") or die("Unable to open file!");
 			
-			$server = 'http://' . $server;
+			$server = 'https://' . $server;
 			
 			foreach($urls as $url)
 			{
