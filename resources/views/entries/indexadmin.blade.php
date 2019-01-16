@@ -51,9 +51,9 @@ if (isset($title))
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{$entryTypes[$record->type_flag] . ', ' . intval($record->photo_count) . ' photos'}})</a>
 
 						@if ($record->published_flag === 0)
-							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
 						@elseif ($record->approved_flag === 0)
-							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
+							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
 						@endif
 						
 						<?php if (intval($record->view_count) > 0) : ?>
@@ -61,7 +61,7 @@ if (isset($title))
 						<?php endif; ?>
 						
 						@if (strlen($record->permalink) === 0)
-							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.No Permalink')</button></a></div>
 						@endif
 												
 					</td>

@@ -39,13 +39,13 @@ if (isset($title))
 						
 						<div>
 						@if (isset($record->published_flag) && $record->published_flag == 0)
-							<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
+							<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
 						@endif
 						@if (isset($record->approved_flag) && $record->approved_flag == 0)
-							<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
+							<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 						@endif
 						@if (strlen($record->permalink) === 0)
-							<a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a>
+							<a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.No Permalink')</button></a>
 						@endif
 						</div>
 												

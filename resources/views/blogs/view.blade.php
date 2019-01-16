@@ -28,9 +28,9 @@ else
 		
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			@if ($record->published_flag === 0)
-				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
 			@elseif ($record->approved_flag === 0)
-				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
+				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
 			@endif
 		@endif
 
@@ -41,13 +41,13 @@ else
 		<!-- show bread crumbs -->
 		<!----------------------->
 		<div style="margin-top:10px;" class="form-group">			
-			<a href="/blogs/index"><button type="button" class="btn btn-blog-nav">Back to Blog List<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>			
+			<a href="/blogs/index"><button type="button" class="btn btn-blog-nav">@LANG('ui.Back to Blog List')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>			
 		</div>	
 	@endif
 	
 	<div style="margin-top: 10px;">
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-			<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-blog-nav">Add New Post</button></a>	
+			<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Add New Post')</button></a>	
 		@endif	
 	</div>
 	
@@ -146,9 +146,9 @@ else
 	<div style="margin:20px 0">
 		
 		<h3>
-			<span class="middle" style="margin: 0 10px 0 0;">Blog Posts ({{ count($records) }})</span>
+			<span class="middle" style="margin: 0 10px 0 0;">@LANG('ui.Blog Posts') ({{ count($records) }})</span>
 			@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-				<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-action">Add New Post</button></a>	
+				<a href="/blogs/addpost/{{$record->id}}"><button type="button" class="btn btn-action">@LANG('ui.Add New Post')</button></a>	
 			@endif
 		</h3>
 	
@@ -172,9 +172,9 @@ else
 						
 						@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 							@if ($record->published_flag === 0)
-								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></div>
+								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
 							@elseif ($record->approved_flag === 0)
-								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></div>
+								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
 							@endif
 							
 							@if (!isset($record->permalink) || strlen($record->permalink) === 0)
@@ -229,7 +229,7 @@ else
 		<!-- if not showing all, show the Show All button -->
 		@if (!isset($all))
 		<span id="showAllButton" style="cursor:pointer;" onclick="showAllRows('blogEntryTable', 'showAllButton')">
-			<button style="margin-bottom:10px;" type="button" class="btn btn-blog-nav">Show All Posts&nbsp;
+			<button style="margin-bottom:10px;" type="button" class="btn btn-blog-nav">@LANG('ui.Show All Posts')&nbsp;
 				<span style="background-color: white; color: #5CB85C;" class="badge">{{count($records)}}</span>
 			</button>
 		</span>

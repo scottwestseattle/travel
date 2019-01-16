@@ -15,9 +15,9 @@
 		<div class="publish-pills">
 			<ul class="nav nav-pills">
 				@if ($record->published_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">Private</a></li>
+					<li class="active"><a href="/entries/publish/{{$record->id}}">@LANG('ui.Private')</a></li>
 				@elseif ($record->approved_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">Pending Approval</a></li>
+					<li class="active"><a href="/entries/publish/{{$record->id}}">@LANG('ui.Pending Approval')</a></li>
 				@endif
 			</ul>
 		</div>
