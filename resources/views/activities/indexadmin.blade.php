@@ -10,7 +10,7 @@
 
 <?php 
 
-$header = 'Activites';
+$header = __('content.Activities');
 if (isset($title))
 {
 	$header = $title;
@@ -67,15 +67,15 @@ if (isset($title))
 						@if ($record->published_flag === 0 || $record->approved_flag === 0 || !isset($record->location_id) || strlen($record->map_link) == 0)
 							<div>
 							@if ($record->published_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a></li>
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></li>
 							@elseif ($record->approved_flag === 0)
-								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a></li>
+								<a href="/activities/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></li>
 							@endif
 							@if (!isset($record->location_id))
-								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>
+								<a class="" href="/activities/location/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('content.Set Location')</button></a>
 							@endif
 							@if (strlen($record->map_link) == 0)
-								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Map</button></a>
+								<a class="" href="/activities/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('content.Set Map')</button></a>
 							@endif
 							</div>
 						@endif

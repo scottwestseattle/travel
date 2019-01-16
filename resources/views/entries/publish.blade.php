@@ -6,7 +6,7 @@
 
 	@component($record->type_flag === ENTRY_TYPE_TOUR ? 'menu-submenu-tours' : 'entries.menu-submenu', ['record' => $record])@endcomponent
 	
-	<h1>Publish</h1>
+	<h1>@LANG('ui.Publish')</h1>
 
 	<form method="POST" action="/entries/publishupdate/{{ $record->id }}">
 
@@ -18,12 +18,12 @@
 				
 		<div class="form-group">
 			<input type="checkbox" name="published_flag" id="published_flag" class="" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="published_flag" class="checkbox-big-label">Published</label>
+			<label for="published_flag" class="checkbox-big-label">@LANG('ui.Published')</label>
 		</div>
 
 		<div class="form-group">
 			<input type="checkbox" name="approved_flag" id="approved_flag" class="" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
-			<label for="approved_flag" class="checkbox-big-label">Approved</label>
+			<label for="approved_flag" class="checkbox-big-label">@LANG('ui.Approved')</label>
 		</div>
 		
 		@if ($record->type_flag === ENTRY_TYPE_BLOG_ENTRY && !isset($record->parent_id))
@@ -36,12 +36,12 @@
 		@endif
 
 		<div class="form-group">
-			<label for="distance">View Count:</label>
+			<label for="distance">@LANG('ui.View Count'):</label>
 			<input type="text" name="view_count" class="form-control" value="{{ $record->view_count }}"  />		
 		</div>		
 		
 		<div class="form-group">
-			<button type="submit" class="btn btn-primary">Update</button>
+			<button type="submit" class="btn btn-primary">@LANG('ui.Update')</button>
 		</div>
 	{{ csrf_field() }}
 	</form>
