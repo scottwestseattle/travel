@@ -512,7 +512,7 @@ class EmailController extends Controller
 		else // create first record from this vendor, using defaults
 		{			
 			// default to food::groceries
-			$record->subcategory_id		= 102;
+			$record->subcategory_id		= 208; // unknown, orig: 102;
 			$record->category_id		= 2;
 			$record->description		= ucfirst(strtolower(strtok($desc, " "))); // only use the first word as the description
 			$record->vendor_memo		= $vendor;
