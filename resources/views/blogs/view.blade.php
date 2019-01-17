@@ -227,7 +227,7 @@ else
 @endif
 
 		<!-- if not showing all, show the Show All button -->
-		@if (!isset($all))
+		@if (!isset($all) && count($records) > 10)
 		<span id="showAllButton" style="cursor:pointer;" onclick="showAllRows('blogEntryTable', 'showAllButton')">
 			<button style="margin-bottom:10px;" type="button" class="btn btn-blog-nav">@LANG('ui.Show All Posts')&nbsp;
 				<span style="background-color: white; color: #5CB85C;" class="badge">{{count($records)}}</span>
