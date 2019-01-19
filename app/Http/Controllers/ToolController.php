@@ -13,7 +13,6 @@ use App\Event;
 use App\Photo;
 use App\Location;
 
-
 class ToolController extends Controller
 {
 	private $tests = [
@@ -262,8 +261,11 @@ class ToolController extends Controller
 		return $urls;
 	}
 	
-    protected function makeSiteMap($domainName)
+    protected function makeSiteMap($sites)
     {	
+    	$http = $sites[0];
+    	$domainName = $sites[1];
+    	
 		$filename = 'sitemap-' . $domainName . '.txt';
 
 		$urls = [
@@ -330,7 +332,7 @@ class ToolController extends Controller
 			// file name looks like: sitemap-domain.com.txt
 			$myfile = fopen($filename, "w") or die("Unable to open file!");
 			
-			$server = 'https://' . $server;
+			$server = $http . $server;
 			
 			foreach($urls as $url)
 			{
@@ -371,10 +373,10 @@ class ToolController extends Controller
     public function sitemap(Request $request)
     {
 		$sites = [
-			'scotthub.com',
-			'hikebikeboat.com',
-			'epictravelguide.com',
-			'grittytravel.com',
+			['https://', 'grittytravel.com'],
+			['https://', 'scotthub.com'],
+			['http://', 'hikebikeboat.com'],
+			['http://', 'epictravelguide.com'],
 		];
 		
 		$siteMaps = [];
