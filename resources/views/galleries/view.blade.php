@@ -36,6 +36,12 @@ foreach($photos as $photo)
 		@endif
 				
 	@endguest
+	
+	<div class="text-center" style="">
+		<a href="/galleries">
+			<button type="button" class="btn btn-blog-nav">@LANG('content.Back to Galleries')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
+		</a>			
+	</div>
 			
 	<?php 
 		//
@@ -61,14 +67,6 @@ foreach($photos as $photo)
 		// map size
 		$mapWidth = 500;
 	?>
-
-	@if (!((Auth::user() && (Auth::user()->user_type >= 1000))))
-	<div class="text-center" style="margin-top: 10px;">
-		<a href="/galleries">
-			<button type="button" class="btn btn-blog-nav">Back to Galleries<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
-		</a>			
-	</div>
-	@endif	
 	
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		<h1 name="title" class="">{{$record->title}} ({{count($photos)}})</h1>
@@ -86,16 +84,29 @@ foreach($photos as $photo)
 					$title .= ', ' . $photo->location;
 			?>
 			
+			@if (true)
+			
+			<span style="">
+				<a href="/photos/gallery/{{$photo->id}}">
+				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
+				</a>
+			</span>
+				
+			@else
+			
 			<span style="cursor:pointer;" onclick="popup({{$record->id}}, '{{$photo->filename}}', {{$photo->id}})">
 				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
 				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
 			</span>
+			
+			@endif
 		@endforeach	
 	</div>
 	
 	<div class="text-center" style="margin-top: 10px;">
 		<a href="/galleries">
-			<button type="button" class="btn btn-blog-nav">Back to Galleries<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
+			<button type="button" class="btn btn-blog-nav">@LANG('content.Back to Galleries')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
 		</a>			
 	</div>
 

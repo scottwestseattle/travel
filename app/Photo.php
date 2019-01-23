@@ -122,4 +122,29 @@ class Photo extends Base
             ->where('parent_id', $parentId)
             ->update(['main_flag' => 0]);
 	}
+	
+	static protected function getNextPrev($parent_id, $id, $next = true)
+	{
+		$record = Photo::select()				 
+			->where('photos.deleted_flag', 0)
+			->where('photos.gallery_flag', 1)
+			->where('photos.parent_id', '=', $parent_id)			
+			->where('photos.id', $next ? '>' : '<', $id)
+			->orderByRaw('photos.id ' . ($next ? 'ASC' : 'DESC'))
+			->first();
+		
+		return $record;
+	}
+	
+	static protected function getFirst($parent_id)
+	{
+		$record = Photo::select()				 
+			->where('photos.deleted_flag', 0)
+			->where('photos.gallery_flag', 1)
+			->where('photos.parent_id', '=', $parent_id)			
+			->orderByRaw('photos.id ASC')
+			->first();
+		
+		return $record;
+	}
 }

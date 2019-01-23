@@ -51,6 +51,46 @@ class GalleryController extends Controller
 		return view(PREFIX . '.indexadmin', $vdata);
     }
 
+	public function view(Request $request, Entry $entry)
+    {	
+		$id = isset($entry) ? $entry->id : null;
+		$this->saveVisitor(LOG_MODEL_GALLERIES, LOG_PAGE_VIEW, $id);
+						
+		if (isset($entry))
+		{
+			$this->countView($entry);
+			$entry->description = nl2br($entry->description);
+			$entry->description = $this->formatLinks($entry->description);		
+		}
+		else
+		{
+			$msg = 'Gallery Not Found';
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_GALLERIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
+            return redirect('/galleries');
+		}
+			
+		$photos = Photo::select()
+			->where('deleted_flag', 0)
+			->where('gallery_flag', 1)
+			->where('parent_id', '=', $entry->id)
+			->orderByRaw('created_at ASC')
+			->get();
+			
+		$photo_path = '/img/entries/';
+		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
+		
+		return view('galleries.view', $this->getViewData([
+			'record' => $entry, 
+			'photos' => $photos,
+			'photo_path' => $photo_path,
+		], 'Photo Gallery of ' . $entry->title));
+    }
+    
     public function permalink(Request $request, $permalink)
     {		
 		$permalink = trim($permalink);
@@ -62,7 +102,7 @@ class GalleryController extends Controller
 			->first();
 			
 		$id = isset($entry) ? $entry->id : null;
-		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+		$this->saveVisitor(LOG_MODEL_GALLERIES, LOG_PAGE_PERMALINK, $id);
 						
 		if (isset($entry))
 		{
@@ -77,7 +117,7 @@ class GalleryController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+			Event::logError(LOG_MODEL_GALLERIES, LOG_ACTION_VIEW, /* title = */ $msg);			
 			
             return redirect('/entries/index');
 		}
@@ -208,18 +248,6 @@ class GalleryController extends Controller
 
 		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
 	}
-	
-	public function view(Entry $entry)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-		 
-		$vdata = $this->getViewData([
-			'record' => $entry,
-		]);				
-		 
-		return view(PREFIX . '.view', $vdata);
-    }
 	
     public function confirmdelete(Entry $entry)
     {	

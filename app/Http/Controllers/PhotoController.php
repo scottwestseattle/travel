@@ -544,22 +544,56 @@ class PhotoController extends Controller
 		return $filename;
 	}
 	
-    public function view(Photo $photo)
-    {
+    public function view(Request $request, Photo $photo)
+    {    	
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
 
 		$path = Controller::getPhotoPath($photo);
 		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
 		
+		$next = Photo::getNextPrev($photo->parent_id, $photo->id);
+		$prev = Photo::getNextPrev($photo->parent_id, $photo->id, /* next = */ false);
+		
+		if (isset($request->return_url))
+			$referrer = $request->return_url;
+		else
+			$referrer = array_key_exists("HTTP_REFERER", $_SERVER) ? $_SERVER["HTTP_REFERER"] : '/galleries';
+			
 		$vdata = $this->getViewData([
 			'photo' => $photo, 
 			'path' => $path, 
-			'page_title' => 'Photo of ' . $photo->alt_text
+			'page_title' => 'Photo of ' . $photo->alt_text,
+			'next' => $next,
+			'prev' => $prev,
+			'return_url' => $referrer,
 		]);		
 		
 		return view('photos.view', $vdata);
 	}
 
+    public function gallery(Photo $photo)
+    {  	
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
+
+		$path = Controller::getPhotoPath($photo);
+		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
+		
+		$next = Photo::getNextPrev($photo->parent_id, $photo->id);
+		$prev = Photo::getNextPrev($photo->parent_id, $photo->id, /* next = */ false);
+		$first = Photo::getFirst($photo->parent_id);
+
+		$vdata = $this->getViewData([
+			'photo' => $photo, 
+			'path' => $path, 
+			'page_title' => 'Photo of ' . $photo->alt_text,
+			'next' => $next,
+			'prev' => $prev,
+			'first' => $first,
+		]);		
+		
+		return view('photos.gallery', $vdata);
+	}
+	
     public function permalinkParent(Request $request, $parent_id, $permalink)
     {
 		$parent_id = intval($parent_id);

@@ -110,6 +110,7 @@ define('LOG_MODEL_ARTICLES', 'articles');
 define('LOG_MODEL_BLOGS', 'blogs');
 define('LOG_MODEL_BLOG_ENTRIES', 'blog entries');
 define('LOG_MODEL_ENTRIES', 'entries');
+define('LOG_MODEL_GALLERIES', 'galleries');
 define('LOG_MODEL_LOCATIONS', 'locations');
 define('LOG_MODEL_OTHER', 'other');
 define('LOG_MODEL_PHOTOS', 'photos');
