@@ -15,8 +15,7 @@ foreach($photos as $photo)
 }
 ?>
 
-<div class="page-size container">
-               
+<div class="container" >          
 	@guest
 	@else
 	
@@ -36,7 +35,10 @@ foreach($photos as $photo)
 		@endif
 				
 	@endguest
+</div>
 	
+<div class="" style="margin-bottom: 10px;">
+
 	<div class="text-center" style="">
 		<a href="/galleries">
 			<button type="button" class="btn btn-blog-nav">@LANG('content.Back to Galleries')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button>
@@ -89,7 +91,7 @@ foreach($photos as $photo)
 			<span style="">
 				<a href="/photos/gallery/{{$photo->id}}">
 				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
-				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:250px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:180px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
 				</a>
 			</span>
 				
