@@ -1,123 +1,3 @@
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, 
-`medium_col1`, `medium_col2`, `large_col1`, `large_col2`, 
-`created_at`, `updated_at`) 
-VALUES (
-'entries', 
-336, 
-'es', 
-'Welcome Section Spanish',
-'section-welcome', 
-'Bienvenido a [[site-name]], donde nuestro objetivo es documentar experiencias de viaje interesantes, proporcionar información detallada sobre el viaje y fotografiar lugares hermosos de todo el mundo. Nos encanta viajar y celebrar la belleza y diversidad de nuestro planeta.', 
-'No habites en el pasado, no sueñes con el futuro, concentra la mente en el momento presente - Buddha Gautama Siddhārtha',
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
-
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`, `large_col2`, `created_at`, `updated_at`) 
-VALUES (
-'entries', 
-336, 
-'zh', 
-'Welcome Section Chinese',
-'section-welcome', 
-'欢迎来到 [[site-name]]我们的目标是记录有趣的旅行体验提供详细的旅行信息并拍摄世界各地的美丽景点。 我们喜欢旅行和庆祝地球的美丽和多样性。', 
-'不要沉溺于过去不要梦想未来，把精力集中在现在的时刻 - 佛陀 Gautama Siddhārtha',
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
-
-
-
-
-
-
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`, `large_col2`, `created_at`, `updated_at`) 
-VALUES (
-'entries', 
-1, 
-'es', 
-'Paseo Marítimo de Seattle al Lago Unión a Través del Ship Canal', 
-'Paseo-Marítimo-de-Seattle-al-Lago-Unión-a-Través-del-Ship-Canal', 
-'Este circuito de 8,5 millas de caminata o bicicleta comienza en el Olympic Sculpture Park en la entrada a Myrtle Edwards Park (Broad Street y Elliot Avenue). Desde Elliot Bay Trail hay un sendero para bicicletas protegido que se conecta con South Ship Canal Trail y luego se une al Lake Union Loop Trail.', 
-'Fantásticas vistas del centro de Seattle, Elliott Bay, Puget Sound, y las montañas olímpicas.',
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
-
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, `medium_col1`, `medium_col2`, `large_col1`, `large_col2`, `created_at`, `updated_at`) 
-VALUES (
-'entries', 
-1, 
-'zh', 
-'西雅图海滨通过船运河到湖联盟', 
-'seattle-waterfront-to-lake-union-via-ship-canal', 
-'这个8.5英里的远足或自行车循环始于奥特莱德雕塑公园，位于默特尔爱德华兹公园（Broad Street和Elliot Avenue）的入口处。 从艾略特湾步道（Elliot Bay Trail）出发，有一条受保护的自行车道，与南船运河步道（South Ship Canal Trail）相连，然后加入Lake Union Loop Trail。', 
-'西雅图市中心，艾略特湾，普吉特海湾和奥林匹克山的美景。',
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
-
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, 
-`small_col1`, `small_col2`, `small_col3`, `small_col4`, `small_col5`, 
-`small_col6`, `small_col7`, `small_col8`, `small_col9`, `small_col10`, 
-`medium_col1`, `medium_col2`, `medium_col3`, 
-`large_col1`, 
-`created_at`, `updated_at`) 
-VALUES (
-'activities', 
-1, 
-'es', 
-'Mapa de Google:', 
-'Haga clic aquí para abrir en Google Maps', 
-'Mapa de Wikiloc.com:', 
-'Haga clic aquí para abrir en Wikiloc.com',
-'', 
-'8.5 millas / 13.7 km', 
-'Fácil', 
-'Plano', 
-'Todo el año', 
-'Bucle', 
-'Baños, Mesas De Picnic', 
-'Muchas opciones', 
-'Estacionamiento pagado en la calle, hay un estacionamiento gratuito en el extremo norte de Myrtle Edwards Park en 16th Ave W', 
-'', 
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
-
-INSERT INTO `translations` 
-(`parent_table`, `parent_id`, `language`, 
-`small_col1`, `small_col2`, `small_col3`, `small_col4`, `small_col5`, 
-`small_col6`, `small_col7`, `small_col8`, `small_col9`, `small_col10`, 
-`medium_col1`, `medium_col2`, `medium_col3`, 
-`large_col1`, 
-`created_at`, `updated_at`) 
-VALUES (
-'activities', 
-1, 
-'zh', 
-'谷歌地图', 
-'点击此处在Google地图中打开', 
-'Wikiloc地图', 
-'点击此处在Wikiloc中打开',
-'自由', 
-'8.5英里/13.7公里', 
-'轻松徒步旅行', 
-'', 
-'常年', 
-'循环踪迹', 
-'浴室，野餐桌', 
-'很多选择', 
-'付费街停车场位于16th Ave W的Myrtle Edwards Park北端有一个免费停车场', 
-'', 
-'2018-12-22 02:48:10',
-'2018-12-22 02:48:10'
-);
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -150,6 +30,9 @@ ALTER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelalt`, ADD `ma
 
 09/29
 ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permalink` VARCHAR(255) NULL AFTER `gallery_flag`;
+
+2019-01-23
+ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

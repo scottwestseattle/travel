@@ -207,7 +207,7 @@ class EmailController extends Controller
 				}
 			}
 
-			imap_close($mbox);
+			imap_close($mbox, CL_EXPUNGE);
 		}
 		else
 		{
