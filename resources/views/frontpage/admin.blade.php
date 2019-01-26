@@ -131,14 +131,16 @@
 				<tr>
 					<td style="width:20px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}</a>
 																			
 						<div>
 							@if ($record->published_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
-							@elseif ($record->approved_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
+							@endif
+							@if ($record->approved_flag === 0)
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 							@endif
 						</div>
 					</td>
@@ -173,9 +175,10 @@
 						
 						<div>
 							@if ($record->published_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Private</button></a>
-							@elseif ($record->approved_flag === 0)
-								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Pending Approval</button></a>
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
+							@endif
+							@if ($record->approved_flag === 0)
+								<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 							@endif
 							@if (!isset($record->location_id))
 								<a class="" href="/entries/setlocation/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">Set Location</button></a>

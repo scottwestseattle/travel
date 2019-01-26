@@ -647,17 +647,11 @@ class EntryController extends Controller
 
     	if ($this->isOwnerOrAdmin($entry->user_id))
         {			
-			$published = isset($request->published_flag) ? 1 : 0;
-			$entry->published_flag = $published;
-			
-			if ($published === 0) // if it goes back to private, then it has to be approved again
-				$entry->approved_flag = 0;
-			else
-				$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
-			
+			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
+			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			$entry->parent_id = $request->parent_id;
 			$entry->view_count = intval($request->view_count);
-			
+
 			$entry->save();
 			
 			return redirect($this->getReferer($request, '/entries/show' . $entry->id)); 

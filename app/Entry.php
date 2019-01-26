@@ -406,8 +406,7 @@ class Entry extends Base
 				AND entries.site_id = ?
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
-				AND (entries.published_flag = ? 
-					OR entries.approved_flag = ?) 
+				AND entries.approved_flag = ?
 			GROUP BY 
 				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path, entries.published_flag, entries.approved_flag 
 			ORDER BY entries.id DESC

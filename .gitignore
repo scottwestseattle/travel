@@ -16,6 +16,7 @@ yarn-error.log
 .env.example
 .DS_Store
 *.swp
-*.lock
 sitemap-*.txt
+*.lock
 *.xsd
+public/error_log
