@@ -32,7 +32,6 @@
 		<!------------------------------------>
 		
 		@if (isset($prev) || isset($record->parent_id) || isset($next))
-		
 		<div style="margin-top: 10px;">
 			@if (isset($prev))
 				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
@@ -50,6 +49,7 @@
 			@if (isset($next))
 				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
 			@endif	
+
 		</div>
 		@elseif (isset($backLink) && isset($backLinkText) && !((Auth::user() && (Auth::user()->user_type >= 1000))))
 		<div style="margin-top: 10px;">

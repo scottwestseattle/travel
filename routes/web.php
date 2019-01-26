@@ -91,7 +91,6 @@ Route::group(['prefix' => 'galleries'], function () {
 	Route::get('/index', 'GalleryController@index');
 	Route::get('/indexadmin', 'GalleryController@indexadmin')->middleware('auth');
 	Route::get('/view/{entry}', ['as' => 'entry.view', 'uses' => 'GalleryController@view']);
-	Route::get('/show/{entry}', 'GalleryController@show']);
 	Route::get('/share/{entry_id}', 'GalleryController@share')->middleware('auth');
 	Route::get('/link/{entry_id}/{gallery_id}', 'GalleryController@link')->middleware('auth');
 	Route::get('/attach/{entry_id}/{photo_id}', 'GalleryController@attach')->middleware('auth');

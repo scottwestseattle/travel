@@ -21,4 +21,9 @@ return [
 'Photo Pages' => 'Photo Pages',
 'Static Pages' => 'Static Pages',
 'Site Map Pages' => 'Site Map Pages',
+'Set Location' => 'Set Location',
+'Set Map' => 'Set Map',
+'Activities' => 'Activities',
+'Back to Gallery' => 'Back to Gallery',
+'Back to Galleries' => 'Back to Galleries',
 ];

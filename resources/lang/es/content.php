@@ -21,4 +21,9 @@ return [
 'Photo Pages' => 'Páginas de fotos',
 'Static Pages' => 'Páginas estáticas',
 'Site Map Pages' => 'Páginas en Mapa del Sitio',
+'Set Location' => 'Escoger Localización',
+'Set Map' => 'Establecer Mapa',
+'Activities' => 'Ocupaciones',
+'Back to Gallery' => 'Volver a la Galería',
+'Back to Galleries' => 'Volver a las Galerías',
 ];

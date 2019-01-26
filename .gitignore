@@ -1,12 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
-/docs/sliders
-/public/img/tours
 /public/img/entries
 /public/img/receipts
 /public/img/sliders
-/public/sitemap-*.txt
+/public/img/tours
 /storage/*.key
 /.idea
 /.vagrant
@@ -16,5 +14,8 @@ npm-debug.log
 yarn-error.log
 .env
 .env.example
-*.swp
 .DS_Store
+*.swp
+*.lock
+sitemap-*.txt
+*.xsd

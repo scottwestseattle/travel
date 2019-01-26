@@ -34,21 +34,6 @@ if (strtolower($site->site_url) == 'scotthub.com')
 	
 	$colorAlt = 'DarkBlue';
 }
-else if (strtolower($site->site_url) == 'hikebikeboat.com')
-{
-	$colors = [
-		'sectionGray',
-		'powerBlue',
-		'sectionGray',
-		'sectionWhite',
-		'sectionGray',
-		'sectionOrange',
-		'sectionGray',
-		'sectionWhite',
-	];
-	
-	$colorAlt = 'DarkBlue';
-}
 else
 {
 	$colors = [

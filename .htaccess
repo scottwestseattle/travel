@@ -5,3 +5,9 @@
 
 php_value upload_max_filesize 10M
 php_value post_max_size 10M
+RewriteCond %{HTTP_HOST} ^hikebikeboat\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.hikebikeboat\.com$
+RewriteRule ^/?$ "http\:\/\/epictravelguide\.com\/public" [R=301,L]
+RewriteCond %{HTTP_HOST} ^grittytravel\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.grittytravel\.com$
+RewriteRule ^/?$ "http\:\/\/epictravelguide\.com\/public" [R=301,L]

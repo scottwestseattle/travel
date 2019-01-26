@@ -92,7 +92,7 @@ class GalleryController extends Controller
     }
     
     public function permalink(Request $request, $permalink)
-    {		
+    {
 		$permalink = trim($permalink);
 		
 		$entry = Entry::select()

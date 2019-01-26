@@ -21,4 +21,9 @@ return [
 'Photo Pages' => '照片页面',
 'Static Pages' => '静态页面',
 'Site Map Pages' => '站点地图中的页面',
+'Set Location' => '设置位置',
+'Set Map' => '设置地图',
+'Activities' => '活动',
+'Back to Gallery' => '回到画廊',
+'Back to Galleries' => '回到画廊',
 ];
