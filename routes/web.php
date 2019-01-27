@@ -42,8 +42,8 @@ Route::post('/test', 'ToolController@test')->middleware('auth');
 Route::get('/language/{locale}', 'ToolController@language');
 
 // crypt / encrypt
-Route::get('/hash', 'EntryController@hash')->middleware('auth');
-Route::post('/hasher', 'EntryController@hasher')->middleware('auth');
+Route::get('/hash', 'ToolController@hash')->middleware('auth');
+Route::post('/hasher', 'ToolController@hasher')->middleware('auth');
 
 // Translations
 Route::group(['prefix' => 'translations'], function () {

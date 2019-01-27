@@ -35,7 +35,12 @@ class LocationsController extends Controller
 			->orderByRaw('locations.name ASC')
 			->get();
 		
-    	return view('locations.indexadmin', ['records' => $locations]);
+		$vdata = $this->getViewData([
+			'records' => $locations, 
+			'page_title' => 'Locations',
+		]);
+		
+    	return view('locations.indexadmin', $vdata);
     }
 	
     public function activities(Location $location = null)
@@ -128,9 +133,11 @@ class LocationsController extends Controller
 			//->where('user_id', '=', Auth::id())
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('locations.name ASC')
-			->get();
-	
-    	return view('locations.add', ['records' => $locations]);
+			->get();	
+		
+    	return view('locations.add', $this->getViewData([
+			'records' => $locations, 
+			]));
     }
 
     public function create(Request $request)
@@ -165,7 +172,10 @@ class LocationsController extends Controller
 
     	if (Auth::check())
         {
-			return view('locations.edit', ['location' => $location, 'records' => $locations]);			
+			return view('locations.edit', $this->getViewData([
+				'location' => $location,
+				'records' => $locations, 
+				]));			
         }
         else 
 		{
@@ -221,7 +231,10 @@ class LocationsController extends Controller
 			$activities = null;
 			$location = $this->getLocation($location->id, $activities);
 			
-			return view('locations.confirmdelete', ['record' => $location, 'activities' => $activities]);
+			return view('locations.confirmdelete', $this->getViewData([
+				'record' => $location, 
+				'activities' => $activities,
+				]));	
         }
         else 
 		{

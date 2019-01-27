@@ -209,10 +209,6 @@ class Controller extends BaseController
 				App::setLocale($locale);
 			return $next($request);
 		});
-	
-
-		
-		//dump($locale);
 	}
 	
 	static public function getEntryTypes()

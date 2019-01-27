@@ -609,25 +609,6 @@ class EntryController extends Controller
     	return view('entries.viewcount');
 	}
 
-    public function hash()
-    {		
-		$data['hash'] = '';
-		$data['hashed'] = '';
-		
-    	return view('entries.hash', $data);
-	}
-	
-	public function hasher(Request $request)
-	{
-		$hash = trim($request->get('hash'));
-		$hashed = $this->getHash($hash);
-
-		$data['hash'] = $hash;
-		$data['hashed'] = $hashed;
-
-		return view('entries.hash', $data);
-	}
-
     public function publish(Request $request, Entry $entry)
     {	
     	if (!$this->isOwnerOrAdmin($entry->user_id))
@@ -828,54 +809,6 @@ class EntryController extends Controller
 	
 		return $text;
 	}		
-
-    private function getHash($text) 
-	{
-		$s = sha1(trim($text));
-		$s = str_ireplace('-', '', $s);
-		$s = strtolower($s);
-		$s = substr($s, 0, 8);
-		$final = '';
-
-		for ($i = 0; $i < 6; $i++)
-		{
-			$c = substr($s, $i, 1);
-				
-			if ($i % 2 != 0)
-			{
-				if (ctype_digit($c))
-				{
-                    if ($i == 1)
-                    {
-                        $final .= "Q";
-                    }
-                    else if ($i == 3)
-                    {
-                        $final .= "Z";
-                    }
-                    else
-                    {
-                        $final .= $c;
-                    }
-				}
-				else
-				{
-					$final .= strtoupper($c);
-				}
-			}
-			else
-			{
-				$final .= $c;
-			}
-		}
-
-		// add last 2 chars
-		$final .= substr($s, 6, 2);
-		
-		//echo $final;
-		
-		return $final;
-	}
 
     public function gallery()
     {		   
