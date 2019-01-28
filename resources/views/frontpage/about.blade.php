@@ -7,12 +7,6 @@
 <!--------------------------------------------------------------------------------------->
 
 <div class="container page-size main-font" style="">	
-
-	@if (isset($record->photo))
-	<div class="text-center" style="margin-top:10px;">
-		<img style="max-width:300px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
-	</div>
-	@endif
 	
 	<h1>@LANG('ui.About')</h1>
 	
@@ -66,6 +60,12 @@
 		<div class="entry" style="">
 			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
 		</div>
+	</div>
+	@endif
+	
+	@if (isset($record->photo))
+	<div class="text-center" style="margin-top:50px;">
+		<img style="max-width:500px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
 	</div>
 	@endif
 			
