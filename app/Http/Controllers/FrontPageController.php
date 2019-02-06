@@ -196,6 +196,8 @@ class FrontPageController extends Controller
 					$new = $agent;
 				else if (stripos($agent, 'bot') !== FALSE)
 					$new = $agent;
+				else if (stripos($record->host_name, 'spider') !== FALSE)
+					$new = $record->host_name;
 				else if (stripos($record->host_name, 'crawl') !== FALSE)
 					$new = $record->host_name;
 				else if (stripos($record->host_name, 'bot') !== FALSE)

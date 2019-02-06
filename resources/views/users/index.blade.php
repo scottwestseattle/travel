@@ -6,7 +6,7 @@
 
 <div class="page-size container">
 	@if (Auth::check())
-		<h1>Users</h1>
+		<h1>Users ({{count($records)}})</h1>
 		<table class="table">
 			<thead>
 				<tr>

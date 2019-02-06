@@ -218,7 +218,7 @@ $sectionCount = 0;
 		</div>
 	@else
 		<div style="margin-top:40px;">
-			<img style="width:95%; max-width:400px;" src="/img/theme1/logo-{{$domainName}}.png" />
+			<img style="width:95%; max-width:300px;" src="/img/theme1/logo-{{$domainName}}.png" />
 		</div>
 	@endif
 	
