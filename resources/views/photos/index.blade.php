@@ -15,10 +15,27 @@
 	@endif
 	
 	@if (Auth::user()->user_type >= 100)
+	
+	<form method="POST" action="/photos/entriesupdate">
+		<div class="form-group form-control-big">
+
+			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+
+			<input type="hidden" name="parent_id" value="{{$record_id}}" />
+			
+			<div style="margin:10px 0;">				
+				<button type="submit" name="update" class="btn btn-primary">Update All Dates</button>
+			</div>
+			
+			{{ csrf_field() }}
+		</div>
+	</form>
+	
 	<h3>
 		<a href="/photos/add/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-cloud-upload" style="padding:5px;"></span></a>
 		<span style="margin-left: 5px;">{{$type}} Photos ({{ count($photos) }})</span>
 	</h3>
+	
 	@endif
 		<table class="table table-striped">
 			<tbody>
@@ -48,6 +65,12 @@
 						
 							<tr><td>{{ $photo->alt_text }}</td></tr>
 							<tr><td>{{ $photo->location }}</td></tr>
+							
+							@if (isset($photo->display_date))
+								<tr><td>{{ $photo->display_date }}</td></tr>
+							@endif
+							
+							
 							@if ($photo->main_flag === 1)
 							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span>{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
 							@endif

@@ -123,6 +123,13 @@ class Photo extends Base
             ->update(['main_flag' => 0]);
 	}
 	
+	static protected function setDisplayDate($parentId, $displayDate)
+	{	
+		DB::table('photos')
+            ->where('parent_id', $parentId)
+            ->update(['display_date' => $displayDate]);
+	}
+	
 	static protected function getNextPrev($parent_id, $id, $next = true)
 	{
 		$record = Photo::select()				 

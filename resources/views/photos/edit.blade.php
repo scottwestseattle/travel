@@ -12,6 +12,8 @@
 	<form method="POST" action="/photos/update/{{$record->id}}">
 		<div class="form-group form-control-big">
 
+			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+
 			<input type="hidden" name="filename_orig" value="{{ $record->filename }}" />
 
 			<div class="entry-title-div">

@@ -120,6 +120,10 @@ class PhotoController extends Controller
 				
 			$galleries = Photo::getGalleryMenuOptions();
 
+			$dates = null;
+			//if (isset($photo->display_date))
+			//	$dates = Controller::getDateControlSelectedDate($photo->display_date);
+
 			$vdata = $this->getViewData([
 				'id' => $parent_id, 
 				'path' => $path, 
@@ -131,6 +135,8 @@ class PhotoController extends Controller
 				'galleries' => $galleries,
 				'record_title' => $title,
 				'redirect' => $redirect,
+				'dates' => Controller::getDateControlDates(),
+				'filter' => $dates,
 			]);				
 				
 			return view('photos.index', $vdata);
@@ -140,7 +146,16 @@ class PhotoController extends Controller
              return redirect('/');
         }
 	}
-	
+
+	public function entriesupdate(Request $request)
+	{	
+		$display_date = Controller::getSelectedDate($request);
+
+		Photo::setDisplayDate($request->parent_id, $display_date);
+		
+        return redirect('/photos/entries/' . $request->parent_id);
+	}
+		
 	public function sliders()
 	{			
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
@@ -653,10 +668,16 @@ class PhotoController extends Controller
         {
 			$path = Controller::getPhotoPath($photo);
 
+			$dates = null;
+			if (isset($photo->display_date))
+				$dates = Controller::getDateControlSelectedDate($photo->display_date);
+
 			$vdata = $this->getViewData([
 				'record' => $photo, 
 				'path' => $path,
 				'type' => Controller::getPhotoInfo($photo->type_flag)['type'],
+				'dates' => Controller::getDateControlDates(),
+				'filter' => $dates,
 			]);		
 			
 			return view('photos.edit', $vdata);
@@ -762,6 +783,7 @@ class PhotoController extends Controller
 			$photo->alt_text = $alt_text;
 			$photo->gallery_flag = isset($request->gallery_flag) ? 1 : 0;
 			$photo->location = trim($request->location);
+			$photo->display_date = Controller::getSelectedDate($request);
 			session(['location' => $photo->location]); 
 
 			// if photo is being set to main, unset any other main photo

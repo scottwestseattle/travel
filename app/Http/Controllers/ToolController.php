@@ -48,12 +48,11 @@ class ToolController extends Controller
     {	
 		$executed = null;
 		
-		$server = 'https://' . strtolower(Controller::getSite()->site_url);
-
-		//$server = 'http://epictravelguide.com';
-		//$server = 'http://grittytravel.com';
-		//$server = 'http://hikebikeboat.com';
-		//$server = 'http://scotthub.com';
+		$url = strtolower(Controller::getSite()->site_url);
+		if ($url == 'hikebikeboat.com')
+			$server = 'http://' . $url;
+		else
+			$server = 'https://' . $url;
 
 		$tests = array_merge($this->tests, ToolController::getTestEntries());
 

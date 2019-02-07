@@ -432,7 +432,6 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/sliders', 'PhotoController@sliders');
 	Route::get('/featured', 'PhotoController@featured');
 	Route::get('/tours/{id}', 'PhotoController@tours')->middleware('auth');
-	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
 	Route::get('/view/{photo}', 'PhotoController@view');
 	Route::get('/gallery/{photo}', 'PhotoController@gallery');
 	Route::get('/slideshow/{entry}', 'PhotoController@slideshow');
@@ -452,6 +451,9 @@ Route::group(['prefix' => 'photos'], function ()
 	// delete / confirm delete
 	Route::get('/confirmdelete/{photo}','PhotoController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{photo}','PhotoController@delete')->middleware('auth');
+
+	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
+	Route::post('/entriesupdate', 'PhotoController@entriesupdate')->middleware('auth');
 });
 
 Route::group(['prefix' => 'faqs'], function () {

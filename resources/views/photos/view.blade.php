@@ -39,11 +39,14 @@
 				<p>{{trim($photo->alt_text)}}</p>
 				
 				@if (isset($photo->location) && strlen($photo->location) > 0)
-					<p>Location: {{$photo->location}}</p>
+					<p>@LANG('ui.Location'): {{$photo->location}}</p>
 				@endif
 
-				<p>Photo Taken on {{date_format($photo->created_at, "l, F j, Y")}}.</p>
-				
+				@if (isset($photo->display_date))
+					<p>@LANG('content.Photo Taken on'): {{date_format(date_create($photo->display_date), "l, F j, Y")}}.</p>					
+				@else
+					<p>@LANG('content.Photo Taken on'): {{date_format($photo->created_at, "l, F j, Y")}}.</p>
+				@endif				
 			</span>
 		</div>
 		
