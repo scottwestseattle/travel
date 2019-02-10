@@ -97,7 +97,7 @@ class GalleryController extends Controller
     {
 		$permalink = trim($permalink);
 
-		$entry = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+		$entry = Entry::select(DB::raw('entries.*, translations.*, entries.id as id, entries.approved_flag as approved_flag'))
 			->leftJoin('translations', function ($join) {
 				$join->on('entries.id', '=', 'translations.parent_id')
 					 ->where('translations.language', '=', App::getLocale())
@@ -107,15 +107,15 @@ class GalleryController extends Controller
 			->where('entries.permalink', $permalink)
 			->first();
 			
-		// copy translations in
-		if (isset($entry->medium_col1))
-			$entry->title = $entry->medium_col1;
-
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_GALLERIES, LOG_PAGE_PERMALINK, $id);
 						
 		if (isset($entry))
 		{
+			// copy translations in
+			if (isset($entry->medium_col1))
+				$entry->title = $entry->medium_col1;
+
 			$this->countView($entry);
 			$entry->description = nl2br($entry->description);
 			$entry->description = $this->formatLinks($entry->description);		
