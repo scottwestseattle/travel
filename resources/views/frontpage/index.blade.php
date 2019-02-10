@@ -218,7 +218,11 @@ $sectionCount = 0;
 		</div>
 	@else
 		<div style="margin-top:40px;">
+		@if (strtolower($domainName) == 'hikebikeboat.com')
+			<img style="max-width:200px;" src="/img/theme1/logo-{{$domainName}}.png" />
+		@else
 			<img style="width:95%; max-width:300px;" src="/img/theme1/logo-{{$domainName}}.png" />
+		@endif
 		</div>
 	@endif
 	

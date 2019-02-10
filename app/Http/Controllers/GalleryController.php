@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App;
 use App\Http\Controllers\Controller;
 use App\Entry;
 use App\Photo;
 use App\Event;
+use DB;
 
 define('PREFIX', 'galleries');
 define('LOG_MODEL', 'galleries');
@@ -94,13 +96,21 @@ class GalleryController extends Controller
     public function permalink(Request $request, $permalink)
     {
 		$permalink = trim($permalink);
-		
-		$entry = Entry::select()
-			//->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('permalink', $permalink)
+
+		$entry = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+			->leftJoin('translations', function ($join) {
+				$join->on('entries.id', '=', 'translations.parent_id')
+					 ->where('translations.language', '=', App::getLocale())
+					 ->where('translations.parent_table', '=', 'entries');
+			})
+			->where('entries.deleted_flag', 0)
+			->where('entries.permalink', $permalink)
 			->first();
 			
+		// copy translations in
+		if (isset($entry->medium_col1))
+			$entry->title = $entry->medium_col1;
+
 		$id = isset($entry) ? $entry->id : null;
 		$this->saveVisitor(LOG_MODEL_GALLERIES, LOG_PAGE_PERMALINK, $id);
 						
