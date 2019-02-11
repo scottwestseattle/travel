@@ -609,56 +609,6 @@ class PhotoController extends Controller
 		return view('photos.gallery', $vdata);
 	}
 	
-    public function permalinkParent(Request $request, $parent_id, $permalink)
-    {
-		$parent_id = intval($parent_id);
-		$permalink = trim($permalink);
-		
-		$photo = Photo::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('parent_id', $parent_id)
-			->where('permalink', $permalink)
-			->first();
-
-		if (!isset($photo))
-		{
-			$msg = 'Specified Photo Not Found: ' . $permalink;
-
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
-			
-			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
-			
-			return redirect($parent_id > 0 ? '/photos/entries/' . $parent_id : '/error');
-		}
-		
-		if (!isset($photo))
-		{
-			$permalink .= '.jpg';
-			
-			$photo = Photo::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('parent_id', $parent_id)
-				->where('filename', $permalink)
-				->first();
-		}
-		
-		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
-
-		$path = Controller::getPhotoPath($photo);
-		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
-		
-		$vdata = $this->getViewData([
-			'photo' => $photo, 
-			'path' => $path, 
-			'page_title' => 'Photo of ' . $photo->alt_text
-		]);		
-		
-		return view('photos.view', $vdata);
-	}
-	
     public function edit(Request $request, Photo $photo)
     {
 		if (!$this->isAdmin())
@@ -866,61 +816,46 @@ class PhotoController extends Controller
 		return redirect($redirect);
 	}
 	
-    public function permalink(Request $request, $permalink)
-    {		
-		$next = null;
-		$prev = null;
-		$permalink = trim($permalink);
+    public function permalink(Request $request, $permalink, $id)
+    {	
+		$id = intval($id);
 		
-		// get the entry the Laravel way so we can access the gallery photo list
-		$entry = Entry::select()
-			->where('site_id', SITE_ID)
+		$photo = Photo::select()
 			->where('deleted_flag', 0)
-			->where('permalink', $permalink)
+			->where('id', $id)
 			->first();
-		$gallery = isset($entry) ? $entry->photos : null;
-		
-		// get the entry the mysql way so we can have all the main photo and location info
-		$entry = Entry::getEntry($permalink);
-			
-		$id = isset($entry) ? $entry->id : null;
-		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
-						
-		if (isset($entry))
+
+		if (!isset($photo))
 		{
-			$entry->description = nl2br($entry->description);
-			$entry->description = $this->formatLinks($entry->description);		
-		}
-		else
-		{
-			$msg = 'Photo Permalink Not Found: ' . $permalink;
-			
+			$msg = 'Specified Photo Not Found: ' . $id;
+
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
 			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
 			
-            return redirect('/entries/index');
+			return back();
 		}
+
+		$this->saveVisitor(LOG_MODEL_PHOTOS, LOG_PAGE_GALLERY, $photo->id);
+
+		$path = Controller::getPhotoPath($photo);
+		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
 		
-		$page_title = $entry->title;
-		$backLink = null;
-		$backLinkText = null;
-		
-		$photos = Photo::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', '<>', 1)
-			->where('parent_id', '=', $entry->id)
-			->orderByRaw('created_at ASC')
-			->get();
-			
+		$next = Photo::getNextPrev($photo->parent_id, $photo->id);
+		$prev = Photo::getNextPrev($photo->parent_id, $photo->id, /* next = */ false);
+		$first = Photo::getFirst($photo->parent_id);
+
 		$vdata = $this->getViewData([
-			'record' => $photo, 
+			'photo' => $photo, 
+			'path' => $path, 
+			'page_title' => 'Photo of ' . $photo->alt_text,
 			'next' => $next,
 			'prev' => $prev,
-		], 'Photo Title');
+			'first' => $first,
+		]);		
 		
-		return view('entries.view', $vdata);
+		return view('photos.gallery', $vdata);
 	}
 	
     public function slideshow(Request $request, Entry $entry)

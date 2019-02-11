@@ -9,19 +9,19 @@
 		@if (isset($prev) || isset($photo->parent_id) || isset($next))
 			<div class="{{SHOW_NON_XS}}" style="margin-bottom: 10px;">
 				@if (isset($prev))
-					<a href="/photos/gallery/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
+					<a href="/photos/{{$prev->permalink}}/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
 				@endif
 			
 				<a href="/galleries/view/{{$photo->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Gallery')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 			
 				@if (isset($next))
-					<a href="/photos/gallery/{{$next->id}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
+					<a href="/photos/{{$next->permalink}}/{{$next->id}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
 				@endif	
 			</div>
 		@endif
 		
 		<div class="form-group">
-			<a href="/photos/gallery/{{isset($next) ? $next->id : $first->id}}">	
+			<a href="/photos/{{isset($next) ? $next->permalink . '/' . $next->id : $first->permalink . '/' . $first->id}}">	
 				<?php $location = (strlen($photo->location) > 0) ? ', ' . $photo->location : ''; ?>
 				<img alt="{{$photo->alt_text}}" title="{{$photo->alt_text . $location}}" style="width:100%;" src="{{$path}}/{{$photo->filename}}" />
 			</a>
@@ -30,11 +30,11 @@
 		@if (isset($prev) || isset($photo->parent_id) || isset($next))
 			<div style="margin-top: 10px;">
 				@if (isset($prev))
-					<a href="/photos/gallery/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
+					<a href="/photos/{{$prev->permalink}}/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
 				@endif
 						
 				@if (isset($next))
-					<a href="/photos/gallery/{{$next->id}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
+					<a href="/photos/{{$next->permalink}}/{{$next->id}}"><button type="button" class="btn btn-blog-nav">@LANG('ui.Next')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-right"></span></button></a>
 				@endif	
 			</div>
 		@endif

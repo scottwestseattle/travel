@@ -454,6 +454,9 @@ Route::group(['prefix' => 'photos'], function ()
 
 	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
 	Route::post('/entriesupdate', 'PhotoController@entriesupdate')->middleware('auth');
+
+	// permalink has to go last or it will catch everything
+	Route::get('/{permalink}/{photo}', 'PhotoController@permalink');
 });
 
 Route::group(['prefix' => 'faqs'], function () {
