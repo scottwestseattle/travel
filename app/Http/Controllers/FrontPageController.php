@@ -407,7 +407,8 @@ class FrontPageController extends Controller
 		$stats['total_pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog_entries'] + $stats['tours'] + $stats['galleries'];
 		$stats['total_photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
 		$stats['static_pages'] = 13;
-		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] ; 
+		$stats['total_sitemap_photos'] = $stats['sliders'] + $stats['photos_gallery']; 
+		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] + $stats['photos_gallery']; 
 		
 		$vdata = $this->getViewData([
 			'record' => $entry,

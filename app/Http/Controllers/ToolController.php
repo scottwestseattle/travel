@@ -233,7 +233,7 @@ class ToolController extends Controller
 		return $urls;
 	}
 
-    protected function getSiteMapPhotos()
+    protected function getSiteMapSliders()
     {	
 		$urls = [];
 
@@ -254,6 +254,36 @@ class ToolController extends Controller
 			foreach($records as $record)
 			{
 				$urls[] = '/photos/view/' . $record->id;	
+			}
+		}
+		
+		return $urls;
+	}
+	
+    protected function getSiteMapPhotos()
+    {	
+		$urls = [];
+
+		$q = '
+SELECT entries.id, photos.filename, photos.id FROM entries
+LEFT JOIN photos
+	ON photos.parent_id = entries.id AND photos.deleted_flag = 0 
+			WHERE 1=1
+				AND entries.site_id = 1
+				AND entries.deleted_flag = 0
+				AND entries.type_flag = 8
+                AND entries.published_flag = 1
+                And entries.approved_flag = 1
+			ORDER by entries.id ASC;
+		';
+
+		$records = DB::select($q, [SITE_ID]);
+		
+		if (isset($records))
+		{
+			foreach($records as $record)
+			{
+				$urls[] = '/photos/' . basename($record->filename, '.jpg') . '/' . $record->id;	
 			}
 		}
 		
@@ -289,7 +319,7 @@ class ToolController extends Controller
 		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
 		{
 			$urls[] = '/photos/sliders';
-			$urls = array_merge($urls, ToolController::getSiteMapPhotos());
+			$urls = array_merge($urls, ToolController::getSiteMapSliders());
 		}
 		
 		if (Controller::getSection(SECTION_ARTICLES, $sections) != null)
@@ -319,6 +349,8 @@ class ToolController extends Controller
 		{
 			$urls[] = '/galleries';
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_GALLERY));
+			
+			$urls = array_merge($urls, ToolController::getSiteMapPhotos());
 		}
 		
 		if (isset($urls))
