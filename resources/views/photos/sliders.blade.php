@@ -23,7 +23,7 @@
 			@foreach($photos as $photo)
 				<tr>
 					<td>
-						<a href="/photos/view/{{$photo->id}}">
+						<a href="/photos/{{$photo->permalink}}/{{$photo->id}}">
 							<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="width: 100%; max-width:500px"/>
 						</a>
 					</td>
@@ -63,7 +63,7 @@
 			@foreach($photos as $photo)
 				<tr>
 					<td>
-						<a href="/photos/view/{{$photo->id}}">
+						<a href="/photos/{{$photo->permalink}}/{{$photo->id}}">
 							<img title="{{$photo->photo_title}}" src="{{$slider_path}}{{$photo->filename}}" style="width: 100%;"/>
 						</a>
 

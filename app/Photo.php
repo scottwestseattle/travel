@@ -134,24 +134,90 @@ class Photo extends Base
 	{
 		$record = Photo::select()				 
 			->where('photos.deleted_flag', 0)
-			->where('photos.gallery_flag', 1)
+            ->where(function ($query) {
+                $query->where('photos.gallery_flag', 1)
+                      ->orWhere('photos.parent_id', 0);
+            })		
 			->where('photos.parent_id', '=', $parent_id)			
 			->where('photos.id', $next ? '>' : '<', $id)
 			->orderByRaw('photos.id ' . ($next ? 'ASC' : 'DESC'))
 			->first();
+			
+		if (!isset($record))
+		{
+			if ($next)
+				$record = Photo::getFirst($parent_id, $next);
+			else // prev
+				$record = Photo::getLast($parent_id, $next);
+		}
 		
+		$record = Photo::setPermalink($record);
+
 		return $record;
 	}
-	
-	static protected function getFirst($parent_id)
+
+	static protected function getLast($parent_id)
 	{
+		$parent_id = intval($parent_id);
+		
 		$record = Photo::select()				 
 			->where('photos.deleted_flag', 0)
-			->where('photos.gallery_flag', 1)
+			->where('photos.parent_id', '=', $parent_id)	
+            ->where(function ($query) {
+                $query->where('photos.gallery_flag', 1)
+                      ->orWhere('photos.parent_id', 0);
+            })		
+			->orderByRaw('photos.id DESC')
+			->first();
+		
+		$record = Photo::setPermalink($record);
+
+		return $record;
+	}
+		
+	static protected function getFirst($parent_id)
+	{
+		$parent_id = intval($parent_id);
+		
+		$record = Photo::select()				 
+			->where('photos.deleted_flag', 0)
+            ->where(function ($query) {
+                $query->where('photos.gallery_flag', 1)
+                      ->orWhere('photos.parent_id', 0);
+            })
 			->where('photos.parent_id', '=', $parent_id)			
 			->orderByRaw('photos.id ASC')
 			->first();
 		
+		$record = Photo::setPermalink($record);
+
 		return $record;
 	}
+	
+	static protected function get($id)
+	{
+		$id = intval($id);
+
+		$record = Photo::select()				 
+			->where('photos.deleted_flag', 0)
+            ->where(function ($query) {
+                $query->where('photos.gallery_flag', 1)
+                      ->orWhere('photos.parent_id', 0);
+            })		
+			->where('photos.id', $id)			
+			->first();
+			
+		$record = Photo::setPermalink($record);
+		
+		return $record;
+	}
+	
+	static protected function setPermalink($record)
+	{
+		if (isset($record) && !isset($record->permalink))
+			$record->permalink = basename($record->filename, '.jpg');
+			
+		return $record;
+	}
+	
 }

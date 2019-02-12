@@ -155,13 +155,32 @@ class PhotoController extends Controller
 		
         return redirect('/photos/entries/' . $request->parent_id);
 	}
+
+	public function sliders(Request $request)
+	{
+		$photo = Photo::getFirst(/* parent_id = */ 0);
 		
-	public function sliders()
+		if (!isset($photo))
+		{
+			$msg = 'Specified Photo Not Found: ' . $id;
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			
+			return back();
+		}
+		
+		return $this->permalink($request, null, $photo->id);
+	}
+			
+	public function slidersOLD()
 	{			
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
 
 		$q = '
-			SELECT id, filename, alt_text, location, main_flag, parent_id, site_id 
+			SELECT id, filename, permalink, alt_text, location, main_flag, parent_id, site_id 
 				, CONCAT(alt_text, " - ", location) as photo_title
 				, CONCAT("' . PHOTO_SLIDER_PATH . '") as path
 			FROM photos
@@ -172,7 +191,7 @@ class PhotoController extends Controller
 		';
 		
 		// get the list with the location included
-		$records = DB::select($q, [SITE_ID]);
+		$records = DB::select($q);
 		
 		$sliderPath = '/img/sliders/';
 		$sliderPath = count($records) > 0 ? Controller::getPhotoPathRemote($sliderPath, $records[0]->site_id) : $sliderPath;
@@ -186,6 +205,7 @@ class PhotoController extends Controller
 		return view('photos.sliders', $vdata);	
 	}
 
+	// does a flow view of the sliders
 	public function featured()
 	{			
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
@@ -820,10 +840,7 @@ class PhotoController extends Controller
     {	
 		$id = intval($id);
 		
-		$photo = Photo::select()
-			->where('deleted_flag', 0)
-			->where('id', $id)
-			->first();
+		$photo = Photo::get($id);
 
 		if (!isset($photo))
 		{
