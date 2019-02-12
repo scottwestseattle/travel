@@ -41,6 +41,9 @@ https://www.booking.com/index.html?aid=1535306
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+// artisan folder
+cd /Users/scottwilkinson/Documents/GitHub/travel/
+
 // drop all tables and migrate all
 php artisan migrate:reset
 
@@ -55,7 +58,7 @@ php artisan migrate:rollback
 php artisan migrate:rollback --step=1
 
 // create Migration, Model and Controller (model name is singular!!)
-php artisan make:model Tag -m -c
+php artisan make:model Entry -m -c
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

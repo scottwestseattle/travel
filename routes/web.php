@@ -228,7 +228,7 @@ Route::group(['prefix' => 'accounts'], function () {
 // templates
 Route::group(['prefix' => 'templates'], function () {
 	
-	Route::get('/index', 'TemplateController@index');
+	Route::get('/', 'TemplateController@index');
 	Route::get('/indexadmin', 'TemplateController@indexadmin')->middleware('auth');
 	Route::get('/view/{template}', ['as' => 'template.view', 'uses' => 'TemplateController@view']);
 	

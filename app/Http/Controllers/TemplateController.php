@@ -17,17 +17,16 @@ class TemplateController extends Controller
 {	
 	public function __construct ()
 	{
+		parent::__construct();
+
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
-		
-		
 	}
 	
     public function index(Request $request)
     {
-		if (!$this->isAdmin())
-             return redirect('/');
-			
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
+
 		$records = null;
 		
 		try
@@ -47,11 +46,9 @@ class TemplateController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		$vdata = $this->getViewData([
+		return view(PREFIX . '.index', $this->getViewData([
 			'records' => $records,
-		]);
-			
-		return view(PREFIX . '.index', $vdata);
+		]));
     }	
 
     public function indexadmin(Request $request)
@@ -75,55 +72,65 @@ class TemplateController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
-					
-		$vdata = $this->getViewData([
-			'records' => $records,
-		]);
 			
-		return view(PREFIX . '.indexadmin', $vdata);
+		return view(PREFIX . '.indexadmin', $this->getViewData([
+			'records' => $records,
+		]));
     }
 
     public function permalink(Request $request, $permalink)
     {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK);
+
 		$permalink = trim($permalink);
 		
-		$record = Template::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('published_flag', 1)
-			->where('approved_flag', 1)
-			->where('permalink', $permalink)
-			->first();
-						
-		if (!isset($record))
+		$record = null;
+			
+		try
 		{
-			$msg = 'Permalink Entry Not Found: ' . $permalink;
+			$record = Template::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('permalink', $permalink)
+				->first();
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Entry Not Found: ' . $permalink;
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			Event::logError(LOG_MODEL, LOG_ACTION_VIEW, /* title = */ $msg);			
+			Event::logError(LOG_MODEL, LOG_ACTION_PERMALINK, /* title = */ $msg);
 			
-            return redirect('/' . PREFIX . '/index');
-		}
-			
-		$vdata = $this->getViewData([
+			return back();					
+		}	
+
+		return view(PREFIX . '.view', $this->getViewData([
 			'record' => $record, 
-		]);
-		
-		return view(PREFIX . '.view', $vdata);
+		]));
 	}
 		
-	
+	public function view(Template $template)
+    {
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW);
+
+		$vdata = $this->getViewData([
+			'record' => $template,
+		]);				
+		 
+		return view(PREFIX . '.view', $vdata);
+    }
+
     public function add()
     {
 		if (!$this->isAdmin())
              return redirect('/');
-
-		$vdata = $this->getViewData([
-		]);
 		 
-		return view(PREFIX . '.add', $vdata);
+		return view(PREFIX . '.add', $this->getViewData([
+			]));
 	}
 		
     public function create(Request $request)
@@ -139,13 +146,10 @@ class TemplateController extends Controller
 		$record->title					= $this->trimNull($request->title);
 		$record->description			= $this->trimNull($request->description);
 
-		$record->permalink = $this->trimNull($request->permalink);
-		if (!isset($record->permalink))
-			$record->permalink = $this->createPermalink($record->title);
-		
 		try
 		{
 			$record->save();
+			
 			Event::logAdd(LOG_MODEL, $record->title, $record->site_url, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
@@ -186,14 +190,13 @@ class TemplateController extends Controller
 		
 		$record->title = $this->copyDirty($record->title, $request->title, $isDirty, $changes);
 		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
-		$record->permalink = $this->copyDirty($record->permalink, $request->permalink, $isDirty, $changes);
 		
 		// example of getting value from radio controls
 		//$v = isset($request->radio_sample) ? intval($request->radio_sample) : 0;		
 		//$record->radio_sample = $this->copyDirty($record->radio_sample, $v, $isDirty, $changes);		
 		
-		$v = isset($request->published_flag) ? 1 : 0;
-		$record->published_flag = $v;
+		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
+		$record->published_flag = isset($request->published_flag) ? 1 : 0;
 						
 		if ($isDirty)
 		{						
@@ -222,19 +225,7 @@ class TemplateController extends Controller
 
 		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
 	}
-	
-	public function view(Template $template)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-		 
-		$vdata = $this->getViewData([
-			'record' => $template,
-		]);				
-		 
-		return view(PREFIX . '.view', $vdata);
-    }
-	
+		
     public function confirmdelete(Template $template)
     {	
 		if (!$this->isAdmin())
@@ -277,12 +268,10 @@ class TemplateController extends Controller
     {	
     	if (!$this->isOwnerOrAdmin($template->user_id))
              return redirect('/');
-
-		$vdata = $this->getViewData([
-			'record' => $template,
-		]);
 		
-		return view(PREFIX . '.publish', $vdata);
+		return view(PREFIX . '.publish', $this->getViewData([
+			'record' => $template,
+		]));
     }
 	
     public function publishupdate(Request $request, Template $template)
@@ -318,7 +307,6 @@ class TemplateController extends Controller
 				$request->session()->flash('message.content', $e->getMessage());		
 			}				
 			
-			//return redirect(route(PREFIX . '.permalink', [$record->permalink]));
 			return redirect('/' . PREFIX . '/indexadmin');
 		}
 		else

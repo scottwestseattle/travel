@@ -12,7 +12,6 @@
 		<thead>
 			<tr>
 				<th>Title</th>
-				<th>Permalink</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -20,7 +19,6 @@
 			@foreach($records as $record)
 			<tr>					
 				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->title}}</a></td>
-				<td>{{$record->permalink}}</td>
 			</tr>
 			@endforeach
 		@endif

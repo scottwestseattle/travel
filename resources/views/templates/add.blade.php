@@ -12,9 +12,6 @@
 							
 		<label for="title" class="control-label">Title:</label>
 		<input type="text" name="title" class="form-control" />
-			
-		<label for="permalink" class="control-label">Permalink:</label>
-		<input type="text" name="permalink" class="form-control" />
 
 		<label for="description" class="control-label">Description:</label>
 		<textarea name="description" class="form-control"></textarea>
