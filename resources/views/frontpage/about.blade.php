@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.theme1')
 
 @section('content')
 
@@ -58,7 +58,7 @@
 	@if (isset($record))
 	<div class="entry-div" style="margin-top:30px;">
 		<div class="entry" style="">
-			<span name="description" class="">{!! nl2br($record->description) !!}</span>				
+			<span name="description" style="font-size:1.5em;">{!! nl2br($record->description) !!}</span>				
 		</div>
 	</div>
 	@endif
