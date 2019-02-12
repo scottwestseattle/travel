@@ -195,8 +195,8 @@ class TemplateController extends Controller
 		//$v = isset($request->radio_sample) ? intval($request->radio_sample) : 0;		
 		//$record->radio_sample = $this->copyDirty($record->radio_sample, $v, $isDirty, $changes);		
 		
-		$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
-		$record->published_flag = isset($request->published_flag) ? 1 : 0;
+		$record->approved_flag = $this->copyDirty($record->approved_flag, isset($request->approved_flag) ? 1 : 0, $isDirty, $changes);
+		$record->published_flag = $this->copyDirty($record->published_flag, isset($request->published_flag) ? 1 : 0, $isDirty, $changes);
 						
 		if ($isDirty)
 		{						
