@@ -54,6 +54,12 @@
 			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
         </nav>
 
+		@if(session()->has('message.level'))
+			<div style="" class="alert alert-{{ session('message.level') }}"> 
+			{!! session('message.content') !!}
+			</div>
+		@endif
+		
         @yield('content')
 		
     </div>

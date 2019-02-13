@@ -583,6 +583,27 @@ class PhotoController extends Controller
     {    	
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_VIEW, $photo->id);
 
+		// check for orphan photo
+		if ($photo->parent_id > 0)
+		{
+			$entry = Entry::select()
+				->where('deleted_flag', 0)
+				->where('id', $photo->parent_id)
+				->first();
+			
+			if (!isset($entry))
+			{
+				$msg = 'Invalid Photo Found: ' . $photo->id;
+
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+		
+				Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+		
+				return redirect('/galleries');
+			}
+		}
+		
 		$path = Controller::getPhotoPath($photo);
 		$path = Controller::getPhotoPathRemote($path, $photo->site_id);
 		
@@ -595,7 +616,7 @@ class PhotoController extends Controller
 			$referrer = array_key_exists("HTTP_REFERER", $_SERVER) ? $_SERVER["HTTP_REFERER"] : '/galleries';
 			
 		$vdata = $this->getViewData([
-			'photo' => $photo, 
+			'photo' => $photo,
 			'path' => $path, 
 			'page_title' => 'Photo of ' . $photo->alt_text,
 			'next' => $next,
@@ -851,7 +872,28 @@ class PhotoController extends Controller
 			
 			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
 			
-			return back();
+			return redirect('/galleries');
+		}
+		
+		// check for orphan photo
+		if (false && $photo->parent_id > 0)
+		{
+			$entry = Entry::select()
+				->where('deleted_flag', 0)
+				->where('id', $photo->parent_id)
+				->first();
+			
+			if (!isset($entry))
+			{
+				$msg = 'Invalid Photo Found: ' . $photo->id;
+
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+		
+				Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+		
+				return redirect('/galleries');
+			}
 		}
 
 		$this->saveVisitor(LOG_MODEL_PHOTOS, LOG_PAGE_GALLERY, $photo->id);
