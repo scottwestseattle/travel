@@ -410,12 +410,17 @@ class FrontPageController extends Controller
 		$stats['total_sitemap_photos'] = $stats['sliders'] + $stats['photos_gallery']; 
 		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] + $stats['photos_gallery']; 
 		
-		$vdata = $this->getViewData([
+		// check for an image
+		$image = '/img/theme1/about-' . $this->domainName . '.jpg';
+		$imagePath = base_path() . '/public' . $image;
+		
+		$image = (file_exists($imagePath) === TRUE) ? $image : null;
+
+        return view('frontpage.about', $this->getViewData([
 			'record' => $entry,
 			'stats' => $stats,
-		], 'About Page');
-		
-        return view('frontpage.about', $vdata);
+			'image' => $image,
+		], 'About Page'));
     }
 	
     /**

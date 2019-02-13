@@ -63,12 +63,16 @@
 	</div>
 	@endif
 	
-	@if (isset($record->photo))
-	<div class="text-center" style="margin-top:50px;">
-		<img style="max-width:500px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
-	</div>
+	@if (false && isset($record->photo))
+		<div class="text-center" style="margin-top:50px;">
+			<img style="max-width:500px; width:95%" src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_path}}" />
+		</div>
+	@elseif (isset($image))
+		<div class="text-center" style="margin-top:50px;">
+			<img style="max-width:500px; width:95%" src="{{$image}}" title="@LANG('content.About Page Image')" />
+		</div>	
 	@endif
-			
+		
 </div>
 
 @endsection
