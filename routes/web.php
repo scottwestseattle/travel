@@ -45,6 +45,30 @@ Route::get('/language/{locale}', 'ToolController@language');
 Route::get('/hash', 'ToolController@hash')->middleware('auth');
 Route::post('/hasher', 'ToolController@hasher')->middleware('auth');
 
+// comments
+Route::group(['prefix' => 'comments'], function () {
+	
+	Route::get('/', 'CommentController@index');
+	Route::get('/indexadmin', 'CommentController@indexadmin')->middleware('auth');
+	Route::get('/view/{template}', 'CommentController@view')->middleware('auth');
+	
+	// add/create
+	Route::get('/add','CommentController@add');
+	Route::post('/create','CommentController@create');
+
+	// edit/update
+	Route::get('/edit/{template}','CommentController@edit');
+	Route::post('/update/{template}','CommentController@update');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{template}', 'CommentController@confirmdelete');
+	Route::post('/delete/{template}', 'CommentController@delete');
+	
+	// publish
+	Route::get('/publish/{template}', 'CommentController@publish');
+	Route::post('/publishupdate/{template}', 'CommentController@publishupdate');		
+});
+
 // Translations
 Route::group(['prefix' => 'translations'], function () {
 	// index

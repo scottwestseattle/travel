@@ -89,6 +89,7 @@
 										@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 											<li><a href="/blogs/indexadmin">@lang('ui.Blogs')</a></li>
 										@endif
+										<li><a href="/comments">@lang('ui.Comments')</a></li>
 										<li><a href="/events/index">@lang('ui.Events')</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
 											<li><a href="/galleries">@lang('ui.Galleries')</a></li>

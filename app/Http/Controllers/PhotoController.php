@@ -158,6 +158,9 @@ class PhotoController extends Controller
 
 	public function sliders(Request $request)
 	{
+		if ($this->isAdmin())
+             return $this->slidersAdmin($request);
+	
 		$photo = Photo::getFirst(/* parent_id = */ 0);
 		
 		if (!isset($photo))
@@ -175,7 +178,7 @@ class PhotoController extends Controller
 		return $this->permalink($request, null, $photo->id);
 	}
 			
-	public function slidersOLD()
+	public function slidersAdmin()
 	{			
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
 

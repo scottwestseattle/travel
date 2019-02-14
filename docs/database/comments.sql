@@ -28,10 +28,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `entries`
 --
 
+DROP TABLE IF EXISTS
+  `comments`;
+
 CREATE TABLE `comments` (
   `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
-  `parent_id` int(10) NOT NULL COMMENT 'Parent can also be an Entry or a Photo',
+  `parent_id` int(10) NOT NULL COMMENT 'Parent can be an Entry or a Photo',
   
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `comment` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
