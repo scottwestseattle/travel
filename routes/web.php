@@ -50,23 +50,23 @@ Route::group(['prefix' => 'comments'], function () {
 	
 	Route::get('/', 'CommentController@index');
 	Route::get('/indexadmin', 'CommentController@indexadmin')->middleware('auth');
-	Route::get('/view/{template}', 'CommentController@view')->middleware('auth');
+	Route::get('/view/{comment}', 'CommentController@view');
 	
 	// add/create
-	Route::get('/add','CommentController@add');
+	Route::get('/add/{parent_id?}','CommentController@add');
 	Route::post('/create','CommentController@create');
 
 	// edit/update
-	Route::get('/edit/{template}','CommentController@edit');
-	Route::post('/update/{template}','CommentController@update');
+	Route::get('/edit/{comment}','CommentController@edit');
+	Route::post('/update/{comment}','CommentController@update');
 
 	// delete / confirm delete
-	Route::get('/confirmdelete/{template}', 'CommentController@confirmdelete');
-	Route::post('/delete/{template}', 'CommentController@delete');
+	Route::get('/confirmdelete/{comment}', 'CommentController@confirmdelete');
+	Route::post('/delete/{comment}', 'CommentController@delete');
 	
 	// publish
-	Route::get('/publish/{template}', 'CommentController@publish');
-	Route::post('/publishupdate/{template}', 'CommentController@publishupdate');		
+	Route::get('/publish/{comment}', 'CommentController@publish');
+	Route::post('/publishupdate/{comment}', 'CommentController@publishupdate');		
 });
 
 // Translations

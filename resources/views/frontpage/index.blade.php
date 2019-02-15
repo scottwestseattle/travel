@@ -45,6 +45,7 @@ else
 		'sectionOrange',
 		'sectionGray',
 		'sectionWhite',
+		'sectionGreen',
 	];
 	
 	$colorAlt = 'DarkBlue';
@@ -651,6 +652,46 @@ $sectionCount = 0;
 		</div>	
 		@endif
 		
+	</div>
+</div>
+</section>
+@endif
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: Affiliates -->
+<!--------------------------------------------------------------------------------------->
+
+@if (true || ($section = getSection(SECTION_COMMENTS, $sections)) != null)
+<section class="{{$colors[$sectionCount++]}}">
+<div class="container text-center" style="max-width: 500px;">	
+	<div style="margin-top: 0px; font-size: 1.5em;" class="sectionHeader main-font">	
+		<h1>@LANG('content.Leave a Comment')</h1>
+	</div>
+	
+	<div class="text-left" style="font-size: 1.2em;">
+		<form method="POST" action="/comments/create">
+				
+			<input type="hidden" name="parent_id" value="0" />	
+					
+			<label for="name" class="control-label">@LANG('ui.Name'):</label>
+			<input type="text" name="name" class="form-control" />
+
+			<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
+			<textarea name="comment" class="form-control"></textarea>
+			
+			<div class="submit-button text-center" style="margin: 20px 0;">
+				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
+			</div>
+						
+			<div class='text-center'>
+				<a href="/comments">
+					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
+				</a>
+			</div>
+	
+			{{ csrf_field() }}
+
+		</form>
 	</div>
 </div>
 </section>

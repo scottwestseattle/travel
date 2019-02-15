@@ -129,7 +129,8 @@
 			<span name="description" class="">{!! $record->description !!}</span>		
 		</div>
 	</div>
-
+	
+	
 	<!-- if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0) -->
 	@if (count($photos) > 0 || count($gallery) > 0)
 	
@@ -185,27 +186,60 @@
 
 	@endif
 
-		<!------------------------------------>
-		<!-- Bottom Navigation Buttons -->
-		<!------------------------------------>
+	<!------------------------------------>
+	<!-- Bottom Navigation Buttons -->
+	<!------------------------------------>
+
+	<div class="trim-text " style="max-width:100%; margin-top: 30px;">
+		@if (isset($prev))
+			<div class="" style="float:left; margin: 0 5px 5px 0;" >
+				<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span>{{$prev->title}}</button></a>
+			</div>
+		@endif
+		@if (isset($next))
+			<div style="float:left;">
+			<span class="{{SHOW_NON_XS}}">
+				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom">{{$next->title}}<span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
+			</span>
+			<span class="{{SHOW_XS_ONLY}}">
+				<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span>{{$next->title}}</button></a>
+			</span>
+			</div>
+		@endif			
+	</div>
 	
-		<div class="trim-text " style="max-width:100%; margin-top: 30px;">
-			@if (isset($prev))
-				<div class="" style="float:left; margin: 0 5px 5px 0;" >
-					<a href="/entries/{{$prev->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-left"></span>{{$prev->title}}</button></a>
-				</div>
-			@endif
-			@if (isset($next))
-				<div style="float:left;">
-				<span class="{{SHOW_NON_XS}}">
-					<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom">{{$next->title}}<span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span></button></a>
-				</span>
-				<span class="{{SHOW_XS_ONLY}}">
-					<a href="/entries/{{$next->permalink}}"><button type="button" class="btn btn-nav-bottom"><span class="glyph-nav-bottom glyphicon glyphicon-circle-arrow-right"></span>{{$next->title}}</button></a>
-				</span>
-				</div>
-			@endif			
+	<!------------------------------------>
+	<!-- Comment Form                   -->
+	<!------------------------------------>
+	
+	<div class="text-center" style="margin-top: 50px; background-color: #f1f1f1; border-radius:15px;">
+	<div style="display: inline-block; width: 95%; max-width:500px;">	
+		<div style="" class="sectionHeader main-font">	
+			<h3>@LANG('content.Leave a Comment')</h3>
 		</div>
+
+		<div class="text-left" style="font-size: 1em;">
+			<form method="POST" action="/comments/create">
+			
+				<input type="hidden" name="parent_id" value="0" />	
+				
+				<label for="name" class="control-label">@LANG('ui.Name'):</label>
+				<input type="text" name="name" class="form-control" />
+
+				<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
+				<textarea name="comment" class="form-control"></textarea>
+		
+				<div class="submit-button text-center" style="margin: 20px 0;">
+					<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
+				</div>
+
+				{{ csrf_field() }}
+
+			</form>
+		</div>
+	</div>
+	</div>	
+
 	
 @if (count($photos) > 0 || count($gallery) > 0)
 <!-- photo view popup -->

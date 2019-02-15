@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS
 
 CREATE TABLE `comments` (
   `id` int(10) UNSIGNED NOT NULL,
+  `site_id` int(10) NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `parent_id` int(10) NOT NULL COMMENT 'Parent can be an Entry or a Photo',
   
@@ -51,9 +52,9 @@ CREATE TABLE `comments` (
 --
 
 --
--- Indexes for table `entries`
+-- Indexes for table
 --
-ALTER TABLE `entries`
+ALTER TABLE `comments`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -61,9 +62,9 @@ ALTER TABLE `entries`
 --
 
 --
--- AUTO_INCREMENT for table `entries`
+-- AUTO_INCREMENT for table
 --
-ALTER TABLE `entries`
+ALTER TABLE `comments`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 

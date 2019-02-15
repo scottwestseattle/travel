@@ -11,7 +11,7 @@ use App\Comment;
 
 define('PREFIX', 'comments');
 define('LOG_MODEL', 'comments');
-define('TITLE', 'Comments');
+define('TITLE', 'Comment');
 
 class CommentController extends Controller
 {	
@@ -34,13 +34,12 @@ class CommentController extends Controller
 			$records = Comment::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
-				->where('published_flag', 1)
 				->where('approved_flag', 1)
 				->get();
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . ' List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->name . ' List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -67,7 +66,7 @@ class CommentController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->name . '  List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -77,41 +76,6 @@ class CommentController extends Controller
 			'records' => $records,
 		]));
     }
-
-    public function permalink(Request $request, $permalink)
-    {
-		$this->saveVisitor(LOG_MODEL, LOG_PAGE_PERMALINK);
-
-		$permalink = trim($permalink);
-		
-		$record = null;
-			
-		try
-		{
-			$record = Comment::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->where('published_flag', 1)
-				->where('approved_flag', 1)
-				->where('permalink', $permalink)
-				->first();
-		}
-		catch (\Exception $e) 
-		{
-			$msg = 'Entry Not Found: ' . $permalink;
-			
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
-			
-			Event::logError(LOG_MODEL, LOG_ACTION_PERMALINK, /* title = */ $msg);
-			
-			return back();					
-		}	
-
-		return view(PREFIX . '.view', $this->getViewData([
-			'record' => $record, 
-		]));
-	}
 		
 	public function view(Comment $comment)
     {
@@ -124,46 +88,61 @@ class CommentController extends Controller
 		return view(PREFIX . '.view', $vdata);
     }
 
-    public function add()
+    public function add($parent_id = 0)
     {
+    	$parent_id = intval($parent_id);
+    	
 		if (!$this->isAdmin())
              return redirect('/');
 		 
 		return view(PREFIX . '.add', $this->getViewData([
-			]));
+			'parent_id' => $parent_id,
+		]));
 	}
 		
     public function create(Request $request)
-    {		
-		if (!$this->isAdmin())
-             return redirect('/');
-			
+    {			
 		$record = new Comment();
 		
 		$record->site_id = SITE_ID;
-		$record->user_id = Auth::id();
+		$record->parent_id = $request->parent_id;
 				
-		$record->title					= $this->trimNull($request->title);
-		$record->description			= $this->trimNull($request->description);
+		$record->name = $this->trimNull($request->name, /* alphanum = */ true);
+		$record->comment = $this->trimNull($request->comment, /* alphanum = */ true);
 
+		if (isset($record->name) && isset($record->comment))
+		{
+		}
+		else
+		{
+			$msg = "Comment name or text can't be empty";
+			
+			Event::logError(LOG_MODEL, LOG_ACTION_ADD, $msg);
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			return back();		
+		}
+		
 		try
 		{
 			$record->save();
 			
-			Event::logAdd(LOG_MODEL, $record->title, $record->site_url, $record->id);
+			Event::logAdd(LOG_MODEL, $record->name, $record->comment, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', $this->title . ' has been added');
+			$request->session()->flash('message.content', __('content.Comment Sent For Approval'));
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'Save Error' . $record->name, null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
+		return redirect($this->getReferer($request, '/' . PREFIX . '/')); 
     }
 
 	public function edit(Comment $comment)
@@ -188,30 +167,38 @@ class CommentController extends Controller
 		$isDirty = false;
 		$changes = '';
 		
-		$record->title = $this->copyDirty($record->title, $request->title, $isDirty, $changes);
-		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
+		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes, /* alphanum = */ true);
+		$record->comment = $this->copyDirty($record->comment, $request->comment, $isDirty, $changes, /* alphanum = */ true);
 		
-		// example of getting value from radio controls
-		//$v = isset($request->radio_sample) ? intval($request->radio_sample) : 0;		
-		//$record->radio_sample = $this->copyDirty($record->radio_sample, $v, $isDirty, $changes);		
-		
-		$record->approved_flag = $this->copyDirty($record->approved_flag, isset($request->approved_flag) ? 1 : 0, $isDirty, $changes);
-		$record->published_flag = $this->copyDirty($record->published_flag, isset($request->published_flag) ? 1 : 0, $isDirty, $changes);
-						
+		if (isset($record->name) && isset($record->comment))
+		{
+		}
+		else
+		{
+			$msg = "Comment name or text can't be empty";
+			
+			Event::logError(LOG_MODEL, LOG_ACTION_ADD, $msg);
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);		
+			
+			return back();
+		}
+					
 		if ($isDirty)
 		{						
 			try
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, $changes);			
+				Event::logEdit(LOG_MODEL, $record->name, $record->id, $changes);			
 				
 				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $this->title . ' has been updated');
+				$request->session()->flash('message.content', $this->name . ' has been updated');
 			}
 			catch (\Exception $e) 
 			{
-				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'title = ' . $record->title, null, $e->getMessage());
+				Event::logException(LOG_MODEL, LOG_ACTION_EDIT, 'name = ' . $record->name, null, $e->getMessage());
 				
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());		
@@ -220,7 +207,7 @@ class CommentController extends Controller
 		else
 		{
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
+			$request->session()->flash('message.content', 'No changes made to ' . $this->name);
 		}
 
 		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
@@ -248,14 +235,14 @@ class CommentController extends Controller
 		try 
 		{
 			$record->deleteSafe();
-			Event::logDelete(LOG_MODEL, $record->title, $record->id);					
+			Event::logDelete(LOG_MODEL, $record->name, $record->id);					
 			
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', $this->title . ' has been deleted');
+			$request->session()->flash('message.content', $this->name . ' has been deleted');
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->title, $record->id, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->name, $record->id, $e->getMessage());
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -283,25 +270,19 @@ class CommentController extends Controller
 
     	if ($this->isOwnerOrAdmin($record->user_id))
         {			
-			$published = isset($request->published_flag) ? 1 : 0;
-			$record->published_flag = $published;
-			
-			if ($published === 0) // if it goes back to private, then it has to be approved again
-				$record->approved_flag = 0;
-			else
-				$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			$record->approved_flag = isset($request->approved_flag) ? 1 : 0;
 			
 			try
 			{
 				$record->save();
-				Event::logEdit(LOG_MODEL, $record->title, $record->id, 'published/approved status updated');			
+				Event::logEdit(LOG_MODEL, $record->name, $record->id, 'published/approved status updated');			
 				
 				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $this->title . ' status has been updated');
+				$request->session()->flash('message.content', $this->name . ' status has been updated');
 			}
 			catch (\Exception $e) 
 			{
-				Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->title, null, $e->getMessage());
+				Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->name, null, $e->getMessage());
 
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());		

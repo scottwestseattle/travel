@@ -10,33 +10,11 @@
 
 	<form method="POST" action="/{{$prefix}}/update/{{$record->id}}">
 
-		<label for="title" class="control-label">Title:</label>
-		<input type="text" name="title" class="form-control" value="{{$record->title}}"></input>	
+		<label for="title" class="control-label">Name:</label>
+		<input type="text" name="name" class="form-control" value="{{$record->name}}"></input>	
 					
-		<label for="description" class="control-label">Description:</label>
-		<textarea name="description" class="form-control">{{$record->description}}</textarea>
-			
-		<div class="form-group">
-			<input type="checkbox" name="approved_flag" id="published_flag" class="form-control-inline" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="approved_flag" class="checkbox-label">Approved</label>
-		</div>
-		
-		<div class="form-group">
-			<input type="checkbox" name="published_flag" id="published_flag" class="form-control-inline" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="published_flag" class="checkbox-label">Published</label>
-		</div>
-
-		<div class="form-group">		
-			<div class="radio-group-item">
-				<input type="radio" name="radio_sample" value="1" class="form-control-inline" {{$record->published_flag ? 'checked' : '' }} />
-				<label for="radio_sample" class="radio-label">Sample Radio Option 1</label>
-			</div>
-			
-			<div class="radio-group-item">
-				<input type="radio" name="radio_sample" value="2" class="form-control-inline" {{$record->published_flag ? 'checked' : '' }} />
-				<label for="radio_sample" class="radio-label">Sample Radio Option 2</label>			
-			</div>	
-		</div>
+		<label for="description" class="control-label">Comment:</label>
+		<textarea name="comment" class="form-control">{{$record->comment}}</textarea>
 			
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">Update</button>

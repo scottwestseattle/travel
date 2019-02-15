@@ -53,7 +53,7 @@ CREATE TABLE `templates` (
 --
 
 --
--- Indexes for table `entries`
+-- Indexes for table
 --
 ALTER TABLE `templates`
   ADD PRIMARY KEY (`id`);
@@ -63,7 +63,7 @@ ALTER TABLE `templates`
 --
 
 --
--- AUTO_INCREMENT for table `entries`
+-- AUTO_INCREMENT for table
 --
 ALTER TABLE `templates`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;

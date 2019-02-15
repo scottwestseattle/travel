@@ -358,7 +358,7 @@ class Controller extends BaseController
 		$this->viewData['sections'] = Controller::getSections();
 		$this->viewData['site'] = Controller::getSite();
 		$this->viewData['prefix'] = $this->prefix;
-		$this->viewData['title'] = $this->title;
+		$this->viewData['title'] = __($this->title);
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
 		$this->viewData['domainName'] = $this->domainName;
 		
@@ -932,10 +932,10 @@ class Controller extends BaseController
 		return $referer;
 	}
 	
-    protected function copyDirty($to, $from, &$isDirty, &$updates = null)
+    protected function copyDirty($to, $from, &$isDirty, &$updates = null, $alphanum = false)
     {	
-		$from = $this->trimNull($from);
-		$to = $this->trimNull($to);
+		$from = $this->trimNull($from, $alphanum);
+		$to = $this->trimNull($to, $alphanum);
 		
 		if ($from != $to)
 		{
@@ -965,24 +965,21 @@ class Controller extends BaseController
 	}	
 	
 	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
-	protected function trimNull($text)
+	protected function trimNull($text, $alphanum = false)
+	{
+		return Controller::trimNullStatic($text, $alphanum);
+	}
+	
+	static protected function trimNullStatic($text, $alphanum = false)
 	{
 		if (isset($text))
 		{
 			$text = trim($text);
 			
-			if (strlen($text) === 0)
-				$text = null;
-		}
-		
-		return $text;
-	}
-	
-	static protected function trimNullStatic($text)
-	{
-		if (isset($text))
-		{
-			$text = trim($text);
+			if ($alphanum)
+			{
+				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+= \r\n]+/", "", $text);
+			}
 			
 			if (strlen($text) === 0)
 				$text = null;

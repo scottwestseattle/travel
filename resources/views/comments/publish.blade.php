@@ -6,17 +6,14 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
 
-	<h1>Publish {{$title}}</h1>
+	<h1>Publish Comment</h1>
 
 	<form method="POST" action="/{{$prefix}}/publishupdate/{{ $record->id }}">
 
-		<h3 name="title" class="">{{$record->title }}</h3>
-				
-		<div class="form-group">
-			<input type="checkbox" name="published_flag" id="published_flag" class="form-control-inline" value="{{$record->published_flag }}" {{ ($record->published_flag) ? 'checked' : '' }} />
-			<label for="published_flag" class="checkbox-label">Published</label>
-		</div>
+		<h3>{{$record->name}}</h3>
 
+		<h3>{{$record->comment}}</h3>
+				
 		<div class="form-group">
 			<input type="checkbox" name="approved_flag" id="approved_flag" class="form-control-inline" value="{{$record->approved_flag }}" {{ ($record->approved_flag) ? 'checked' : '' }} />
 			<label for="approved_flag" class="checkbox-label">Approved</label>
