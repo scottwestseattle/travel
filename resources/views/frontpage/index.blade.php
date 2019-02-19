@@ -311,7 +311,7 @@ $sectionCount = 0;
 @if (isset($articles) && count($articles) > 0)
 @if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
 <section class="{{$colors[$sectionCount++]}}">
-	<div class="container" style="max-width:1440px;">	
+	<div class="container main-font" style="max-width:1440px;">	
 		<div class="sectionHeader text-center">			
 						
 			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
