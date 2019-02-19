@@ -51,7 +51,7 @@
 						<div class="col-md-2">
 
 							<!---------------------------------------------------->
-							<!-- Links -->
+							<!-- Site Map -->
 							<!---------------------------------------------------->
 							<h4 class="letter-spacing-1">@LANG('ui.SITE MAP')</h4>
 							<ul class="FooterList list-unstyled">

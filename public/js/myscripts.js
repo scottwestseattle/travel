@@ -126,7 +126,12 @@ function createPhotoName(fromId, fromLocationId, toId)
 			}
 		}
 		
-		if (location.length > 2)
+		if (location.length <= 1) // if nothing to split then there is one empty array element
+		{
+			// nothing to do
+			toElem.value = '';
+		}
+		else if (location.length > 2)
 		{
 			// flip the words, for example "Beijing, China" becomes "china-beijing"
 			toElem.value = location[2] + '-';

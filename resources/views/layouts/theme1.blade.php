@@ -6,31 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 	
-	<!-- set up the favicon.ico -->
+	<!-- set up the favicon.ico -->	
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4993fd">
 <meta name="msapplication-TileColor" content="#4993fd">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#ffffff">	
 	
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{isset($page_title) ? $page_title : $_SERVER["SERVER_NAME"]}}</title>
+	
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet" >
 
     <!-- Styles -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('css/app.css') }}" rel="stylesheet">	
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+	<!-- link href="{{ asset('css/default.css') }}" rel="stylesheet" -->
 	<link href="{{ asset('css/theme1.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
+	
+	<!-- App styles -->
+    <!-- link href="{{ asset('css/custom.css') }}" rel="stylesheet" -->
 	
 	<!-- Fonts -->
 	@if (!isset($localhost))
 		<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
 	@endif
-	
+		
 	<!-- google fonts
 	font-family: 'Raleway', sans-serif;
 	-->
@@ -77,7 +83,7 @@ else // not logged in
 ?>
 
 <body style="margin:0; padding:0;">
-    <div id="app" style="min-height:500px; ">
+    <div id="app" style="min-height:500px; margin-bottom: 30px">
         <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; ">
 			@if (isset($sections) && isset($site))
 				@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
