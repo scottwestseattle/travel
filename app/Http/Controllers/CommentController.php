@@ -35,11 +35,12 @@ class CommentController extends Controller
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('approved_flag', 1)
+				->orderByRaw('id DESC')
 				->get();
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->name . ' List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . ' List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -66,7 +67,7 @@ class CommentController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->name . '  List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
@@ -194,7 +195,7 @@ class CommentController extends Controller
 				Event::logEdit(LOG_MODEL, $record->name, $record->id, $changes);			
 				
 				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $this->name . ' has been updated');
+				$request->session()->flash('message.content', $this->title . ' has been updated');
 			}
 			catch (\Exception $e) 
 			{
@@ -207,7 +208,7 @@ class CommentController extends Controller
 		else
 		{
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', 'No changes made to ' . $this->name);
+			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
 		return redirect($this->getReferer($request, '/' . PREFIX . '/indexadmin/')); 
@@ -238,7 +239,7 @@ class CommentController extends Controller
 			Event::logDelete(LOG_MODEL, $record->name, $record->id);					
 			
 			$request->session()->flash('message.level', 'success');
-			$request->session()->flash('message.content', $this->name . ' has been deleted');
+			$request->session()->flash('message.content', $this->title . ' has been deleted');
 		}
 		catch (\Exception $e) 
 		{
@@ -248,7 +249,7 @@ class CommentController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		return redirect('/' . PREFIX . '/index');
+		return redirect('/' . PREFIX . '/indexadmin');
     }	
 
     public function publish(Request $request, Comment $comment)
@@ -275,10 +276,10 @@ class CommentController extends Controller
 			try
 			{
 				$record->save();
-				Event::logEdit(LOG_MODEL, $record->name, $record->id, 'published/approved status updated');			
+				Event::logEdit(LOG_MODEL, $record->name, $record->id, 'comment has been approved');			
 				
 				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $this->name . ' status has been updated');
+				$request->session()->flash('message.content', $this->title . ' has been approved');
 			}
 			catch (\Exception $e) 
 			{

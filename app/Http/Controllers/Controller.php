@@ -978,7 +978,7 @@ class Controller extends BaseController
 			
 			if ($alphanum)
 			{
-				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+= \r\n]+/", "", $text);
+				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", $text);
 			}
 			
 			if (strlen($text) === 0)

@@ -13,6 +13,7 @@ use App\Location;
 use App\Visitor;
 use App\Site;
 use App\Event;
+use App\Comment;
 
 define('PREFIX', 'frontpage');
 define('LOG_MODEL', 'frontpage');
@@ -255,7 +256,18 @@ class FrontPageController extends Controller
 		$linksToFix = ToolController::getLinksToFix();
 		$linksToTest = null; //ToolController::getLinksToTest();
 		$shortEntries = ToolController::getShortEntries();
-		
+
+		//
+		// get unapproved comments
+		//
+		$comments = Comment::select()
+			->where('deleted_flag', 0)
+			->where('approved_flag', 0)
+			->orderByRaw('id DESC')
+			->get();
+		if (count($comments) === 0)
+			$comments = null;
+				
 		//
 		// get latest events
 		//
@@ -272,12 +284,12 @@ class FrontPageController extends Controller
 		$entries = $this->getTourIndexAdmin(/* $pending = */ true);
 			
 		//
-		// get unconfirmed users
+		// get latest users
 		//
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
-			->where('blocked_flag', 0)
 			->orderByRaw('id DESC')
+			->limit(5)
 			->get();
 					
 		//
@@ -297,7 +309,8 @@ class FrontPageController extends Controller
 			'events' => $events,
 			'records' => $entries, 
 			'users' => $users, 
-			'visitors' => $visitors, 
+			'visitors' => null,
+			'comments' => $comments, 
 			'ip' => $ip, 
 			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor(),

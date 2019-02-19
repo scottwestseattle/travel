@@ -11,6 +11,7 @@ use App\Event;
 use App\Photo;
 use App\Location;
 use App\Translation;
+use App\Comment;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -297,6 +298,13 @@ class EntryController extends Controller
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
+			
+		$comments = Comment::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('approved_flag', 1)
+			->where('parent_id', $entry->id)
+			->get();
 
 		$vdata = $this->getViewData([
 			'record' => $entry, 
@@ -308,6 +316,7 @@ class EntryController extends Controller
 			'backLinkText' => $backLinkText,
 			'page_title' => $page_title,
 			'display_date' => Controller::translateDate($entry->display_date),
+			'comments' => $comments,
 		]);
 		
 		return view('entries.view', $vdata);
@@ -332,9 +341,16 @@ class EntryController extends Controller
 			->orderByRaw('created_at ASC')
 			->get();
 		
+		$comments = Comment::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('parent_id', $entry->id)
+			->get();
+			
 		$vdata = $this->getViewData([
 			'record' => $entry, 
 			'photos' => $photos,
+			'comments' => $comments,
 		]);
 		
 		return view('entries.view', $vdata);

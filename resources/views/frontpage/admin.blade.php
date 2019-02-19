@@ -17,9 +17,31 @@
 		</ul>
 	</div>
 	
+	@if (isset($comments))
+	<div>	
+		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Created</th><th>Name</th><th>Comment</th><th></th></tr>
+				@foreach($comments as $record)
+					<tr>
+						<td style="width:10px;"><a href='/comments/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+						<td>{{$record->created_at}}</td>
+						<td><a href="/comments/publish/{{ $record->id }}">{{$record->name}}</a></td>
+						<td>{{$record->comment}}</td>
+						<td><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+		<a href="/comments/indexadmin">Show All Comments</a>
+	</div>
+	<hr />
+	@endif
+	
 	@if (count($users) > 0)
 	<div>	
-		<h3 style="color:red;">New Users ({{count($users)}})</h3>
+		<h3 style="">Latest New Users ({{count($users)}})</h3>
 		<table class="table table-striped">
 			<tbody>
 				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
@@ -39,7 +61,7 @@
 	</div>
 	<hr />
 	@endif
-
+	
 	@if (isset($linksToFix) && count($linksToFix) > 0)
 	<div>	
 		<h3 style="color:red;">Links to Fix ({{count($linksToFix)}})</h3>
@@ -247,7 +269,8 @@
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />
-				
+	
+	@if (isset($visitors))			
 	<div>
 		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
 		<p><a href="/visitors">Show All Visits</a></p>
@@ -268,6 +291,7 @@
 			</tbody>
 		</table>
 	</div>
+	@endif
 	
 </div>
 @endsection

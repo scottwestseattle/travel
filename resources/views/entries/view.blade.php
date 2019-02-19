@@ -213,33 +213,69 @@
 	<!------------------------------------>
 	
 	<div class="text-center" style="margin-top: 50px; background-color: #f1f1f1; border-radius:15px;">
-	<div style="display: inline-block; width: 95%; max-width:500px;">	
-		<div style="" class="sectionHeader main-font">	
-			<h3>@LANG('content.Leave a Comment')</h3>
-		</div>
+		<div style="display: inline-block; width: 95%; max-width:500px;">	
+			<div style="" class="sectionHeader main-font">	
+				<h3>@LANG('content.Leave a Comment')</h3>
+			</div>
 
-		<div class="text-left" style="font-size: 1em;">
-			<form method="POST" action="/comments/create">
+			<div class="text-left" style="font-size: 1em;">
+				<form method="POST" action="/comments/create">
 			
-				<input type="hidden" name="parent_id" value="0" />	
+					<input type="hidden" name="parent_id" value="{{$record->id}}" />	
 				
-				<label for="name" class="control-label">@LANG('ui.Name'):</label>
-				<input type="text" name="name" class="form-control" />
+					<label for="name" class="control-label">@LANG('ui.Name'):</label>
+					<input type="text" name="name" class="form-control" />
 
-				<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
-				<textarea name="comment" class="form-control"></textarea>
+					<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
+					<textarea name="comment" class="form-control"></textarea>
 		
-				<div class="submit-button text-center" style="margin: 20px 0;">
-					<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
-				</div>
+					<div class="submit-button text-center" style="margin: 20px 0;">
+						<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
+					</div>
 
-				{{ csrf_field() }}
+					{{ csrf_field() }}
 
-			</form>
+				</form>
+			</div>
 		</div>
-	</div>
 	</div>	
 
+	
+	<!------------------------------------>
+	<!-- Comments                       -->
+	<!------------------------------------>
+
+	@if (isset($comments) && count($comments) > 0)
+	<div class="text-center" style="margin-top: 50px;">
+		<div style="display: inline-block; width: 95%; max-width:500px;">	
+			<div style="" class="sectionHeader main-font">	
+				<h3>@LANG('content.Comments')</h3>
+			</div>
+
+			<table>
+			@foreach($comments as $comment)
+			<tr style="vertical-align:top;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+				<td style="min-width:100px; font-size: 1.5em; padding:10px; vertical-align: center; color: white; background-color: #74b567; margin-bottom:10px;" >
+					<div>{{strtoupper(date_format($comment->created_at, "M"))}}</div>
+					<div>{{date_format($comment->created_at, "j")}}</div>
+					<div>{{date_format($comment->created_at, "Y")}}</div>
+				</td>
+				<td style="color:default; padding: 0 10px; text-align:left;">
+					<table>
+					<tbody>
+						<tr><td style="padding:10 0; font-size:2.0em; font-weight:bold;">{{$comment->name}}</td></tr>
+						<tr><td>{{$comment->comment}}</td></tr>
+					</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr><td>&nbsp;</td><td></td></tr>
+			@endforeach
+			</table>
+		</div>
+	</div>	
+	@endif
+	
 	
 @if (count($photos) > 0 || count($gallery) > 0)
 <!-- photo view popup -->

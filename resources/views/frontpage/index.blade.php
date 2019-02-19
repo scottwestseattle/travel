@@ -674,10 +674,10 @@ $sectionCount = 0;
 			<input type="hidden" name="parent_id" value="0" />	
 					
 			<label for="name" class="control-label">@LANG('ui.Name'):</label>
-			<input type="text" name="name" class="form-control" />
+			<input type="text" name="name" class="form-control" maxlength="50" />
 
 			<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
-			<textarea name="comment" class="form-control"></textarea>
+			<textarea name="comment" class="form-control" maxlength="500"></textarea>
 			
 			<div class="submit-button text-center" style="margin: 20px 0;">
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>

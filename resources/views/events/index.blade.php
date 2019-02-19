@@ -4,9 +4,9 @@
 
 <div class="page-size container">
 		
-		@component('menu-submenu-events')@endcomponent
+		@component('events.menu-submenu-events')@endcomponent
 
-		@component('menu-submenu-events-filter')@endcomponent
+		@component('events.menu-submenu-events-filter', ['totals' => $totals])@endcomponent
 				
 		<h3>Events ({{$records->count()}})</h3>
 		
