@@ -39,29 +39,6 @@
 	<hr />
 	@endif
 	
-	@if (count($users) > 0)
-	<div>	
-		<h3 style="">Latest New Users ({{count($users)}})</h3>
-		<table class="table table-striped">
-			<tbody>
-				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
-			@foreach($users as $record)
-				<tr>
-					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td>{{$record->created_at}}</td>
-					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
-					<td>{{$record->email}}</td>
-					<td>{{$record->user_type}}</td>
-					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
-		<a href="/users/index">Show All Users</a>
-	</div>
-	<hr />
-	@endif
-	
 	@if (isset($linksToFix) && count($linksToFix) > 0)
 	<div>	
 		<h3 style="color:red;">Links to Fix ({{count($linksToFix)}})</h3>
@@ -139,6 +116,29 @@
 			@endforeach
 			</tbody>
 		</table>
+	</div>
+	<hr />
+	@endif
+	
+	@if (count($users) > 0)
+	<div>	
+		<h3 style="">Latest New Users ({{count($users)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
+			@foreach($users as $record)
+				<tr>
+					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td>{{$record->created_at}}</td>
+					<td><a href="/users/view/{{ $record->id }}">{{$record->name}}</a></td>
+					<td>{{$record->email}}</td>
+					<td>{{$record->user_type}}</td>
+					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+		<a href="/users/index">Show All Users</a>
 	</div>
 	<hr />
 	@endif
