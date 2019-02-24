@@ -120,12 +120,18 @@
 	<hr />
 	@endif
 	
+	@if (isset($visitors))			
+	<div style="margin-bottom:50px;">
+		<h3 style="">Today's Visitors: {{count($visitors)}}</h3>
+		<p><a href="/visitors">Show All Visitors</a></p>
+	</div>
+	@endif
+	
 	@if (count($users) > 0)
 	<div>	
-		<h3 style="">Latest New Users ({{count($users)}})</h3>
+		<h3 style="">Last New User ({{count($users)}} Total)</h3>
 		<table class="table table-striped">
 			<tbody>
-				<tr><th></th><th>Created</th><th>Name</th><th>Email</th><th>Type</th><th></th></tr>
 			@foreach($users as $record)
 				<tr>
 					<td style="width:10px;"><a href='/users/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
@@ -135,6 +141,7 @@
 					<td>{{$record->user_type}}</td>
 					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
+				@break
 			@endforeach
 			</tbody>
 		</table>
@@ -269,29 +276,6 @@
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />
-	
-	@if (isset($visitors))			
-	<div>
-		<h3 style="">Latest Visitors ({{count($visitors)}})</h3>
-		<p><a href="/visitors">Show All Visits</a></p>
-		<table class="table table-striped">
-			<tbody>
-				<tr><th>Timestamp</th><th>Count</th><th>IP</th><th>Host</th><th>Referrer</th><th>Agent</th></tr>
-				@foreach($visitors as $record)
-				<tr>
-					<td>{{$record->updated_at}}</td>
-					<td>{{$record->visit_count}}</td>
-					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record->ip_address}}">{{$record->ip_address}}</a></td>
-					<td>{{$record->host_name}}</td>
-					<td>{{$record->referrer}}</td>
-					<td>{{$record->user_agent}}</td>
-					<td><a href='/entries/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
-	</div>
-	@endif
 	
 </div>
 @endsection

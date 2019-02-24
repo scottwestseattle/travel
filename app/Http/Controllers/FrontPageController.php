@@ -167,70 +167,8 @@ class FrontPageController extends Controller
 			$date = isset($dates['from_date']) ? $dates['from_date'] : null;
 		
 			$records = Visitor::getVisitors($date);
-			$count = 0;
-			$out = [];
-			foreach($records as $record)
-			{
-				// shorten the user_agent
-				$agent = $record->user_agent;
-				$new = null;
-				
-				if (stripos($agent, 'Googlebot') !== FALSE)
-					$new = 'GoogleBot';
-				else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
-					$new = 'GoogleSiteVerification';
-				else if (stripos($agent, 'bingbot') !== FALSE)
-					$new = 'BingBot';
-				else if (stripos($agent, 'mediapartners') !== FALSE)
-					$new = 'AdSense';
-				else if (stripos($agent, 'a6-indexer') !== FALSE)
-					$new = 'Amazon A6';
-				else if (stripos($agent, 'pinterest') !== FALSE)
-					$new = 'PinBot';					
-				else if (stripos($agent, 'yandex.com/bots') !== FALSE)
-					$new = 'YandexBot';					
-				else if (stripos($agent, 'alphaseobot') !== FALSE)
-					$new = 'AlphaSeoBot';
-				else if (stripos($agent, 'uptimebot') !== FALSE)
-					$new = 'UptimeBot';
-				else if (stripos($agent, 'crawl') !== FALSE)
-					$new = $agent;
-				else if (stripos($agent, 'bot') !== FALSE)
-					$new = $agent;
-				else if (stripos($record->host_name, 'spider') !== FALSE)
-					$new = $record->host_name;
-				else if (stripos($record->host_name, 'crawl') !== FALSE)
-					$new = $record->host_name;
-				else if (stripos($record->host_name, 'bot') !== FALSE)
-					$new = $record->host_name;
-				else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
-					$new = 'GoogleUserContent';
-				else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
-					$new = 'AmazonAWS';
-				else if (stripos($record->referrer, 'localhost') !== FALSE)
-					$new = 'localhost';
-					
-				if (isset($new))
-				{
-					if (!$showBots)
-						continue;
-
-					$record->user_agent = $new;
-				}
-					
-				$out[$count]['date'] = $record->updated_at;
-				$out[$count]['id'] = $record->record_id;
-				$out[$count]['page'] = $record->page;
-				$out[$count]['ref'] = $record->referrer;
-				$out[$count]['agent'] = $record->user_agent;
-				$out[$count]['host'] = $record->host_name;
-				$out[$count]['model'] = $record->model;
-				$out[$count]['ip'] = $record->ip_address;
-				
-				$count++;
-			}
 			
-			$records = $out;
+			$records = FrontPageController::removeRobots($records, $showBots);
 		}
 				
 		$vdata = $this->getViewData([
@@ -243,6 +181,75 @@ class FrontPageController extends Controller
 						
 		return view('frontpage.visits', $vdata);
     }
+
+	static protected function removeRobots($records, $showBots = false)
+	{    
+		$count = 0;
+		$out = [];
+		
+		foreach($records as $record)
+		{
+			// shorten the user_agent
+			$agent = $record->user_agent;
+			$new = null;
+			
+			if (stripos($agent, 'Googlebot') !== FALSE)
+				$new = 'GoogleBot';
+			else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
+				$new = 'GoogleSiteVerification';
+			else if (stripos($agent, 'bingbot') !== FALSE)
+				$new = 'BingBot';
+			else if (stripos($agent, 'mediapartners') !== FALSE)
+				$new = 'AdSense';
+			else if (stripos($agent, 'a6-indexer') !== FALSE)
+				$new = 'Amazon A6';
+			else if (stripos($agent, 'pinterest') !== FALSE)
+				$new = 'PinBot';					
+			else if (stripos($agent, 'yandex.com/bots') !== FALSE)
+				$new = 'YandexBot';					
+			else if (stripos($agent, 'alphaseobot') !== FALSE)
+				$new = 'AlphaSeoBot';
+			else if (stripos($agent, 'uptimebot') !== FALSE)
+				$new = 'UptimeBot';
+			else if (stripos($agent, 'crawl') !== FALSE)
+				$new = $agent;
+			else if (stripos($agent, 'bot') !== FALSE)
+				$new = $agent;
+			else if (stripos($record->host_name, 'spider') !== FALSE)
+				$new = $record->host_name;
+			else if (stripos($record->host_name, 'crawl') !== FALSE)
+				$new = $record->host_name;
+			else if (stripos($record->host_name, 'bot') !== FALSE)
+				$new = $record->host_name;
+			else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
+				$new = 'GoogleUserContent';
+			else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
+				$new = 'AmazonAWS';
+			else if (stripos($record->referrer, 'localhost') !== FALSE)
+				$new = 'localhost';
+				
+			if (isset($new))
+			{
+				if (!$showBots)
+					continue;
+
+				$record->user_agent = $new;
+			}
+				
+			$out[$count]['date'] = $record->updated_at;
+			$out[$count]['id'] = $record->record_id;
+			$out[$count]['page'] = $record->page;
+			$out[$count]['ref'] = $record->referrer;
+			$out[$count]['agent'] = $record->user_agent;
+			$out[$count]['host'] = $record->host_name;
+			$out[$count]['model'] = $record->model;
+			$out[$count]['ip'] = $record->ip_address;
+			
+			$count++;
+		}
+		
+		return $out;
+	}
 	
     public function admin()
     {
@@ -289,18 +296,12 @@ class FrontPageController extends Controller
 		$users = User::select()
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
-			->limit(5)
 			->get();
 					
 		//
-		// get latest visitors
+		// get today's visitors
 		//
-		$visitors = Visitor::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->latest()
-			->limit(10)
-			->get();
+		$visitors = FrontPageController::removeRobots(Visitor::getVisitors());
 			
 		$ip = Event::getVisitorIp();
 						
@@ -309,7 +310,7 @@ class FrontPageController extends Controller
 			'events' => $events,
 			'records' => $entries, 
 			'users' => $users, 
-			'visitors' => null,
+			'visitors' => $visitors,
 			'comments' => $comments, 
 			'ip' => $ip, 
 			'todo' => $todo,
