@@ -254,13 +254,13 @@
 
 			<table>
 			@foreach($comments as $comment)
-			<tr style="vertical-align:top;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+			<tr style="max-width:100%; vertical-align:top;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
 				<td style="min-width:100px; font-size: 1.5em; padding:10px; vertical-align: center; color: white; background-color: #74b567; margin-bottom:10px;" >
 					<div>{{strtoupper(date_format($comment->created_at, "M"))}}</div>
 					<div>{{date_format($comment->created_at, "j")}}</div>
 					<div>{{date_format($comment->created_at, "Y")}}</div>
 				</td>
-				<td style="color:default; padding: 0 10px; text-align:left;">
+				<td style="max-width: 75%; width: 500px; color:default; padding: 0 10px; text-align:left;">
 					<table>
 					<tbody>
 						<tr><td style="padding:10 0; font-size:2.0em; font-weight:bold;">{{$comment->name}}</td></tr>

@@ -63,6 +63,7 @@ class CommentController extends Controller
 			$records = Comment::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
+				->orderByRaw('approved_flag ASC, id DESC')
 				->get();		
 		}
 		catch (\Exception $e) 
@@ -168,8 +169,8 @@ class CommentController extends Controller
 		$isDirty = false;
 		$changes = '';
 		
-		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes, /* alphanum = */ true);
-		$record->comment = $this->copyDirty($record->comment, $request->comment, $isDirty, $changes, /* alphanum = */ true);
+		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes);
+		$record->comment = $this->copyDirty($record->comment, $request->comment, $isDirty, $changes);
 		
 		if (isset($record->name) && isset($record->comment))
 		{
