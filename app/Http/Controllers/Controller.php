@@ -513,9 +513,7 @@ class Controller extends BaseController
     protected function getPhotosYola($id, $ext)
     {
 		$path = base_path() . TOUR_PHOTOS_PATH . $entry->id;
-		
-		//Debugger::dump('path: ' . $path);
-			
+					
 		$files = scandir($path);						
 		foreach($files as $file)
 		{
@@ -536,17 +534,11 @@ class Controller extends BaseController
 					$photos_thumbs[] = $file;					
 				}
 			}
-			
-			//Debugger::dump('thumbs_path: ' . $thumbs_path);
-	
+				
 			// if big photos and thumb lists don't match, create the thumbs
 			if ($photos != $photos_thumbs)
 			{	
 				echo  'processing ' . (count($photos) - count($photos_thumbs)) . ' photos...';
-			
-				//Debugger::dump($photos);
-				//Debugger::dump($photos_thumbs);
-				//die;
 				
 				//
 				// if thumbs are missing create them first
@@ -554,8 +546,6 @@ class Controller extends BaseController
 				foreach($photos as $file)
 				{
 					$file_thumb = $thumbs_path . '/' . $file;
-					//Debugger::dump($file_thumb);//die($file_thumb);						
-					//Debugger::dump('file: '. $file);
 					
 					// create the thumb if it's not already there and the right size
 					$this->makeThumb($path, $thumbs_path, $file, $width, true);
@@ -569,11 +559,8 @@ class Controller extends BaseController
 					$file_main = $path . '/' . $file;
 					
 					if (!file_exists($file_main))
-					{
-						//Debugger::dump('no main for thumb: ' . $file_main);
-						
+					{						
 						$file_thumb = $thumbs_path . '/' . $file;
-						//Debugger::dump('deleting: ' . $file_thumb);
 						$this->deleteFile($file_thumb);
 					}
 				}				
@@ -586,7 +573,6 @@ class Controller extends BaseController
 				foreach($photos as $file)
 				{
 					$file_thumb = $thumbs_path . '/' . $file;
-					//Debugger::dump($file_thumb);//die($file_thumb);
 											
 					$this->makeThumb($path, $thumbs_path, $file, $width, false);
 				}
@@ -1299,6 +1285,7 @@ class Controller extends BaseController
 		$filter['search'] = false;
 		$filter['unreconciled_flag'] = false;
 		$filter['unmerged_flag'] = false;
+		$filter['showalldates_flag'] = false;
 		
 		if (isset($request))
 		{
@@ -1338,6 +1325,11 @@ class Controller extends BaseController
 			{
 				$filter['unmerged_flag'] = $request->unmerged_flag;
 			}
+			
+			if (isset($request->showalldates_flag))
+			{
+				$filter['showalldates_flag'] = $request->showalldates_flag;
+			}		
 		}
 		
 		return $filter;
@@ -1654,9 +1646,7 @@ class Controller extends BaseController
 		
 		//
 		// get image info
-		//
-		//Debugger::dump('from: ' . $toPath);die;	
-			
+		//			
 		$file = $fromPath;
 						
 		$file = Controller::appendPath($file, $filename);
@@ -1686,10 +1676,6 @@ class Controller extends BaseController
 		// check for bad image
 		if (!$image)
 		{
-			//Debugger::dump('filename = ' . $filename);
-			//Debugger::dump('file = ' . $file);
-			//Debugger::dump($image_info);
-	
 			return false;
 		}
 		
@@ -1744,10 +1730,7 @@ class Controller extends BaseController
 			{		
 				return false;
 			}	
-
-			//Debugger::dump( 'r = ' . $ratio .', h = ' . $height . ', w = ' . $width . ', ' . $portrait . ', ' . $file . '<br />' );
-			//Debugger::dump( 'r = ' . $ratio .', h = ' . imagesy($imageThumb) . ', w = ' . imagesx($imageThumb) . ', ' . $portrait . ', ' . $file . '<br />' );
-			
+		
 			if (intval($height) == imagesy($imageThumb) && intval($width) == imagesx($imageThumb))
 			{
 				return false;

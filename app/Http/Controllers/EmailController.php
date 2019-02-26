@@ -41,6 +41,8 @@ class EmailController extends Controller
 
     public function check(Request $request, $debug = false) 
 	{		
+		//$debug = true;
+
 		$email_account = env('EMAIL_USERNAME');
 		$email_password = env('EMAIL_PASSWORD');
 		$email_server = env('EMAIL_HOST');
@@ -496,7 +498,7 @@ class EmailController extends Controller
 		// check for first transaction from this vendor
 		$vendor = $desc; // use the full desc as the vendor_memo
 		$trx = Transaction::getByVendor($vendor);
-		
+
 		// set account
 		$record->parent_id = intval($accountId);
 

@@ -117,8 +117,10 @@ class Transaction extends Base
 			WHERE 1=1 
 			AND trx.user_id = ?
 			AND trx.deleted_flag = 0 
- 			AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) 
 		';
+		
+		if ($filter['showalldates_flag'] == 0) // use date filter
+			$q .= ' AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) ';
 		
 		if ($filter['account_id'] > 0)
 			$q .= ' AND trx.parent_id = ' . intval($filter['account_id']) . '';
@@ -130,12 +132,16 @@ class Transaction extends Base
 			$q .= ' AND trx.subcategory_id = ' . intval($filter['subcategory_id']) . '';
 
 		if (isset($filter['search']) && strlen($filter['search']) > 0)
-			$q .= ' AND trx.description like "%' . $filter['search'] . '%"';
+		{
+			$q .= ' AND ( trx.description like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.vendor_memo like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.amount like "%' . $filter['search'] . '%"';
+			$q .= '     )';
+		}
 
 		if (isset($filter['unreconciled_flag']) && $filter['unreconciled_flag'] == 1)
 			$q .= ' AND trx.reconciled_flag = 0 ';
-		//else
-		//	$q .= ' AND trx.reconciled_flag = 1 ';
 		
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
