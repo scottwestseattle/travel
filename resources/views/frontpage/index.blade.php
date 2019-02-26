@@ -64,7 +64,7 @@ $sectionCount = 0;
 
 @if (getSection(SECTION_SLIDERS, $sections) != null)
 	
-@if ($sliders->count() > 0)
+@if (count($sliders) > 0)
 <?php $sectionCount++; ?>
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 @else
@@ -123,13 +123,13 @@ $sectionCount = 0;
 	var sliderPath = "{{$slider_path}}";
 	var sliders = [
 		@foreach($sliders as $slider)
-			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}'],
+			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}', {{$slider->type_flag}}],
 		@endforeach
 	];
 	
 	// if firstslider is set then show the first one, otherwise show one randomly
 	@if (isset($firstslider))
-	var ix = 0;
+	var ix = sliders.length > 10 ? 10 : 0;
 	@else
 	var ix = Math.floor(Math.random() * sliders.length);
 	@endif

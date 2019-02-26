@@ -76,11 +76,47 @@ class FrontPageController extends Controller
 		// get the sliders
 		//
 		$sliders = Photo::select()
-			//->where('site_id', SITE_ID)
 			->where('parent_id', '=', 0)
 			->where('deleted_flag', '=', 0)
 			->orderByRaw('id ASC')
 			->get();
+			
+		$count = count($sliders);
+		if ($count > 0)
+		{
+			// get a random slider and then only send the 10 sliders on each side of it
+			$padding = 10;
+			
+			$rnd = ($count > 0 && !isset($firstslider)) ? mt_rand(0, $count - 1) : 0;
+			
+			$first = $rnd - $padding;
+			if ($first < 0)
+				$first = $count + $first;
+				
+			$last = $rnd + $padding;
+			if ($last > $count)
+				$last = -($count - $last);
+				
+			//dump('count=' . $count . ', rnd=' . $rnd . ', first=' . $first . ', last=' . $last);
+				
+			// copy the 21 sliders to a new array
+			$slice = [];
+			for ($i = 0; $i < $padding * 2; $i++)
+			{
+				$ix = $first + $i;
+				
+				// need to wrap around?
+				if ($ix >= $count)
+				{
+					$ix -= $count;
+				}
+				
+				$slice[$i] = $sliders[$ix];
+			}
+
+			// replace the full list with the short list
+			$sliders = $slice;
+		}
 			
 		$sliderPath = '/img/sliders/';
 		$sliderPath = count($sliders) > 0 ? Controller::getPhotoPathRemote($sliderPath, $sliders[0]->site_id) : $sliderPath;
@@ -278,7 +314,7 @@ class FrontPageController extends Controller
 		//
 		// get latest events
 		//
-		$events = Event::get(10);
+		$events = Event::getAlerts(10);
 
 		//
 		// get blog entries which need action

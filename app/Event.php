@@ -27,6 +27,27 @@ class Event extends Model
 		return $records;		
 	}
 	
+    static public function getAlerts($limit = 0)
+	{
+		// get all alerts that are not 'Info' (Warning, Error, Exception, and Other)
+		$q = '
+			SELECT *
+			FROM events
+			WHERE 1=1
+			AND site_id = ?
+			AND deleted_flag = 0
+			AND type_flag > 1
+			ORDER BY id DESC 
+		';
+		
+		if ($limit > 0)
+			$q .= ' LIMIT ' . $limit . ' ';
+		
+		$records = DB::select($q, [SITE_ID]);
+		
+		return $records;		
+	}
+
 	// these are the shortcuts
     static public function logAdd($model, $title, $description, $record_id)
 	{
