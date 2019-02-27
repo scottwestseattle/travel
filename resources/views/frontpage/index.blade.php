@@ -72,13 +72,79 @@ $sectionCount = 0;
 @endif
 	<section>
 		<div class="slider-center">
-			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
+		
+<?php $newWay = false; ?>
+@if ($newWay)
+			<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
 			
 				<!------------------------------------------------------->
-				<!-- these is the slider spacer used to size the slider-->
+				<!-- this is the vertical slider for XS, the background image is set by javascript at the end of the page -->
+				<!------------------------------------------------------->		
+					
+				<div id="slider-xs" style="xmin-height:800px; background-repeat: no-repeat; background-size: cover; background-position: center center; background-attachment:fixed;">
+					<!------------------------------------------------------->
+					<!-- this is the slider spacer used to size the slider-->
+					<!------------------------------------------------------->			
+					<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" height="550px;" />
+				
+					<!------------------------------------------------------->
+					<!-- these are the slider mover arrows -->
+					<!------------------------------------------------------->
+					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
+						</span>
+					</div>
+					
+					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
+						</span>
+					</div>	
+				</div>			
+			
+			</div>
+			
+			<div class="hidden-xs" ><!-- all other sizes -->
+
+				<!------------------------------------------------------->
+				<!-- this is the horizontal slider, the background image is set by javascript at the end of the page -->
+				<!------------------------------------------------------->	
+						
+				<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
+					<!------------------------------------------------------->
+					<!-- this is the slider spacer used to size the slider-->
+					<!------------------------------------------------------->			
+					<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
+				
+					<!------------------------------------------------------->
+					<!-- these are the slider mover arrows -->
+					<!------------------------------------------------------->
+					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
+						</span>
+					</div>
+					
+					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
+						</span>
+					</div>	
+				</div>
+
+			</div>	
+@else			
+			<!------------------------------------------------------->
+			<!-- ORIGINAL CODE: this is the slider, the background image is set by javascript at the end of the page -->
+			<!------------------------------------------------------->	
+					
+			<div id="slider" style="min-height:800px; background-repeat: no-repeat; position: relative;">
+				<!------------------------------------------------------->
+				<!-- this is the slider spacer used to size the slider-->
 				<!------------------------------------------------------->			
 				<img id="slider-spacer" src="/img/theme1/spacer.png" width="100%" />
-				
+			
 				<!------------------------------------------------------->
 				<!-- these are the slider mover arrows -->
 				<!------------------------------------------------------->
@@ -87,15 +153,15 @@ $sectionCount = 0;
 						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
-					
+				
 				<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
 					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>
-				</div>
-					
+				</div>	
 			</div>
-			
+@endif
+
 			<div class="{{$colorAlt}}">
 				<!------------------------------------------------------->
 				<!-- This is the slider caption -->
@@ -139,10 +205,17 @@ $sectionCount = 0;
 	var alt = sliders[ix][2];
 	
 	document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
-	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
+	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so the initial slider load isn't so jerky, once it's loaded, remove this
+	document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
+
+@if ($newWay)
+	document.getElementById("slider-xs").style.backgroundImage = "url('" + sliderPath + img + "')";
+	document.getElementById("slider-xs").style.minHeight = ''; // the min-height is only set so the initial slider load isn't so jerky, once it's loaded, remove this
+	document.getElementById("slider-xs").title = decodeHtml(alt + ', ' + loc);
+@endif
+
 	document.getElementById("slider-text").innerHTML = loc;
 	document.getElementById("slider-text-xs").innerHTML = loc;
-	document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
 
 	function showSliderControls(show)
 	{	
