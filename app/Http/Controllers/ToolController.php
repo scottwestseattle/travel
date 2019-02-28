@@ -253,7 +253,10 @@ class ToolController extends Controller
 		{
 			foreach($records as $record)
 			{
-				$urls[] = '/photos/view/' . $record->id;	
+				//$urls[] = '/photos/view/' . $record->id;
+				
+				$record = Photo::setPermalink($record);
+				$urls[] = '/photos/' . $record->permalink . '/' . $record->id;					
 			}
 		}
 		
@@ -283,7 +286,8 @@ LEFT JOIN photos
 		{
 			foreach($records as $record)
 			{
-				$urls[] = '/photos/' . basename($record->filename, '.jpg') . '/' . $record->id;	
+				$record = Photo::setPermalink($record);
+				$urls[] = '/photos/' . $record->permalink . '/' . $record->id;					
 			}
 		}
 		

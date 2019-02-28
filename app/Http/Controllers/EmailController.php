@@ -41,8 +41,6 @@ class EmailController extends Controller
 
     public function check(Request $request, $debug = false) 
 	{		
-		//$debug = true;
-
 		$email_account = env('EMAIL_USERNAME');
 		$email_password = env('EMAIL_PASSWORD');
 		$email_server = env('EMAIL_HOST');
@@ -50,7 +48,10 @@ class EmailController extends Controller
 		$email_driver = env('EMAIL_DRIVER');
 		$email_encryption = env('EMAIL_ENCRYPTION');
 
-		//$debug = true;
+		if ($email_account == 'spam@scotthub.com')
+		{
+			$debug = true;
+		}
 		
 		$flash = '';
 		$errors = '';
@@ -104,14 +105,9 @@ class EmailController extends Controller
 			if ($num > 0)
 				$headers = imap_headers($mbox);
 
-			if ($headers == false) // no email found
+			if ($headers == false)
 			{
-				$flash = 'No Email Transactions Found';
-				
-				$request->session()->flash('message.level', 'success');
-				$request->session()->flash('message.content', $flash);
-				
-				return redirect('/transactions/filter');
+				// no email found
 			}
 			else
 			{
@@ -223,10 +219,17 @@ class EmailController extends Controller
 		}
 		else
 		{
-			$flash = 'No Email Transactions Found';
-			
 			if ($count_trx > 0)
+			{
 				$flash = 'Transactions added from Email: ' . $count_trx;
+			}
+			else
+			{
+				if ($debug)
+					$flash = 'No Email Transactions Found for address: ' . $email_account;
+				else
+					$flash = 'No Email Transactions Found';
+			}
 		}
 			
 		$request->session()->flash('message.level', 'success');
@@ -236,10 +239,12 @@ class EmailController extends Controller
 		{
 			echo 'flash=' . $flash;
 			echo "<br/><br/><a href='/transactions/filter/'>Return to Transactions</a>";
-			//die;
+			die;
 		}
-		
-		return redirect('/transactions/filter');
+		else
+		{
+			return redirect('/transactions/filter');
+		}
 	}
 	
 	private function checkManual($mbox, $count, $val, &$date, &$amount, &$desc, $debug) 

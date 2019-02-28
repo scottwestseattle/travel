@@ -195,7 +195,7 @@ $sectionCount = 0;
 	
 	// if firstslider is set then show the first one, otherwise show one randomly
 	@if (isset($firstslider))
-	var ix = sliders.length > 10 ? 10 : 0;
+	var ix = sliders.length > 9 ? 9 : 0;
 	@else
 	var ix = Math.floor(Math.random() * sliders.length);
 	@endif
