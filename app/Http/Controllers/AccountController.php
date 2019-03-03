@@ -23,16 +23,20 @@ class AccountController extends Controller
 		$this->title = TITLE;
 	}
 
-    public function index(Request $request, $showAll = null)
+    public function index(Request $request, $show = null)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 
 		$records = null;
 		
+		$show = strtolower(Controller::trimNullStatic($show, /* alphanum = */ true));
+		$showAll = ($show == 'all');
+		$showNonZero = ($show == 'nonzero');
+		
 		try
 		{
-			$records = Account::getIndex(isset($showAll));		
+			$records = Account::getIndex($showAll || $showNonZero);		
 		}
 		catch (\Exception $e) 
 		{
@@ -41,9 +45,25 @@ class AccountController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
+		
+		$accounts = [];
+		
+		foreach($records as $record)
+		{
+			if ($showNonZero && $record->balance == 0)
+			{
+				// skip
+				continue;
+			}
+			
+			$accounts[] = $record;
+		}
+		
+		$records = $accounts;
 					
 		$vdata = $this->getViewData([
 			'records' => $records,
+			'shownonzero' => $showNonZero,
 		]);
 			
 		return view(PREFIX . '.index', $vdata);

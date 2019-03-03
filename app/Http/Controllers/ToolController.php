@@ -277,6 +277,7 @@ LEFT JOIN photos
 				AND entries.type_flag = 8
                 AND entries.published_flag = 1
                 And entries.approved_flag = 1
+                AND photos.gallery_flag = 1
 			ORDER by entries.id ASC;
 		';
 

@@ -50,7 +50,7 @@ class EmailController extends Controller
 
 		if ($email_account == 'spam@scotthub.com')
 		{
-			$debug = true;
+			//$debug = true;
 		}
 		
 		$flash = '';

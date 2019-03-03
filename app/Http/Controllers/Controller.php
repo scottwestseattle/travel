@@ -41,6 +41,8 @@ define('PHOTO_TYPE_NOTSET',		-1);
 define('PHOTO_TYPE_SLIDER',		0);
 define('PHOTO_TYPE_ENTRY', 		1);
 define('PHOTO_TYPE_RECEIPT', 	2);
+define('PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY', 3);
+define('PHOTO_TYPE_SLIDER_VERTICAL_ONLY', 4);
 define('PHOTO_TYPE_OTHER', 		99);
 
 define('PHOTO_THUMBNAIL_HEIGHT', 400);
@@ -684,6 +686,8 @@ class Controller extends BaseController
 				$type = 'Receipt';
 				break;
 			case PHOTO_TYPE_SLIDER:
+			case PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY:
+			case PHOTO_TYPE_SLIDER_VERTICAL_ONLY:
 				$folder = PHOTO_SLIDER_FOLDER;
 				$redirect = 'sliders';
 				$type = 'Slider';
@@ -864,7 +868,18 @@ class Controller extends BaseController
 	
 	static protected function isSlider($type_flag)
 	{
-		return intval($type_flag) === PHOTO_TYPE_SLIDER;
+		$rc = false;
+		
+		switch(intval($type_flag))
+		{
+			case PHOTO_TYPE_SLIDER:
+			case PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY:
+			case PHOTO_TYPE_SLIDER_VERTICAL_ONLY:
+				$rc = true;
+				break;
+		}
+		
+		return $rc;
 	}
 	
     protected function saveLocations($entry, $locations)

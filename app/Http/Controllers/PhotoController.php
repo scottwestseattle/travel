@@ -389,6 +389,8 @@ class PhotoController extends Controller
 		switch($type_flag)
 		{
 			case PHOTO_TYPE_SLIDER:
+			case PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY:
+			case PHOTO_TYPE_SLIDER_VERTICAL_ONLY:
 				$path = $this->getPhotosFullPath(PHOTO_SLIDER_FOLDER . '/');
 				$redirect = '/photos/' . PHOTO_SLIDER_FOLDER;
 				$redirect_error = '/photos/add/' . PHOTO_SLIDER_FOLDER;
@@ -661,7 +663,6 @@ class PhotoController extends Controller
     	if ($this->isOwnerOrAdmin($photo->user_id))
         {
 			$path = Controller::getPhotoPath($photo);
-
 			$dates = null;
 			if (isset($photo->display_date))
 				$dates = Controller::getDateControlSelectedDate($photo->display_date);
@@ -681,22 +682,6 @@ class PhotoController extends Controller
              return redirect('/');
 		}            	
     }
-
-    public function updateparent(Request $request, Photo $photo)
-    {		
-		if (!$this->isAdmin())
-             return redirect('/');
-		
-		$parent_id_orig = $photo->parent_id;
-		
-    	if ($this->isOwnerOrAdmin($photo->user_id))
-        {
-			$photo->parent_id = intval($request->parent_id);
-			$photo->save();
-		}
-
-		return redirect('/photos/entries/' . $parent_id_orig);
-	}
 	
     public function update(Request $request, Photo $photo)
     {		
@@ -780,6 +765,13 @@ class PhotoController extends Controller
 			$photo->display_date = Controller::getSelectedDate($request);
 			session(['location' => $photo->location]); 
 
+			// special fields for slider photos
+			if (isset($request->horiz_flag))
+				$photo->type_flag = PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY;
+
+			if (isset($request->vert_flag))
+				$photo->type_flag = PHOTO_TYPE_SLIDER_VERTICAL_ONLY;
+			
 			// if photo is being set to main, unset any other main photo
 			if (isset($request->main_flag) && !$photo->main_flag)
 			{
@@ -796,7 +788,23 @@ class PhotoController extends Controller
 		{
 			return redirect('/');
 		}
-    }	
+    }
+    
+    public function updateparent(Request $request, Photo $photo)
+    {		
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$parent_id_orig = $photo->parent_id;
+		
+    	if ($this->isOwnerOrAdmin($photo->user_id))
+        {
+			$photo->parent_id = intval($request->parent_id);
+			$photo->save();
+		}
+
+		return redirect('/photos/entries/' . $parent_id_orig);
+	}	
 	
     public function confirmdelete(Request $request, Photo $photo)
     {		
