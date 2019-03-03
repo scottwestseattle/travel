@@ -64,7 +64,7 @@ $sectionCount = 0;
 
 @if (getSection(SECTION_SLIDERS, $sections) != null)
 	
-@if (count($sliders) > 0)
+@if (count($sliders_h) > 0 && count($sliders_v) > 0)
 <?php $sectionCount++; ?>
 <div style="width:100%; background-color: white; background-position: center; background-repeat: no-repeat; background-image:url('/img/theme1/load-loop.gif'); " >
 @else
@@ -91,13 +91,13 @@ $sectionCount = 0;
 					<!-- these are the slider mover arrows -->
 					<!------------------------------------------------------->
 					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_v)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>
 					
 					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_v)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>	
@@ -121,13 +121,13 @@ $sectionCount = 0;
 					<!-- these are the slider mover arrows -->
 					<!------------------------------------------------------->
 					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>
 					
 					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>	
@@ -149,13 +149,13 @@ $sectionCount = 0;
 				<!-- these are the slider mover arrows -->
 				<!------------------------------------------------------->
 				<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
 				
 				<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>	
@@ -179,44 +179,39 @@ $sectionCount = 0;
 
 <script>
 
+	var sliders_h = [
+		@foreach($sliders_h as $slider)
+			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}', {{$slider->type_flag}}],
+		@endforeach
+	];
+	
+	var sliders_v = [
+		@foreach($sliders_v as $slider)
+			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}', {{$slider->type_flag}}],
+		@endforeach
+	];
+	
+	var sliderPath = "{{$slider_path}}";
+	
+	// if firstslider is set then show the first one, otherwise show one randomly
+	@if (isset($firstslider))
+	var ix = sliders.length > {{$slider_count / 2}} ? {{$slider_count / 2}} : 0;
+	@else
+	var ix = Math.floor(Math.random() * sliders_h.length);
+	@endif
+		
+	slider_update(sliders_h, "slider", "slider-text");
+	
+	@if ($newWay)
+		setSliders(sliders_v, "slider-xs", "slider-text-xs");
+	@endif
+	
 	function decodeHtml(html) {
 		var txt = document.createElement("textarea");
 		txt.innerHTML = html;
 		return txt.value;
 	}
 	
-	// load all the sliders so we can javascript through them
-	var sliderPath = "{{$slider_path}}";
-	var sliders = [
-		@foreach($sliders as $slider)
-			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}', {{$slider->type_flag}}],
-		@endforeach
-	];
-	
-	// if firstslider is set then show the first one, otherwise show one randomly
-	@if (isset($firstslider))
-	var ix = sliders.length > 9 ? 9 : 0;
-	@else
-	var ix = Math.floor(Math.random() * sliders.length);
-	@endif
-	
-	var img = sliders[ix][0];
-	var loc = sliders[ix][1];
-	var alt = sliders[ix][2];
-	
-	document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
-	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so the initial slider load isn't so jerky, once it's loaded, remove this
-	document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
-
-@if ($newWay)
-	document.getElementById("slider-xs").style.backgroundImage = "url('" + sliderPath + img + "')";
-	document.getElementById("slider-xs").style.minHeight = ''; // the min-height is only set so the initial slider load isn't so jerky, once it's loaded, remove this
-	document.getElementById("slider-xs").title = decodeHtml(alt + ', ' + loc);
-@endif
-
-	document.getElementById("slider-text").innerHTML = loc;
-	document.getElementById("slider-text-xs").innerHTML = loc;
-
 	function showSliderControls(show)
 	{	
 		if (show)
@@ -231,36 +226,36 @@ $sectionCount = 0;
 		document.getElementById("slider-control-right").style.opacity = document.getElementById("slider-control-left").style.opacity;
 	}
 	
-	function slider_left()
+	function slider_left(sliders)
 	{
 		ix--;
 		
 		if (ix < 0)
 			ix = sliders.length - 1;
 			
-		slider_update();
+		slider_update(sliders, "slider", "slider-text");
 	}
 	
-	function slider_right()
+	function slider_right(sliders)
 	{
 		ix++;
 		
 		if (ix > sliders.length - 1)
 			ix = 0;
 			
-		slider_update();
+		slider_update(sliders, "slider", "slider-text");
 	}
 	
-	function slider_update()
+	function slider_update(sliders, slider_id, slider_text_id)
 	{
 		var img = sliders[ix][0];
 		var loc = sliders[ix][1];
 		var alt = sliders[ix][2];
 		
-		document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
-		document.getElementById("slider-text").innerHTML = loc;
+		document.getElementById(slider_id).style.backgroundImage = "url('" + sliderPath + img + "')";
+		document.getElementById(slider_text_id).innerHTML = loc;
 		document.getElementById("slider-text-xs").innerHTML = loc;
-		document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
+		document.getElementById(slider_id).title = decodeHtml(alt + ', ' + loc);
 	}
 </script>
 

@@ -12,7 +12,27 @@ class Account extends Base
     {
     	return $this->belongsTo(User::class);
     }
-	
+
+    static public function getStartingBalance($accountId)
+    {
+    	$accountId = intval($accountId);
+    	$startingBalance = 0.0;
+    	
+		$record = Account::select()
+			->where('user_id', Auth::id())
+			->where('deleted_flag', 0)
+			->where('id', $accountId)
+			->orderByRaw('name')
+			->first();
+
+		if (isset($record))
+		{
+			$startingBalance = round(floatval($record->starting_balance), 2);
+		}
+
+		return $startingBalance;
+	}
+		
     static public function getArray(&$error)
     {
 		// get account list
@@ -58,7 +78,7 @@ class Account extends Base
 			
 		if (!$showAll)
 			$q .= ' AND a.hidden_flag = 0 ';
-		
+
 		$q .= '
 			GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
 			ORDER BY a.name ASC

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
+use App\Account;
 
 class Transaction extends Base
 {
@@ -78,26 +79,35 @@ class Transaction extends Base
 		return $records;
     }
 	
-    static public function getTotal($records)
+    static public function getTotal($records, $accountId = false)
     {
 		$total = 0.0;
 		$reconciled = 0.0;
+		$rc = [];
 
 		foreach($records as $record)
 		{
-			$amount = floatval($record->amount);
-			
+			$amount = round(floatval($record->amount), 2);
+
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
 			
 			$total += $amount;
 		}
 		
-		$rc = ['total' => $total];
+		// this has to be done or else it shows -0 because of a tiny fraction
+		$total = round($total, 2);
+		$reconciled = round($reconciled, 2);
+		
+		$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
+
+		$rc['total'] = $total + $startingBalance;
 		
 		if ($total != $reconciled)
-			$rc['reconciled'] = $reconciled;
-		
+		{
+			$rc['reconciled'] = $reconciled + $startingBalance;
+		}
+
 		return $rc;
     }
 

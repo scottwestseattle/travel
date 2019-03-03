@@ -211,7 +211,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/view/{id}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
 
 	// filter
-	Route::get('/filter','TransactionController@filter')->middleware('auth');
+	Route::get('/filter/{all?}','TransactionController@filter')->middleware('auth');
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	
 	// add/create/copy/transfer

@@ -315,14 +315,25 @@ class TransactionController extends Controller
 		return redirect('/' . PREFIX . '/filter/');
     }	
 		
-    public function filter(Request $request)
+    public function filter(Request $request, $showAllDates = false)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
 		 
-		//todo: session(['account_id' => null]);
+		$showAllDates = strtolower(Controller::trimNullStatic($showAllDates, /* alphanum = */ true));
+		$showAllDates = ($showAllDates == 'all');
 
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$accountId = false;
+		if ($showAllDates || $filter['showalldates_flag'])
+		{
+			$filter['showalldates_flag'] = true; // in case we're using the command line
+			
+			// account id is needed to get starting balance to make the totals correct below
+			// it is only used when showing all records for a selected account
+			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
+		}
+
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
@@ -331,7 +342,7 @@ class TransactionController extends Controller
 		try
 		{
 			$records = Transaction::getFilter($filter);
-			$totals = Transaction::getTotal($records);
+			$totals = Transaction::getTotal($records, $accountId);
 		}
 		catch (\Exception $e) 
 		{
@@ -361,7 +372,7 @@ class TransactionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
 
 /*
 		$filter = [

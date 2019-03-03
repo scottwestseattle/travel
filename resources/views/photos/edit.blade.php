@@ -31,7 +31,16 @@
 				<input type="text" name="filename" id="filename" class="form-control" value="{{$record->filename}}"/>
 			</div>
 			
-			@if (intval($record->parent_id) !== 0)
+			@if (intval($record->parent_id) == 0)
+				<div style="clear: both;" class="">
+					<input type="checkbox" name="horiz_flag" id="horiz_flag" class="" {{ (intval($record->type_flag) == 3) ? 'checked' : '' }} />
+					<label for="horiz_flag" class="checkbox-big-label">Horizontal Only</label>
+				</div>
+				<div>
+					<input type="checkbox" name="vert_flag" id="vert_flag" class="" {{ (intval($record->type_flag) == 4) ? 'checked' : '' }} />
+					<label for="vert_flag" class="checkbox-big-label">Vertical Only</label>
+				</div>				
+			@else
 				<div style="clear: both;" class="">
 					<input type="checkbox" name="main_flag" id="main_flag" class="" value="{{ intval($record->main_flag) }}" {{ (intval($record->main_flag)) ? 'checked' : '' }} />
 					<label for="main_flag" class="checkbox-big-label">Main Photo</label>

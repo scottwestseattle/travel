@@ -75,51 +75,16 @@ class FrontPageController extends Controller
 		//
 		// get the sliders
 		//
-		$sliders = Photo::select()
-			->where('parent_id', '=', 0)
-			->where('deleted_flag', '=', 0)
-			->orderByRaw('id ASC')
-			->get();
-			
-		$count = count($sliders);
-		if ($count > 0)
-		{
-			// get a random slider and then only send the 10 sliders on each side of it
-			$padding = 10;
-			
-			$rnd = ($count > 0 && !isset($firstslider)) ? mt_rand(0, $count - 1) : 0;
-			
-			$first = $rnd - $padding;
-			if ($first < 0)
-				$first = $count + $first;
-				
-			$last = $rnd + $padding;
-			if ($last > $count)
-				$last = -($count - $last);
-				
-			//dump('count=' . $count . ', rnd=' . $rnd . ', first=' . $first . ', last=' . $last);
-				
-			// copy the 21 sliders to a new array
-			$slice = [];
-			for ($i = 0; $i < $padding * 2; $i++)
-			{
-				$ix = $first + $i;
-				
-				// need to wrap around?
-				if ($ix >= $count)
-				{
-					$ix -= $count;
-				}
-				
-				$slice[$i] = $sliders[$ix];
-			}
+		$sliderCount = 10; // number of sliders to loop through
+		$sliders_h = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY, $sliderCount, $firstslider);
+		$sliders_v = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_VERTICAL_ONLY, $sliderCount, $firstslider);
 
-			// replace the full list with the short list
-			$sliders = $slice;
-		}
-			
 		$sliderPath = '/img/sliders/';
-		$sliderPath = count($sliders) > 0 ? Controller::getPhotoPathRemote($sliderPath, $sliders[0]->site_id) : $sliderPath;
+		
+		if (count($sliders_h) > 0)
+			$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_h[0]->site_id);
+		else if (count($sliders_v) > 0)
+			$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_v[0]->site_id);
 		
 		//
 		// get the latest blog posts
@@ -146,8 +111,10 @@ class FrontPageController extends Controller
 			'posts' => $posts, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
-			'sliders' => $sliders, 
+			'sliders_h' => $sliders_h, 
+			'sliders_v' => $sliders_v, 
 			'slider_path' => $sliderPath,
+			'slider_count' => $sliderCount,
 			'locations' => $locations, 
 			'tourCount' => Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true), 
 			'blogCount' => Entry::getEntryCount(ENTRY_TYPE_BLOG, /* $allSites = */ false),
@@ -161,6 +128,57 @@ class FrontPageController extends Controller
 		
     	return view('frontpage.index', $vdata);
     }
+    
+	private function getSlidersRandom($type_flag, $sliderCount, $firstslider)
+	{
+$type_flag = PHOTO_TYPE_SLIDER; //sbw
+		
+		$sliders = Photo::select()
+			->where('parent_id', 0)
+			->where('deleted_flag', 0)
+			->where('type_flag', intval($type_flag))
+			->orderByRaw('id ASC')
+			->get();
+			
+		$padding = $sliderCount / 2;
+		$count = count($sliders);
+		if ($count >= ($sliderCount))
+		{
+			// get a random slider and then only send the 10 sliders on each side of it
+			
+			$rnd = ($count > 0 && !isset($firstslider)) ? mt_rand(0, $count - 1) : 0;
+			
+			$first = $rnd - $padding;
+			if ($first < 0)
+				$first = $count + $first;
+				
+			$last = $rnd + $padding;
+			if ($last > $count)
+				$last = -($count - $last);
+				
+			//dump('count=' . $count . ', rnd=' . $rnd . ', first=' . $first . ', last=' . $last);
+				
+			// copy the sliders to a new array
+			$slice = [];
+			for ($i = 0; $i < $sliderCount; $i++)
+			{
+				$ix = $first + $i;
+				
+				// need to wrap around?
+				if ($ix >= $count)
+				{
+					$ix -= $count;
+				}
+				
+				$slice[$i] = $sliders[$ix];
+			}
+
+			// replace the full list with the short list
+			$sliders = $slice;
+		}
+		
+		return $sliders;
+	}
 
     public function visits()
     {			
