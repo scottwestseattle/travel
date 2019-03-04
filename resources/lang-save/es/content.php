@@ -26,4 +26,13 @@ return [
 'Activities' => 'Ocupaciones',
 'Back to Gallery' => 'Volver a la Galería',
 'Back to Galleries' => 'Volver a las Galerías',
+'Gallery Photo Pages' => 'Páginas de fotos de galería',
+'Photo Taken on' => 'Fecha de la foto',
+'About Page Image' => 'Imagen de la página Acerca de',
+'Leave a Comment' => 'Deje un Comentario',
+'Comment' => 'Comentario',
+'Comment Sent For Approval' => 'El comentario ha sido enviado y será visible tan pronto como sea aprobado',
+'Comments' => 'Comentarios',
+'Show All Comments' => 'Mostrar Todos Los Comentarios',
+'Back to Comments' => 'Volver a Los Comentarios',
 ];

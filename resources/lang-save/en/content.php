@@ -26,4 +26,13 @@ return [
 'Activities' => 'Activities',
 'Back to Gallery' => 'Back to Gallery',
 'Back to Galleries' => 'Back to Galleries',
+'Gallery Photo Pages' => 'Gallery Photo Pages',
+'Photo Taken on' => 'Photo Taken on',
+'About Page Image' => 'About Page Image',
+'Leave a Comment' => 'Leave a Comment',
+'Comment' => 'Comment',
+'Comment Sent For Approval' => 'Comment has been submitted and will be visible as soon as it is approved',
+'Comments' => 'Comments',
+'Show All Comments' => 'Show All Comments',
+'Back to Comments' => 'Back to Comments',
 ];

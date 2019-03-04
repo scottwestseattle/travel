@@ -26,4 +26,13 @@ return [
 'Activities' => '活动',
 'Back to Gallery' => '回到画廊',
 'Back to Galleries' => '回到画廊',
+'Gallery Photo Pages' => '画廊照片页面',
+'Photo Taken on' => '照片日期',
+'About Page Image' => '关于页面的图像',
+'Leave a Comment' => '发表评论',
+'Comment' => '评论',
+'Comment Sent For Approval' => '评论已提交，并在获得批准后立即显示',
+'Comments' => '评论',
+'Show All Comments' => '显示所有评论',
+'Back to Comments' => '回到评论',
 ];
