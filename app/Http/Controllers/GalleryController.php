@@ -139,6 +139,13 @@ class GalleryController extends Controller
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
+
+		$fixed = [];
+		foreach($photos as $record)
+		{
+			$fixed[] = Photo::setPermalink($record);
+		}
+		$photos = $fixed;
 			
 		$photo_path = '/img/entries/';
 		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
