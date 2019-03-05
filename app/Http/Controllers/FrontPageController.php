@@ -113,6 +113,7 @@ class FrontPageController extends Controller
 			'tour_count' => $tour_count, 
 			'sliders_h' => $sliders_h, 
 			'sliders_v' => $sliders_v, 
+			'sliders' => $sliders_h, // backwards compatibility
 			'slider_path' => $sliderPath,
 			'slider_count' => $sliderCount,
 			'locations' => $locations, 

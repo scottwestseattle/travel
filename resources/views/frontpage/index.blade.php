@@ -149,13 +149,13 @@ $sectionCount = 0;
 				<!-- these are the slider mover arrows -->
 				<!------------------------------------------------------->
 				<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+					<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 						<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>
 				
 				<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+					<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 						<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 					</span>
 				</div>	
@@ -177,6 +177,7 @@ $sectionCount = 0;
 	</section>
 </div>
 
+@if ($newWay)
 <script>
 
 	var sliders_h = [
@@ -258,6 +259,93 @@ $sectionCount = 0;
 		document.getElementById(slider_id).title = decodeHtml(alt + ', ' + loc);
 	}
 </script>
+
+@else
+
+<script>
+
+	function decodeHtml(html) {
+		var txt = document.createElement("textarea");
+		txt.innerHTML = html;
+		return txt.value;
+	}
+	
+	// load all the sliders so we can javascript through them
+	var sliderPath = "{{$slider_path}}";
+	var sliders = [
+		@foreach($sliders as $slider)
+			['{{$slider->filename}}', '{{$slider->location}}', '{{$slider->alt_text}}'],
+		@endforeach
+	];
+	
+	// if firstslider is set then show the first one, otherwise show one randomly
+	@if (isset($firstslider))
+	var ix = 0;
+	@else
+	var ix = Math.floor(Math.random() * sliders.length);
+	@endif
+	
+	var img = sliders[ix][0];
+	var loc = sliders[ix][1];
+	var alt = sliders[ix][2];
+	
+	document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
+	document.getElementById("slider").style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
+	document.getElementById("slider-text").innerHTML = loc;
+	document.getElementById("slider-text-xs").innerHTML = loc;
+	document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
+
+	function showSliderControls(show)
+	{	
+		if (show)
+		{
+			document.getElementById("slider-control-left").style.opacity = "0.0";
+		}
+		else
+		{
+			document.getElementById("slider-control-left").style.opacity = "0.0";
+		}
+		
+		document.getElementById("slider-control-right").style.opacity = document.getElementById("slider-control-left").style.opacity;
+	}
+	
+	function slider_left()
+	{
+		ix--;
+		
+		if (ix < 0)
+			ix = sliders.length - 1;
+			
+		slider_update();
+	}
+	
+	function slider_right()
+	{
+		ix++;
+		
+		if (ix > sliders.length - 1)
+			ix = 0;
+			
+		slider_update();
+	}
+	
+	function slider_update()
+	{
+		var img = sliders[ix][0];
+		var loc = sliders[ix][1];
+		var alt = sliders[ix][2];
+		
+		document.getElementById("slider").style.backgroundImage = "url('" + sliderPath + img + "')";
+		document.getElementById("slider-text").innerHTML = loc;
+		document.getElementById("slider-text-xs").innerHTML = loc;
+		document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
+	}
+
+
+</script>	
+
+
+@endif
 
 @endif	
 
