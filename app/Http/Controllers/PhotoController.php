@@ -766,12 +766,18 @@ class PhotoController extends Controller
 			session(['location' => $photo->location]); 
 
 			// special fields for slider photos
-			if (isset($request->horiz_flag))
-				$photo->type_flag = PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY;
-
-			if (isset($request->vert_flag))
-				$photo->type_flag = PHOTO_TYPE_SLIDER_VERTICAL_ONLY;
-			
+			if (Controller::isSlider($photo->type_flag))
+			{
+				$photo->type_flag = PHOTO_TYPE_SLIDER; // default is both unset
+				
+				if (isset($request->horiz_flag) && isset($request->vert_flag))
+					; // both checked, flag already set to all sliders
+				else if (isset($request->horiz_flag))
+					$photo->type_flag = PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY;
+				else if (isset($request->vert_flag))
+					$photo->type_flag = PHOTO_TYPE_SLIDER_VERTICAL_ONLY;
+			}
+						
 			// if photo is being set to main, unset any other main photo
 			if (isset($request->main_flag) && !$photo->main_flag)
 			{

@@ -7,6 +7,7 @@
 
 	<div style="margin-bottom:40px;">
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
+			<li>Time: {{date("Y-m-d H:i:s")}}</li>
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			<li>My IP:&nbsp;{{$ip}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}

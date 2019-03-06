@@ -73,7 +73,6 @@ $sectionCount = 0;
 	<section>
 		<div class="slider-center">
 		
-<?php $newWay = false; ?>
 @if ($newWay)
 			<div class="hidden-xl hidden-lg hidden-md hidden-sm"><!-- xs only -->
 			
@@ -91,13 +90,13 @@ $sectionCount = 0;
 					<!-- these are the slider mover arrows -->
 					<!------------------------------------------------------->
 					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_v)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>
 					
 					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_v)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>	
@@ -121,13 +120,13 @@ $sectionCount = 0;
 					<!-- these are the slider mover arrows -->
 					<!------------------------------------------------------->
 					<div id="slider-arrow-left" style="font-size: 150px; position:absolute; top:0; left:0">
-						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
+						<span id="slider-control-left" style="opacity:0.0; color: white;" onclick="slider_left()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)">
 							<span class="glyphicon glyphicon-chevron-left" style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>
 					
 					<div id="slider-arrow-right" style="font-size:150px; position:absolute; top:0; right:0;">
-						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right(sliders_h)" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
+						<span id="slider-control-right" style="opacity:0.0; color: white;" onclick="slider_right()" onmouseover="showSliderControls(true)" onmouseout="showSliderControls(false)" >
 							<span class="glyphicon glyphicon-chevron-right"  style="background-color:black; border-radius:8px;"></span>
 						</span>
 					</div>	
@@ -196,16 +195,15 @@ $sectionCount = 0;
 	
 	// if firstslider is set then show the first one, otherwise show one randomly
 	@if (isset($firstslider))
-	var ix = sliders.length > {{$slider_count / 2}} ? {{$slider_count / 2}} : 0;
+	//var ix = sliders.length > {{$slider_count / 2}} ? {{$slider_count / 2}} : 0;
 	@else
-	var ix = Math.floor(Math.random() * sliders_h.length);
 	@endif
-		
-	slider_update(sliders_h, "slider", "slider-text");
-	
-	@if ($newWay)
-		setSliders(sliders_v, "slider-xs", "slider-text-xs");
-	@endif
+
+	var ix_v = Math.floor(Math.random() * sliders_v.length);
+	var ix_h = Math.floor(Math.random() * sliders_h.length);
+
+	slider_update(sliders_h, ix_h, "slider", "slider-text");
+	slider_update(sliders_v, ix_v, "slider-xs", "slider-text-xs");
 	
 	function decodeHtml(html) {
 		var txt = document.createElement("textarea");
@@ -227,35 +225,51 @@ $sectionCount = 0;
 		document.getElementById("slider-control-right").style.opacity = document.getElementById("slider-control-left").style.opacity;
 	}
 	
-	function slider_left(sliders)
+	function slider_right()
+	{
+		ix_h = slider_right_update(sliders_h, ix_h, "slider", "slider-text")
+		ix_v = slider_right_update(sliders_v, ix_v, "slider-xs", "slider-text-xs")
+	}
+
+	function slider_left()
+	{
+		ix_h = slider_left_update(sliders_h, ix_h, "slider", "slider-text")
+		ix_v = slider_left_update(sliders_v, ix_v, "slider-xs", "slider-text-xs")
+	}
+	
+	function slider_left_update(sliders, ix, slider_id, slider_text_id)
 	{
 		ix--;
 		
 		if (ix < 0)
 			ix = sliders.length - 1;
 			
-		slider_update(sliders, "slider", "slider-text");
+		slider_update(sliders, ix, slider_id, slider_text_id);
+		
+		return ix;
 	}
-	
-	function slider_right(sliders)
+		
+	function slider_right_update(sliders, ix, slider_id, slider_text_id)
 	{
 		ix++;
 		
 		if (ix > sliders.length - 1)
 			ix = 0;
 			
-		slider_update(sliders, "slider", "slider-text");
+		slider_update(sliders, ix, slider_id, slider_text_id);
+		
+		return ix;
 	}
 	
-	function slider_update(sliders, slider_id, slider_text_id)
+	function slider_update(sliders, ix, slider_id, slider_text_id)
 	{
 		var img = sliders[ix][0];
 		var loc = sliders[ix][1];
 		var alt = sliders[ix][2];
-		
+	
+		document.getElementById(slider_id).style.minHeight = ''; // the min-height is only set so they initial slider load isn't so jerky, once it's loaded, remove this
 		document.getElementById(slider_id).style.backgroundImage = "url('" + sliderPath + img + "')";
 		document.getElementById(slider_text_id).innerHTML = loc;
-		document.getElementById("slider-text-xs").innerHTML = loc;
 		document.getElementById(slider_id).title = decodeHtml(alt + ', ' + loc);
 	}
 </script>
