@@ -156,10 +156,12 @@ class PhotoController extends Controller
         return redirect('/photos/entries/' . $request->parent_id);
 	}
 
-	public function sliders(Request $request)
+	public function sliders(Request $request, $all = false)
 	{
+		$all = isset($all) && $all !== false;
+		
 		if ($this->isAdmin())
-             return $this->slidersAdmin($request);
+             return $this->slidersAdmin($request, $all);
 	
 		$photo = Photo::getFirst(/* parent_id = */ 0);
 		
@@ -178,8 +180,8 @@ class PhotoController extends Controller
 		return $this->permalink($request, null, $photo->id);
 	}
 			
-	public function slidersAdmin()
-	{			
+	public function slidersAdmin(Request $request , $all = false)
+	{					
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_SLIDERS);
 
 		$q = '
@@ -192,6 +194,9 @@ class PhotoController extends Controller
 				AND (parent_id is null OR parent_id = 0)
 			ORDER BY id DESC
 		';
+		
+		if (!$all)
+			$q .= ' LIMIT 10 ';
 		
 		// get the list with the location included
 		$records = DB::select($q);
