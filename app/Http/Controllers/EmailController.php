@@ -23,24 +23,34 @@ define("EMAIL_CAPGRAY_ACCOUNT", '6403');
 define("EMAIL_CAPBLUE_ID", 10);  
 define("EMAIL_CAPBLUE_ACCOUNT", '5043');
 
+// pacific
+define("EMAIL_PACIFIC_ID", 14);  
+define("EMAIL_PACIFIC_ACCOUNT", '1712');
+
+define("EMAIL_DEFAULT_ACCOUNT_ID", 31);  
+
 class EmailController extends Controller
 {	
 	private function getAccountId($account)
 	{
-		$accountId = EMAIL_CAPGRAY_ID;
+		$accounts = [
+			'2117' => 35,
+			'6403' => 31,
+			'5043' => 10,
+			'1712' => 14,
+		];
+		
+		$accountId = EMAIL_DEFAULT_ACCOUNT_ID;
 
-		if ($account === EMAIL_CHASE_ACCOUNT)
-			$accountId = EMAIL_CHASE_ID;
-		else if ($account === EMAIL_CAPGRAY_ACCOUNT)
-			$accountId = EMAIL_CAPGRAY_ID;
-		else if ($account === EMAIL_CAPBLUE_ACCOUNT)
-			$accountId = EMAIL_CAPBLUE_ID;
-
+		if (array_key_exists($account, $accounts))
+			$accountId = $accounts[$account];
+			
 		return $accountId;
 	}	
 
     public function check(Request $request, $debug = false) 
 	{		
+//$debug = true;
 		$email_account = env('EMAIL_USERNAME');
 		$email_password = env('EMAIL_PASSWORD');
 		$email_server = env('EMAIL_HOST');
@@ -121,7 +131,11 @@ class EmailController extends Controller
 					$add = false;
 					$accountId = 0;
 					
-					if ($this->checkCapital($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
+					if ($this->checkPacific($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
+					{
+						$add = true;
+					}					
+					else if ($this->checkCapital($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
 					{
 						$add = true;
 					}
@@ -200,7 +214,8 @@ class EmailController extends Controller
 					else
 					{
 						// delete all other emails since they've already been forwarded
-						imap_delete($mbox, $count);
+						if (!$debug)
+							imap_delete($mbox, $count);
 					}
 				}
 			}
@@ -239,7 +254,7 @@ class EmailController extends Controller
 		{
 			echo 'flash=' . $flash;
 			echo "<br/><br/><a href='/transactions/filter/'>Return to Transactions</a>";
-			die;
+			//die;
 		}
 		else
 		{
@@ -470,6 +485,91 @@ class EmailController extends Controller
 		
 		return $rc;
 	}
+	
+	private function checkPacific($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug) 
+	{
+		$rc = false; 
+		$subject = 'You_paid';
+		
+		if ($debug) dump($val);
+			
+		$pos = strpos($val, $subject);
+		if ($debug) dump($pos);
+			
+		$sample = "Hello, Scott Wilkinson PayPal You paid $8.34 USD to WASABI KING'S MALL HAM.  Thanks for using your PayPal Business Debit Mastercard.  Here are details for the recent payment made using your card ending in 1712.";
+		$sample = "You paid ";
+		
+		//echo '<br/>' . $val . '<br/>pos=' . $pos; die;
+		if ($pos !== false /* && $pos == 44 */) 
+		{
+			$rc = true; // transaction found
+			//echo 'pos = ' . $pos . '<br/>';
+						
+			// get the body
+			$body_raw = imap_body($mbox, $count);
+						
+			$pos = strpos($body_raw, $sample);
+			if ($pos === false)
+			{
+				echo $body_raw . '<br/>';
+				die('parse: info text not found in body raw');
+			}
+			if ($debug) dump($pos);
+			
+			//echo 'pos=' . $pos . '<br/>';die;
+						
+			$body_raw = substr($body_raw, $pos);
+			
+			// get the amount
+			$amount = $this->parseTag($body_raw, 'You paid ', 6, 0); 
+			$amount = floatval(trim($amount, '$'));
+			$amount = -$amount;
+			if ($debug) dump($amount);
+					
+			// get the account number, last four digits
+			$account = $this->parseTag($body_raw, 'card ending in ', 4, -1); 
+			$accountId = $this->getAccountId($account);
+			if ($debug) dump($account);
+			if ($debug) dump($accountId);
+	
+			// get the date
+			$date_raw = $this->parseTag($body_raw, 'Transaction ID: ', 40, -1);
+					
+			$matches = [];
+			preg_match('/\| .* \|/', $date_raw, $matches, PREG_OFFSET_CAPTURE);
+			//dump($matches);
+			$date2 = count($matches) > 0 ? trim(trim($matches[0][0], '|')) : '';
+			if ($debug) dump($date2);
+	
+			$date = new DateTime($date2);
+			if ($date == NULL)
+			{
+				die("Date conversion 3 failed, from text: " . $date2);
+			}
+					
+			// get the description
+			$desc = $this->parseTag($body_raw, 'Paid to: ', 100, -1); 
+			preg_match('/\| .* \|/', $desc, $matches, PREG_OFFSET_CAPTURE);
+			//dump($matches);
+			$desc = count($matches) > 0 ? trim(trim($matches[0][0], '|')) : '';			
+			if ($debug) dump($desc);
+			
+			if ($debug)
+			{
+				echo 'pos=' . $pos . ', val=' . $val . '<br/>';
+				echo 'body=' . $body_raw . '<br/>';
+				echo 'account=' . $account . '<br/>'; 
+				echo 'accountId=' . $account . '<br/>'; 
+				//dd('*** end of debug ***');
+			}
+			
+			//dump($body_raw);												
+
+			//echo 'Record::' . $account . '::' . $amount . '::' . $date->format('Y-m-d') . '::' . $desc . '<BR/>';
+		}
+		
+		return $rc;
+	}
 		
 	private function parseTag($text, $tag, $length, $wordIndex) 
 	{
@@ -521,7 +621,8 @@ class EmailController extends Controller
 			// default to food::groceries
 			$record->subcategory_id		= 208; // unknown, orig: 102;
 			$record->category_id		= 2;
-			$record->description		= ucfirst(strtolower(strtok($desc, " "))); // only use the first word as the description
+			$record->description		= ucwords(strtolower($desc)); // uppercase the first word only
+//old way	$record->description		= ucfirst(strtolower(strtok($desc, " "))); // only use the first word as the description
 			$record->vendor_memo		= $vendor;
 			$record->type_flag 			= 1;			
 		}
