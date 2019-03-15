@@ -75,10 +75,10 @@ class FrontPageController extends Controller
 		//
 		// get the sliders
 		//
+		$newWay = false;
 		$sliderCount = 10; // number of sliders to loop through
 		$sliders_h = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY, $sliderCount, $firstslider);
 		$sliders_v = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_VERTICAL_ONLY, $sliderCount, $firstslider);
-
 		$sliderPath = '/img/sliders/';
 		
 		if (count($sliders_h) > 0)
@@ -113,6 +113,7 @@ class FrontPageController extends Controller
 			'tour_count' => $tour_count, 
 			'sliders_h' => $sliders_h, 
 			'sliders_v' => $sliders_v, 
+			'newWay' => $newWay,
 			'sliders' => $sliders_h, // backwards compatibility
 			'slider_path' => $sliderPath,
 			'slider_count' => $sliderCount,
@@ -131,13 +132,11 @@ class FrontPageController extends Controller
     }
     
 	private function getSlidersRandom($type_flag, $sliderCount, $firstslider)
-	{
-$type_flag = PHOTO_TYPE_SLIDER; //sbw
-		
+	{		
 		$sliders = Photo::select()
 			->where('parent_id', 0)
 			->where('deleted_flag', 0)
-			->where('type_flag', intval($type_flag))
+			->whereIn('type_flag', [PHOTO_TYPE_SLIDER, intval($type_flag)])
 			->orderByRaw('id ASC')
 			->get();
 			
