@@ -16,6 +16,10 @@
 	
 	@if (Auth::user()->user_type >= 100)
 	
+	<!------------------------------------------------------>
+	<!-- Form at the top to update dates of all photos -->
+	<!------------------------------------------------------>
+	
 	<form method="POST" action="/photos/entriesupdate">
 		<div class="form-group form-control-big">
 
@@ -31,12 +35,21 @@
 		</div>
 	</form>
 	
-	<h3>
-		<a href="/photos/add/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-cloud-upload" style="padding:5px;"></span></a>
-		<span style="margin-left: 5px;">{{$type}} Photos ({{ count($photos) }})</span>
-	</h3>
-	
 	@endif
+	
+	<!-------------------------------------------------------------------------->
+	<!-- List of photos that are attached to the entry and not in the gallery -->
+	<!-------------------------------------------------------------------------->	
+	
+@if (isset($entry) && $entry->type_flag == ENTRY_TYPE_GALLERY)
+
+	@if (Auth::user()->user_type >= 100)
+	<h3>
+		<!-- a href="/photos/add/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-cloud-upload" style="padding:5px;"></span></a -->
+		<span style="margin-left: 5px;">Gallery Photos ({{ count($photos) }})</span><span style="margin-left: 20px; font-size:.7em;"><a href="/photos/add/{{$type_flag}}/{{$id}}">Upload Photos</a></span>
+	</h3>
+	@endif	
+	
 		<table class="table table-striped">
 			<tbody>
 			@foreach($photos as $photo)
@@ -92,12 +105,15 @@
 			@endforeach
 			</tbody>
 		</table>
-		
+				
+@else
+	
 	@if (isset($entry) && isset($entry->photos))
 	@if (Auth::user()->user_type >= 100)
 	<h3>
-		<a href="/galleries/share/{{$id}}"><span class="glyphSliders glyphicon glyphicon-duplicate" style="padding:5px;"></span></a>
-		<span style="margin-left: 5px;">Gallery Photos ({{ count($entry->photos) }})</span>
+		<!-- a href="/galleries/share/{{$id}}"><span class="glyphSliders glyphicon glyphicon-duplicate" style="padding:5px;"></span></a -->
+		<!-- span style="margin-left: 5px;">Gallery Photos ({{ count($entry->photos) }})</span -->
+		<span style="margin-left: 5px;">Photos ({{ count($entry->photos) }})</span><span style="margin-left: 20px; font-size:.7em;"><a href="/galleries/share/{{$id}}">Add Photos From Gallery</a></span>
 	</h3>
 	@endif
 		<table class="table table-striped">
@@ -139,6 +155,7 @@
 			</tbody>
 		</table>		
 	@endif	
+@endif
 		
 </div>
 

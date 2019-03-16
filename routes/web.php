@@ -118,6 +118,7 @@ Route::group(['prefix' => 'galleries'], function () {
 	Route::get('/share/{entry_id}', 'GalleryController@share')->middleware('auth');
 	Route::get('/link/{entry_id}/{gallery_id}', 'GalleryController@link')->middleware('auth');
 	Route::get('/attach/{entry_id}/{photo_id}', 'GalleryController@attach')->middleware('auth');
+	Route::get('/attachasync/{entry_id}/{photo_id}', 'GalleryController@attachasync')->middleware('auth');
 	Route::get('/setmain/{entry_id}/{photo_id}', 'GalleryController@setmain')->middleware('auth');
 	
 	// add/create/copy

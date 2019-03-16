@@ -7,7 +7,7 @@
 	@component('photos.menu-submenu', ['record_id' => $parent_id])
 	@endcomponent	
 
-	<h1>Add {{$type}} Photo</h1>
+	<h1>Upload Photo to Gallery</h1>
                			   
 	<form method="POST" action="/photos/create" enctype="multipart/form-data">
 		<div class="form-control-big">	

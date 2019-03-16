@@ -413,6 +413,64 @@ class GalleryController extends Controller
 
 		$entry_id = intval($entry_id);
 		$photo_id = intval($photo_id);
+	 	$redirect = "/";
+	 		
+		try 
+		{
+			$entry = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $entry_id)
+				->first();
+				
+			if (isset($entry))
+			{
+				//throw new \Exception('entry not found');
+			}
+			
+			// get the photo
+			$photo = Photo::select()
+					->where('id', abs($photo_id))
+					->first();
+					
+			if (!isset($photo))
+			{
+				//throw new \Exception('photo not found');
+			}
+						
+			if ($photo_id > 0)
+			{
+				//
+				// add photo
+				//
+				$entry->photos()->save($photo);
+	 			$redirect = "/galleries/link/$entry_id/$photo->parent_id";
+			}
+			else
+			{
+				//
+				// remove photo
+				//
+				$entry->photos()->detach($photo);
+				$redirect = "/photos/entries/$entry_id";
+			}
+		}
+		catch (\Exception $e) 
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $e->getMessage());
+		}
+		
+		return redirect($redirect);
+	}
+
+    public function attachasync($entry_id, $photo_id)
+    { 
+		if (!$this->isAdmin())
+			return redirect('/');
+
+		$entry_id = intval($entry_id);
+		$photo_id = intval($photo_id);
 	 		
 		try 
 		{
@@ -458,9 +516,9 @@ class GalleryController extends Controller
 			//$request->session()->flash('message.content', $e->getMessage());
 		}
 		
-		return redirect("/galleries/link/$entry_id/$photo->parent_id");
+		return;
 	}
-
+	
     public function move(Request $request, Photo $photo)
     {		
 		if (!$this->isAdmin())
