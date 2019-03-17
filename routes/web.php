@@ -478,6 +478,7 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::post('/delete/{photo}','PhotoController@delete')->middleware('auth');
 
 	Route::get('/entries/{id}/{folder?}', 'PhotoController@entries')->middleware('auth');
+	Route::get('/entries2/{id}/{folder?}', 'PhotoController@entries2')->middleware('auth');
 	Route::post('/entriesupdate', 'PhotoController@entriesupdate')->middleware('auth');
 
 	// permalink has to go last or it will catch everything

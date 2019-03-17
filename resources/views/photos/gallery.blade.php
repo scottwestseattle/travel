@@ -7,12 +7,12 @@
 		<input type="hidden" name="parent_id" value="{{$photo->parent_id}}" />
 		
 		@if (isset($prev) || isset($photo->parent_id) || isset($next))
-			<div class="{{SHOW_NON_XS}}" style="margin-bottom: 10px;">
+			<div class="" style="margin-bottom: 10px;">
 				@if (isset($prev))
 					<a href="/photos/{{$prev->permalink}}/{{$prev->id}}"><button type="button" class="btn btn-blog-nav"><span style="margin-right:5px;" class="glyphicon glyphicon-circle-arrow-left"></span>@LANG('ui.Prev')</button></button></a>
 				@endif
 			
-				@if ($photo->parent_id > 0)
+				@if (false && $photo->parent_id > 0)
 					<a href="/galleries/view/{{$photo->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Gallery')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 				@endif
 				

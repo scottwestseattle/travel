@@ -1653,7 +1653,7 @@ class Controller extends BaseController
 	}
 	
 	static protected function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)
-	{	
+	{
 		if (!is_dir($toPath)) 
 		{
 			mkdir($toPath, 0755);// make the folder with read/execute for everybody
@@ -1667,7 +1667,7 @@ class Controller extends BaseController
 		$file = Controller::appendPath($file, $filename);
 		$fileThumb = Controller::appendPath($toPath, $filenameTo);
 				
-		$image_info = getimagesize($file);
+		$image_info = getimagesize($file);	
 		
 		switch($image_info["mime"])
 		{
@@ -1687,7 +1687,7 @@ class Controller extends BaseController
 				$image = false;
 				break;
 		}
-		
+
 		// check for bad image
 		if (!$image)
 		{
@@ -1713,8 +1713,6 @@ class Controller extends BaseController
 			$ratio = $height / imagesy($image);			
 			$width = imagesx($image) * $ratio; 			
 		}
-
-		//sbw $fileThumb = $toPath . '/' . $filename;
 
 		if (false /*sbw*/ && file_exists($fileThumb))
 		{			
@@ -1754,15 +1752,27 @@ class Controller extends BaseController
 		
 		//echo 'rewriting file...<b />';
 		
-		$new_image = imagecreatetruecolor($width, $height); 
-		
+		//dump('width=' . $width . ', height=' . $height);	
+
+		$new_image = null;
+		try
+		{
+			ini_set('memory_limit', '-1');
+			$new_image = imagecreatetruecolor($width, $height) or die('imagecreatetruecolor() call failed'); 
+		}
+		catch (\Exception $e) 
+		{
+			$messageLevel = 'danger';
+			$message = $e->getMessage();			
+		}
+				
 		imagecopyresampled($new_image, $image, 0, 0, 0, 0, $width, $height
 			, imagesx($image)
 			, imagesy($image)
 			); 
 			
 		$image = $new_image;
-		
+
 		//
 		// save the thumb
 		//

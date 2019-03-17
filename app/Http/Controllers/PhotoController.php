@@ -147,6 +147,85 @@ class PhotoController extends Controller
         }
 	}
 
+	// the original way to do it where gallery photos is not enforced
+	public function entries2($parent_id, $type_flag = PHOTO_TYPE_ENTRY)
+	{			
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$parent_id = intval($parent_id);		 
+		
+    	if ($parent_id > 0) // if parent_id is set and is not a slider
+        {
+			$info = Controller::getPhotoInfo($type_flag);
+			$folder = $info['folder'];
+			$type = $info['type'];
+
+			$subfolder = $folder . '/' . $parent_id . '/';			
+			$path = $this->getPhotosWebPath($subfolder);
+			$redirect = null;
+			
+			if ($type_flag == 2)
+			{
+				$entry = Transaction::select()
+					->where('deleted_flag', 0)
+					->where('id', $parent_id)
+					->first();
+
+				$redirect = '/transactions/filter';
+				$title = isset($entry) ? $entry->description : 'No Title';
+			}			
+			else
+			{
+				$entry = Entry::select()
+					->where('deleted_flag', 0)
+					->where('id', $parent_id)
+					->first();
+				
+				$title = isset($entry) ? $entry->title : 'No Title';
+			}
+						
+			$photos = Photo::select()
+				->where('deleted_flag', 0)
+				->where('parent_id', '=', $parent_id)
+				->orderByRaw('photos.main_flag DESC, photos.gallery_flag DESC, photos.id DESC')
+				->get();
+				
+			foreach($photos as $photo)
+			{
+				if (!isset($photo->permalink))
+					$photo->permalink = str_replace(".jpg", "", $photo->filename);
+			}
+				
+			$galleries = Photo::getGalleryMenuOptions();
+
+			$dates = null;
+			//if (isset($photo->display_date))
+			//	$dates = Controller::getDateControlSelectedDate($photo->display_date);
+
+			$vdata = $this->getViewData([
+				'id' => $parent_id, 
+				'path' => $path, 
+				'photos' => $photos, 
+				'record_id' => $parent_id,
+				'type_flag' => $type_flag,
+				'type' => $type,
+				'entry' => $entry,
+				'galleries' => $galleries,
+				'record_title' => $title,
+				'redirect' => $redirect,
+				'dates' => Controller::getDateControlDates(),
+				'filter' => $dates,
+			]);				
+				
+			return view('photos.index2', $vdata);
+        }           
+        else 
+		{
+             return redirect('/');
+        }
+	}
+	
 	public function entriesupdate(Request $request)
 	{	
 		$display_date = Controller::getSelectedDate($request);
@@ -467,7 +546,7 @@ class PhotoController extends Controller
 			if ($id > 0 && intval($size) > 2000000) // 2mb limit for non-sliders only
 			{
 				// resize and put it up in the live photo folder
-				if (Controller::resizeImage($tempPath, $path, $filename, $filenameUnique, /* new height = */ 750))
+				if (Controller::resizeImage($tempPath, $path, $filename, $filenameUnique, /* new height = */ 1500))
 				{
 					$resized = true;
 					$newSize = filesize($path . $filename);
