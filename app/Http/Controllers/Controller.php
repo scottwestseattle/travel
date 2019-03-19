@@ -430,7 +430,7 @@ class Controller extends BaseController
 
 		$key = 'Map Location:';
 		$trx = __('content.' . $key);
-		$text = preg_replace('/' . $key . ' ([0-9]*+)\.([0-9]*+), ([0-9]*+)\.([0-9]*+)/i', '<a target="_blank" href="' . $link . '">' . $trx . ' <span id="copy$1$2$3$4">$1.$2, $3.$4</span></a>&nbsp;<a href="#" onclick="javascript:clipboardCopy(event, \'copy$1$2$3$4\', \'copy$1$2$3$4\')"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
+		$text = preg_replace('/' . $key . ' (-*[0-9]+)\.(-*[0-9]+), (-*[0-9]+)\.(-*[0-9]+)/i', '<a target="_blank" href="' . $link . '">' . $trx . ' <span id="copy$1$2$3$4">$1.$2, $3.$4</span></a>&nbsp;<a href="#" onclick="javascript:clipboardCopy(event, \'copy$1$2$3$4\', \'copy$1$2$3$4\')"><span class="glyphicon glyphicon-copy" style="font-size:.7em;"></span></a>', $text);
 
 		return $text;
 	}

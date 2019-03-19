@@ -89,7 +89,7 @@ class FrontPageController extends Controller
 		//
 		// get the latest blog posts
 		//
-		$posts = $this->getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 3);
+		$posts = $this->getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 6);
 
 		//
 		// get the articles

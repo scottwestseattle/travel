@@ -6,6 +6,18 @@
 	background-position: center; 
 }
 
+.blog-post-text {
+	font-family: 'Volkhov', serif; 
+	color: white; 
+	font-weight: bold; 
+	text-shadow: 2px 2px black;
+	text-decoration: none;
+}
+
+a:hover  {
+	color: white;
+}
+
 .index-article {
 	min-width:150px; 
 	min-height:100px; 
