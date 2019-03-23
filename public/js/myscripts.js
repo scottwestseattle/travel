@@ -151,7 +151,13 @@ function createPhotoName(fromId, fromLocationId, toId)
 		}
 		
 		toElem.value += fromElem.value.trim();
-		
+
+		// remove apostrophe		
+		toElem.value = toElem.value.replace(/\'/g, "");
+
+		// replace & with n, B&B to BnB
+		toElem.value = toElem.value.replace(/\&/g, "n");
+
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
 	}

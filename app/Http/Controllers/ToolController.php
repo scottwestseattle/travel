@@ -307,6 +307,7 @@ LEFT JOIN photos
 			'/login',
 			'/register',
 			'/about',
+			'/comments',
 		];
 		
 		$site = Controller::getSiteByDomainName($domainName);
