@@ -35,7 +35,7 @@ class EmailController extends Controller
 	{
 		$accounts = [
 			'2117' => 35,
-			'6403' => 31,
+			'0370' => 31,
 			'5043' => 10,
 			'1712' => 14,
 		];
@@ -43,7 +43,13 @@ class EmailController extends Controller
 		$accountId = EMAIL_DEFAULT_ACCOUNT_ID;
 
 		if (array_key_exists($account, $accounts))
+		{
 			$accountId = $accounts[$account];
+		}
+		else
+		{
+			dd('account not found: ' . $account);
+		}
 			
 		return $accountId;
 	}	
