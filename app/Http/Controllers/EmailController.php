@@ -396,8 +396,11 @@ class EmailController extends Controller
 				}
 			}
 									
-			// get the account number, last four digits
-			$account = $this->parseTag($body_full, 'RE: Account ending in ', 4, -1); 
+			// get the account number, last four digits, it will be within the text in $account
+			$account = $this->parseTag($body_full, 'RE: Account ', 20, -1); 
+			$matches = [];			
+			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
+			$account = (count($matches) > 0) ? $matches[0][0] : '';
 			$accountId = $this->getAccountId($account);
 
 			// get the description
@@ -542,6 +545,7 @@ class EmailController extends Controller
 			$date_raw = $this->parseTag($body_raw, 'Transaction ID: ', 40, -1);
 					
 			$matches = [];
+			// string looks like this: '| some text |'
 			preg_match('/\| .* \|/', $date_raw, $matches, PREG_OFFSET_CAPTURE);
 			//dump($matches);
 			$date2 = count($matches) > 0 ? trim(trim($matches[0][0], '|')) : '';
@@ -555,6 +559,7 @@ class EmailController extends Controller
 					
 			// get the description
 			$desc = $this->parseTag($body_raw, 'Paid to: ', 100, -1); 
+			// string looks like this: '| some text |'
 			preg_match('/\| .* \|/', $desc, $matches, PREG_OFFSET_CAPTURE);
 			//dump($matches);
 			$desc = count($matches) > 0 ? trim(trim($matches[0][0], '|')) : '';			
@@ -585,7 +590,13 @@ class EmailController extends Controller
 		if ($wordIndex >= 0)
 		{
 			$words = explode(" ", $target);	
-			$target = $words[$wordIndex];
+			if (count($words) > $wordIndex)
+				$target = $words[$wordIndex];
+			else
+			{
+				dump($words);
+				dd('parseTag() word index out of range: ' . $wordIndex . ', max index is: ' . (count($words) - 1));
+			}
 		}
 		
 		return $target;
