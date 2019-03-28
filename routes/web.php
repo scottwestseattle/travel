@@ -460,6 +460,8 @@ Route::group(['prefix' => 'photos'], function ()
 	Route::get('/view/{photo}', 'PhotoController@view');
 	Route::get('/gallery/{photo}', 'PhotoController@gallery');
 	Route::get('/slideshow/{entry}', 'PhotoController@slideshow');
+	Route::get('/setmain/{photo}','PhotoController@setmain')->middleware('auth');
+	Route::get('/setgallery/{photo}', 'PhotoController@setgallery')->middleware('auth');
 
 	// add/create
 	Route::get('/add/{type_flag}/{parent_id?}','PhotoController@add')->middleware('auth');

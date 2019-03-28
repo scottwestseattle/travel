@@ -70,8 +70,10 @@
 						<table>
 						
 							@if (Auth::user()->user_type >= 100)
-								@if ($photo->gallery_flag <> 1)
-									<tr><td><span style="color:red;">Not in Gallery</span></td></tr>
+								@if ($photo->gallery_flag == 0)
+									<tr><td><span style="color:red;"><a href="/photos/setgallery/{{$photo->id}}">Show in Gallery</a></span></td></tr>								
+								@else
+									<tr><td><span style="color:green;"><a href="/photos/setgallery/{{$photo->id}}">Don't Show in Gallery</a></span></td></tr>
 								@endif																	
 								<tr><td>{{ $photo->filename }}</td></tr>
 							@endif					
@@ -86,6 +88,8 @@
 							
 							@if ($photo->main_flag === 1)
 							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span>{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
+							@else
+							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span><a href="/photos/setmain/{{$photo->id}}">Set as Main Photo</a></td></tr>							
 							@endif
 							
 							@if (Auth::user()->user_type >= 100)

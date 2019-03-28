@@ -1055,21 +1055,21 @@ class PhotoController extends Controller
             return redirect('/articles');
 		}
 		
-if (false)
-{
-		$id = isset($entry) ? $entry->id : null;
-		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+		if (false)
+		{
+			$id = isset($entry) ? $entry->id : null;
+			$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
 						
-		if (isset($entry))
-		{
-			$entry->description = nl2br($entry->description);
-			$entry->description = $this->formatLinks($entry->description);		
-		}
-		else
-		{
+			if (isset($entry))
+			{
+				$entry->description = nl2br($entry->description);
+				$entry->description = $this->formatLinks($entry->description);		
+			}
+			else
+			{
 
+			}
 		}
-}
 
 		$backLink = null;
 		$backLinkText = null;
@@ -1083,6 +1083,55 @@ if (false)
 		], 'Photo Slideshow');
 		
 		return view('photos.view', $vdata);
+	}
+	
+	// attach photo to an entry as a many-to-many
+    public function setmain(Photo $photo)
+    { 
+		if (!$this->isAdmin())
+			return redirect('/');
+	 		
+		try 
+		{	
+			// clear current main photo
+			Photo::clearMainPhoto($photo->parent_id);
+
+			// set the photo as the main photo
+			$photo->main_flag = true;
+			$photo->gallery_flag = true; // has to be shown in the gallery too
+			$photo->save();
+		}
+		catch (\Exception $e) 
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $e->getMessage());
+		}
+		
+		return back();
+	}
+	
+	public function setgallery(Photo $photo)
+    { 
+		if (!$this->isAdmin())
+			return redirect('/');
+ 		
+		try 
+		{
+			// flip the gallery flag
+			$photo->gallery_flag = !$photo->gallery_flag;
+			
+			if ($photo->main_flag && !$photo->gallery_flag)
+				$photo->main_flag = false;
+				
+			$photo->save();
+		}
+		catch (\Exception $e) 
+		{
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $e->getMessage());
+		}
+		
+		return back();
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////

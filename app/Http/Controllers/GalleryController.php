@@ -639,5 +639,4 @@ class GalleryController extends Controller
 		
 		return redirect("/photos/entries/$entry->id");
 	}
-	
 }
