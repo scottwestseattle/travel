@@ -130,9 +130,8 @@
 		</div>
 	</div>
 	
-	
 	<!-- if ($record->photo_count > 0 || count($record->photo_gallery_count) > 0) -->
-	@if (count($photos) > 0 || count($gallery) > 0)
+	@if ((isset($photos) && count($photos) > 0) || (isset($gallery) && count($gallery) > 0))
 	
 		<div class="entry-div">
 			<div class="entry amenity-item">
@@ -277,7 +276,7 @@
 	@endif
 	
 	
-@if (count($photos) > 0 || count($gallery) > 0)
+@if ((isset($photos) && count($photos) > 0) || (isset($gallery) && count($gallery) > 0))
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
 	<div  style="cursor:pointer;" class="modal-content">

@@ -554,13 +554,16 @@ $sectionCount = 0;
 			@foreach($posts as $record)
 			
 			@if (true)
+			<!---------------------------------------------------------->
+			<!-- This is the new style, with the text on the photo    -->
+			<!---------------------------------------------------------->
 			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 				<div class="drop-box" style="height:215px; color: black; background-color: white; " ><!-- inner col div -->
 				
 					<!-- blog photo -->
 					<a href="/entries/{{$record->permalink}}">
-						<div class="index-blog-post text-center" style="padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
-							<span>
+						<div class="index-blog-post text-center" style="background-color: #cfcfcf; background-blend-mode: multiply; padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
+							<span style="filter: none;">
 								<p><a href="/blogs/show/{{$record->blog_id}}" class="blog-post-text">{{$record->blog_title}}</a></p>	
 								<a class="blog-post-text" style="font-size:1.4em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 								<p class="blog-post-text">{{$record->display_date}}</p>
@@ -571,6 +574,9 @@ $sectionCount = 0;
 				</div><!-- inner col div -->
 			</div><!-- outer col div -->
 			@else
+			<!---------------------------------------------------------->
+			<!-- This is the old style, with the text below the photo -->
+			<!---------------------------------------------------------->
 			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 				<div class="drop-box" style="min-height:450px; color: black; background-color: white; " ><!-- inner col div -->
 				
