@@ -14,8 +14,9 @@
 	text-decoration: none;
 }
 
-a:hover  {
+a.blog-post-text:hover  {
 	color: white;
+	text-decoration: none;
 }
 
 .index-article {

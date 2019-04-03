@@ -246,10 +246,14 @@ class Controller extends BaseController
 	
 	protected function saveVisitor($model, $page, $record_id = null)
 	{		
+		// ignore these
+		if (strtolower($this->domainName) == 'blog.scotthub.com')
+			return;
+
 		$spy = session('spy', null);
 		if (isset($spy))
 			return; // spy mode, don't count views
-	
+				
 		if ($this->isAdmin())
 			return; // admin user, don't count views
 

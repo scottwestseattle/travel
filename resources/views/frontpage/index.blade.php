@@ -389,10 +389,18 @@ $sectionCount = 0;
 		</div>
 	@else
 		<div style="margin-top:40px;">
-		@if (strtolower($domainName) == 'hikebikeboat.com')
-			<img style="max-width:200px;" src="/img/theme1/logo-{{$domainName}}.png" />
-		@else
-			<img style="width:95%; max-width:200px;" src="/img/theme1/logo-{{$domainName}}.png" />
+		<?php 
+			$p = '/img/theme1/logo-' . $domainName . '.png'; 
+			$fp = base_path() . '/public' . $p; 
+		?>
+		@if (file_exists($fp))
+			@if (strtolower($domainName) == 'hikebikeboat.com')
+				<img style="max-width:200px;" src="{{$p}}" />
+			@elseif (strtolower($domainName) == 'blog.scotthub.com')
+				<img style="width: 95%; max-width: 400px;" src="{{$p}}" />
+			@else
+				<img style="width:95%; max-width:200px;" src="{{$p}}" />
+			@endif
 		@endif
 		</div>
 	@endif
@@ -561,15 +569,14 @@ $sectionCount = 0;
 				<div class="drop-box" style="height:215px; color: black; background-color: white; " ><!-- inner col div -->
 				
 					<!-- blog photo -->
-					<a href="/entries/{{$record->permalink}}">
 						<div class="index-blog-post text-center" style="background-color: #cfcfcf; background-blend-mode: multiply; padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
 							<span style="filter: none;">
 								<p><a href="/blogs/show/{{$record->blog_id}}" class="blog-post-text">{{$record->blog_title}}</a></p>	
 								<a class="blog-post-text" style="font-size:1.4em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 								<p class="blog-post-text">{{$record->display_date}}</p>
-							</span>						
+								<!-- p>{{$record->location . ', ' . $record->location_parent}}</p -->
+							</span>
 						</div>
-					</a>						
 					
 				</div><!-- inner col div -->
 			</div><!-- outer col div -->
