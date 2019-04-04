@@ -489,18 +489,24 @@ $sectionCount = 0;
 @if (isset($articles) && count($articles) > 0)
 @if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
 <section class="{{$colors[$sectionCount++]}}">
-	<div class="container main-font" style="max-width:1440px;">	
+	<div class="container main-font" style="max-width:95%;">	
 		<div class="sectionHeader text-center">			
 						
 			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
 
-			<div class="row clearfix text-left">
+			<div class="row clearfix text-left" >
 				
-				<table>
+				<table style="width:100%;">
 				<tbody>
 				@foreach($articles as $record)
-					<tr style="vertical-align:top;">
-						<td style="margin-bottom:10px;" >
+					<!-- tr style="width:100%; vertical-align:middle; border: solid 1px rgba(0, 0, 0, 0.08);" -->
+					<tr style="width:100%; vertical-align:middle; 
+-webkit-box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
+-moz-box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
+box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
+">
+					<!-- tr class="drop-box" style="width:100%; vertical-align:middle; box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);" -->
+						<td style="margin-bottom:10px; width:100px;" >
 							<a href="/entries/{{$record->permalink}}">
 								@component('entries.show-main-photo', ['record' => $record, 'class' => 'index-article'])@endcomponent
 							</a>							
@@ -567,17 +573,14 @@ $sectionCount = 0;
 			<!---------------------------------------------------------->
 			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
 				<div class="drop-box" style="height:215px; color: black; background-color: white; " ><!-- inner col div -->
-				
 					<!-- blog photo -->
 						<div class="index-blog-post text-center" style="background-color: #cfcfcf; background-blend-mode: multiply; padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
-							<span style="filter: none;">
 								<p><a href="/blogs/show/{{$record->blog_id}}" class="blog-post-text">{{$record->blog_title}}</a></p>	
 								<a class="blog-post-text" style="font-size:1.4em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 								<p class="blog-post-text">{{$record->display_date}}</p>
+								<!-- p class="blog-post-text">url('{{$record->photo_path}}/{{$record->photo}}')</p -->
 								<!-- p>{{$record->location . ', ' . $record->location_parent}}</p -->
-							</span>
 						</div>
-					
 				</div><!-- inner col div -->
 			</div><!-- outer col div -->
 			@else
