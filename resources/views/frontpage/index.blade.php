@@ -572,9 +572,9 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			<!-- This is the new style, with the text on the photo    -->
 			<!---------------------------------------------------------->
 			<div style="max-width: 400px; padding:10px;" class="col-sm-4"><!-- outer div needed for the columns and the padding, otherwise they won't center -->
-				<div class="drop-box" style="height:215px; color: black; background-color: white; " ><!-- inner col div -->
+				<div class="drop-box" style="height:215px; " ><!-- inner col div -->
 					<!-- blog photo -->
-						<div class="index-blog-post text-center" style="background-color: #cfcfcf; background-blend-mode: multiply; padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
+						<div class="index-blog-post text-center" style="padding:15px; background-image: url('{{$record->photo_path}}/{{$record->photo}}'); ">
 								<p><a href="/blogs/show/{{$record->blog_id}}" class="blog-post-text">{{$record->blog_title}}</a></p>	
 								<a class="blog-post-text" style="font-size:1.4em;" href="/entries/{{$record->permalink}}">{{ $record->title }}</a>
 								<p class="blog-post-text">{{$record->display_date}}</p>
