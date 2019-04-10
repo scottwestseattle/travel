@@ -411,9 +411,9 @@ LEFT JOIN photos
     {
 		$sites = [
 			['https://', 'grittytravel.com'],
-			['https://', 'scotthub.com'],
-			['http://', 'hikebikeboat.com'],
-			['http://', 'epictravelguide.com'],
+			['http://', 'scotthub.com'],
+//			['http://', 'hikebikeboat.com'],
+//			['http://', 'epictravelguide.com'],
 		];
 		
 		$siteMaps = [];
@@ -638,4 +638,8 @@ LEFT JOIN photos
 	}
 
 	
+    public function phpinfo() 
+	{
+		phpinfo();
+	}
 }

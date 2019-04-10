@@ -40,6 +40,7 @@ Route::get('/sitemap', 'ToolController@sitemap')->middleware('auth');
 Route::get('/test', 'ToolController@test')->middleware('auth');
 Route::post('/test', 'ToolController@test')->middleware('auth');
 Route::get('/language/{locale}', 'ToolController@language');
+Route::get('/phpinfo', 'ToolController@phpinfo')->middleware('auth');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');

@@ -1,3 +1,8 @@
+#RewriteEngine On
+#RewriteCond %{HTTP_HOST} scotthub\.com [NC]
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule ^(.*)$ https://scotthub.com/$1 [R,L]
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
