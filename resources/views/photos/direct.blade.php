@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	@if (isset($entry))
+	@if (false && isset($entry))
 		@component('entries.menu-submenu', ['record' => $entry])@endcomponent
 	@endif
 	
@@ -14,29 +14,6 @@
 	<p><a href="{{$redirect}}">Back to Transactions</a></p>
 	@endif
 	
-	@if (Auth::user()->user_type >= 100)
-	
-	<!------------------------------------------------------>
-	<!-- Form at the top to update dates of all photos -->
-	<!------------------------------------------------------>
-	
-	<form method="POST" action="/photos/entriesupdate">
-		<div class="form-group form-control-big">
-
-			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
-
-			<input type="hidden" name="parent_id" value="{{$record_id}}" />
-			
-			<div style="margin:10px 0;">				
-				<button type="submit" name="update" class="btn btn-primary">Update All Dates</button>
-			</div>
-			
-			{{ csrf_field() }}
-		</div>
-	</form>
-	
-	@endif
-	
 	<!-------------------------------------------------------------------------->
 	<!-- List of photos that are attached to the entry and not in the gallery -->
 	<!-------------------------------------------------------------------------->	
@@ -44,7 +21,7 @@
 	@if (Auth::user()->user_type >= 100)
 	<h3>
 		<!-- a href="/photos/add/{{$type_flag}}/{{$id}}"><span class="glyphSliders glyphicon glyphicon-cloud-upload" style="padding:5px;"></span></a -->
-		<span style="margin-left: 5px;">Gallery Photos ({{ count($photos) }})</span><span style="margin-left: 20px; font-size:.7em;"><a href="/photos/add/{{$type_flag}}/{{$id}}">Upload Photos</a></span>
+		<span style="margin-left: 5px;">Photos ({{ count($photos) }})</span><span style="margin-left: 20px; font-size:.7em;"><a href="/photos/add/{{$type_flag}}/{{$id}}">Upload Photos</a></span>
 	</h3>
 	@endif	
 	
@@ -91,7 +68,7 @@
 								<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>
 								<tr><td style="padding-top:15px;">
-								@if (isset($entry))
+								@if (false && isset($entry))
 									@component('control-dropdown-gallery-move', ['entry_id' => $entry->id, 'photo_id' => $photo->id, 'galleries' => $galleries])@endcomponent
 								@endif
 								</td></tr>

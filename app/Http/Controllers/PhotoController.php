@@ -148,7 +148,7 @@ class PhotoController extends Controller
 	}
 
 	// the original way to do it where gallery photos is not enforced
-	public function entries2($parent_id, $type_flag = PHOTO_TYPE_ENTRY)
+	public function direct($parent_id, $type_flag = PHOTO_TYPE_ENTRY)
 	{			
 		if (!$this->isAdmin())
              return redirect('/');
@@ -218,7 +218,7 @@ class PhotoController extends Controller
 				'filter' => $dates,
 			]);				
 				
-			return view('photos.index2', $vdata);
+			return view('photos.direct', $vdata);
         }           
         else 
 		{

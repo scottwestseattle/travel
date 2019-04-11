@@ -100,6 +100,7 @@ define('SECTION_SLIDERS', 'section-sliders');
 define('SECTION_TOURS', 'section-tours');
 define('SECTION_WELCOME', 'section-welcome');
 define('SECTION_CASH', 'section-cash');
+define('SECTION_COMMENTS', 'section-comments');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);

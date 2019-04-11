@@ -437,6 +437,7 @@ class FrontPageController extends Controller
 		$stats['tours'] = 0;
 		$stats['photos_tour'] = 0;
 		$stats['photos_gallery'] = 0;
+		$stats['galleries'] = 0;
 		
 		$sections = Controller::getSections();
 		
@@ -474,9 +475,13 @@ class FrontPageController extends Controller
 		$stats['photos_content'] = $stats['photos_article'] + $stats['photos_blog'] + $stats['photos_post'] + $stats['photos_tour'];
 		$stats['total_pages'] = $stats['articles'] + $stats['blogs'] + $stats['blog_entries'] + $stats['tours'] + $stats['galleries'];
 		$stats['total_photos'] = $stats['sliders'] + $stats['photos_content'] + $stats['photos_gallery']; 
+		$stats['total_sitemap_photos'] = $stats['sliders'] + $stats['photos_gallery'];
+		
 		$stats['static_pages'] = 13;
-		$stats['total_sitemap_photos'] = $stats['sliders'] + $stats['photos_gallery']; 
 		$stats['total_sitemap'] = $stats['sliders'] + $stats['total_pages'] + $stats['static_pages'] + $stats['photos_gallery']; 
+		
+		if ($stats['total_pages'] == 0 && $stats['total_photos'] == 0)
+			$stats = null;
 		
 		// check for an image
 		$image = '/img/theme1/about-' . $this->domainName . '.jpg';

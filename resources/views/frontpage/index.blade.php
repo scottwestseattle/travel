@@ -890,12 +890,13 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
 			</div>
 						
+@if (($section = getSection(SECTION_COMMENTS, $sections)) != null)
 			<div class='text-center'>
 				<a href="/comments">
 					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
 				</a>
 			</div>
-	
+@endif	
 			{{ csrf_field() }}
 
 		</form>
