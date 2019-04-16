@@ -1079,8 +1079,11 @@ class Controller extends BaseController
 			
 			// create a dummy site so everything will still work
 			$this->site = new Site;
-			$this->site->site_name = $this->domainName . ' - Site Not Found';
-			$this->site->site_url = 'not found';
+			$this->site->site_name = $this->domainName . ' - Web Site';
+			$this->site->site_url = $this->domainName;
+			$this->site->telephone = '+1 800 555-5555';
+			$this->site->email = 'name@email.com';
+			$this->site->site_title = 'Information Web Site';
 		}
 		
 		return $this->site;

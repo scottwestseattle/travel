@@ -55,7 +55,18 @@ class EmailController extends Controller
 	}	
 
     public function check(Request $request, $debug = false) 
-	{		
+	{	
+		if (!function_exists('imap_open'))
+		{
+			$msg = 'Email is not available on this server';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'imap', null, $msg);
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			return redirect('/transactions/filter');
+		}
+			
 //$debug = true;
 		$email_account = env('EMAIL_USERNAME');
 		$email_password = env('EMAIL_PASSWORD');
