@@ -6,6 +6,7 @@
 /public/img/sliders
 /public/img/tours
 /storage/*.key
+/storage/*
 /.idea
 /.vagrant
 Homestead.json

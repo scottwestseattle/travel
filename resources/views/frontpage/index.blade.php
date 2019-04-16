@@ -58,6 +58,36 @@ $sectionCount = 0;
 <!-- Title Logo Bar -->
 <!--------------------------------------------------------------------------------------->
 
+
+@if (count($sections) == 0)
+
+<?php 
+	$title = 'Welcome to the front page of this web site';
+	$text = 'To add content, use the \'Sections\' menu option.'; 
+?>
+
+<section id="" class="sectionOrange" style="padding: 30px 0 40px 0;">
+<div class="container" style="max-width:1400px;">	
+	<div class="sectionHeader text-center">	
+		
+		<div class="hidden-xl hidden-lg hidden-md hidden-sm">
+			<!-- xs only -->
+			<h3 style="font-size:1.2em;" class="welcome-text main-font">{{$title}} </h3>
+			<p>{{$text}}</p>
+		</div>
+		
+		<div class="hidden-xs" >
+			<!-- all other sizes -->
+			<h3 class="welcome-text main-font">{{$title}} </h3>
+			<p>{{$text}}</p>
+		</div>
+
+	</div>
+</div>
+</section>
+
+@endif
+
 	<!--------------------------------------------------------------------------------------->
 	<!-- Sliders -->
 	<!--------------------------------------------------------------------------------------->
@@ -868,7 +898,7 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!-- SECTION: Affiliates -->
 <!--------------------------------------------------------------------------------------->
 
-@if (true || ($section = getSection(SECTION_COMMENTS, $sections)) != null)
+@if (($section = getSection(SECTION_COMMENTS, $sections)) != null)
 <section class="{{$colors[$sectionCount++]}}">
 <div class="container text-center" style="max-width: 500px;">	
 	<div style="margin-top: 0px; font-size: 1.5em;" class="sectionHeader main-font">	
@@ -890,13 +920,11 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
 			</div>
 						
-@if (($section = getSection(SECTION_COMMENTS, $sections)) != null)
 			<div class='text-center'>
 				<a href="/comments">
 					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
 				</a>
 			</div>
-@endif	
 			{{ csrf_field() }}
 
 		</form>

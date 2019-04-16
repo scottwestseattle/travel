@@ -41,7 +41,7 @@ class FrontPageController extends Controller
 	}
 	
     public function index(Request $request, $firstslider = null)
-    {					
+    {						
 		if (Auth::user() && Auth::user()->blocked_flag != 0)
 		{
 			Auth::logout();
@@ -49,7 +49,21 @@ class FrontPageController extends Controller
 		}
 
 		$posts = null;
-		
+		$tours = null;
+		$tour_count = 0;
+		$tourCount = 0;
+		$blogCount = 0;
+		$locations = null;
+		$photosWebPath = null;
+		$newWay = false;
+		$sliderCount = 0;
+		$sliders_h = null;
+		$sliders_v = null;
+		$sliderPath = null;		
+		$posts = null;
+		$articles = null;
+		$gallery = null;
+
 		$site = Controller::getSite();		
 		$showFullGallery = (strtolower($site->site_url) == 'scotthub.com') ? true : false;
 				
@@ -61,46 +75,63 @@ class FrontPageController extends Controller
 		//
 		// get tour info
 		//
-		$tours = $this->getEntriesByType(ENTRY_TYPE_TOUR);
+		if (Controller::getArrayByKey(SECTION_TOURS, $sections))
+		{
+			$tours = $this->getEntriesByType(ENTRY_TYPE_TOUR);
 
-		$tour_count = isset($tours) ? count($tours) : 0;
+			$tour_count = isset($tours) ? count($tours) : 0;
+			$tourCount = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true);
+			
+			$locations = Location::getPills();
 
-		$locations = Location::getPills();
-
-		//
-		// get tour page link and main photo
-		//
-		$photosWebPath = Controller::getPhotoPathRemote('/img/entries/', count($tours) > 0 ? $tours[0]->site_id : 0);
+			//
+			// get tour page link and main photo
+			//
+			$photosWebPath = Controller::getPhotoPathRemote('/img/entries/', count($tours) > 0 ? $tours[0]->site_id : 0);
+		}
 		
 		//
 		// get the sliders
 		//
-		$newWay = false;
-		$sliderCount = 10; // number of sliders to loop through
-		$sliders_h = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY, $sliderCount, $firstslider);
-		$sliders_v = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_VERTICAL_ONLY, $sliderCount, $firstslider);
-		$sliderPath = '/img/sliders/';
+		if (Controller::getArrayByKey(SECTION_SLIDERS, $sections))
+		{
+			$newWay = false;
+			$sliderCount = 10; // number of sliders to loop through
+			$sliders_h = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY, $sliderCount, $firstslider);
+			$sliders_v = FrontPageController::getSlidersRandom(PHOTO_TYPE_SLIDER_VERTICAL_ONLY, $sliderCount, $firstslider);
+			$sliderPath = '/img/sliders/';
 		
-		if (count($sliders_h) > 0)
-			$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_h[0]->site_id);
-		else if (count($sliders_v) > 0)
-			$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_v[0]->site_id);
-		
+			if (count($sliders_h) > 0)
+				$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_h[0]->site_id);
+			else if (count($sliders_v) > 0)
+				$sliderPath =  Controller::getPhotoPathRemote($sliderPath, $sliders_v[0]->site_id);
+		}
+				
 		//
 		// get the latest blog posts
 		//
-		$posts = $this->getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 6);
-
+		if (Controller::getArrayByKey(SECTION_BLOGS, $sections))
+		{
+			$posts = $this->getEntriesByType(ENTRY_TYPE_BLOG_ENTRY, true, 6);
+			$blogCount = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* $allSites = */ false);
+		}
+		
 		//
 		// get the articles
 		//
-		$articles = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
-
+		if (Controller::getArrayByKey(SECTION_ARTICLES, $sections))
+		{
+			$articles = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
+		}
+		
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ ($showFullGallery) ? PHP_INT_MAX : 10);
-		
+		if (Controller::getArrayByKey(SECTION_GALLERY, $sections))
+		{
+			$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ ($showFullGallery) ? PHP_INT_MAX : 10);
+		}
+				
 		//
 		// save visitor stats
 		//
@@ -111,6 +142,7 @@ class FrontPageController extends Controller
 			'posts' => $posts, 
 			'tours' => $tours, 
 			'tour_count' => $tour_count, 
+			'tourCount' => $tourCount, // todo: why are there two of these counts?
 			'sliders_h' => $sliders_h, 
 			'sliders_v' => $sliders_v, 
 			'newWay' => $newWay,
@@ -118,8 +150,7 @@ class FrontPageController extends Controller
 			'slider_path' => $sliderPath,
 			'slider_count' => $sliderCount,
 			'locations' => $locations, 
-			'tourCount' => Entry::getEntryCount(ENTRY_TYPE_TOUR, /* $allSites = */ true), 
-			'blogCount' => Entry::getEntryCount(ENTRY_TYPE_BLOG, /* $allSites = */ false),
+			'blogCount' => $blogCount,
 			'photoPath' => $photosWebPath, 
 			'sections' => $sections,
 			'articles' => $articles,

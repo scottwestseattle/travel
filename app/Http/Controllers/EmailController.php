@@ -40,7 +40,7 @@ class EmailController extends Controller
 			'1712' => 14,
 		];
 		
-		$accountId = EMAIL_DEFAULT_ACCOUNT_ID;
+		$accountId = false;
 
 		if (array_key_exists($account, $accounts))
 		{
@@ -48,7 +48,7 @@ class EmailController extends Controller
 		}
 		else
 		{
-			dd('account not found: ' . $account);
+			dump('account not found: ' . $account);
 		}
 			
 		return $accountId;
@@ -354,7 +354,7 @@ class EmailController extends Controller
 					
 		$pos = strpos($val, $subject);
 										
-		$sample = "A purchase was charged to your account. RE: Account ending in 6789 SCOTT, As requested, we're notifying you that on SEP 30, 2016, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
+		$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on SEP 30, 2016, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
 				
 		if ($pos !== false && $pos == 44) 
 		{
@@ -397,11 +397,17 @@ class EmailController extends Controller
 			}
 									
 			// get the account number, last four digits, it will be within the text in $account
-			$account = $this->parseTag($body_full, 'RE: Account ', 20, -1); 
+			$account = $this->parseTag($body_full, 'Account ending in', 20, -1); 
 			$matches = [];			
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
 			$account = (count($matches) > 0) ? $matches[0][0] : '';
 			$accountId = $this->getAccountId($account);
+			if (!$accountId)
+			{
+				dump($account);
+				dump($body_full);
+				dd($accountId);
+			}
 
 			// get the description
 			$desc = $this->parseTag($body_raw, $date_raw . ', at ', 30, -1); 
@@ -471,7 +477,13 @@ class EmailController extends Controller
 			// get the account number, last four digits
 			$account = $this->parseTag($body_raw, 'account ending in ', 4, -1); 
 			$accountId = $this->getAccountId($account);
-
+			if (!$accountId)
+			{
+				dump($account);
+				dump($body_full);
+				dd($accountId);
+			}
+			
 			// get the description
 			$desc = $this->parseTag($body_raw, 'A charge of ($USD) ', 30, -1); 
 			$pieces = explode(' ', $desc);
@@ -540,6 +552,12 @@ class EmailController extends Controller
 			$accountId = $this->getAccountId($account);
 			if ($debug) dump($account);
 			if ($debug) dump($accountId);
+			if (!$accountId)
+			{
+				dump($account);
+				dump($body_raw);
+				dd($accountId);
+			}
 	
 			// get the date
 			$date_raw = $this->parseTag($body_raw, 'Transaction ID: ', 40, -1);
@@ -616,9 +634,10 @@ class EmailController extends Controller
 			
 		// remove all non-alphas from desc
 		$desc = preg_replace("/(\W)+/", " ", $desc);
+		$desc = trim($desc);
 		
 		// check for first transaction from this vendor
-		$vendor = $desc; // use the full desc as the vendor_memo
+		$vendor = strtok($desc, " "); // use the first word of the desc as the vendor_memo
 		$trx = Transaction::getByVendor($vendor);
 
 		// set account
@@ -635,11 +654,11 @@ class EmailController extends Controller
 		}
 		else // create first record from this vendor, using defaults
 		{			
-			// default to food::groceries
-			$record->subcategory_id		= 208; // unknown, orig: 102;
-			$record->category_id		= 2;
+			// default to food::unknown
+			$record->subcategory_id		= 208;  // unknown
+			$record->category_id		= 2;	// food
 			$record->description		= ucwords(strtolower($desc)); // uppercase the first word only
-//old way	$record->description		= ucfirst(strtolower(strtok($desc, " "))); // only use the first word as the description
+//old way:	$record->description		= ucfirst(strtolower(strtok($desc, " "))); // uppercase the first word and use it as the description
 			$record->vendor_memo		= $vendor;
 			$record->type_flag 			= 1;			
 		}

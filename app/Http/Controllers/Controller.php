@@ -1147,6 +1147,18 @@ class Controller extends BaseController
 		
 		return $section;
 	}
+	
+	static public function getArrayByKey($key, $array)
+	{
+		$record = null;
+	
+		if (array_key_exists($key, $array))
+		{
+			$record = $array[$key];
+		}
+	
+		return $record;
+	}
 
     protected function getSections($site_id = null)
     {		

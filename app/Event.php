@@ -98,8 +98,18 @@ class Event extends Model
 		$record->record_id 		= $record_id;		
 		$record->error 			= $error;
 		$record->updates 		= $changes;
-						
-		$record->save();
+
+		try
+		{
+			//$record->save();
+		}
+		catch (\Exception $e)
+		{
+			// database failed so show even message
+			dump('DB Error Adding Event: ' . $title);
+			dump($e->getMessage());
+			dump('Check end of log file in ~/storage/logs');
+		}			
     }
 	
 	static public function getVisitorIp()

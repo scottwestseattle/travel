@@ -16,13 +16,17 @@ class Transaction extends Base
 
     static public function getByVendor($memo)
     {
+    	//dump($memo);
+    	
 		$record = Transaction::select()
 			->where('user_id', Auth::id())
 			->where('deleted_flag', 0)
-			->where('vendor_memo', $memo)
+			->where('vendor_memo', 'like', $memo . '%')
 			->orderByRaw('id DESC')
 			->first();
 
+		//dd($record);
+		
 		return $record;
     }
 

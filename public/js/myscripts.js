@@ -160,6 +160,27 @@ function createPhotoName(fromId, fromLocationId, toId)
 
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
+		
+		// check for and skip repeating words
+		var words = toElem.value.split("-");
+		toElem.value = "";
+		var prev = "";
+		words.forEach(
+			function(element) {
+				if (element != prev)
+				{
+					if (toElem.value.length > 0)
+						toElem.value += "-";
+						
+					toElem.value += element;
+				}
+					
+				prev = element;
+		});	
+		
+		// remove trailing dash, if any
+		if (toElem.value.endsWith("-"))
+			toElem.value = toElem.value.slice(0, -1);	
 	}
 	else
 	{

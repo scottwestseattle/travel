@@ -1,3 +1,8 @@
+Changes
+- Use middleware for function auth
+- 
+
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
