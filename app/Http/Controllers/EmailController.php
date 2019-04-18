@@ -56,6 +56,8 @@ class EmailController extends Controller
 
     public function check(Request $request, $debug = false) 
 	{	
+		//$debug = true;
+
 		if (!function_exists('imap_open'))
 		{
 			$msg = 'Email is not available on this server';
@@ -67,7 +69,6 @@ class EmailController extends Controller
 			return redirect('/transactions/filter');
 		}
 			
-//$debug = true;
 		$email_account = env('EMAIL_USERNAME');
 		$email_password = env('EMAIL_PASSWORD');
 		$email_server = env('EMAIL_HOST');
@@ -364,10 +365,13 @@ class EmailController extends Controller
 		$subject = 'A new transaction was';
 					
 		$pos = strpos($val, $subject);
-										
+		
+		if ($debug)
+			dump('pos=' . $pos);
+									
 		$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on SEP 30, 2016, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
 				
-		if ($pos !== false && $pos == 44) 
+		if ($pos !== false && $pos >= 44) 
 		{
 			$rc = true; // transaction found
 			//echo 'pos = ' . $pos . '<br/>';
@@ -646,10 +650,33 @@ class EmailController extends Controller
 		// remove all non-alphas from desc
 		$desc = preg_replace("/(\W)+/", " ", $desc);
 		$desc = trim($desc);
-		
+		$words = explode(" ", $desc);
+	
 		// check for first transaction from this vendor
-		$vendor = strtok($desc, " "); // use the first word of the desc as the vendor_memo
+		if (count($words) > 2)
+		{
+			$vendor = $words[0] . ' ' . $words[1]; // use the first 2 words of the vendor_memo
+		}
+		else if (count($words) > 0)
+		{
+			$vendor = $words[0]; // only use the first word of the desc as the vendor_memo
+		}
+		else
+		{
+			$vendor = $desc; // no words
+		}
+
 		$trx = Transaction::getByVendor($vendor);
+
+		if ($debug)
+		{
+			dump('words:');
+			dump($words);
+			dump('desc=' . $desc);
+			dump('vendor=' . $vendor);
+			dump('trx: ');
+			dump($trx);
+		}
 
 		// set account
 		$record->parent_id = intval($accountId);

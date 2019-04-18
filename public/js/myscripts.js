@@ -323,6 +323,147 @@ function changeDate(inc, fromYearId, fromMonthId, fromDayId, useCurrentDate = fa
 	}
 }
 
+function changeDateNEW(inc, fromYearId, fromMonthId, fromDayId, useCurrentDate = false)
+{
+	var monthDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+	
+	var fromDay = document.getElementById(fromDayId);
+    var fromMonth = document.getElementById(fromMonthId);
+    var fromYear = document.getElementById(fromYearId);
+	
+	if (inc == 0) // this means clear the date
+	{
+		fromDay.value = 0;
+		fromMonth.value = 0;
+//		fromYear.value = 0;
+		
+		return;
+	}
+	else if (inc == 99) // this means set to current day
+	{
+		var today = new Date();
+		
+		fromDay.value = today.getDate();
+		fromMonth.value = today.getMonth() + 1;
+		fromYear.value = today.getFullYear();
+		
+		return;
+	}
+			
+ 	if (fromDay && parseInt(fromDay.value) == 0)
+	{
+		if (useCurrentDate)
+		{
+			var today = new Date();
+			fromDay.value = today.getDate();		}
+		else
+		{
+			fromDay = null;
+		}
+	}
+	
+	if (fromMonth && parseInt(fromMonth.value) == 0)
+	{
+		fromMonth = null;
+	}
+	    
+//	var lastDayOfTheMonth = getLastDayOfMonth(parseInt(fromMonth.value));
+//alert(fromDay.value + ", " + fromMonth.value + ", " + fromYear.value);
+
+	if (fromDay && fromMonth && fromYear) // using month/day/year
+	{
+			var newDate = parseInt(fromDay.value) + inc;
+			
+			// get last day of current month
+			var lastDayOfMonth = new Date(parseInt(fromYear.value), parseInt(fromMonth.value), 0).getDate();
+
+			if (newDate == 0) // roll to previous month
+			{
+				newMonth = parseInt(fromMonth.value) - 1;
+				if (newMonth >= 0)
+				{
+					fromMonth.value = newMonth;
+				}
+				else
+				{
+					// roll around to previous year
+					fromMonth.value = 12;
+					fromYear.value = parseInt(fromYear.value) - 1;
+				}
+				
+				// get last day of new month
+				lastDayOfMonth = new Date(parseInt(fromYear.value), parseInt(fromMonth.value), 0).getDate();
+				fromDay.value = lastDayOfMonth;
+			}
+			else if (newDate > lastDayOfMonth) // roll to next month
+			{
+				fromDay.value = 1;
+				newMonth = parseInt(fromMonth.value) + 1;
+				
+				if (newMonth <= 12)
+				{
+					fromMonth.value = newMonth;
+				}
+				else
+				{
+					// roll over to next year
+					fromMonth.value = 1;
+					fromYear.value = parseInt(fromYear.value) + 1;
+				}
+			}
+			else
+			{
+				fromDay.value = newDate;
+			}
+	}
+	else if (fromMonth && fromYear) // using month/year only so attempt to switch months
+	{
+			var newDate = parseInt(fromMonth.value) + inc;
+			
+			if (newDate == 0) // roll to previous year
+			{
+				fromMonth.value = 12;
+				fromYear.value = parseInt(fromYear.value) - 1;
+			}
+			else if (newDate > 12) // roll to next year
+			{
+				fromMonth.value = 1;
+				fromYear.value = parseInt(fromYear.value) + 1;
+			}
+			else
+			{
+				// just change month
+				fromMonth.value = newDate;
+			}
+	}
+	else if (fromYear) // only using year so loop years
+	{
+		//alert(fromYear.value);
+		
+			var newDate = parseInt(fromYear.value) + inc;
+			
+			if (newDate < 2010) // roll to previous year
+			{
+				fromYear.value = 2020;
+			}
+			else if (newDate > 2020) // roll to next year
+			{
+				fromYear.value = 2010;
+			}
+			else
+			{
+				// just change year
+				fromYear.value = newDate;
+			}
+	}
+	else
+	{
+		alert('Error changing dates');
+	}
+}
+
+
+
 function decodeHtml(html) 
 {
 	var txt = document.createElement("textarea");

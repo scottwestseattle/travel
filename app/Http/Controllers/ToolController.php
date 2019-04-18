@@ -49,7 +49,13 @@ class ToolController extends Controller
 		$executed = null;
 		
 		$url = strtolower(Controller::getSite()->site_url);
-		if ($url == 'hikebikeboat.com')
+		if (
+				$url == 'codespace.us'
+			 || $url == 'travel.codespace.us'
+			 || $url == 'spanish50.com'
+			 || $url == 'english50.com'
+			 || $url == 'localhost'
+			)
 			$server = 'http://' . $url;
 		else
 			$server = 'https://' . $url;
@@ -411,9 +417,11 @@ LEFT JOIN photos
     {
 		$sites = [
 			['https://', 'grittytravel.com'],
-			['http://', 'scotthub.com'],
-//			['http://', 'hikebikeboat.com'],
-//			['http://', 'epictravelguide.com'],
+			['https://', 'scotthub.com'],
+			['http://', 'travel.codespace.us'],
+//			['http://', 'codespace.us'],
+//			['http://', 'spanish50.com'],
+//			['http://', 'english50.com'],
 		];
 		
 		$siteMaps = [];
