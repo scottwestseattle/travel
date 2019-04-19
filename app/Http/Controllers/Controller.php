@@ -1277,18 +1277,17 @@ class Controller extends BaseController
 			10 => 'October',
 			11 => 'November',
 			12 => 'December',
-		];		
+		];	
 
 		$days = [];
 		for ($i = 1; $i <= 31; $i++)
 			$days[$i] = $i;
 
-		$years = [];		
-		for ($i = 2010; $i <= 2050; $i++)
-		{
-			if ($i > (intval(date('Y')) + 1)) // only go up to next year
-				break;
-				
+		$years = [];
+		$startYear = intval(date('Y')) - 8; // 8 previous years, this year, and next year = 10
+		$endYear = intval(date('Y')) + 1; // end next year
+		for ($i = $startYear; $i <= $endYear; $i++)
+		{		
 			$years[$i] = $i;	
 		}			
 			
@@ -1670,6 +1669,70 @@ class Controller extends BaseController
 		}
 		
 		$record->photo_path = $record->photo_path . '/tn';
+	}
+	
+	static public function makeThumbnailDirect($photo_path, $photo)
+	{
+		$tnFolder = base_path() . '/public' . $photo_path;
+		if (!Controller::endsWith($tnFolder, '/'))
+			$tnFolder .= '/';
+		$tnFolder .= PHOTOS_THUMBNAIL_FOLDER; 
+		 
+		$found = false;
+		
+		if (is_dir($tnFolder))
+		{
+			// does TN already exists for this photo
+			$tn = $tnFolder . '/' . $photo;
+		
+			if (file_exists($tn))
+			{
+				// TN already exists
+				$found = true;
+			}
+		}
+		else
+		{
+			// create the TN folder and the TN for this photo
+			try
+			{
+				mkdir($tnFolder, 0755);
+			}
+			catch (\Exception $e) 
+			{	
+				// log exception
+				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder: ' . $tnFolder, null, $e->getMessage());
+			}			
+		}
+		
+		if (!$found)
+		{
+			$fromPath = base_path() . '/public' . $photo_path;
+
+			try
+			{
+				if (Controller::resizeImage($fromPath, $tnFolder, $photo, $photo, /* new height = */ PHOTO_THUMBNAIL_HEIGHT))
+				{
+					// log results
+					$msg = 'TN created for photo ' . $photo . ' in folder ' . $tnFolder;
+					Event::logInfo(LOG_MODEL, LOG_ACTION_RESIZE, $msg);
+				}
+				else
+				{
+					// log error
+					$msg = 'Error resizing image: photo=' . $photo . ', folder=' . $tnFolder;
+					Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg);
+				}
+			}
+			catch (\Exception $e) 
+			{	
+				// log exception
+				$msg = 'Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
+				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+			}				
+		}
+		
+		return $photo_path;
 	}
 	
 	static protected function resizeImage($fromPath, $toPath, $filename, $filenameTo, $heightNew)

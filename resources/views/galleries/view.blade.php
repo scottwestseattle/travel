@@ -88,8 +88,8 @@ foreach($photos as $photo)
 			
 			<span style="">
 				<a href="/photos/{{$photo->permalink}}/{{$photo->id}}">
-				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
-				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:180px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}{{$record->id}}/{{$photo->filename}}" />
+				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:180px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
 				</a>
 			</span>
 				

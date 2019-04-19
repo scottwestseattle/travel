@@ -82,9 +82,18 @@ class GalleryController extends Controller
 			->where('parent_id', '=', $entry->id)
 			->orderByRaw('created_at ASC')
 			->get();
-			
+	
 		$photo_path = '/img/entries/';
 		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
+		$photo_path .= $id;
+
+		$fixed = [];
+		foreach($photos as $record)
+		{
+			Controller::makeThumbnailDirect($photo_path, $record->filename);
+			$fixed[] = Photo::setPermalink($record);
+		}
+		$photos = $fixed;
 		
 		return view('galleries.view', $this->getViewData([
 			'record' => $entry, 
@@ -140,16 +149,18 @@ class GalleryController extends Controller
 			->orderByRaw('created_at ASC')
 			->get();
 
+		$photo_path = '/img/entries/';
+		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
+		$photo_path .= $id;
+
 		$fixed = [];
 		foreach($photos as $record)
 		{
+			Controller::makeThumbnailDirect($photo_path, $record->filename);
 			$fixed[] = Photo::setPermalink($record);
 		}
 		$photos = $fixed;
-			
-		$photo_path = '/img/entries/';
-		$photo_path = count($photos) > 0 ? Controller::getPhotoPathRemote($photo_path, $photos[0]->site_id) : $photo_path;
-		
+
 		return view('galleries.view', $this->getViewData([
 			'record' => $entry, 
 			'photos' => $photos,
@@ -370,7 +381,13 @@ class GalleryController extends Controller
 			->where('id', $entry_id)
 			->first();
 			
-		$galleries = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ false, /* limit = */ 16, /* site_id = */ null, /* orderBy = */ ORDERBY_DATE);
+		$galleries = $this->getEntriesByType(
+			ENTRY_TYPE_GALLERY
+			, /* approved = */ false
+			, /* limit = */ 16
+			, /* site_id = */ null
+			, /* orderBy = */ ORDERBY_DATE
+		);
 
 		$vdata = $this->getViewData([
 			'entry' => $entry,
