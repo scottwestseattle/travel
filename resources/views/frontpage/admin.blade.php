@@ -10,6 +10,8 @@
 			<li>Time: {{date("Y-m-d H:i:s")}}</li>
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
 			<li>My IP:&nbsp;{{$ip}}</li>
+			<li>{{base_path()}}</li>
+			<li>Debug:&nbsp;{{(NULL != env('APP_DEBUG')) ? 'ON' : 'OFF'}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
 				&nbsp;&nbsp;<a href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a href="/travelocity">Travelocity</a>
