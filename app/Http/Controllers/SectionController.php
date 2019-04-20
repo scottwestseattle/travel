@@ -27,6 +27,8 @@ class SectionController extends Controller
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
+//dump(SITE_ID);
+//dd($this->getSiteId());
 			
 		$vdata = $this->getViewData([
 			'records' => $entries,
@@ -51,7 +53,22 @@ class SectionController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-			 
+			
+		// not done, needs ui
+		$sections = [
+			SECTION_SLIDERS => 'Sliders',
+			SECTION_WELCOME => 'Welcome',
+			SECTION_GALLERY => 'Galleries',
+			SECTION_ARTICLES => 'Articles',
+			SECTION_BLOGS => 'Blogs',
+			SECTION_CURRENT_LOCATION => 'Current Location',
+			SECTION_TOURS => 'Tours/Hike',
+			SECTION_COMMENTS => 'Comments',
+			SECTION_AFFILIATES => 'Affiliates',
+			SECTION_CASH => 'Cash',
+			SECTION_LESSONS => 'Lessons',
+		];
+	 
 		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
@@ -60,6 +77,7 @@ class SectionController extends Controller
 			'site_id' => $this->getSiteId(),
 			'referer' => '/sections',
 			'colors' => $this->colors,
+			'sections' => $sections,
 		]);
 		
 		return view('sections.add', $vdata);

@@ -78,7 +78,7 @@ define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
 // entries
-// -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=other 	
+// -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=section, 8=gallery, 9=lesson, 99=other 	
 define('ENTRY_TYPE_NOTSET', 	-1);
 define('ENTRY_TYPE_ENTRY', 		1);
 define('ENTRY_TYPE_TOUR', 		2);
@@ -88,6 +88,7 @@ define('ENTRY_TYPE_ARTICLE', 	5);
 define('ENTRY_TYPE_NOTE', 		6);
 define('ENTRY_TYPE_SECTION',	7);
 define('ENTRY_TYPE_GALLERY',	8);
+define('ENTRY_TYPE_LESSON',		9);
 define('ENTRY_TYPE_OTHER',		99);
 
 // sections
@@ -101,6 +102,7 @@ define('SECTION_TOURS', 'section-tours');
 define('SECTION_WELCOME', 'section-welcome');
 define('SECTION_CASH', 'section-cash');
 define('SECTION_COMMENTS', 'section-comments');
+define('SECTION_CHAPTERS', 'section-chapters');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -179,6 +181,7 @@ class Controller extends BaseController
 		ENTRY_TYPE_OTHER => 'Other',
 		ENTRY_TYPE_SECTION => 'Section',
 		ENTRY_TYPE_TOUR => 'Tour/Hike',
+		ENTRY_TYPE_LESSON => 'Lesson',
 	];
 
 	static private $entryUrls = [

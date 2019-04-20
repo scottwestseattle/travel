@@ -6,7 +6,11 @@ Changes
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-DB Changes
+Latest DB Changes
+
+2019-04-20
+ALTER TABLE `entries` ADD `major_number` SMALLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMALLINT NULL DEFAULT NULL AFTER `major_number`;
+
 
 7/10
 ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
