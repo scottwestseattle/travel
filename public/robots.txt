@@ -2,4 +2,3 @@ User-agent: *
 Disallow:
 Sitemap: https://grittytravel.com/sitemap-grittytravel.com.txt
 Sitemap: https://scotthub.com/sitemap-scotthub.com.txt
-Sitemap: http://hikebikeboat.com/sitemap-hikebikeboat.com.txt
