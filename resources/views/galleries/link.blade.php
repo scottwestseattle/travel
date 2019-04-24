@@ -43,7 +43,7 @@ function attach(event, entry, photo)
 	event.preventDefault();
 
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://grittytravel.com/galleries/attachasync/' + entry + '/' + photo);
+	xhr.open('GET', '/galleries/attachasync/' + entry + '/' + photo);
 	
 	xhr.onload = function() {
 		if (xhr.status === 200) 
