@@ -2,6 +2,34 @@
 
 @section('content')
 
+<script>
+
+function attach(event, entry, photo)
+{		
+	event.preventDefault();
+
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', '/galleries/attachasync/' + entry + '/' + photo);
+	
+	xhr.onload = function() {
+		if (xhr.status === 200) 
+		{
+			// success
+			document.getElementById(photo).style.display = "none";
+			//document.getElementById("attached").text = "Attached";
+		}
+		else 
+		{
+			// failure
+			alert('Request failed.  Returned status of ' + xhr.status);
+		}
+	};
+	
+	xhr.send();	
+}
+
+</script>
+
 <div class="container">
 	
 	<h1>Gallery Photos ({{count($photos)}})</h1>
@@ -35,33 +63,5 @@
 	<div style="margin-top:30px 0;"><a href="/photos/entries/{{$entry->id}}">Return to Parent</a></div>
 
 </div>
-
-<script>
-
-function attach(event, entry, photo)
-{		
-	event.preventDefault();
-
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', '/galleries/attachasync/' + entry + '/' + photo);
-	
-	xhr.onload = function() {
-		if (xhr.status === 200) 
-		{
-			// success
-			document.getElementById(photo).style.display = "none";
-			//document.getElementById("attached").text = "Attached";
-		}
-		else 
-		{
-			// failure
-			alert('Request failed.  Returned status of ' + xhr.status);
-		}
-	};
-	
-	xhr.send();	
-}
-
-</script>
 
 @endsection
