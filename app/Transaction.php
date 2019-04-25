@@ -87,6 +87,7 @@ class Transaction extends Base
     {
 		$total = 0.0;
 		$reconciled = 0.0;
+		$noPhotos = 0;
 		$rc = [];
 
 		foreach($records as $record)
@@ -95,6 +96,9 @@ class Transaction extends Base
 
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
+				
+			if (!isset($record->photo))
+				$noPhotos++;
 			
 			$total += $amount;
 		}
@@ -106,6 +110,7 @@ class Transaction extends Base
 		$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
 
 		$rc['total'] = $total + $startingBalance;
+		$rc['no_photos'] = $noPhotos;
 		
 		if ($total != $reconciled)
 		{
@@ -122,12 +127,14 @@ class Transaction extends Base
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
-				, transfer_accounts.name as transfer_account 
+				, transfer_accounts.name as transfer_account
+				, photos.filename as photo
 			FROM transactions as trx
 			JOIN accounts ON accounts.id = trx.parent_id
 			LEFT JOIN accounts AS transfer_accounts ON transfer_accounts.id = trx.transfer_account_id 
 			JOIN categories ON categories.id = trx.category_id
 			JOIN categories AS subcategories ON subcategories.id = trx.subcategory_id
+			LEFT JOIN photos ON photos.parent_id = trx.id
 			WHERE 1=1 
 			AND trx.user_id = ?
 			AND trx.deleted_flag = 0 

@@ -102,7 +102,7 @@ define('SECTION_TOURS', 'section-tours');
 define('SECTION_WELCOME', 'section-welcome');
 define('SECTION_CASH', 'section-cash');
 define('SECTION_COMMENTS', 'section-comments');
-define('SECTION_CHAPTERS', 'section-chapters');
+define('SECTION_LESSONS', 'section-lessons');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -195,6 +195,7 @@ class Controller extends BaseController
 		ENTRY_TYPE_OTHER => 'entries',
 		ENTRY_TYPE_SECTION => 'entries',
 		ENTRY_TYPE_TOUR => 'tours',
+		ENTRY_TYPE_LESSON => 'entries',
 	];
 	
 	public function __construct ()
@@ -1323,6 +1324,7 @@ class Controller extends BaseController
 		$filter['unreconciled_flag'] = false;
 		$filter['unmerged_flag'] = false;
 		$filter['showalldates_flag'] = false;
+		$filter['showphotos_flag'] = false;
 		
 		if (isset($request))
 		{
@@ -1366,7 +1368,12 @@ class Controller extends BaseController
 			if (isset($request->showalldates_flag))
 			{
 				$filter['showalldates_flag'] = $request->showalldates_flag;
-			}		
+			}
+					
+			if (isset($request->showphotos_flag))
+			{
+				$filter['showphotos_flag'] = $request->showphotos_flag;
+			}	
 		}
 		
 		return $filter;
