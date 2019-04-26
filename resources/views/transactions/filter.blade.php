@@ -59,7 +59,7 @@
 						@continue
 					@endif
 					
-					@if ($filter['showphotos_flag'] && isset($record->photo))
+					@if ($filter['showphotos_flag'] && $record->photo)
 						@continue
 					@endif	
 					
@@ -68,7 +68,7 @@
 						<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
 						@if ($filter['showphotos_flag'])
-							<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{isset($record->photo) ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+							<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{$record->photo ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 						@endif
 						<td style="color:{{$color}};">{{$record->transaction_date}}</td>
 						<td style="color:{{$color}};">{{$record->amount}}</td>

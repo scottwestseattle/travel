@@ -351,7 +351,7 @@ class PhotoController extends Controller
     }
 		
     public function add($type_flag, $parent_id = 0)
-    {		
+    {
 		if (!$this->isAdmin())
 			return redirect('/');
            
@@ -488,8 +488,8 @@ class PhotoController extends Controller
 				break;
 			case PHOTO_TYPE_RECEIPT:
 				$path = $this->getPhotosFullPath(PHOTO_RECEIPT_FOLDER . '/' . $id . '/');
-				$redirect = '/photos/' . PHOTO_ENTRY_FOLDER . '/' . $id . '/' . $type_flag;
-				$redirect_error = '/photos/add/' . PHOTO_RECEIPT_FOLDER . '/' . $id;				
+				$redirect = '/photos/direct/' . $id . '/' . $type_flag;
+				$redirect_error = '/photos/direct/' . $id . '/' . $type_flag;				
 				$folder = PHOTO_RECEIPT_FOLDER;
 				break;
 			default:

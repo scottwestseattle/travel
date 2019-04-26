@@ -78,6 +78,7 @@
 		
 		@if (null !== Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			<br/>View Count: {{$record->view_count}}<br/>
+			Word Count: {{str_word_count($record->description)}}<br/>
 		@endif
 		</strong>
 	</div>

@@ -76,7 +76,12 @@
 							@if ($user_type >= 100)
 								<li><a href="/about">@lang('ui.About')</a></li>
 								<li><a href="/admin">@lang('ui.Admin')</a></li>
-								<li><a href="/articles">@lang('ui.Articles')</a></li>
+								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
+									<li><a href="/articles">@lang('ui.Articles')</a></li>
+								@endif
+								@if (true || isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
+									<li><a href="/lessons">@lang('ui.Lessons')</a></li>
+								@endif
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">@lang('ui.Entries')</a></li>
 								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 									<li><a href="/tours/index">@lang('ui.Tours')</a></li>

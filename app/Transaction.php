@@ -97,7 +97,7 @@ class Transaction extends Base
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
 				
-			if (!isset($record->photo))
+			if (!$record->photo)
 				$noPhotos++;
 			
 			$total += $amount;
@@ -123,21 +123,22 @@ class Transaction extends Base
     static public function getFilter($filter)
     {		
 		$q = '
-			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes, trx.reconciled_flag, trx.transfer_id
+			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
+				, trx.reconciled_flag, trx.transfer_id
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
 				, transfer_accounts.name as transfer_account
-				, photos.filename as photo
+				, count(photos.id) as photo
 			FROM transactions as trx
 			JOIN accounts ON accounts.id = trx.parent_id
 			LEFT JOIN accounts AS transfer_accounts ON transfer_accounts.id = trx.transfer_account_id 
 			JOIN categories ON categories.id = trx.category_id
 			JOIN categories AS subcategories ON subcategories.id = trx.subcategory_id
-			LEFT JOIN photos ON photos.parent_id = trx.id
+			LEFT JOIN photos ON photos.parent_id = trx.id AND photos.deleted_flag = 0
 			WHERE 1=1 
 			AND trx.user_id = ?
-			AND trx.deleted_flag = 0 
+			AND trx.deleted_flag = 0
 		';
 		
 		if ($filter['showalldates_flag'] == 0) // use date filter
@@ -164,12 +165,23 @@ class Transaction extends Base
 		if (isset($filter['unreconciled_flag']) && $filter['unreconciled_flag'] == 1)
 			$q .= ' AND trx.reconciled_flag = 0 ';
 		
+		
+		$q .= '
+			GROUP BY trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
+				, trx.reconciled_flag, trx.transfer_id
+				, accounts.name
+				, categories.name
+				, subcategories.name
+				, subcategories.id 
+				, transfer_accounts.name
+		';
+		
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
 							
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
-		
+
 		return $records;
     }	
 	

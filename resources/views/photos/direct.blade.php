@@ -44,10 +44,7 @@
 					<td>
 						<table>
 						
-							@if (Auth::user()->user_type >= 100)
-								@if ($photo->gallery_flag <> 1)
-									<tr><td><span style="color:red;">Not in Gallery</span></td></tr>
-								@endif																	
+							@if (Auth::user()->user_type >= 100)																
 								<tr><td>{{ $photo->filename }}</td></tr>
 							@endif					
 						

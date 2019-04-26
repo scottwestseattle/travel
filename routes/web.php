@@ -47,6 +47,31 @@ Route::get('/hash', 'ToolController@hash')->middleware('auth');
 Route::post('/hasher', 'ToolController@hasher')->middleware('auth');
 
 // comments
+Route::group(['prefix' => 'lessons'], function () {
+	
+	// index
+	Route::get('/', 'LessonController@index');
+	Route::get('/indexadmin', 'EntryController@indexadmin')->middleware('auth');
+	Route::get('/view/{comment}', 'EntryController@view');
+	
+	// add/create
+	Route::get('/add/{parent_id?}','LessonController@add');
+	Route::post('/create','EntryController@create');
+
+	// edit/update
+	Route::get('/edit/{comment}','EntryController@edit');
+	Route::post('/update/{comment}','EntryController@update');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{comment}', 'EntryController@confirmdelete');
+	Route::post('/delete/{comment}', 'EntryController@delete');
+	
+	// publish
+	Route::get('/publish/{comment}', 'EntryController@publish');
+	Route::post('/publishupdate/{comment}', 'EntryController@publishupdate');		
+});
+
+// comments
 Route::group(['prefix' => 'comments'], function () {
 	
 	Route::get('/', 'CommentController@index');
