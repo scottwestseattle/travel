@@ -68,7 +68,11 @@ Route::group(['prefix' => 'lessons'], function () {
 	
 	// publish
 	Route::get('/publish/{comment}', 'EntryController@publish');
-	Route::post('/publishupdate/{comment}', 'EntryController@publishupdate');		
+	Route::post('/publishupdate/{comment}', 'EntryController@publishupdate');
+	
+	// permalink must go at bottom as catchall
+	Route::get('/stats/{permalink}', ['as' => 'lesson.stats', 'uses' => 'LessonController@stats']);		
+	Route::get('/{permalink}', ['as' => 'lesson.permalink', 'uses' => 'LessonController@permalink']);		
 });
 
 // comments

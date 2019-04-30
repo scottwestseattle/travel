@@ -1288,7 +1288,7 @@ class Controller extends BaseController
 			$days[$i] = $i;
 
 		$years = [];
-		$startYear = intval(date('Y')) - 8; // 8 previous years, this year, and next year = 10
+		$startYear = 1997; //
 		$endYear = intval(date('Y')) + 1; // end next year
 		for ($i = $startYear; $i <= $endYear; $i++)
 		{		
