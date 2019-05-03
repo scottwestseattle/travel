@@ -45,7 +45,7 @@ define('PHOTO_TYPE_SLIDER_HORIZONTAL_ONLY', 3);
 define('PHOTO_TYPE_SLIDER_VERTICAL_ONLY', 4);
 define('PHOTO_TYPE_OTHER', 		99);
 
-define('PHOTO_THUMBNAIL_HEIGHT', 400);
+define('PHOTO_THUMBNAIL_HEIGHT', 1000);
 
 define('PHOTO_SLIDER_FOLDER', 'sliders');
 define('PHOTO_ENTRY_FOLDER', 'entries');
@@ -1761,7 +1761,6 @@ class Controller extends BaseController
 		$fileThumb = Controller::appendPath($toPath, $filenameTo);
 				
 		$image_info = getimagesize($file);	
-		
 		switch($image_info["mime"])
 		{
 			case "image/jpeg":
@@ -1791,57 +1790,27 @@ class Controller extends BaseController
 		// resize the file
 		//
 		
-		$portrait = (imagesy($image) > imagesx($image));
+		$h = imagesy($image);
+		$w = imagesx($image);
 		
+		$portrait = ($h > $w);
 		$width = 0;
 		$height = $heightNew;
 		
 		if ($portrait)
 		{
-			$ratio = $height / imagesy($image);
-			$width = imagesx($image) * $ratio; 			
+			$ratio = $height / $h;
+			$width = $w * $ratio; 			
 		}
 		else
 		{
-			$ratio = $height / imagesy($image);			
-			$width = imagesx($image) * $ratio; 			
+			$ratio = $height / $h;			
+			$width = $w * $ratio; 			
 		}
-
-		if (false /*sbw*/ && file_exists($fileThumb))
-		{			
-			// check the thumb
-			$image_info_thumb = getimagesize($fileThumb);
-			
-			switch($image_info_thumb["mime"])
-			{
-				case "image/jpeg":
-					$imageThumb = @imagecreatefromjpeg($fileThumb); //jpeg file
-					break;
-					
-				case "image/gif":
-					$imageThumb = @imagecreatefromgif($fileThumb); //gif file
-					break;
-					
-				case "image/png":
-					$imageThumb = @imagecreatefrompng($fileThumb); //png file
-					break;
-					
-				default: 
-					$imageThumb = false;
-					break;
-			}
-			
-			// check for bad image
-			if (!$imageThumb)
-			{		
-				return false;
-			}	
-		
-			if (intval($height) == imagesy($imageThumb) && intval($width) == imagesx($imageThumb))
-			{
-				return false;
-			}
-		}
+dump($portrait);
+dump($ratio);
+dump($height);
+//dd($width);
 		
 		//echo 'rewriting file...<b />';
 		
