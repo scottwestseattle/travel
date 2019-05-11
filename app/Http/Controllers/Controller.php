@@ -218,6 +218,18 @@ class Controller extends BaseController
 			return $next($request);
 		});
 	}
+
+	static public function getDomainName()
+	{
+		$dn = 'Domain Unknown';
+				
+		if (array_key_exists("SERVER_NAME", $_SERVER))
+		{			
+			$dn = $_SERVER["SERVER_NAME"];
+		}
+		
+		return $dn;
+	}
 	
 	static public function getEntryTypes()
 	{		
@@ -1625,7 +1637,7 @@ class Controller extends BaseController
 			
 		$tnFolder = base_path() . '/public' . $record->photo_path . '/' . PHOTOS_THUMBNAIL_FOLDER; 
 		$found = false;
-		
+
 		if (is_dir($tnFolder))
 		{
 			// does TN already exists for this photo
@@ -1673,7 +1685,7 @@ class Controller extends BaseController
 			catch (\Exception $e) 
 			{	
 				// log exception
-				$msg = 'Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
+				$msg = Controller::getDomainName() . ': Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
 				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
 			}				
 		}
@@ -1687,7 +1699,7 @@ class Controller extends BaseController
 		if (!Controller::endsWith($tnFolder, '/'))
 			$tnFolder .= '/';
 		$tnFolder .= PHOTOS_THUMBNAIL_FOLDER; 
-		 
+	 
 		$found = false;
 		
 		if (is_dir($tnFolder))
@@ -1737,7 +1749,7 @@ class Controller extends BaseController
 			catch (\Exception $e) 
 			{	
 				// log exception
-				$msg = 'Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
+				$msg = Controller::getDomainName() . ': Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
 				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
 			}				
 		}
@@ -1807,9 +1819,9 @@ class Controller extends BaseController
 			$ratio = $height / $h;			
 			$width = $w * $ratio; 			
 		}
-dump($portrait);
-dump($ratio);
-dump($height);
+//dump($portrait);
+//dump($ratio);
+//dump($height);
 //dd($width);
 		
 		//echo 'rewriting file...<b />';
