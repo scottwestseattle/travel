@@ -158,6 +158,18 @@ function createPhotoName(fromId, fromLocationId, toId)
 		// replace & with n, B&B to BnB
 		toElem.value = toElem.value.replace(/\&/g, "n");
 
+		// replace accent characters
+		toElem.value = toElem.value.replace(/ñ/g, "n");
+		toElem.value = toElem.value.replace(/í/g, "i");
+		toElem.value = toElem.value.replace(/á/g, "a");
+		toElem.value = toElem.value.replace(/ó/g, "o");
+		toElem.value = toElem.value.replace(/ú/g, "u");
+		toElem.value = toElem.value.replace(/é/g, "e");
+		toElem.value = toElem.value.replace(/ü/g, "u");
+		toElem.value = toElem.value.replace(/ç/g, "c");
+//		toElem.value = toElem.value.replace(//g, "");
+
+
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
 		
