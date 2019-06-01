@@ -150,37 +150,35 @@ function createPhotoName(fromId, fromLocationId, toId)
 			toElem.value = fromLocation.value.trim() + '-';
 		}
 		
+		// trim the trash
 		toElem.value += fromElem.value.trim();
 
-		// remove apostrophe		
+		// remove apostrophes
 		toElem.value = toElem.value.replace(/\'/g, "");
 
 		// replace & with n, B&B to BnB
 		toElem.value = toElem.value.replace(/\&/g, "n");
 
-		// replace accent characters
+		//
+		// replace accent / special characters one by one
+		//
 		toElem.value = toElem.value.replace(/ñ/g, "n");
 		toElem.value = toElem.value.replace(/ç/g, "c");
 
-		toElem.value = toElem.value.replace(/í/g, "i");
-		toElem.value = toElem.value.replace(/Í/g, "I");
-
 		toElem.value = toElem.value.replace(/Á/g,"A");
-		toElem.value = toElem.value.replace(/á/g, "a");
-		toElem.value = toElem.value.replace(/â/g, "a");
+		toElem.value = toElem.value.replace(/[àáâä]+/g, "a");
 
-		toElem.value = toElem.value.replace(/ó/g, "o");
-		toElem.value = toElem.value.replace(/Ó/g, "O");
-		toElem.value = toElem.value.replace(/ô/g, "o");
-		toElem.value = toElem.value.replace(/ö/g, "o");
-
-		toElem.value = toElem.value.replace(/ú/g, "u");
-		toElem.value = toElem.value.replace(/Ú/g, "U");
-		toElem.value = toElem.value.replace(/ü/g, "u");
-
-		toElem.value = toElem.value.replace(/é/g, "e");
-		toElem.value = toElem.value.replace(/ê/g, "e");
 		toElem.value = toElem.value.replace(/É/g, "E");
+		toElem.value = toElem.value.replace(/[èéêë]+/g, "e");
+
+		toElem.value = toElem.value.replace(/Í/g, "I");
+		toElem.value = toElem.value.replace(/[ìíîï]+/g, "i");
+
+		toElem.value = toElem.value.replace(/Ó/g, "O");
+		toElem.value = toElem.value.replace(/[òóôö]+/g, "o");
+
+		toElem.value = toElem.value.replace(/Ú/g, "U");
+		toElem.value = toElem.value.replace(/[ùúûü]+/g, "u");
 
 //		toElem.value = toElem.value.replace(//g, "");
 //		toElem.value = toElem.value.replace(//g, "");
