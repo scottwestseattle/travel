@@ -3,6 +3,7 @@
 		<table><tr>
 			@component('menu-submenu-general')@endcomponent
 			<td><a href='/{{$prefix}}/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
+			<td><a href='/{{$prefix}}/reconciles/'><span class="glyphCustom glyphicon glyphicon-star"></span></a></td>
 			@if (isset($record->id))
 				<td><a href='/{{$prefix}}/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
 				<td><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>

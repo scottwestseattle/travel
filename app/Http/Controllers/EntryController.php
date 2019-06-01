@@ -291,6 +291,12 @@ class EntryController extends Controller
 				$prev = Entry::getNextPrevEntry($entry->display_date, $entry->id, /* next = */ false);
 			}
 		}
+		else if ($entry->type_flag == ENTRY_TYPE_LESSON)
+		{
+			$backLink = '/lessons';
+			$backLinkText = __('content.Back to Lessons');
+			$page_title = __('ui.Lesson') . ' - ' . $page_title;
+		}		
 		
 		$photos = Photo::select()
 			->where('site_id', SITE_ID)

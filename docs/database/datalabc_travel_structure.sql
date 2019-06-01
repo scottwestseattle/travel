@@ -30,6 +30,24 @@ USE `datalabc_cms`;
 -- Estructura de tabla para la tabla `accounts`
 --
 
+DROP TABLE IF EXISTS `reconciles`;
+CREATE TABLE IF NOT EXISTS `reconciles` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `balance` decimal(10,2) DEFAULT 0.00,
+  `done_flag` tinyint(4) DEFAULT 0,
+  `deleted_flag` tinyint(4) DEFAULT 0,
+  `statement_date` datetime NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Estructura de tabla para la tabla `accounts`
+--
+
 DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE IF NOT EXISTS `accounts` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,

@@ -43,6 +43,9 @@ ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type
 2019-01-23
 ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
 
+2019-05-10
+ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 My Booking Affiliate Link

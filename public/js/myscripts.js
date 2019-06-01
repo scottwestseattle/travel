@@ -160,15 +160,34 @@ function createPhotoName(fromId, fromLocationId, toId)
 
 		// replace accent characters
 		toElem.value = toElem.value.replace(/ñ/g, "n");
-		toElem.value = toElem.value.replace(/í/g, "i");
-		toElem.value = toElem.value.replace(/á/g, "a");
-		toElem.value = toElem.value.replace(/ó/g, "o");
-		toElem.value = toElem.value.replace(/ú/g, "u");
-		toElem.value = toElem.value.replace(/é/g, "e");
-		toElem.value = toElem.value.replace(/ü/g, "u");
 		toElem.value = toElem.value.replace(/ç/g, "c");
-//		toElem.value = toElem.value.replace(//g, "");
 
+		toElem.value = toElem.value.replace(/í/g, "i");
+		toElem.value = toElem.value.replace(/Í/g, "I");
+
+		toElem.value = toElem.value.replace(/Á/g,"A");
+		toElem.value = toElem.value.replace(/á/g, "a");
+		toElem.value = toElem.value.replace(/â/g, "a");
+
+		toElem.value = toElem.value.replace(/ó/g, "o");
+		toElem.value = toElem.value.replace(/Ó/g, "O");
+		toElem.value = toElem.value.replace(/ô/g, "o");
+		toElem.value = toElem.value.replace(/ö/g, "o");
+
+		toElem.value = toElem.value.replace(/ú/g, "u");
+		toElem.value = toElem.value.replace(/Ú/g, "U");
+		toElem.value = toElem.value.replace(/ü/g, "u");
+
+		toElem.value = toElem.value.replace(/é/g, "e");
+		toElem.value = toElem.value.replace(/ê/g, "e");
+		toElem.value = toElem.value.replace(/É/g, "E");
+
+//		toElem.value = toElem.value.replace(//g, "");
+//		toElem.value = toElem.value.replace(//g, "");
+//		toElem.value = toElem.value.replace(//g, "");
+//		toElem.value = toElem.value.replace(//g, "");
+//		toElem.value = toElem.value.replace(//g, "");
+//		toElem.value = toElem.value.replace(//g, "");
 
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
