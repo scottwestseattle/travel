@@ -79,7 +79,7 @@
 								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 									<li><a href="/articles">@lang('ui.Articles')</a></li>
 								@endif
-								@if (true || isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
+								@if (isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
 									<li><a href="/lessons">@lang('ui.Lessons')</a></li>
 								@endif
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">@lang('ui.Entries')</a></li>
