@@ -9,6 +9,10 @@
 		<table class="table">
 			<tbody>@foreach($records as $record)
 				<tr>
+					<?php 
+						$count = count($record->entries);
+						$deleted = $record->deleted_flag; 
+					?>
 					<td style="width:10px; padding-right:20px;">
 						<a href='/locations/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a>
 					</td>
@@ -16,7 +20,7 @@
 						<a href='/locations/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
 					</td>
 					<td>
-						<a target="" href="/locations/activities/{{$record->id}}">{{$record->name}}</a>
+						<a target="" href="/locations/view/{{$record->id}}">{{$record->name}} ({{$count}}) {{($deleted == 1 ? 'DELETED' : '')}}</a>
 					</td>
 					<td style="width:200px; margin-right: 20px;">
 						@if ($record->breadcrumb_flag)

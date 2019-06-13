@@ -4,17 +4,7 @@
 
 <div class="container page-size">
 
-	@guest
-	@else
-		@if (Auth::user()->user_type >= 100)
-		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/locations/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/locations/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/locations/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/locations/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
-		</tr></table>
-		@endif
-	@endguest
+	@component('locations.menu-submenu', ['prefix' => $prefix, 'record' => $record])@endcomponent
 
 	<h1>Delete: {{$record->name }}</h1>
 
@@ -37,10 +27,12 @@
 	</div>	
 
 	<div class="form-group">
-		<h3 name="name" class="">Users: {{isset($activities) && count($activities) > 0 ? '' : 'None' }}</h3>
+		<h3 name="name" class="">In Use By: {{isset($entries) && count($entries) > 0 ? '' : 'None' }}</h3>
 		<ul>
-		@foreach($activities as $activity)
-			<li>{{$activity->title}}</li>
+		@foreach($entries as $entry)
+			@if ($entry->deleted_flag == 0)
+			<li><a href="/entries/{{$entry->permalink}}" target="_blank">{{$entry->title}}</a></li>
+			@endif
 		@endforeach
 		</ul>
 	</div>		

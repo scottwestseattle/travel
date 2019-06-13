@@ -31,7 +31,7 @@ class LocationsController extends Controller
              return redirect('/');
 		
 		$locations = Location::select()
-			//->where('user_id', '=', Auth::id())
+			->where('deleted_flag', 0)
 			->orderByRaw('locations.name ASC')
 			->get();
 		
@@ -108,17 +108,19 @@ class LocationsController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-		
+
 		$parent = Location::select()
 			//->where('user_id', '=', Auth::id())
 			->where('id', '=', $location->parent_id)
 			->first();
 			
 		$activities = null;
-		$location = $this->getLocation($location->id, $activities);			
+		$locWithParent = $this->getLocation($location->id, $activities);			
 
 		$vdata = $this->getViewData([
-			'record' => $location, 'activities' => $activities
+			'record' => $locWithParent,
+			'activities' => $activities,
+			'entries' => $location->entries,
 		]);		
 			
 		return view('locations.view', $vdata);
@@ -140,10 +142,29 @@ class LocationsController extends Controller
 			]));
     }
 
+    public function exists($name, $parent_id)
+    {		
+		$l = Location::select()
+			->where('deleted_flag', '=', 0)
+			->where('parent_id', $parent_id)
+			->where('name', $name)
+			->first();
+			
+		return (isset($l));
+	}
+	
     public function create(Request $request)
     {
 		if (!$this->isAdmin())
              return redirect('/');
+		
+		if ($this->exists($request->name, $request->parent_id) > 0)
+		{
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Location Already Exists: ' . $request->name);		
+
+	    	return redirect('/locations/add'); 
+		}
 		
     	$location = new Location();
     	$location->name = $request->name;
@@ -154,6 +175,9 @@ class LocationsController extends Controller
 		$location->popular_flag = isset($request->popular_flag) ? 1 : 0;
 		
     	$location->save();
+
+		$request->session()->flash('message.level', 'success');
+		$request->session()->flash('message.content', 'Location Added: ' . $request->name);		
 		
     	return redirect('/locations/indexadmin'); 
     }
@@ -190,6 +214,14 @@ class LocationsController extends Controller
 	
     	if (Auth::check())
         {
+			if ($this->exists($request->name, $request->parent_id) > 0)
+			{
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', 'Location Already Exists: ' . $request->name);		
+
+				return redirect('/locations/edit/' . $location->id); 
+			}
+		
 			$location->name = $request->name;
 			$location->location_type = $request->location_type;
 			$location->parent_id = $request->parent_id;
@@ -229,10 +261,11 @@ class LocationsController extends Controller
     	if (Auth::check())
         {
 			$activities = null;
-			$location = $this->getLocation($location->id, $activities);
+			$locWithParent = $this->getLocation($location->id, $activities);
 			
 			return view('locations.confirmdelete', $this->getViewData([
-				'record' => $location, 
+				'record' => $locWithParent,
+				'entries' => $location->entries, 
 				'activities' => $activities,
 				]));	
         }
@@ -243,7 +276,7 @@ class LocationsController extends Controller
     }
 	
     public function delete(Location $location)
-    {
+    {    	
 		if (!$this->isAdmin())
              return redirect('/');
 		
