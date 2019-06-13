@@ -164,28 +164,12 @@ function createPhotoName(fromId, fromLocationId, toId)
 		//
 		toElem.value = toElem.value.replace(/ñ/g, "n");
 		toElem.value = toElem.value.replace(/ç/g, "c");
-
-		toElem.value = toElem.value.replace(/Á/g,"A");
-		toElem.value = toElem.value.replace(/[àáâä]+/g, "a");
-
-		toElem.value = toElem.value.replace(/É/g, "E");
-		toElem.value = toElem.value.replace(/[èéêë]+/g, "e");
-
-		toElem.value = toElem.value.replace(/Í/g, "I");
-		toElem.value = toElem.value.replace(/[ìíîï]+/g, "i");
-
-		toElem.value = toElem.value.replace(/Ó/g, "O");
-		toElem.value = toElem.value.replace(/[òóôö]+/g, "o");
-
-		toElem.value = toElem.value.replace(/Ú/g, "U");
-		toElem.value = toElem.value.replace(/[ùúûü]+/g, "u");
-
-//		toElem.value = toElem.value.replace(//g, "");
-//		toElem.value = toElem.value.replace(//g, "");
-//		toElem.value = toElem.value.replace(//g, "");
-//		toElem.value = toElem.value.replace(//g, "");
-//		toElem.value = toElem.value.replace(//g, "");
-//		toElem.value = toElem.value.replace(//g, "");
+		toElem.value = toElem.value.replace(/[ÀÁÄÂàáâäã]+/g, "a");
+		toElem.value = toElem.value.replace(/[ÉÈËÊèéêë]+/g, "e");
+		toElem.value = toElem.value.replace(/[ÍÌÏÎìíîï]+/g, "i");
+		toElem.value = toElem.value.replace(/[ÓÒÖÔòóôöõ]+/g, "o");
+		toElem.value = toElem.value.replace(/[ÙÚÜÛùúûü]+/g, "u");
+		toElem.value = toElem.value.replace(/Ÿÿ/g, "y");
 
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());
