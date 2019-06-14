@@ -64,7 +64,7 @@
 
 	@if (isset($shortEntries) and count($shortEntries) > 0)
 	<div>
-		<h3 style="color:red;">Short Entries ({{count($shortEntries)}})</h3>
+		<h3 style="color:red;">Unfinished Entries ({{count($shortEntries)}})</h3>
 		<table class="table table-striped">
 			<tbody>
 				<tr><th></th><th>Entry</th><th>Created Date</th><th>Type</th>

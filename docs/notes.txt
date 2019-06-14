@@ -2,14 +2,20 @@ Changes
 - Use middleware for function auth
 - 
 
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Latest DB Changes
 
+2019-05-10
+ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
+update `entries` set finished_flag = 1
+
 2019-04-20
 ALTER TABLE `entries` ADD `major_number` SMALLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMALLINT NULL DEFAULT NULL AFTER `major_number`;
+
+2019-01-23
+ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
+
 
 
 7/10
@@ -39,12 +45,6 @@ ALTER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelalt`, ADD `ma
 
 09/29
 ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permalink` VARCHAR(255) NULL AFTER `gallery_flag`;
-
-2019-01-23
-ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
-
-2019-05-10
-ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

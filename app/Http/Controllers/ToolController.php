@@ -574,13 +574,18 @@ LEFT JOIN photos
 			SELECT *
 			FROM entries
 			WHERE 1=1
-				AND (CHAR_LENGTH(description) < 100 OR description IS NULL)  				
 				AND deleted_flag = 0
 				AND type_flag in (2,3,4,5)
-				AND approved_flag = 1 
-				AND published_flag = 1
+				AND (finished_flag = 0 OR finished_flag is null)
 			ORDER by id DESC
 		';
+
+// original:
+//				AND (CHAR_LENGTH(description) < 100 OR description IS NULL)  				
+//				AND deleted_flag = 0
+//				AND type_flag in (2,3,4,5)
+//				AND approved_flag = 1 
+//				AND published_flag = 1				
 
 		$records = DB::select($q);
 			

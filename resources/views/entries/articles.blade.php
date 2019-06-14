@@ -4,14 +4,7 @@
 
 <div class="page-size container">
 
-		@if (Auth::check() && isset($record) && (Auth::user()->user_type >= 1000 || (Auth::user()->id === $record->user_id)))
-			<!-- Sub-menu ------>
-			<div class="" style="font-size:20px;">
-				<table class=""><tr>			
-					<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
-				</tr></table>
-			</div>			
-		@endif
+	@component('entries.menu-submenu')@endcomponent	
 
 	<h1 style="font-size:1.3em;">@LANG('ui.Articles') ({{ count($records) }})</h1>
 

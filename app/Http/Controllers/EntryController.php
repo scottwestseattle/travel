@@ -652,6 +652,7 @@ class EntryController extends Controller
         {			
 			$entry->published_flag = isset($request->published_flag) ? 1 : 0;
 			$entry->approved_flag = isset($request->approved_flag) ? 1 : 0;
+			$entry->finished_flag = isset($request->finished_flag) ? 1 : 0;
 			$entry->parent_id = $request->parent_id;
 			$entry->view_count = intval($request->view_count);
 
