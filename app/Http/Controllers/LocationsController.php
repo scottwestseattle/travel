@@ -214,7 +214,7 @@ class LocationsController extends Controller
 	
     	if (Auth::check())
         {
-			if ($this->exists($request->name, $request->parent_id) > 0)
+			if (strtolower($location->name) != strtolower($request->name) && $this->exists($request->name, $request->parent_id) > 0)
 			{
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', 'Location Already Exists: ' . $request->name);		

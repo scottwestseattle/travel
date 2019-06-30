@@ -65,12 +65,17 @@
 					
 					<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
 					<tr>
+					@if ($record->reconciled_flag == 0)
+						<td class="glyphCol"><a href='/{{$prefix}}/reconcile/{{$record->id}}/1'><span style="color:red;" class="glyphCustom glyphicon glyphicon-star-empty"></span></a></td>
+					@else
+						<td class="glyphCol"><a href='/{{$prefix}}/reconcile/{{$record->id}}/0'><span class="glyphCustom glyphicon glyphicon-star"></span></a></td>
+					@endif
 						<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
 						@if ($filter['showphotos_flag'])
 							<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{$record->photo ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 						@endif
-						<td style="color:{{$color}};">{{$record->transaction_date}}</td>
+						<td style="color:default;">{{$record->transaction_date}}</td>
 						<td style="color:{{$color}};">{{$record->amount}}</td>
 						
 						@if (isset($record->transfer_id))
@@ -84,8 +89,8 @@
 							<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
 						@endif
 						
-						<td style="color:{{$color}};">{{$record->notes}}</td>
-						<td style="color:{{$color}};">{{$record->vendor_memo}}</td>
+						<td>{{$record->notes}}</td>
+						<td>{{$record->vendor_memo}}</td>
 						<td><a href="/{{$prefix}}/show/account/{{$record->parent_id}}">{{$record->account}}</a></td>
 						<td><a href="/{{$prefix}}/show/category/{{$record->id}}">{{$record->category}}</a>::<a href="/{{$prefix}}/show/subcategory/{{$record->subcategory_id}}">{{$record->subcategory}}</a></td>
 						<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>

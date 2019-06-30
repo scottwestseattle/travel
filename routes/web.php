@@ -245,6 +245,10 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/filter/{all?}','TransactionController@filter')->middleware('auth');
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	
+	// reconcile
+	Route::get('/reconciles/{accountId?}', 'TransactionController@reconciles')->middleware('auth');
+	Route::get('/reconcile/{transaction}/{reconcile}', 'TransactionController@reconcile')->middleware('auth');
+	
 	// add/create/copy/transfer
 	Route::get('/copy/{transaction}','TransactionController@copy')->middleware('auth');
 	Route::get('/transfer/{account}','TransactionController@transfer')->middleware('auth');
@@ -258,7 +262,8 @@ Route::group(['prefix' => 'transactions'], function () {
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{transaction}', 'TransactionController@confirmdelete')->middleware('auth');
-	Route::post('/delete/{transaction}', 'TransactionController@delete')->middleware('auth');	
+	Route::post('/delete/{transaction}', 'TransactionController@delete')->middleware('auth');
+		
 });
 
 // Accounts

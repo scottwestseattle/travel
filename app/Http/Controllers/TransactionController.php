@@ -12,6 +12,7 @@ use App\Account;
 use App\Category;
 use DateTime;
 use App\Photo;
+use App\Reconcile;
 
 define('PREFIX', 'transactions');
 define('LOG_MODEL', 'transactions');
@@ -366,7 +367,92 @@ class TransactionController extends Controller
 							
 		return view(PREFIX . '.filter', $vdata);
     }	
+    
+    public function reconciles(Request $request, $accountId = -1)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
 
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+//dd($accounts);
+		
+		$accountId = intval($accountId);
+		
+		$records = null;
+		$totals = null;
+		$total = 0.0;
+		$filter = [
+			"selected_month" => 12,
+			"selected_day" => false,
+			"selected_year" => 2018,
+			"from_date" => "2018-12-1",
+			"to_date" => "2018-12-31",
+			"account_id" => $accountId,
+			"category_id" => false,
+			"subcategory_id" => false,
+			"search" => false,
+			"unreconciled_flag" => true,
+		  	"unmerged_flag" => false,
+			"showalldates_flag" => true,
+		];
+
+		if ($accountId >= 0)
+		{
+			try
+			{
+				$records = Transaction::getFilter($filter);
+				$totals = Transaction::getTotal($records, $accountId);
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $e->getMessage());
+		
+				return redirect('/error');
+			}
+		}
+					
+		return view(PREFIX . '.reconcile', $this->getViewData([
+			'records' => $records,
+			'totals' => $totals,
+			'accounts' => $accounts,
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $filter,
+		]));
+    }	
+
+    public function reconcile(Request $request, Transaction $transaction, $reconcile)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$record = $transaction;
+
+		$record->reconciled_flag = intval($reconcile);
+		$msg = 'Transaction has been ' . ($record->reconciled_flag == 1 ? 'Reconciled' : 'Unreconciled');
+						
+		try
+		{
+			$record->save();
+
+			Event::logEdit(LOG_MODEL, $record->description, $record->id, $msg);			
+			
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', $msg);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg, null, $e->getMessage());
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}
+		
+		return back();					    	
+	}
+	
     public function show(Request $request, $query, $id)
     {	
 		if (!$this->isAdmin())
