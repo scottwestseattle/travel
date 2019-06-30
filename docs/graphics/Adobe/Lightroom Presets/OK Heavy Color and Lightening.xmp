@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="A84EE23EC9B3402393DE005A3F1F3B8D"
+   crs:UUID="2ADA599EEB9B4201990DFCBAB8B7986C"
    crs:SupportsAmount="False"
    crs:SupportsColor="True"
    crs:SupportsMonochrome="True"
@@ -16,11 +16,11 @@
    crs:Copyright=""
    crs:ContactInfo=""
    crs:Version="11.2"
-   crs:ProcessVersion="10.0"
+   crs:ProcessVersion="11.0"
    crs:WhiteBalance="As Shot"
    crs:IncrementalTemperature="0"
    crs:IncrementalTint="0"
-   crs:Saturation="-10"
+   crs:Saturation="+21"
    crs:Sharpness="0"
    crs:LuminanceSmoothing="0"
    crs:ColorNoiseReduction="0"
@@ -32,7 +32,7 @@
    crs:GreenSaturation="0"
    crs:BlueHue="0"
    crs:BlueSaturation="0"
-   crs:Vibrance="0"
+   crs:Vibrance="+9"
    crs:HueAdjustmentRed="0"
    crs:HueAdjustmentOrange="0"
    crs:HueAdjustmentYellow="0"
@@ -77,19 +77,19 @@
    crs:LensManualDistortionAmount="0"
    crs:AutoLateralCA="0"
    crs:Exposure2012="0.00"
-   crs:Contrast2012="+20"
-   crs:Highlights2012="0"
-   crs:Shadows2012="0"
-   crs:Whites2012="0"
-   crs:Blacks2012="0"
-   crs:Clarity2012="0"
+   crs:Contrast2012="+15"
+   crs:Highlights2012="+52"
+   crs:Shadows2012="+47"
+   crs:Whites2012="+70"
+   crs:Blacks2012="+9"
+   crs:Clarity2012="+35"
    crs:DefringePurpleAmount="0"
    crs:DefringePurpleHueLo="30"
    crs:DefringePurpleHueHi="70"
    crs:DefringeGreenAmount="0"
    crs:DefringeGreenHueLo="40"
    crs:DefringeGreenHueHi="60"
-   crs:Dehaze="+50"
+   crs:Dehaze="+56"
    crs:ConvertToGrayscale="False"
    crs:OverrideLookVignette="False"
    crs:ToneCurveName2012="Linear"
@@ -97,7 +97,7 @@
    crs:HasSettings="True">
    <crs:Name>
     <rdf:Alt>
-     <rdf:li xml:lang="x-default">Asia Tone Down</rdf:li>
+     <rdf:li xml:lang="x-default">OK Heavy Color and Lightening</rdf:li>
     </rdf:Alt>
    </crs:Name>
    <crs:ShortName>

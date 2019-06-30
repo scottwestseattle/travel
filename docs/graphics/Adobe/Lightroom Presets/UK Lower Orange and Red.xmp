@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="A84EE23EC9B3402393DE005A3F1F3B8D"
+   crs:UUID="A3772CBD327D46ADB99FF86BAB9CD0D5"
    crs:SupportsAmount="False"
    crs:SupportsColor="True"
    crs:SupportsMonochrome="True"
@@ -16,11 +16,11 @@
    crs:Copyright=""
    crs:ContactInfo=""
    crs:Version="11.2"
-   crs:ProcessVersion="10.0"
+   crs:ProcessVersion="11.0"
    crs:WhiteBalance="As Shot"
    crs:IncrementalTemperature="0"
    crs:IncrementalTint="0"
-   crs:Saturation="-10"
+   crs:Saturation="+73"
    crs:Sharpness="0"
    crs:LuminanceSmoothing="0"
    crs:ColorNoiseReduction="0"
@@ -32,7 +32,7 @@
    crs:GreenSaturation="0"
    crs:BlueHue="0"
    crs:BlueSaturation="0"
-   crs:Vibrance="0"
+   crs:Vibrance="+46"
    crs:HueAdjustmentRed="0"
    crs:HueAdjustmentOrange="0"
    crs:HueAdjustmentYellow="0"
@@ -50,9 +50,9 @@
    crs:SaturationAdjustmentPurple="0"
    crs:SaturationAdjustmentMagenta="0"
    crs:LuminanceAdjustmentRed="0"
-   crs:LuminanceAdjustmentOrange="0"
-   crs:LuminanceAdjustmentYellow="0"
-   crs:LuminanceAdjustmentGreen="0"
+   crs:LuminanceAdjustmentOrange="-71"
+   crs:LuminanceAdjustmentYellow="-29"
+   crs:LuminanceAdjustmentGreen="-55"
    crs:LuminanceAdjustmentAqua="0"
    crs:LuminanceAdjustmentBlue="0"
    crs:LuminanceAdjustmentPurple="0"
@@ -77,27 +77,27 @@
    crs:LensManualDistortionAmount="0"
    crs:AutoLateralCA="0"
    crs:Exposure2012="0.00"
-   crs:Contrast2012="+20"
-   crs:Highlights2012="0"
-   crs:Shadows2012="0"
-   crs:Whites2012="0"
-   crs:Blacks2012="0"
-   crs:Clarity2012="0"
+   crs:Contrast2012="-21"
+   crs:Highlights2012="+52"
+   crs:Shadows2012="+84"
+   crs:Whites2012="+20"
+   crs:Blacks2012="+80"
+   crs:Clarity2012="+25"
    crs:DefringePurpleAmount="0"
    crs:DefringePurpleHueLo="30"
    crs:DefringePurpleHueHi="70"
    crs:DefringeGreenAmount="0"
    crs:DefringeGreenHueLo="40"
    crs:DefringeGreenHueHi="60"
-   crs:Dehaze="+50"
+   crs:Dehaze="+70"
    crs:ConvertToGrayscale="False"
    crs:OverrideLookVignette="False"
-   crs:ToneCurveName2012="Linear"
+   crs:ToneCurveName2012="Custom"
    crs:CameraProfile="Embedded"
    crs:HasSettings="True">
    <crs:Name>
     <rdf:Alt>
-     <rdf:li xml:lang="x-default">Asia Tone Down</rdf:li>
+     <rdf:li xml:lang="x-default">UK Lower Orange and Red</rdf:li>
     </rdf:Alt>
    </crs:Name>
    <crs:ShortName>
@@ -123,6 +123,9 @@
    <crs:ToneCurvePV2012>
     <rdf:Seq>
      <rdf:li>0, 0</rdf:li>
+     <rdf:li>58, 59</rdf:li>
+     <rdf:li>128, 131</rdf:li>
+     <rdf:li>193, 211</rdf:li>
      <rdf:li>255, 255</rdf:li>
     </rdf:Seq>
    </crs:ToneCurvePV2012>

@@ -4,7 +4,7 @@
     xmlns:crs="http://ns.adobe.com/camera-raw-settings/1.0/"
    crs:PresetType="Normal"
    crs:Cluster=""
-   crs:UUID="A84EE23EC9B3402393DE005A3F1F3B8D"
+   crs:UUID="1AA8B8C7E75847B094C421F3B80E19C5"
    crs:SupportsAmount="False"
    crs:SupportsColor="True"
    crs:SupportsMonochrome="True"
@@ -16,11 +16,11 @@
    crs:Copyright=""
    crs:ContactInfo=""
    crs:Version="11.2"
-   crs:ProcessVersion="10.0"
+   crs:ProcessVersion="11.0"
    crs:WhiteBalance="As Shot"
    crs:IncrementalTemperature="0"
    crs:IncrementalTint="0"
-   crs:Saturation="-10"
+   crs:Saturation="0"
    crs:Sharpness="0"
    crs:LuminanceSmoothing="0"
    crs:ColorNoiseReduction="0"
@@ -77,7 +77,7 @@
    crs:LensManualDistortionAmount="0"
    crs:AutoLateralCA="0"
    crs:Exposure2012="0.00"
-   crs:Contrast2012="+20"
+   crs:Contrast2012="0"
    crs:Highlights2012="0"
    crs:Shadows2012="0"
    crs:Whites2012="0"
@@ -89,7 +89,7 @@
    crs:DefringeGreenAmount="0"
    crs:DefringeGreenHueLo="40"
    crs:DefringeGreenHueHi="60"
-   crs:Dehaze="+50"
+   crs:Dehaze="0"
    crs:ConvertToGrayscale="False"
    crs:OverrideLookVignette="False"
    crs:ToneCurveName2012="Linear"
@@ -97,7 +97,7 @@
    crs:HasSettings="True">
    <crs:Name>
     <rdf:Alt>
-     <rdf:li xml:lang="x-default">Asia Tone Down</rdf:li>
+     <rdf:li xml:lang="x-default">_No Changes</rdf:li>
     </rdf:Alt>
    </crs:Name>
    <crs:ShortName>
