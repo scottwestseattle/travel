@@ -2,6 +2,87 @@
 
 @section('content')
 
+<script>
+
+function inlineEditStart(id)
+{
+	$('#inlineEditMenu' + id).hide();
+	$('#amount' + id).hide();
+	
+	$('#inlineEditButtons' + id).show();
+	$('#inlineEdit' + id).show();
+	
+	$('#update' + id).focus();	
+}
+
+function inlineEditCancel(id)
+{
+	$('#inlineEditMenu' + id).show();
+	$('#amount' + id).show();
+	
+	$('#inlineEditButtons' + id).hide();
+	$('#inlineEdit' + id).hide();
+}
+
+function inlineEditSubmit(id)
+{
+	var amount = parseFloat($('#update' + id).val());
+	if (isNaN(amount))
+	{
+		alert('Invalid value: not a number');
+		return;
+	}
+
+	var xhttp = new XMLHttpRequest();
+	var url = '/transactions/inlineupdate/' + id + '/' + amount;
+	
+	xhttp.onreadystatechange = function() 
+	{
+		//alert(this.status);
+		
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+		else if (this.status == 404)
+		{
+			alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			/*
+			alert(
+				'call response: ' + this.responseText +
+				', length: ' + this.responseText.length 
+				+ ', char: ' + this.responseText.charCodeAt(0) 
+				+ ' ' + this.responseText.charCodeAt(1)
+			);
+			*/
+
+			//
+			// results
+			//
+			//alert(this.requestText);
+				
+			// get the select element
+			var s = document.getElementById("inlineEditResults" + id);
+			
+			// replace the option list
+			s.innerHTML = this.responseText;
+			$('#amount' + id).html(amount);
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
+	
+	// finished successfully
+	inlineEditCancel(id);	
+}
+	
+</script>
+
 <div class="container">
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
@@ -37,7 +118,10 @@
 			<label for="showphotos_flag" class="checkbox-label">Show No Receipt</label>
 		</div>				
 		
-		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Filter</button>
+		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Filter</button>
+
+		{{ csrf_field() }}		
+	</form>	   
 
 		<div class="clear"></div>
 		
@@ -76,7 +160,24 @@
 							<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{$record->photo ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 						@endif
 						<td style="color:default;">{{$record->transaction_date}}</td>
-						<td style="color:{{$color}};">{{$record->amount}}</td>
+						
+						<td style="color:{{$color}};">
+							<span id="amount{{$record->id}}">{{$record->amount}}</span>
+							<br/>
+							
+							<a href='#' onclick="event.preventDefault(); inlineEditStart({{$record->id}});">
+								<span id="inlineEditMenu{{$record->id}}">
+									<span style="" class="glyphCustom glyphicon glyphicon-option-horizontal"></span>
+									<span id="inlineEditResults{{$record->id}}"></span>
+								</span>
+							</a>
+							<span id="inlineEditButtons{{$record->id}}" style="display:none;">
+								<input style="font-size:12px; height:16px; width:100px;" type="text" id="update{{$record->id}}" class="form-control" value="{{$record->amount}}"></input>
+								
+								<button type="submit" onclick="event.preventDefault(); inlineEditSubmit({{$record->id}});" name="inlineOk" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">OK</button>
+								<button type="cancel" onclick="inlineEditCancel({{$record->id}});" name="inlineCancel" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">Cancel</button>
+							</span>
+						</td>
 						
 						@if (isset($record->transfer_id))
 							@if ($record->amount > 0)
@@ -99,10 +200,7 @@
 			@endif
 			</tbody>
 		</table>
-       
-		{{ csrf_field() }}
 		
-	</form>	   
 </div>
 
 @endsection

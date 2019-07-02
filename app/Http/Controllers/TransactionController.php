@@ -250,6 +250,35 @@ class TransactionController extends Controller
 		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 
 	}
 	
+    public function inlineupdate(Transaction $transaction, $amount)
+    {
+		if (!$this->isAdmin())
+             return 'Error: not admin';
+
+		$record = $transaction;
+
+		$amount = floatval($amount);
+		$record->amount = $amount;
+		$msg = 'Updating Transaction Amount to: ' . $amount;
+		$rc = '';
+		
+		try
+		{
+			$record->save();
+
+			$msg .=  ' -- ' . $rc;
+			Event::logEdit(LOG_MODEL, $record->description, $record->id, $msg);			
+		}
+		catch (\Exception $e) 
+		{
+			$rc = 'ERROR (check Events)';
+			$msg .=  ' -- ' . $rc;
+			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg, null, $e->getMessage());		
+		}
+
+		return $rc;
+	}
+	
 	public function view($id)
     {
 		if (!$this->isAdmin())
