@@ -203,7 +203,6 @@
 
 	/* footer contact text */
 	#footer address {
-		background:url('/img/world-map.png') no-repeat center;
 	}
 	#footer address .footer-sprite {
 		margin-bottom:20px;
@@ -388,7 +387,6 @@
 
 
 #footer address {
-	background:url('/img/world-map.png') no-repeat center;
 }
 
 #footer address .footer-sprite {

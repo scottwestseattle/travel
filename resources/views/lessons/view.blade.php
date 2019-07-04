@@ -276,20 +276,6 @@
 	</div>	
 	@endif
 	
-	
-		<!-- GET YOUR GUIDE AD -->
-		<!--
-		<script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
-
-		<div style="float:left; margin:20px;">
-			<!-- a target="_blank" href="https://www.getyourguide.com/?partner_id=RTJHCDQ&utm_medium=online_publisher&placement=button-cta">Get Your Guide</a -->
-			
-<div data-gyg-partner-id="RTJHCDQ" data-gyg-number-of-items="3" data-gyg-currency="USD" data-gyg-locale-code="en-US" data-gyg-id="code-example" data-gyg-widget="activites" data-gyg-href="https://widget.getyourguide.com/RTJHCDQ/activities.frame"></div>
-
-		</div>
-		-->
-	
-	
 @if ((isset($photos) && count($photos) > 0) || (isset($gallery) && count($gallery) > 0))
 <!-- photo view popup -->
 <div id="myModal" onclick="nextPhoto(false)" class="modal-popup text-center">
