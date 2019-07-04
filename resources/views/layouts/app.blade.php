@@ -64,7 +64,7 @@ $user_type = $is_logged_in ? intval(Auth::user()->user_type) : 0;
 
 if ($user_type >= 1000) // super admin
 {
-	$color = 'red'; 
+	$color = 'purple'; 
 }
 else if ($user_type >= 100) // site admin
 {
@@ -82,8 +82,8 @@ else // not logged in
 ?>
 
 <body style="margin:0; padding:0;">
-    <div id="app" style="min-height:500px; ">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; ">
+    <div id="app" style="min-height:500px;">
+        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; margin:0;">
 			@if (isset($sections) && isset($site))
 				@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
 			@else
@@ -100,7 +100,7 @@ else // not logged in
 @if (isset($euNoticeAccepted) && !$euNoticeAccepted)
 	<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success"> 
 		<span>@LANG('content.European Union Privacy Notice')</span>
-		<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept/true'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>
+		<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>
     </div>
 @endif
 

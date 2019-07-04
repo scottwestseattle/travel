@@ -38,7 +38,7 @@ return [
 'Activities' => 'Actividades',
 'Tasks' => 'Tareas',
 'Templates' => 'Plantillas',
-'Logout' => 'Cerrar sesión',
+'Show All' => 'Mostrar Todo',
 'Show All Galleries' => 'Mostrar Todas Las Galerías',
 'Show All Articles' => 'Mostrar Todos Los Articulos',
 'Show All Blogs' => 'Mostrar Todos Los Blogs',

@@ -38,7 +38,7 @@ return [
 'Activities' => 'Activities',
 'Tasks' => 'Tasks',
 'Templates' => 'Templates',
-'Logout' => 'Logout',
+'Show All' => 'Show All',
 'Show All Galleries' => '显示所有的画廊',
 'Show All Articles' => '显示所有文章',
 'Show All Blogs' => '显示所有博客',

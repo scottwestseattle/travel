@@ -655,11 +655,17 @@ LEFT JOIN photos
 		phpinfo();
 	}
 	
-    public function eunoticeaccept($accept = null)
+    public function eunoticeaccept()
     {
 		// set eunotice cookie to show that user has accepted it
-		session(['eunotice' => isset($accept) && $accept != null ? true : false]);
-
-		return;
+		session(['eunotice' => true]);
+    }
+	
+    public function eunoticereset()
+    {
+		// set eunotice cookie to show that user has accepted it
+		session(['eunotice' => false]);
+		
+		return redirect()->back();		
     }	
 }

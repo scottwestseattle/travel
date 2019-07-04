@@ -15,7 +15,7 @@ if (isset($title))
 <div class="page-size container">
 
 	<!-- Sub-menu ------>
-	<div class="" style="font-size:20px;">
+	<div class="submenu-view" style="font-size:20px;">
 		<table class=""><tr>			
 			<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
 		</tr></table>

@@ -41,7 +41,8 @@ Route::get('/test', 'ToolController@test')->middleware('auth');
 Route::post('/test', 'ToolController@test')->middleware('auth');
 Route::get('/language/{locale}', 'ToolController@language');
 Route::get('/phpinfo', 'ToolController@phpinfo')->middleware('auth');
-Route::get('/eunoticeaccept/{true?}', 'ToolController@eunoticeaccept');
+Route::get('/eunoticeaccept/', 'ToolController@eunoticeaccept');
+Route::get('/eunoticereset/', 'ToolController@eunoticereset');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');

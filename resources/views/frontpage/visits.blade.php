@@ -10,9 +10,11 @@ $now = new DateTime();
 
 	<form method="POST" action="/frontpage/visitors">
 
-		@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent
-		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Date</button>
-
+		<div class="submenu-view">
+			@component('control-dropdown-date', ['months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent
+			<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Date</button>
+		</div>
+		
 		<div style="padding:10px 0 0 20px;">
 			<input style="width:20px;" type="checkbox" name="showbots" id="showbots" class="form-control-inline" {{ $bots ? 'checked' : '' }} />
 			<label for="showbots" class="checkbox-label">Show Bots</label>

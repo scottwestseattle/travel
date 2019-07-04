@@ -38,7 +38,7 @@ return [
 'Activities' => 'Activities',
 'Tasks' => 'Tasks',
 'Templates' => 'Templates',
-'Logout' => 'Logout',
+'Show All' => 'Show All',
 'Show All Galleries' => 'Show All Galleries',
 'Show All Articles' => 'Show All Articles',
 'Show All Blogs' => 'Show All Blogs',

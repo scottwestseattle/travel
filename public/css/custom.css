@@ -175,6 +175,10 @@ ul.submenu {
 	font-size: 2em;
 }
 
+.submenu-view {
+	margin-top: 20px;
+}
+
 .entriesHeader { 
 	color: #337AB7; 
 	font-size: 1.75em;

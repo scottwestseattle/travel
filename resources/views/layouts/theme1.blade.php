@@ -84,7 +84,7 @@ else // not logged in
 
 <body style="margin:0; padding:0;">
     <div id="app" style="min-height:500px; margin-bottom: 30px">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}}; ">
+        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}};  margin:0;">
 			@if (isset($sections) && isset($site))
 				@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
 			@else
@@ -95,6 +95,13 @@ else // not logged in
 @if(session()->has('message.level'))
     <div style="" class="alert alert-{{ session('message.level') }}"> 
     {!! session('message.content') !!}
+    </div>
+@endif
+
+@if (isset($euNoticeAccepted) && !$euNoticeAccepted)
+	<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success"> 
+		<span>@LANG('content.European Union Privacy Notice')</span>
+		<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>
     </div>
 @endif
 
