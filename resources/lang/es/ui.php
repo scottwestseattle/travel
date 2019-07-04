@@ -99,4 +99,5 @@ return [
 'Title' => 'Título',
 'Description' => 'Descripción',
 'Comment' => 'Comentario',
+'Accept' => 'Estoy de acuerdo',
 ];

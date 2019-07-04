@@ -35,4 +35,5 @@ return [
 'Comments' => 'Comentarios',
 'Show All Comments' => 'Mostrar Todos Los Comentarios',
 'Back to Comments' => 'Volver a Los Comentarios',
+'European Union Privacy Notice' => 'Este sitio web utiliza cookies para personalizar el contenido y analizar el tráfico.',
 ];

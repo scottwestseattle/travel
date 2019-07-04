@@ -99,4 +99,5 @@ return [
 'Title' => '标题',
 'Description' => '描述',
 'Comment' => '评论',
+'Accept' => '接受',
 ];

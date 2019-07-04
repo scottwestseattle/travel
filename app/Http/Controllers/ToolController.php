@@ -650,9 +650,16 @@ LEFT JOIN photos
 		return $final;
 	}
 
-	
     public function phpinfo() 
 	{
 		phpinfo();
 	}
+	
+    public function eunoticeaccept($accept = null)
+    {
+		// set eunotice cookie to show that user has accepted it
+		session(['eunotice' => isset($accept) && $accept != null ? true : false]);
+
+		return;
+    }	
 }

@@ -35,4 +35,5 @@ return [
 'Comments' => 'Comments',
 'Show All Comments' => 'Show All Comments',
 'Back to Comments' => 'Back to Comments',
+'European Union Privacy Notice' => 'This web site uses cookies to personize content and to analyze traffice.',
 ];

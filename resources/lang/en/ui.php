@@ -99,4 +99,5 @@ return [
 'Title' => 'Title',
 'Description' => 'Description',
 'Comment' => 'Comment',
+'Accept' => 'Accept',
 ];

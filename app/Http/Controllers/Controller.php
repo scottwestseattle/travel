@@ -169,6 +169,8 @@ class Controller extends BaseController
 	
 	private $site = null;
 	private $viewData = [];
+	private $euNoticeAccepted = false;
+	private $euNotice = "ui.euNotice";
 	
 	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
@@ -198,8 +200,8 @@ class Controller extends BaseController
 		ENTRY_TYPE_LESSON => 'entries',
 	];
 	
-	public function __construct ()
-	{
+	public function __construct()
+	{		
 		if (array_key_exists("SERVER_NAME", $_SERVER))
 		{			
 			$dn = $_SERVER["SERVER_NAME"];
@@ -212,9 +214,20 @@ class Controller extends BaseController
 
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next){
+
+			// check for EU notice
+			$this->euNoticeAccepted = session('eunotice', false);
+			
+//session()->flash('message.level', 'success');
+//session()->flash('message.content', 'Notice: ' . session('eunotice'));
+//session(['eunotice' => !$this->euNoticeAccepted]);
+//dd($this->euNoticeAccepted);
+
+			// set locale according to selected language
 			$locale = session('locale');
 			if (isset($locale))
 				App::setLocale($locale);
+			
 			return $next($request);
 		});
 	}
@@ -384,6 +397,8 @@ class Controller extends BaseController
 		$this->viewData['title'] = __($this->title);
 		$this->viewData['titlePlural'] = ucwords($this->prefix);
 		$this->viewData['domainName'] = $this->domainName;
+		$this->viewData['euNoticeAccepted'] = $this->euNoticeAccepted;
+		$this->viewData['euNotice'] = $this->euNotice;
 		
 		if ($this->domainName == 'localhost')
 			$this->viewData['localhost'] = true;

@@ -598,3 +598,33 @@ function onCategoryChange(id)
 	xhttp.open("GET", url, true);
 	xhttp.send();
 }
+
+function ajaxexec(url)
+{	
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() 
+	{
+		//alert(this.status);
+		
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+		else if (this.status == 404)
+		{
+			alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			//
+			// results
+			//
+			//alert(this.requestText);
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
+}

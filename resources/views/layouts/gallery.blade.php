@@ -60,6 +60,13 @@
 			</div>
 		@endif
 		
+		@if (isset($euNoticeAccepted) && !$euNoticeAccepted)
+			<div style="margin:0; padding: 5px 5px 5px 20px;" id="euNoticeAccepted" class="alert alert-success"> 
+				<span>@LANG('content.European Union Privacy Notice')</span>
+				<button type="submit" onclick="event.preventDefault(); ajaxexec('/eunoticeaccept/true'); $('#euNoticeAccepted').hide();" class="btn btn-primary" style="padding:1px 4px; margin:5px;">@LANG('ui.Accept')</button>
+			</div>
+		@endif
+		
         @yield('content')
 		
     </div>
