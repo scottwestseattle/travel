@@ -817,12 +817,12 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		<h1>{{$section->title}}</h1>
 		<!-- h1>Affiliate Partners</h1 -->	
 		
+		@if (false)
 		<!-- AMAZON ADS -->
 		<div style="float:left; margin:20px;">
 			<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=12&l=ur1&category=amazonhomepage&f=ifr&linkID=19442e58f18ebdac206c630f92678c97&t=travelwebs024-20&tracking_id=travelwebs024-20" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
 		</div>
 		
-		@if (false)
 		<!-- AGODA AFFILIATE -->
 		<div style="float:left; margin:20px;">
 		
@@ -833,6 +833,21 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			
 		</div>
 		@endif
+		
+		<!-- GOOGLE ADS -->
+		<div style="float:left; margin:20px;">
+		
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Front Page Ad 300 x 250 -->
+			<ins class="adsbygoogle"
+				 style="display:inline-block;width:300px;height:250px"
+				 data-ad-client="ca-pub-3301644572924270"
+				 data-ad-slot="8699059746"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+
+		</div>		
 		
 		<!-- BOOKING AFFILIATE -->
 		<div style="float:left; margin:20px;">

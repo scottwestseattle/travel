@@ -43,8 +43,8 @@ class Account extends Base
 			$records = Account::select()
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
-				->where('account_type_flag', 2)
-				->where('hidden_flag', 0)
+				//->where('account_type_flag', 2)
+				//->where('hidden_flag', 0)
 				->orderByRaw('name')
 				->get();
 //dd($records);
