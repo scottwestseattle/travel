@@ -51,10 +51,24 @@ ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type
 My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// Switchhing localhost projects on MacBook
+cd \etc\apache2
+sudo vi httpd.conf
+look for DocumentRoot and <Directory ...>
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
+// create project
+cd /wamp3.1.9/www
+laravel new projectname
+
 // artisan folder
-cd /Users/scottwilkinson/Documents/GitHub/travel/
+cd /wamp3.1.9/www/[project]/
+
+// create auth
+php artisan make:auth
 
 // drop all tables and migrate all
 php artisan migrate:reset
