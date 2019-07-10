@@ -12480,12 +12480,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `user_type`, `template_id`, `view_id`, `blocked_flag`, `search_whole_words_flag`, `created_at`, `updated_at`) VALUES
-(1, 'Scott', 'sbwilkinson@yahoo.com', '$2y$10$cOzpwmCcSbthkKaOv0gm4uNXfX8uZkvIxn7L4/7GG5gWxnWROJL9C', 'jInP0bVfaIxJl8UEIYxOdbZmo4RQeG5QHLBBR5wXEwbSJ2Ptjjttn7NkPN4e', 1000, 243, -1, 0, -1, '2018-01-02 04:47:08', '2018-07-10 14:18:35'),
-(2, 'admin', 'etgadmin@yopmail.com', '$2y$10$5H0RoVdAh/eHONrQbNOu2.aakPp11QJt6OOrWtI0SQX9SFB6Mx5Ty', 'KvbxQMG6BOWbciZCk6x5gDYtuvekJnYMz238rA5xoy4Cq2LYXRHzMdhC2IBw', 100, 0, -1, -1, -1, '2018-01-19 00:57:37', '2018-05-13 01:21:01'),
-(3, 'unconfirmed', 'etgunconfirmed@yopmail.com', '$2y$10$aHdSnL11pKegUiX7hjoLX..x2gisU61yfAH8hLly/Tw.ZrnkZ6nlq', 'ByCa0TkJpv8yYmhiWYW1tbJkneGStXfFxvTvZ12pHWg7E1fqHDpm7HO5kmox', 0, 0, -1, 1, -1, '2018-05-13 01:17:36', '2018-07-23 06:11:03'),
-(4, 'confirmed', 'etgconfirmed@yopmail.com', '$2y$10$rIa87neoUpZcTNTzog85l.E.8wy8fZu3vgfIU1VX92w0WpQwfQ3Mq', 'FQl7pgMXBu3swwk5fHv0MS23UMJM0VAPknK6o5RjGnWVgCR2SHUfcDDgXV0O', 10, 0, -1, -1, -1, '2018-05-13 01:18:15', '2018-05-13 01:21:13'),
-(5, 'deletetest', 'etgdeletetest@yopmail.com', '$2y$10$oqdfUbXTw.oTP4kXg.R1Oeya.dVN4FnU3kK/286AaofAlPS5DQU8O', 'my02fAsn35rPEP3Iql7N48P1UYxGRFu1LQaxDkQGy2KDG65DOzjbiUogLZsn', 0, 0, -1, -1, -1, '2018-05-13 01:18:53', '2018-05-13 01:21:31'),
-(6, 'superadmin', 'etgsuperadmin@yopmail.com', '$2y$10$SuGS/XiJyCqTRmX5Cl7TEuQ7KMR1a3Qyaqg08u90Tktc8Yekauuhi', NULL, 1000, 0, -1, -1, -1, '2018-05-13 01:23:10', '2018-05-13 01:23:27'),
 (7, 'ProgonNon', 'torjuncconsstar1996@plusgmail.ru', 'blocked', NULL, 0, 0, -1, 1, -1, '2018-07-10 02:18:06', '2018-07-10 14:19:39'),
 (8, 'Mediakaph', 'ubdgej9@datarec.top', '$2y$10$urZKrGzSaPcU2fPvIJmCjeMYdE2Zdgtk7E20f5LVlksiV3Cr9sMLS', NULL, 0, 0, -1, 1, -1, '2018-07-22 19:24:00', '2018-07-23 03:11:29'),
 (9, 'Mediakaph', 'dlezaz7@datarec.top', '$2y$10$80UZNl8Aij6uu5ONOB7MPu7mBGo9VDtJ0lJNZxzDkEwx.9v.8FUgK', NULL, 0, 0, -1, 1, -1, '2018-07-23 05:53:24', '2018-07-23 06:09:57'),
