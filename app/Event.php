@@ -101,7 +101,7 @@ class Event extends Model
 
 		try
 		{
-			//$record->save();
+			$record->save();
 		}
 		catch (\Exception $e)
 		{
