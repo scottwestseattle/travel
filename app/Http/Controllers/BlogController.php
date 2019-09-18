@@ -64,6 +64,7 @@ class BlogController extends Controller
 			'records' => $records,
 			'redirect' => '/' . $this->prefix . '/index',
 			'page_title' => 'List of Blogs',
+			'placeholder' => 'img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $this->domainName . '.jpg',
 		]);
 
     	return view($this->prefix . '.index', $vdata);

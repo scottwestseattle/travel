@@ -18,6 +18,7 @@ if (isset($title))
 	<div class="" style="font-size:20px;">
 		<table class=""><tr>			
 			<td style="width:40px;"><a href='/entries/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>			
+			<td style="width:40px;"><a href='/blogs/index/'><span class="glyphCustom glyphicon glyphicon-eye-open"></span></a></td>			
 		</tr></table>
 	</div>			
 

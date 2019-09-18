@@ -14,6 +14,16 @@
 //sbw, call a view directly
 //Route::get('/', function () { return view('welcome'); });
 
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});
+
+Route::get('/clear-view', function() {
+    Artisan::call('view:clear');
+    return "Compiled views cleared";
+});
+
 Auth::routes();
 
 // public pages

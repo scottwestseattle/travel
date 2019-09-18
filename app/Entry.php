@@ -332,7 +332,7 @@ class Entry extends Base
 	static public function getBlogIndex()
 	{
 		$q = '
-			SELECT entries.id, entries.title, entries.description, entries.permalink
+			SELECT entries.id, entries.title, entries.description, entries.description_short, entries.permalink
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
@@ -349,7 +349,7 @@ class Entry extends Base
 				AND entries.published_flag = 1 
 				AND entries.approved_flag = 1
 			GROUP BY 
-				entries.id, entries.title, entries.description, entries.permalink, photo, photo_title, photo_path
+				entries.id, entries.title, entries.description, entries.description_short, entries.permalink, photo, photo_title, photo_path
 			ORDER BY entries.id DESC
 		';
 		

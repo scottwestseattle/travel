@@ -1632,7 +1632,7 @@ class Controller extends BaseController
 			}
 			else
 			{
-				$record->photo = TOUR_PHOTO_PLACEHOLDER;
+				$record->photo = 'img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $this->domainName . '.jpg';
 				$record->photo_path = '';
 			}
 

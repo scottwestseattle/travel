@@ -1,5 +1,28 @@
 <style>
 
+@media (max-width:767px) {
+
+	.blog-box {
+	}
+	
+}
+			
+@media (min-width:768px) {
+
+	.blog-box {
+		height: 500px; 
+	}
+    
+}
+
+@media (min-width:992px) {
+
+	.blog-box {
+		height: 450px; 
+	}
+    
+}
+
 .submenu-icons {
 	width: 40px; 
 	font-size: 50px;
