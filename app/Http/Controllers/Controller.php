@@ -326,7 +326,8 @@ class Controller extends BaseController
 		$visitor->model = $model;
 		$visitor->page = $page;
 		$visitor->record_id = $record_id;
-		
+		$visitor->domain_name = $this->domainName;
+
 		$visitor->save();		
 	}	
 

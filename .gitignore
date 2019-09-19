@@ -15,13 +15,13 @@ npm-debug.log
 yarn-error.log
 .env
 .env*
+.env.gt
 .DS_Store
 *.swp
 sitemap-*.txt
 *.lock
 *.xsd
+*.psd
 public/error_log
 /docs/sliders
 /docs/graphics
-*.psd
-*.com.psd
