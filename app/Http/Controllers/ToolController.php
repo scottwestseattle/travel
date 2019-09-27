@@ -505,6 +505,7 @@ LEFT JOIN photos
 			WHERE 1=1
 				AND (title like "%' . $text . '%" OR description like "%' . $text . '%")
 				AND site_id = ? 
+				AND deleted_flag = 0 
 			ORDER by id DESC
 		';
 		//AND type_flag in (2,3,4,5,8)
@@ -522,6 +523,7 @@ LEFT JOIN photos
 			WHERE 1=1
 				AND (title like "%' . $text . '%" OR alt_text like "%' . $text . '%" OR filename like "%' . $text . '%" OR location like "%' . $text . '%")
 				AND site_id = ? 
+				AND deleted_flag = 0 
 			ORDER by id DESC
 		';
 

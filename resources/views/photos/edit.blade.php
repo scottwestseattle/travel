@@ -8,6 +8,10 @@
 	@endcomponent	
 
 	<h1>Edit {{$type}} Photo</h1>
+	
+	@if ($record->deleted_flag)
+		<h3 style="color:red;">Deleted</h3>
+	@endif
 
 	<form method="POST" action="/photos/update/{{$record->id}}">
 		<div class="form-group form-control-big">
