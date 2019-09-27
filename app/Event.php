@@ -64,9 +64,9 @@ class Event extends Model
 		Event::add(LOG_TYPE_INFO, $model, LOG_ACTION_DELETE, $title, null, $record_id);
 	}
 	
-    static public function logError($model, $action, $title, $description = null, $record_id = null, $error = null)
+    static public function logError($model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null, $link = null)
     {		
-		Event::add(LOG_TYPE_ERROR, $model, $action, $title, $description, $record_id, $error);
+		Event::add(LOG_TYPE_ERROR, $model, $action, $title, $description, $record_id, $error, $changes, $link);
 	}
 	
     static public function logException($model, $action, $title, $record_id, $error)
@@ -80,8 +80,12 @@ class Event extends Model
 	}
 	
 	// this is the add for all records
-    static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null)
+    static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null, $link = null)
     {		
+//dd('event: ' . $link);
+		if (!isset($error))
+			$error = $link;
+			
 		$record = new Event();
 		
 		$record->ip_address		= Event::getVisitorIp();

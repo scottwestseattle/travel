@@ -243,15 +243,17 @@ class PhotoController extends Controller
              return $this->slidersAdmin($request, $all);
 	
 		$photo = Photo::getFirst(/* parent_id = */ 0);
-		
+
 		if (!isset($photo))
 		{
-			$msg = 'Specified Photo Not Found: ' . $id;
+			$msg = 'First Slider Not Found';
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
+
+			$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 			
-			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, null, null, null, null, $link);			
 			
 			return back();
 		}
@@ -971,7 +973,9 @@ class PhotoController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
+			$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, null, null, null, null, $link);			
 			
 			return redirect('/galleries');
 		}

@@ -272,7 +272,11 @@
 					<td>{{$type}}</td>
 					<td>{{$record->model_flag}}</td>
 					<td>{{$record->action_flag}}</td>
-					<td>{{$record->title}}</td>
+					@if (isset($record->error) && strtolower(substr($record->error, 0, 4)) == 'http'))
+						<td><a href="{{$record->error}}">{{$record->title}}</a></td>
+					@else
+						<td>{{$record->title}}</td>
+					@endif
 				</tr>
 			@endforeach
 			</tbody>
