@@ -575,7 +575,7 @@ LEFT JOIN photos
 			FROM entries
 			WHERE 1=1
 				AND deleted_flag = 0
-				AND type_flag in (2,3,4,5)
+				AND type_flag in (2,3,4,5,8)
 				AND (finished_flag = 0 OR finished_flag is null)
 			ORDER by id DESC
 		';

@@ -658,7 +658,7 @@ class EntryController extends Controller
 
 			$entry->save();
 			
-			return redirect($this->getReferer($request, '/entries/show' . $entry->id)); 
+			return redirect($this->getReferer($request, '/entries/index')); 
 		}
 		else
 		{
