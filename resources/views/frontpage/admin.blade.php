@@ -272,8 +272,12 @@
 					<td>{{$type}}</td>
 					<td>{{$record->model_flag}}</td>
 					<td>{{$record->action_flag}}</td>
-					@if (isset($record->error) && strtolower(substr($record->error, 0, 4)) == 'http'))
-						<td><a href="{{$record->error}}">{{$record->title}}</a></td>
+					@if (isset($record->error) && strtolower(substr($record->error, 0, 4)) == 'http')
+						<td><a href="{{$record->error}}">{{$record->title}}</a>
+						@if (isset($record->record_id))
+						&nbsp;<a href="/photos/edit/{{$record->record_id}}"><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
+						@endif
+						</td>
 					@else
 						<td>{{$record->title}}</td>
 					@endif
