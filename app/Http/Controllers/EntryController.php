@@ -248,12 +248,14 @@ class EntryController extends Controller
 		}
 		else
 		{
-			$msg = 'Permalink Entry Not Found: ' . $permalink;
+			$msg = 'Permalink Not Found: ' . $permalink;
 			
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg);			
+			$referrer = $this->getReferrer();
+			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $referrer);			
 			
             return redirect('/entries/index');
 		}

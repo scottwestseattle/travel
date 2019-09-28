@@ -276,8 +276,10 @@
 						<td><a href="{{$record->error}}">{{$record->title}}</a>
 						@if (isset($record->record_id))
 						&nbsp;<a href="/photos/edit/{{$record->record_id}}"><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
-						@endif
+						@endif						
 						</td>
+					@elseif (isset($record->description) && strtolower(substr($record->description, 0, 4)) == 'http')
+						<td>{{$record->title}} ({{$record->description}})</td>
 					@else
 						<td>{{$record->title}}</td>
 					@endif

@@ -253,7 +253,17 @@ class Controller extends BaseController
 	{		
 		return Controller::$entryUrls;
 	}
-	
+
+	protected function getReferrer()
+	{
+		$referrer = null;
+		
+		if (array_key_exists("HTTP_REFERER", $_SERVER))
+			$referrer = $_SERVER["HTTP_REFERER"];
+			
+		return $referrer;	
+	}
+		
 	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
 	{
 		//
