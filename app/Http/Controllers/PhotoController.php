@@ -975,7 +975,9 @@ class PhotoController extends Controller
 			
 			$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, null, $id, null, null, $link);			
+			$desc = $this->getVisitorInfoDebug();
+
+			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, $desc, $id, null, null, $link);			
 			
 			return redirect('/galleries');
 		}

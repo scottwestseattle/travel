@@ -284,6 +284,21 @@ class Controller extends BaseController
 		return $ip;
 	}
 	
+	protected function getVisitorInfoDebug()
+	{
+		// get info about visitor
+		$info = $referrer = $host = $agent = null;
+		$ip = $this->getVisitorInfo($host, $referrer, $agent);
+		$referrer = isset($referrer) ? $referrer : 'null';
+		$ip = isset($ip) ? $ip : 'null';
+		$host = isset($host) ? $host : 'null';
+		$agent = isset($agent) ? $agent : 'null';
+		$info = 'referrer:' . $referrer . ', ip:' . $ip . ', host:' . $host . ', agent:' . $agent;
+			
+		return $info;
+	}
+
+	
 	protected function saveVisitor($model, $page, $record_id = null)
 	{		
 		// ignore these

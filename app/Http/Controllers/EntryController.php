@@ -253,9 +253,9 @@ class EntryController extends Controller
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $msg);
 			
-			$referrer = $this->getReferrer();
+			$desc = $this->getVisitorInfoDebug();
 			
-			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $referrer);			
+			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $desc);			
 			
             return redirect('/entries/index');
 		}
