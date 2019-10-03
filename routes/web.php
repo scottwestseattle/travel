@@ -25,6 +25,7 @@ Route::get('/clear-view', function() {
 });
 
 Auth::routes();
+Route::get('/register', 'FrontPageController@about');
 
 // public pages
 Route::get('/', 'FrontPageController@index');

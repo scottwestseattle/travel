@@ -71,7 +71,9 @@
 								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
 							@endif	
 							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@lang('ui.Login')</a></li>
-                            <li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@lang('ui.Register')</a></li>
+							@if (false)
+                            	<li><a href="{{ route('register') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@lang('ui.Register')</a></li>
+							@endif
                         @else							
 							@if ($user_type >= 100)
 								<li><a href="/about">@lang('ui.About')</a></li>

@@ -79,8 +79,9 @@
 								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@LANG('ui.Gallery')</a></li>
 							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@LANG('ui.Login')</a></li>
-								<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@LANG('ui.Register')</a></li>
-						
+								@if (false)
+									<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@LANG('ui.Register')</a></li>
+								@endif
 							@if (Auth::user() && intval(Auth::user()->user_type) > 10)
 								<li id="debug-tag-xl"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (XL)</a></li>
 								<li id="debug-tag-lg"><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-modal-window"></span>@LANG('ui.About') (L)</a></li>
