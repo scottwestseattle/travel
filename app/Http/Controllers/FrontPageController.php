@@ -404,7 +404,14 @@ class FrontPageController extends Controller
 			
 		return view('frontpage.tours', compact('entries'));
     }
-	
+
+    public function booking()
+    {
+    	Event::logInfo(LOG_MODEL, LOG_ACTION_REGISTER, "user clicked on register");
+
+    	return redirect('https://www.booking.com/index.html?aid=1535308');
+	}
+		
     /**
      * About page
      */
