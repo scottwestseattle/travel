@@ -979,27 +979,42 @@ class PhotoController extends Controller
 
 			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, $desc, $id, null, null, $link);			
 			
-			return redirect('/galleries');
+			return redirect('/');
 		}
 		
-		// check for orphan photo
-		if (false && $photo->parent_id > 0)
+		// check parent type
+		$backLink = '/entries/' . $permalink;
+		$backLinkLabel = 'Back to Gallery';
+		if (false)
 		{
 			$entry = Entry::select()
 				->where('deleted_flag', 0)
 				->where('id', $photo->parent_id)
 				->first();
 			
-			if (!isset($entry))
+			if (isset($entry))
 			{
-				$msg = 'Invalid Photo Found: ' . $photo->id;
+				if ($entry->type_flag == ENTRY_TYPE_GALLERY)
+				{
+					// already set by default above
+				}
+				else
+				{
+					$backLink = $entry->permalink;
+					$backLinkLabel = 'Back to Entry';
+					//dd($backLink);
+				}
+			}
+			else
+			{
+				$msg = 'Invalid Photo Parent Found: ' . $photo->parent_id;
 
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $msg);
 		
 				Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg);			
 		
-				return redirect('/galleries');
+				return redirect('/');
 			}
 		}
 
@@ -1019,6 +1034,8 @@ class PhotoController extends Controller
 			'next' => $next,
 			'prev' => $prev,
 			'first' => $first,
+			'backLink' => $backLink,
+			'backLinkLabel' => $backLinkLabel,
 		]);		
 		
 		return view('photos.gallery', $vdata);

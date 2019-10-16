@@ -378,7 +378,8 @@ class EmailController extends Controller
 						
 			// get the body
 			$body_raw = imap_body($mbox, $count);
-						
+			$body_raw = preg_replace("/[^A-Za-z0-9\/\.\'\, ]/", '', $body_raw); // remove all of the trash
+			
 			$pos = strpos($body_raw, substr($sample, 0, 30));
 			//echo 'pos=' . $pos . '<br/>';
 			if ($pos === false)
@@ -412,6 +413,7 @@ class EmailController extends Controller
 			}
 									
 			// get the account number, last four digits, it will be within the text in $account
+
 			$account = $this->parseTag($body_full, 'Account ending in', 20, -1); 
 			$matches = [];			
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
@@ -427,16 +429,16 @@ class EmailController extends Controller
 			// get the description
 			$desc = $this->parseTag($body_raw, $date_raw . ', at ', 30, -1); 
 			$pieces = explode(',', $desc);
+
 			$desc = $pieces[0];
 						
 			if ($debug)
 			{
-				echo 'pos=' . $pos . ', val=' . $val . '<br/>';
-				echo 'body=' . $body_raw . '<br/>';
-				echo 'account=' . $account . '<br/>'; 
-				echo 'accountId=' . $account . '<br/>'; 
+				echo 'date=' . $date_raw . '<br/>';
+				echo 'amount=' . $amount . '<br/>';
 				echo 'desc=' . $desc . '<br/>'; 
-				//die('*** end of debug ***');
+				echo 'accountId=' . $account . '<br/>'; 
+				die('*** end of debug ***');
 			}
 			
 			//echo 'Record:' . $account_raw . '::' . $amount . '::' . $date->format('Y-m-d') . '::' . $desc;
@@ -624,7 +626,9 @@ class EmailController extends Controller
 		{
 			$words = explode(" ", $target);	
 			if (count($words) > $wordIndex)
+			{
 				$target = $words[$wordIndex];
+			}
 			else
 			{
 				dump($words);

@@ -63,7 +63,7 @@
 			</span>
 			
 			@if ($photo->parent_id > 0)
-				<a href="/galleries/view/{{$photo->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Gallery')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
+				<a href="{{$backLink}}"><button type="button" class="btn btn-blog-nav">@LANG('content.' . $backLinkLabel)<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 			@endif
 			
 		</div>
