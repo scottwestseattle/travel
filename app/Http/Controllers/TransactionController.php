@@ -397,6 +397,41 @@ class TransactionController extends Controller
 		return view(PREFIX . '.filter', $vdata);
     }	
     
+    public function balances(Request $request)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$accountId = false;
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$records = null;
+		$total = 0.0;
+		try
+		{
+			$balance = Transaction::getBalanceByDate($filter);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Balance', null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());
+		
+			return redirect('/error');
+		}	
+						
+		$vdata = $this->getViewData([
+			'balance' => $balance,
+			'accounts' => $accounts,
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $filter,
+		]);
+							
+		return view(PREFIX . '.balances', $vdata);
+    }	    
+    
+    
     public function reconciles(Request $request, $accountId = -1)
     {	
 		if (!$this->isAdmin())

@@ -4,7 +4,7 @@
 
 <?php 
 	$gallery = isset($gallery) ? $gallery : null; 
-	$directLink = true;
+	$directLink = false;
 ?>
 
 <div class="page-size container">

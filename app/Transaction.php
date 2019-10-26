@@ -244,6 +244,37 @@ class Transaction extends Base
 		return $balance;
     }
 
+    static public function getBalanceByDate($filter)
+    {
+		$balance = 0.0;
+		
+		$q = '
+			SELECT sum(amount) AS balance
+			FROM transactions 
+			WHERE 1=1  
+			AND user_id = ? 
+			AND deleted_flag = 0
+			AND reconciled_flag = 1
+			AND transaction_date <= STR_TO_DATE(?, "%Y-%m-%d") 
+			AND parent_id = ?
+		';
+		
+/*
+SELECT sum(amount) FROM `transactions` 
+where 1=1 
+AND parent_id = 31 
+and transaction_date < STR_TO_DATE("2019-10-13", "%Y-%m-%d") 
+AND deleted_flag = 0 
+AND reconciled_flag = 1
+*/
+			
+		$records = DB::select($q, [Auth::id(), $filter['to_date'], $filter['account_id']]);
+		if (count($records) > 0)
+			$balance = floatval($records[0]->balance);
+		
+		return $balance;
+    }
+    
     static public function getExpenses($filter)
     {			
 		$q = '

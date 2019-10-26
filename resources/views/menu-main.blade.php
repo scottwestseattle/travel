@@ -121,6 +121,7 @@
 									<ul class="dropdown-menu">
 										<li><a href="/transactions/summary">@lang('ui.Summary')</a></li>
 										<li><a href="/transactions/filter">@lang('ui.Transactions')</a></li>
+										<li><a href="/transactions/balances">@lang('ui.Balances')</a></li>
 										<li><a href="/accounts/index">@lang('ui.Accounts')</a></li>
 										<li><a href="/categories/indexadmin">@lang('ui.Categories')</a></li>
 										<li><a href="/email/check">@lang('ui.Email')</a></li>
