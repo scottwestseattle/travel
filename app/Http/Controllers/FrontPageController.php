@@ -57,6 +57,23 @@ class FrontPageController extends Controller
 		// Set up the sections
 		//
 		$sections = Controller::getSections();
+		$latestLocations = photo::getLatestLocations();
+		
+		$currentLocation = null;			
+		if (isset($latestLocations))
+		{
+			$s = '';
+			
+			foreach($latestLocations as $record)
+			{
+				if (!isset($currentLocation))
+					$currentLocation = $record->location;
+				else
+					$s .= $record->location . '<br>';
+			}
+			
+			$latestLocations = $s;
+		}
 			
 		//
 		// get tour info
@@ -126,6 +143,8 @@ class FrontPageController extends Controller
 			'gallery' => $gallery,
 			'firstslider' => $firstslider,
 			'showFullGallery' => $showFullGallery,
+			'latestLocations' => $latestLocations,
+			'currentLocation' => $currentLocation,
 		]);
 		
     	return view('frontpage.index', $vdata);
