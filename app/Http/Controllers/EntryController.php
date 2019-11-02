@@ -141,10 +141,13 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
+		$locations = Location::getPlaces();
+		
 		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request),
+			'locations' => $locations,
 		]);
 		
 		return view('entries.add', $vdata);

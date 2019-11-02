@@ -38,10 +38,10 @@ class Location extends Base
 			GROUP BY 
 				locations.id, locations.name
 		';
-		
+
 		// get the list with the location included
 		$records = DB::select($q, [ENTRY_TYPE_TOUR]);
-		
+
 		return $records;
 	}		
 	
@@ -53,4 +53,51 @@ class Location extends Base
         return $this->belongsToMany('App\Entry')->withTimestamps();
     }
 	
+	static public function getPlaces()
+	{
+		$records = null;
+		
+		$q = '
+SELECT locations.id, locations.name as place, locations_parent.name as country1, country.name as country2
+FROM locations
+LEFT JOIN locations as locations_parent
+	ON locations_parent.id = locations.parent_id AND locations_parent.deleted_flag = 0
+LEFT JOIN locations as country
+	ON country.id = locations_parent.parent_id AND country.deleted_flag = 0 AND country.location_type = 300
+WHERE 1=1
+AND locations.deleted_flag = 0
+AND locations.location_type = 700
+			;
+			';
+
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			//dump($e);
+		}
+		//dd($records);
+		
+		$locations = [];
+		foreach($records as $record)
+		{
+			$l = $record->place;
+			
+			if (isset($record->country2))
+				$l .= ', ' . $record->country2;
+			else
+				$l .= ', ' . $record->country1;
+				
+			$locations[$l] = $record->id;
+		}
+		
+		ksort($locations);
+		
+		//dd($locations);
+		
+		return $locations;
+	}
 }

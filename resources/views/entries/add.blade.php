@@ -33,10 +33,15 @@
 			<div class="entry-title-div">
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />
 			</div>
+
+			@if (false)
+			<!-- todo: not ready yet -->
+			@component('control-dropdown-location', ['locations' => $locations, 'current_location' => null])@endcomponent
+			@endif
 			
 			<div class="entry-title-div">
 				<a href='#' onclick="javascript:urlEncodeWithDate('title', 'year', 'month', 'day', 'permalink')";>
-					<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
+					<span id="" class="glyphCustom glyphicon glyphicon-link" style="font-size:1.3em; margin-left:5px;"></span>
 				</a>						
 				<input type="text" id="permalink" name="permalink" class="form-control"  placeholder="Permalink" />
 			</div>			
