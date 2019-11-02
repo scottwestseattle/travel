@@ -194,35 +194,6 @@ class Photo extends Base
 		return $record;
 	}
 	
-	static protected function getLatestLocations()
-	{
-		$q = '
-			SELECT location FROM `photos` 
-			WHERE 1=1
-			AND location IS NOT NULL
-			AND location != ""
-			AND type_flag = 1
-			AND gallery_flag = 1
-			AND deleted_flag = 0
-			GROUP BY `parent_id`, location
-			ORDER BY parent_id DESC
-			LIMIT 11
-			;
-		';
-
-		$records = null;
-		try {		
-			$records = DB::select($q);
-		}
-		catch(\Exception $e)
-		{
-			// todo: log me
-		}
-
-//dd($rc);
-		return $records;
-	}
-	
 	static protected function get($id)
 	{
 		$id = intval($id);

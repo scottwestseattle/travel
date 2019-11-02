@@ -57,7 +57,7 @@ class FrontPageController extends Controller
 		// Set up the sections
 		//
 		$sections = Controller::getSections();
-		$latestLocations = photo::getLatestLocations();
+		$latestLocations = self::getLatestLocations();
 		
 		$currentLocation = null;			
 		if (isset($latestLocations))
@@ -67,9 +67,9 @@ class FrontPageController extends Controller
 			foreach($latestLocations as $record)
 			{
 				if (!isset($currentLocation))
-					$currentLocation = $record->location;
+					$currentLocation = $record;
 				else
-					$s .= $record->location . '<br>';
+					$s .= $record . '<br>';
 			}
 			
 			$latestLocations = $s;
@@ -149,7 +149,55 @@ class FrontPageController extends Controller
 		
     	return view('frontpage.index', $vdata);
     }
+
+	static protected function getLatestLocations()
+	{
+		return self::getLatestLocationsFromBlogEntries();
+	}
     
+	static protected function getLatestLocationsFromBlogEntries()
+	{
+		$q = '
+SELECT country.name FROM entries AS e
+LEFT JOIN locations AS city
+	ON city.id = e.location_id AND city.deleted_flag = 0
+LEFT JOIN locations as country
+	ON country.id = city.parent_id AND country.deleted_flag = 0
+WHERE 1=1
+AND e.type_flag = 4
+AND e.deleted_flag = 0
+AND city.name IS NOT NULL
+AND country.name IS NOT NULL
+ORDER BY e.display_date DESC
+;
+		';
+
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+		}
+		$locations = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+			if (!array_key_exists($record->name, $locations))
+				$locations[$record->name] = $cnt++;
+				
+			if (count($locations) == 11)
+				break;
+		}
+
+		$l = [];
+		foreach($locations as $key => $value)
+			$l[] = $key;
+
+		return $l;
+	}
+	
 	private function getSlidersRandom($type_flag, $sliderCount, $firstslider)
 	{		
 		$sliders = Photo::select()
@@ -465,6 +513,8 @@ class FrontPageController extends Controller
 		$stats['photos_gallery'] = 0;
 		$stats['galleries'] = 0;
 		
+    	$countries = self::getCountries();
+
 		$sections = Controller::getSections();
 		
 		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
@@ -519,6 +569,7 @@ class FrontPageController extends Controller
 			'record' => $entry,
 			'stats' => $stats,
 			'image' => $image,
+			'countries' => $countries,
 		], 'About Page'));
     }
 	
@@ -677,4 +728,5 @@ priceTaxes=$59.50
 
 		return view('frontpage.spy', $vdata);
     }	
+    
 }

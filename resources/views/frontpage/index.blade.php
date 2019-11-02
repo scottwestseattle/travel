@@ -685,16 +685,10 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		<div class="" style="font-size: 4em;"><span class="glyphicon glyphicon-globe"></span></div>
 		
 		<!-- Current Location: Location -->
-		@if (isset($currentLocation))
-			<h1>Current Location: {{$currentLocation}}</h1>
-		@elseif (isset($section->title))
+		@if (isset($section->description) && $section->description != '')
 			<h1>{{$section->title}}</h1>
 		@else
-			<h1>Current Location:</h1>
-		@endif
-
-		@if (isset($site->current_location))
-			<h1>{{$site->current_location}}</h1>
+			<h1>Current Location: {{$currentLocation}}</h1>
 		@endif
 				
 		<!-- Main Photo or Map Location -->
@@ -705,16 +699,16 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		@endif
 
 		<!-- Previous Locations -->
-		@if (isset($section->description))
-			@if (isset($section->description_short))
-				<h3>{{$section->description_short}}</h3>
-			@else
-				<h3>@LANG('content.Previous Locations:')</h3>
-			@endif
+		@if (isset($section->description_short))
+			<h3>{{$section->description_short}}</h3>
+		@else
+			<h3>@LANG('content.Previous Locations:')</h3>
+		@endif
 			
+		@if (isset($section->description) && $section->description != '')						
+			<p style="font-size:1.2em;">{!!nl2br($section->description)!!}</p>
+		@else
 			<p style="font-size:1.2em;">{!!$latestLocations!!}</p>
-			
-			<!-- p style="font-size:1.2em;">{!!nl2br($section->description)!!}</p -->
 		@endif
 		
 		@if (false)

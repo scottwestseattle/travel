@@ -358,19 +358,36 @@ class PhotoController extends Controller
 			return redirect('/');
            
 		$info = Controller::getPhotoInfoPath($type_flag, $parent_id);
+
 		$type = $info['type'];
 		
 		$photos = null;
 		
 		if (!Controller::isSlider($type_flag))
+		{
 			$photos = Photo::select()
 				->where('site_id', SITE_ID)
 				->where('deleted_flag', 0)
 				->where('parent_id', $parent_id)
-				->get();	
+				->get();
+			
+			// get the location from the first photo
+			$loc = null;	
+			if (count($photos) > 0)
+			{
+				$loc = $photos[0]->location;
+			}
+		}
 		
-		// check if location has been saved in the session so we can pre-populate it
-		$location = session('location', '');
+		if (isset($loc) && $loc != '')
+		{
+			$location = $loc;
+		}
+		else
+		{
+			// check if location has been saved in the session so we can pre-populate it
+			$location = session('location', '');
+		}
 
 		$vdata = $this->getViewData([
 			'parent_id' => $parent_id,

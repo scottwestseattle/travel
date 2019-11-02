@@ -1993,5 +1993,121 @@ class Controller extends BaseController
 		
 		return $date;
 	}
+
+	static protected function getCountries()
+	{
+		$locations = self::getLocationsFromPhotos();
+		$locations2 = self::getLocationsFromEntries();
+
+		foreach($locations2 as $record)
+		{			
+			if (!array_key_exists($record, $locations))
+				$locations[$record] = $record;
+		}
+		
+		$countries = [];
+		foreach($locations as $key => $value)
+		{
+			$countries[] = $value;
+		}
+		sort($countries);
+
+		return $countries;
+	}
+		
+	static protected function getLocationsFromPhotos()
+	{		
+		$q = '
+			SELECT location FROM `photos` 
+			WHERE 1=1
+			AND location IS NOT NULL
+			AND location != ""
+			AND type_flag = 1
+			AND gallery_flag = 1
+			AND deleted_flag = 0
+			GROUP BY `parent_id`, location
+			ORDER BY parent_id DESC
+			;
+		';
+
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			//dump($e);
+		}
+
+		$locations = [];
+		foreach($records as $record)
+		{
+			$country = self::getCountryFromLocation($record->location);
 			
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
+		}
+
+		return $locations;
+	}
+	
+	static protected function getCountryFromLocation($location)
+	{
+		$c = explode(',', $location);
+		if (count($c) > 2)
+		{
+			$c = trim($c[2]);
+		}
+		else if (count($c) > 1)
+		{
+			$c = trim($c[1]);
+		}
+		else
+		{
+			$c = $location;
+			//dump($location);
+		}
+			
+		//dd($c);
+		
+		return $c;
+	}
+			
+	static protected function getLocationsFromEntries()
+	{
+		$q = '
+SELECT country.name FROM entries AS e
+LEFT JOIN locations AS city
+	ON city.id = e.location_id AND city.deleted_flag = 0
+LEFT JOIN locations as country
+	ON country.id = city.parent_id AND country.deleted_flag = 0
+WHERE 1=1
+AND e.type_flag = 4
+AND e.deleted_flag = 0
+AND city.name IS NOT NULL
+AND country.name IS NOT NULL
+ORDER BY e.display_date DESC
+;
+		';
+
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+		}
+		
+		$locations = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+			if (!array_key_exists($record->name, $locations))
+				$locations[$record->name] = $record->name;
+		}
+
+		return $locations;
+	}		
 }

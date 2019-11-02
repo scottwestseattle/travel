@@ -73,6 +73,16 @@
 		</div>	
 	@endif
 		
+	<h3>Countries ({{count($countries)}})</h3>
+	<div>	
+	<p>
+	<?php $last = end($countries); ?>
+	@foreach($countries as $record)
+		<button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record}}</button>
+	@endforeach
+	</p>
+	</div>
+		
 </div>
 
 @endsection
