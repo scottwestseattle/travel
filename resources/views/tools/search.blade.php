@@ -4,7 +4,7 @@
 
 <div class="container page-size">
 
-	<h1>Search @if (isset($records))({{count($records)}})@endif</h1>
+	<h1>Search @if (isset($records))({{count($records) + count($photos)}})@endif</h1>
 	
 	<form method="POST" action="/search">
 		<div class="form-group form-control-big">

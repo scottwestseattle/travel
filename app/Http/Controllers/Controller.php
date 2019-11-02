@@ -1997,7 +1997,10 @@ class Controller extends BaseController
 	static protected function getCountries()
 	{
 		$locations = self::getLocationsFromPhotos();
+		//dd($locations);
+		
 		$locations2 = self::getLocationsFromEntries();
+		//dd($locations2);
 
 		foreach($locations2 as $record)
 		{			
@@ -2022,7 +2025,7 @@ class Controller extends BaseController
 			WHERE 1=1
 			AND location IS NOT NULL
 			AND location != ""
-			AND type_flag = 1
+			AND type_flag in (0,1)
 			AND gallery_flag = 1
 			AND deleted_flag = 0
 			GROUP BY `parent_id`, location
@@ -2030,6 +2033,18 @@ class Controller extends BaseController
 			;
 		';
 
+		$q2 = '
+			SELECT * FROM `photos` 
+			WHERE 1=1
+			AND location IS NOT NULL
+			AND location != ""
+			AND type_flag in (0,1)
+			AND gallery_flag = 1
+			AND deleted_flag = 0
+			ORDER BY parent_id DESC
+			;
+		';
+		
 		$records = null;
 		try {		
 			$records = DB::select($q);
@@ -2045,6 +2060,9 @@ class Controller extends BaseController
 		{
 			$country = self::getCountryFromLocation($record->location);
 			
+			//if ($country == 'Temple')
+			//	dd($record);
+			
 			if (!array_key_exists($country, $locations))
 				$locations[$country] = $country;
 		}
@@ -2052,32 +2070,10 @@ class Controller extends BaseController
 		return $locations;
 	}
 	
-	static protected function getCountryFromLocation($location)
-	{
-		$c = explode(',', $location);
-		if (count($c) > 2)
-		{
-			$c = trim($c[2]);
-		}
-		else if (count($c) > 1)
-		{
-			$c = trim($c[1]);
-		}
-		else
-		{
-			$c = $location;
-			//dump($location);
-		}
-			
-		//dd($c);
-		
-		return $c;
-	}
-			
 	static protected function getLocationsFromEntries()
 	{
 		$q = '
-SELECT country.name FROM entries AS e
+SELECT e.title, country.name FROM entries AS e
 LEFT JOIN locations AS city
 	ON city.id = e.location_id AND city.deleted_flag = 0
 LEFT JOIN locations as country
@@ -2104,10 +2100,63 @@ ORDER BY e.display_date DESC
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			if (!array_key_exists($record->name, $locations))
-				$locations[$record->name] = $record->name;
+			$country = self::getCountryStandardName($record->name);
+			
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
 		}
 
 		return $locations;
+	}
+	
+	static protected function getCountryFromLocation($location)
+	{
+		$c = explode(',', $location);
+		if (count($c) > 2)
+		{
+			$c = trim($c[2]);
+		}
+		else if (count($c) > 1)
+		{
+			$c = trim($c[1]);
+		}
+		else
+		{
+			$c = $location;
+			//dump($location);
+		}
+			
+		//dd($c);
+		$c = self::getCountryStandardName($c);
+		
+		return $c;
+	}
+	
+	static protected function getCountryStandardName($country)
+	{
+		if ($country == 'USA')
+			$country = 'United States';
+
+		else if ($country == 'UK')
+			$country = 'United Kingdom';
+		else if ($country == 'England')
+			$country = 'United Kingdom';
+		else if ($country == 'Scotland')
+			$country = 'United Kingdom';
+		else if ($country == 'Wales')
+			$country = 'United Kingdom';
+		else if ($country == 'Gibraltar')
+			$country = 'United Kingdom';
+
+		else if ($country == 'Holland')
+			$country = 'Netherlands';
+		else if ($country == 'UAE')
+			$country = 'United Arab Emirates';
+		else if ($country == 'Bosnia')
+			$country = 'Bosnia Herzegovina';
+		
+		
+		return $country;
 	}		
+			
 }
