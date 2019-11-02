@@ -488,13 +488,14 @@ $sectionCount = 0;
 	<div id="content" style='margin:0; padding: 0 0 {{$showFullGallery ? '5px' : '30px'}} 0; min-height: 200px; text-align: center;'>
 		@foreach($gallery as $record)
 			<div class='frontpage-box' style="" >
+			
 				<!-- BACKGROUND PHOTO LINK -->
 				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; height: 150px; background-size: 100%; background-repeat: no-repeat; background-image: url('{{$record->photo_path}}/{{$record->photo}}')" ></a>
 
 				<div style='white-space: nowrap; overflow: hidden;' class='frontpage-box-text'>
 					{{$record->title}}
 				</div>
-			</div>			
+			</div>													
 		@endforeach			
 	</div>
 	
@@ -694,8 +695,10 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		<!-- Main Photo or Map Location -->
 		@if (isset($site->current_location_map_link))
 			<iframe src="{{$site->current_location_map_link}}" width="90%" height="500" frameborder="0" style="border:0" allowfullscreen></iframe>
-		@elseif (isset($section->photo) && strpos($section->photo, PHOTOS_PLACEHOLDER_PREFIX) === false)
+		@elseif (false && isset($section->photo) && strpos($section->photo, PHOTOS_PLACEHOLDER_PREFIX) === false)
 			<img src="{{$section->photo_path}}/{{$section->photo}}" title="{{$section->photo_title}}" width="100%" style="max-width:700px" />
+		@else
+			<img src="{{$currentLocationPhoto}}" title="" width="100%" style="max-width:700px" />
 		@endif
 
 		<!-- Previous Locations -->

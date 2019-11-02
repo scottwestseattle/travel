@@ -64,12 +64,17 @@ class FrontPageController extends Controller
 		{
 			$s = '';
 			
-			foreach($latestLocations as $record)
+			foreach($latestLocations as $key => $value)
 			{
 				if (!isset($currentLocation))
-					$currentLocation = $record;
+				{
+					$currentLocation = $key;
+					$currentLocationPhoto = $value;
+				}
 				else
-					$s .= $record . '<br>';
+				{
+					$s .= $key . '<br>';
+				}
 			}
 			
 			$latestLocations = $s;
@@ -145,6 +150,7 @@ class FrontPageController extends Controller
 			'showFullGallery' => $showFullGallery,
 			'latestLocations' => $latestLocations,
 			'currentLocation' => $currentLocation,
+			'currentLocationPhoto' => $currentLocationPhoto,
 		]);
 		
     	return view('frontpage.index', $vdata);
@@ -158,11 +164,13 @@ class FrontPageController extends Controller
 	static protected function getLatestLocationsFromBlogEntries()
 	{
 		$q = '
-SELECT country.name FROM entries AS e
+SELECT country.name, photos.filename, photos.parent_id FROM entries AS e
 LEFT JOIN locations AS city
 	ON city.id = e.location_id AND city.deleted_flag = 0
 LEFT JOIN locations as country
 	ON country.id = city.parent_id AND country.deleted_flag = 0
+LEFT JOIN photos
+	ON photos.id = e.photo_id AND photos.deleted_flag = 0
 WHERE 1=1
 AND e.type_flag = 4
 AND e.deleted_flag = 0
@@ -179,23 +187,21 @@ ORDER BY e.display_date DESC
 		catch(\Exception $e)
 		{
 			// todo: log me
+			dump($e);
 		}
+		
 		$locations = [];
-		$cnt = 0;
 		foreach($records as $record)
 		{
 			if (!array_key_exists($record->name, $locations))
-				$locations[$record->name] = $cnt++;
+				$locations[$record->name] = '/img/entries/' . $record->parent_id . '/' . $record->filename;
 				
 			if (count($locations) == 11)
 				break;
 		}
+		//dd($locations);
 
-		$l = [];
-		foreach($locations as $key => $value)
-			$l[] = $key;
-
-		return $l;
+		return $locations;
 	}
 	
 	private function getSlidersRandom($type_flag, $sliderCount, $firstslider)
