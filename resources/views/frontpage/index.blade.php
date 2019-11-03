@@ -523,7 +523,12 @@ $sectionCount = 0;
 	<div class="container main-font" style="max-width:95%;">	
 		<div class="sectionHeader text-center">			
 						
-			<h1 style="margin-bottom: 30px;" class="">{{$section->title}}</h1>
+			<h1 style="margin-bottom: 30px;" class="">
+				{{$section->title}}
+			@if (Auth::check())
+				<a style="color: white;" href="/entries/add"><span style="font-size:.6em;" class="glyphicon glyphicon-plus"></span></a>
+			@endif			
+			</h1>
 
 			<div class="row clearfix text-left" >
 				

@@ -34,9 +34,8 @@
 				<input type="text" id="title" name="title" placeholder="Title" class="form-control" />
 			</div>
 
-			@if (false)
-			<!-- todo: not ready yet -->
-			@component('control-dropdown-location', ['locations' => $locations, 'current_location' => null])@endcomponent
+			@if (isset($locations))
+				@component('control-dropdown-location', ['locations' => $locations, 'current_location' => null])@endcomponent
 			@endif
 			
 			<div class="entry-title-div">
