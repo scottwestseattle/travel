@@ -57,7 +57,7 @@ class FrontPageController extends Controller
 		// Set up the sections
 		//
 		$sections = Controller::getSections();
-		$latestLocations = self::getLatestLocations();
+		$latestLocations = $this->getLatestLocations();
 		
 		$currentLocation = null;			
 		if (isset($latestLocations))
@@ -156,15 +156,16 @@ class FrontPageController extends Controller
     	return view('frontpage.index', $vdata);
     }
 
-	static protected function getLatestLocations()
+	protected function getLatestLocations()
 	{
-		return self::getLatestLocationsFromBlogEntries();
+		return $this->getLatestLocationsFromBlogEntries();
 	}
     
-	static protected function getLatestLocationsFromBlogEntries()
+	protected function getLatestLocationsFromBlogEntries()
 	{
 		$q = '
-SELECT country.name, photos.filename, photos.parent_id FROM entries AS e
+SELECT country.name, photos.filename, photos.parent_id 
+FROM entries AS e
 LEFT JOIN locations AS city
 	ON city.id = e.location_id AND city.deleted_flag = 0
 LEFT JOIN locations as country
@@ -174,6 +175,8 @@ LEFT JOIN photos
 WHERE 1=1
 AND e.type_flag = 4
 AND e.deleted_flag = 0
+AND e.approved_flag = 1
+AND e.published_flag = 1
 AND city.name IS NOT NULL
 AND country.name IS NOT NULL
 ORDER BY e.display_date DESC
@@ -187,14 +190,23 @@ ORDER BY e.display_date DESC
 		catch(\Exception $e)
 		{
 			// todo: log me
-			dump($e);
+			//dump($e);
 		}
 		
 		$locations = [];
 		foreach($records as $record)
 		{
 			if (!array_key_exists($record->name, $locations))
-				$locations[$record->name] = '/img/entries/' . $record->parent_id . '/' . $record->filename;
+			{		
+				$photo = null;
+				
+				if (isset($record->filename))
+					$photo = '/img/entries/' . $record->parent_id . '/' . $record->filename;
+				else
+					$photo = '/img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $this->domainName . '.jpg';
+									
+				$locations[$record->name] = $photo;
+			}
 				
 			if (count($locations) == 11)
 				break;

@@ -2153,7 +2153,9 @@ ORDER BY e.display_date DESC
 		else if ($country == 'UAE')
 			$country = 'United Arab Emirates';
 		else if ($country == 'Bosnia')
-			$country = 'Bosnia Herzegovina';
+			$country = 'Bosnia and Herzegovina';
+		else if ($country == 'Bosnia Herzegovina')
+			$country = 'Bosnia and Herzegovina';
 		
 		
 		return $country;
