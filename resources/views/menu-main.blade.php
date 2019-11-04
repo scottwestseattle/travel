@@ -28,6 +28,10 @@
                     </a>
 					
 					@if ($user_type >= 100)
+						<a class="navbar-brand" href="{{ url('/admin') }}">
+							<span class="glyphCustom glyphicon glyphicon-user"></span>
+						</a>
+
 						<a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
 					@endif
 
