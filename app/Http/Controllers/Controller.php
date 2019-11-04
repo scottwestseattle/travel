@@ -1994,15 +1994,26 @@ class Controller extends BaseController
 		return $date;
 	}
 
+	// This function get countries from Blog Entry locations, Photo locations, and the Country List settings entry record.
 	static protected function getCountries()
 	{
-		$locations = self::getLocationsFromPhotos();
+		$standardCountryNames = self::getStandardCountryNames();
+
+		$locations = self::getLocationsFromPhotos($standardCountryNames);
 		//dd($locations);
 		
-		$locations2 = self::getLocationsFromEntries();
+		$locations2 = self::getLocationsFromEntries($standardCountryNames);
 		//dd($locations2);
-
+		
 		foreach($locations2 as $record)
+		{			
+			if (!array_key_exists($record, $locations))
+				$locations[$record] = $record;
+		}
+		
+		$locations3 = self::getLocationsFromSettings($standardCountryNames);
+
+		foreach($locations3 as $record)
 		{			
 			if (!array_key_exists($record, $locations))
 				$locations[$record] = $record;
@@ -2017,29 +2028,88 @@ class Controller extends BaseController
 
 		return $countries;
 	}
-		
-	static protected function getLocationsFromPhotos()
+
+	static protected function getLocationsFromSettings($standardCountryNames)
 	{		
-		$q = '
+		$record = null;
+		try {		
+			$record = Entry::select()
+				->where('permalink', '=', 'settings-country-list')
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			dump($e);
+		}
+	
+		$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
+
+		$locations = [];
+		foreach($lines as $country)
+		{
+			$country = self::getStandardCountryName($standardCountryNames, $country);
+			
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
+		}
+
+		return $locations;
+	}
+
+	static protected function getStandardCountryNames()
+	{		
+		$record = null;
+		try {		
+			$record = Entry::select()
+				->where('permalink', '=', 'settings-standard-country-names')
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			dump($e);
+		}
+	
+		$names = [];
+		
+		if (isset($record))
+		{
+			$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
+		
+			foreach($lines as $line)
+			{	
+				$parts = explode('|', $line);
+				if (count($parts) > 1)
+					$names[trim($parts[0])] = trim($parts[1]);
+			}
+		}
+
+		return $names;
+	}
+	
+	static protected function getLocationsFromPhotos($standardCountryNames)
+	{		
+		$q1 = '
 			SELECT location FROM `photos` 
 			WHERE 1=1
 			AND location IS NOT NULL
 			AND location != ""
 			AND type_flag in (0,1)
-			AND gallery_flag = 1
 			AND deleted_flag = 0
 			GROUP BY `parent_id`, location
 			ORDER BY parent_id DESC
 			;
 		';
 
-		$q2 = '
+		$q = '
 			SELECT * FROM `photos` 
 			WHERE 1=1
 			AND location IS NOT NULL
 			AND location != ""
 			AND type_flag in (0,1)
-			AND gallery_flag = 1
 			AND deleted_flag = 0
 			ORDER BY parent_id DESC
 			;
@@ -2058,9 +2128,10 @@ class Controller extends BaseController
 		$locations = [];
 		foreach($records as $record)
 		{
-			$country = self::getCountryFromLocation($record->location);
+			//dump($record->location);
+			$country = self::getCountryFromLocation($standardCountryNames, $record->location);
 			
-			//if ($country == 'Temple')
+			//if ($country == 'Washington')
 			//	dd($record);
 			
 			if (!array_key_exists($country, $locations))
@@ -2070,7 +2141,7 @@ class Controller extends BaseController
 		return $locations;
 	}
 	
-	static protected function getLocationsFromEntries()
+	static protected function getLocationsFromEntries($standardCountryNames)
 	{
 		$q = '
 SELECT e.title, country.name FROM entries AS e
@@ -2100,16 +2171,21 @@ ORDER BY e.display_date DESC
 		$cnt = 0;
 		foreach($records as $record)
 		{
-			$country = self::getCountryStandardName($record->name);
-			
+			$country = self::getCountryFromLocation($standardCountryNames, $record->name);
+		
+			//if ($country == 'Washington')
+			//	dump($record);
+				
 			if (!array_key_exists($country, $locations))
 				$locations[$country] = $country;
 		}
+		
+		//dd('stop');
 
 		return $locations;
 	}
 	
-	static protected function getCountryFromLocation($location)
+	static protected function getCountryFromLocation($standardCountryNames, $location)
 	{
 		$c = explode(',', $location);
 		if (count($c) > 2)
@@ -2125,40 +2201,21 @@ ORDER BY e.display_date DESC
 			$c = $location;
 			//dump($location);
 		}
+		
+		$c = self::getStandardCountryName($standardCountryNames, $c);
 			
 		//dd($c);
-		$c = self::getCountryStandardName($c);
-		
+	
 		return $c;
 	}
 	
-	static protected function getCountryStandardName($country)
+	//private _countryStandardNames = null;
+	static protected function getStandardCountryName($standardCountryNames, $country)
 	{
-		if ($country == 'USA')
-			$country = 'United States';
-
-		else if ($country == 'UK')
-			$country = 'United Kingdom';
-		else if ($country == 'England')
-			$country = 'United Kingdom';
-		else if ($country == 'Scotland')
-			$country = 'United Kingdom';
-		else if ($country == 'Wales')
-			$country = 'United Kingdom';
-		else if ($country == 'Gibraltar')
-			$country = 'United Kingdom';
-
-		else if ($country == 'Holland')
-			$country = 'Netherlands';
-		else if ($country == 'UAE')
-			$country = 'United Arab Emirates';
-		else if ($country == 'Bosnia')
-			$country = 'Bosnia and Herzegovina';
-		else if ($country == 'Bosnia Herzegovina')
-			$country = 'Bosnia and Herzegovina';
-		
+		if (array_key_exists($country, $standardCountryNames))
+			$country = $standardCountryNames[$country];
 		
 		return $country;
-	}		
+	}	
 			
 }
