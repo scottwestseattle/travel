@@ -717,6 +717,10 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			<p style="font-size:1.2em;">{!!nl2br($section->description)!!}</p>
 		@else
 			<p style="font-size:1.2em;">{!!$latestLocations!!}</p>
+			<div class="text-center">
+				<a href="/entries/recent-locations" style=""><button style="margin-top:20px;" type="button" class="btn btn-info">@lang('ui.Show All')</button></a>			
+			</div>
+
 		@endif
 		
 		@if (false)

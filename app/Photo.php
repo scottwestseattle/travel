@@ -268,7 +268,9 @@ class Photo extends Base
 			if (!array_key_exists($country, $locations))
 				$locations[$country] = $country;
 		}
-
+		
+		//dd($locations);
+		
 		return $locations;
 	}
 		

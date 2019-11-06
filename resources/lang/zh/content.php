@@ -36,4 +36,5 @@ return [
 'Show All Comments' => '显示所有评论',
 'Back to Comments' => '回到评论',
 'European Union Privacy Notice' => '该网站使用cookie来个性化内容和分析流量。',
+'Recent Locations' => '最近的位置',
 ];

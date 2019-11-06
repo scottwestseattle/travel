@@ -691,8 +691,8 @@ priceTaxes=$59.50
 		
 		foreach($locations2 as $record)
 		{			
-			if (!array_key_exists($record, $locations))
-				$locations[$record] = $record;
+			if (!array_key_exists($record->name, $locations))
+				$locations[$record->name] = $record->name;
 		}
 		
 		// Get additional country names from settings record

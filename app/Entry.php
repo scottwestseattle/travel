@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use App;
 use App\Tools;
+use DateTime;
 
 class Entry extends Base
 {
@@ -557,7 +558,7 @@ class Entry extends Base
 	static protected function getLocationsFromEntries($standardCountryNames)
 	{
 		$q = '
-SELECT e.title, country.name FROM entries AS e
+SELECT e.title, e.display_date, country.name FROM entries AS e
 LEFT JOIN locations AS city
 	ON city.id = e.location_id AND city.deleted_flag = 0
 LEFT JOIN locations as country
@@ -567,6 +568,7 @@ AND e.type_flag = 4
 AND e.deleted_flag = 0
 AND city.name IS NOT NULL
 AND country.name IS NOT NULL
+AND YEAR(e.display_date) >= 2018
 ORDER BY e.display_date DESC
 ;
 		';
@@ -590,7 +592,12 @@ ORDER BY e.display_date DESC
 			//	dump($record);
 				
 			if (!array_key_exists($country, $locations))
-				$locations[$country] = $country;
+			{
+				$record->display_date = new DateTime($record->display_date);
+				$record->name = $country;
+				
+				$locations[$country] = $record;
+			}
 		}
 		
 		//dd('stop');

@@ -171,8 +171,8 @@ class TranslationController extends Controller
 		{
 			Event::logException(LOG_MODEL_TRANSLATIONS, LOG_ACTION_EDIT, 'Error accessing translation file: ' . $path, null, $e->getMessage());
 			
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());
+			request()->session()->flash('message.level', 'danger');
+			request()->session()->flash('message.content', $e->getMessage());
 		}
 		
 	}

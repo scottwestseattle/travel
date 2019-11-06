@@ -675,8 +675,11 @@ LEFT JOIN photos
     {
 		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
 
-		$records = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, /* approved = */ false); // get all because they are displayed by super admin
-			
+		// get the standard country names to display and sort by from settings record
+		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
+
+		$records = Entry::getLocationsFromEntries($standardCountryNames);
+
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'page_title' => 'Recent Locations',
