@@ -14,6 +14,7 @@ use App\Visitor;
 use App\Site;
 use App\Event;
 use App\Comment;
+use App\Tools;
 
 define('PREFIX', 'frontpage');
 define('LOG_MODEL', 'frontpage');
@@ -57,29 +58,12 @@ class FrontPageController extends Controller
 		// Set up the sections
 		//
 		$sections = Controller::getSections();
-		$latestLocations = $this->getLatestLocations();
 		
-		$currentLocation = null;			
-		if (isset($latestLocations))
-		{
-			$s = '';
-			
-			foreach($latestLocations as $key => $value)
-			{
-				if (!isset($currentLocation))
-				{
-					$currentLocation = $key;
-					$currentLocationPhoto = $value;
-				}
-				else
-				{
-					$s .= $key . '<br>';
-				}
-			}
-			
-			$latestLocations = $s;
-		}
-			
+		//
+		// Get locations to show current and latest locations
+		//
+		$latestLocations = Entry::getLatestLocationsFromBlogEntries();
+					
 		//
 		// get tour info
 		//
@@ -148,74 +132,14 @@ class FrontPageController extends Controller
 			'gallery' => $gallery,
 			'firstslider' => $firstslider,
 			'showFullGallery' => $showFullGallery,
-			'latestLocations' => $latestLocations,
-			'currentLocation' => $currentLocation,
-			'currentLocationPhoto' => $currentLocationPhoto,
+			'latestLocations' => $latestLocations['recentLocations'],
+			'currentLocation' => $latestLocations['currentLocation'],
+			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
 		]);
 		
     	return view('frontpage.index', $vdata);
     }
 
-	protected function getLatestLocations()
-	{
-		return $this->getLatestLocationsFromBlogEntries();
-	}
-    
-	protected function getLatestLocationsFromBlogEntries()
-	{
-		$q = '
-SELECT country.name, photos.filename, photos.parent_id 
-FROM entries AS e
-LEFT JOIN locations AS city
-	ON city.id = e.location_id AND city.deleted_flag = 0
-LEFT JOIN locations as country
-	ON country.id = city.parent_id AND country.deleted_flag = 0
-LEFT JOIN photos
-	ON photos.id = e.photo_id AND photos.deleted_flag = 0
-WHERE 1=1
-AND e.type_flag = 4
-AND e.deleted_flag = 0
-AND e.approved_flag = 1
-AND e.published_flag = 1
-AND city.name IS NOT NULL
-AND country.name IS NOT NULL
-ORDER BY e.display_date DESC
-;
-		';
-
-		$records = null;
-		try {		
-			$records = DB::select($q);
-		}
-		catch(\Exception $e)
-		{
-			// todo: log me
-			//dump($e);
-		}
-		
-		$locations = [];
-		foreach($records as $record)
-		{
-			if (!array_key_exists($record->name, $locations))
-			{		
-				$photo = null;
-				
-				if (isset($record->filename))
-					$photo = '/img/entries/' . $record->parent_id . '/' . $record->filename;
-				else
-					$photo = '/img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $this->domainName . '.jpg';
-									
-				$locations[$record->name] = $photo;
-			}
-				
-			if (count($locations) == 11)
-				break;
-		}
-		//dd($locations);
-
-		return $locations;
-	}
-	
 	private function getSlidersRandom($type_flag, $sliderCount, $firstslider)
 	{		
 		$sliders = Photo::select()
@@ -307,7 +231,7 @@ ORDER BY e.display_date DESC
 		
 			$records = Visitor::getVisitors($date);
 			
-			$records = FrontPageController::removeRobots($records, $showBots);
+			$records = self::removeRobots($records, $showBots);
 		}
 				
 		$vdata = $this->getViewData([
@@ -328,44 +252,37 @@ ORDER BY e.display_date DESC
 		
 		foreach($records as $record)
 		{
-			// shorten the user_agent
+			// shorten the field
 			$agent = $record->user_agent;
+			$host = $record->host_name;
 			$new = null;
+			$found = null;
+
+			// get the robot list from the settings record			
+			$robots = Entry::getSetting('settings-user-agent-robots');
+
+			// check if $agent is in the robot list
+			foreach($robots as $robot => $replacement)
+			{
+				//$needle = $robot;
+				if (($found = Tools::reduceString($robot, $agent, $replacement)) != null)
+				{		
+					$new = $found;
+					break;
+				}
+				else if (($found = Tools::reduceString($robot, $host, $replacement)) != null)
+				{		
+					$new = $found;
+					break;
+				}
+			}
 			
-			if (stripos($agent, 'Googlebot') !== FALSE)
-				$new = 'GoogleBot';
-			else if (stripos($agent, 'Google-Site-Verification') !== FALSE)
-				$new = 'GoogleSiteVerification';
-			else if (stripos($agent, 'bingbot') !== FALSE)
-				$new = 'BingBot';
-			else if (stripos($agent, 'mediapartners') !== FALSE)
-				$new = 'AdSense';
-			else if (stripos($agent, 'a6-indexer') !== FALSE)
-				$new = 'Amazon A6';
-			else if (stripos($agent, 'pinterest') !== FALSE)
-				$new = 'PinBot';					
-			else if (stripos($agent, 'yandex.com/bots') !== FALSE)
-				$new = 'YandexBot';					
-			else if (stripos($agent, 'alphaseobot') !== FALSE)
-				$new = 'AlphaSeoBot';
-			else if (stripos($agent, 'uptimebot') !== FALSE)
-				$new = 'UptimeBot';
-			else if (stripos($agent, 'crawl') !== FALSE)
-				$new = $agent;
-			else if (stripos($agent, 'bot') !== FALSE)
-				$new = $agent;
-			else if (stripos($record->host_name, 'spider') !== FALSE)
-				$new = $record->host_name;
-			else if (stripos($record->host_name, 'crawl') !== FALSE)
-				$new = $record->host_name;
-			else if (stripos($record->host_name, 'bot') !== FALSE)
-				$new = $record->host_name;
-			else if (stripos($record->host_name, 'googleusercontent.com') !== FALSE)
-				$new = 'GoogleUserContent';
-			else if (stripos($record->host_name, 'amazonaws.com') !== FALSE)
-				$new = 'AmazonAWS';
+			// check if host name is in the robot list	
+			
+			if (isset($new))
+				; // already set above		
 			else if (stripos($record->referrer, 'localhost') !== FALSE)
-				$new = 'localhost';
+				$new = 'localhost'; // don't want anything that came from localhost
 				
 			if (isset($new))
 			{
@@ -375,6 +292,7 @@ ORDER BY e.display_date DESC
 				$record->user_agent = $new;
 			}
 				
+			// save the parts that we want to keep
 			$out[$count]['date'] = $record->updated_at;
 			$out[$count]['id'] = $record->record_id;
 			$out[$count]['page'] = $record->page;
@@ -440,8 +358,19 @@ ORDER BY e.display_date DESC
 		//
 		// get today's visitors
 		//
-		$visitors = FrontPageController::removeRobots(Visitor::getVisitors());
-			
+		$visitors = self::removeRobots(Visitor::getVisitors());
+		$visitorsUnique = [];
+		foreach($visitors as $record)
+		{
+			if (array_key_exists($record['ip'], $visitorsUnique))
+			{
+			}
+			else
+			{
+				$visitorsUnique[$record['ip']] = $record;
+			}
+		}
+
 		$ip = Event::getVisitorIp();
 						
 		return view('frontpage.admin', $this->getViewData([
@@ -450,6 +379,7 @@ ORDER BY e.display_date DESC
 			'records' => $entries, 
 			'users' => $users, 
 			'visitors' => $visitors,
+			'visitorsUnique' => $visitorsUnique,
 			'comments' => $comments, 
 			'ip' => $ip, 
 			'todo' => $todo,
@@ -747,4 +677,40 @@ priceTaxes=$59.50
 		return view('frontpage.spy', $vdata);
     }	
     
+	// This function get countries from Blog Entry locations, Photo locations, and the Country List settings entry record.
+	static private function getCountries()
+	{
+		// get the standard country names to display and sort by from settings record
+		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
+
+		$locations = Photo::getLocationsFromPhotos($standardCountryNames);
+		//dd($locations);
+		
+		$locations2 = Entry::getLocationsFromEntries($standardCountryNames);
+		//dd($locations2);
+		
+		foreach($locations2 as $record)
+		{			
+			if (!array_key_exists($record, $locations))
+				$locations[$record] = $record;
+		}
+		
+		// Get additional country names from settings record
+		$locations3 = Entry::getLocationsFromSettings($standardCountryNames);
+
+		foreach($locations3 as $record)
+		{			
+			if (!array_key_exists($record, $locations))
+				$locations[$record] = $record;
+		}
+		
+		$countries = [];
+		foreach($locations as $key => $value)
+		{
+			$countries[] = $value;
+		}
+		sort($countries);
+
+		return $countries;
+	}
 }

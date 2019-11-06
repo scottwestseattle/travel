@@ -16,7 +16,7 @@ ALTER TABLE `entries` ADD `major_number` SMALLINT NULL DEFAULT NULL AFTER `color
 2019-01-23
 ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
 
-
+2018
 
 7/10
 ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
@@ -50,7 +50,6 @@ ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type
 
 My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Switchhing localhost projects on MacBook

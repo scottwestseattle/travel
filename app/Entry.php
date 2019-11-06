@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use App;
+use App\Tools;
 
 class Entry extends Base
 {
@@ -513,5 +514,200 @@ class Entry extends Base
 		$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);
 		
 		return $stats;
+	}
+	
+	// Get a setting record where $name is the record permalink and has the format 'key|value'
+	static protected function getSetting($name)
+	{		
+		$record = null;
+		try {		
+			$record = Entry::select()
+				->where('permalink', '=', $name)
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			//dump($e);
+		}
+	
+		$values = [];
+		
+		if (isset($record))
+		{
+			$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
+		
+			foreach($lines as $line)
+			{	
+				$parts = explode('|', $line);
+				
+				if (count($parts) > 1) // format is $key|$value
+					$values[trim($parts[0])] = trim($parts[1]);
+				else if (count($parts) == 1) // format is $key only
+					$values[trim($parts[0])] = null;
+				else
+					; // blank line, ignored
+			}
+		}
+
+		return $values;
+	}
+
+	static protected function getLocationsFromEntries($standardCountryNames)
+	{
+		$q = '
+SELECT e.title, country.name FROM entries AS e
+LEFT JOIN locations AS city
+	ON city.id = e.location_id AND city.deleted_flag = 0
+LEFT JOIN locations as country
+	ON country.id = city.parent_id AND country.deleted_flag = 0
+WHERE 1=1
+AND e.type_flag = 4
+AND e.deleted_flag = 0
+AND city.name IS NOT NULL
+AND country.name IS NOT NULL
+ORDER BY e.display_date DESC
+;
+		';
+
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+		}
+		
+		$locations = [];
+		$cnt = 0;
+		foreach($records as $record)
+		{
+			$country = Tools::getStandardCountryName($standardCountryNames, $record->name);
+		
+			//if ($country == 'Washington')
+			//	dump($record);
+				
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
+		}
+		
+		//dd('stop');
+
+		return $locations;
+	}
+	
+	static protected function getLocationsFromSettings($standardCountryNames)
+	{		
+		$record = null;
+		try {		
+			$record = Entry::select()
+				->where('permalink', '=', 'settings-country-list')
+				->where('deleted_flag', 0)
+				->first();
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			dump($e);
+		}
+	
+		$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
+
+		$locations = [];
+		foreach($lines as $country)
+		{
+			$country = Tools::getStandardCountryName($standardCountryNames, $country);
+			
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
+		}
+
+		return $locations;
+	}
+	
+	protected function getLatestLocationsFromBlogEntries()
+	{
+		$q = '
+SELECT country.name, photos.filename, photos.parent_id 
+FROM entries AS e
+LEFT JOIN locations AS city
+	ON city.id = e.location_id AND city.deleted_flag = 0
+LEFT JOIN locations as country
+	ON country.id = city.parent_id AND country.deleted_flag = 0
+LEFT JOIN photos
+	ON photos.id = e.photo_id AND photos.deleted_flag = 0
+WHERE 1=1
+AND e.type_flag = 4
+AND e.deleted_flag = 0
+AND e.approved_flag = 1
+AND e.published_flag = 1
+AND city.name IS NOT NULL
+AND country.name IS NOT NULL
+ORDER BY e.display_date DESC
+;
+		';
+
+		$records = null;
+		$domainName = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			//dump($e);
+		}
+		
+		$locations = [];			// only used for uniqueness and count
+		$currentLocation = null;	// first location is the current location
+		$recentLocations = '';		// recent locations are the next 10 unique location names
+		
+		foreach($records as $record)
+		{
+			// only add entries once
+			if (!array_key_exists($record->name, $locations))
+			{
+				if (isset($currentLocation))
+				{
+					// locations 2 - 11 are the recent locations
+					$recentLocations .= $record->name . '<br>';
+				}
+				else
+				{
+					// first location is the current location	
+						
+					$currentLocation = $record->name;
+					
+					$currentLocationPhoto = null;
+					if (isset($record->filename))
+					{
+						$currentLocationPhoto = '/img/entries/' . $record->parent_id . '/' . $record->filename;
+					}
+					else
+					{
+						if (!isset($domainName))
+							$domainName = Tools::getDomainName();
+					
+						$currentLocationPhoto = '/img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $domainName . '.jpg';
+					}
+				}
+				
+				$locations[$record->name] = $record->name;
+			}
+				
+			if (count($locations) == 11)
+				break;
+		}
+		
+		// pack up the return values
+		$rc['currentLocation'] = $currentLocation;
+		$rc['currentLocationPhoto'] = $currentLocationPhoto;
+		$rc['recentLocations'] = $recentLocations;
+		
+		//dd($rc);
+
+		return $rc;
 	}
 }

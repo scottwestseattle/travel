@@ -422,7 +422,8 @@ Route::group(['prefix' => 'entries'], function () {
 	Route::get('/indexadmin/{type_flag?}', 'EntryController@indexadmin')->middleware('auth');
 	Route::get('/tag/{tag_id}', 'EntryController@tag')->middleware('auth');
 	Route::get('/show/{id}', 'EntryController@show');
-		
+	Route::get('/recent-locations', 'ToolController@recentLocations');
+
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
 	Route::post('/publishupdate/{entry}', 'EntryController@publishupdate')->middleware('auth');

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
+use App\Tools;
 
 class Photo extends Base
 {
@@ -219,5 +220,56 @@ class Photo extends Base
 			
 		return $record;
 	}
-	
+
+	static protected function getLocationsFromPhotos($standardCountryNames)
+	{		
+		$q = '
+			SELECT location FROM `photos` 
+			WHERE 1=1
+			AND location IS NOT NULL
+			AND location != ""
+			AND type_flag in (0,1)
+			AND deleted_flag = 0
+			GROUP BY `parent_id`, location
+			ORDER BY parent_id DESC
+			;
+		';
+
+		$qTEST = '
+			SELECT * FROM `photos` 
+			WHERE 1=1
+			AND location IS NOT NULL
+			AND location != ""
+			AND type_flag in (0,1)
+			AND deleted_flag = 0
+			ORDER BY parent_id DESC
+			;
+		';
+		
+		$records = null;
+		try {		
+			$records = DB::select($q);
+		}
+		catch(\Exception $e)
+		{
+			// todo: log me
+			//dump($e);
+		}
+
+		$locations = [];
+		foreach($records as $record)
+		{
+			//dump($record->location);
+			$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
+			
+			//if ($country == 'Washington')
+			//	dd($record);
+			
+			if (!array_key_exists($country, $locations))
+				$locations[$country] = $country;
+		}
+
+		return $locations;
+	}
+		
 }

@@ -126,7 +126,9 @@
 	
 	@if (isset($visitors))			
 	<div style="margin-bottom:50px;">
-		<h3 style="">Today's Visitors: {{count($visitors)}}</h3>
+		<h3>Today's Visitors:</h3>
+		<p style="font-size:1.5em;">Total: {{count($visitors)}}<p>
+		<p style="font-size:1.5em;">Unique: {{count($visitorsUnique)}}<p>
 		<p><a href="/visitors">Show All Visitors</a></p>
 	</div>
 	@endif
