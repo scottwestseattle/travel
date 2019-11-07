@@ -15,6 +15,7 @@ use App\Location;
 
 class ToolController extends Controller
 {
+	//fields: ['Expected Result', 'url to test', 'error message returned']
 	private $tests = [
 		['EXPECTED NOT FOUND', '/', ''],
 		['Affiliates', '/', ''],
@@ -42,6 +43,7 @@ class ToolController extends Controller
 		['Seattle', '/tours/location/2', ''],
 		['China', '/tours/location/9', ''],
 		['Articles', '/articles', ''],
+		['Myanmar', '/entries/recent-locations', ''],
 		];
 		
     public function test(Request $request)
@@ -673,7 +675,7 @@ LEFT JOIN photos
     
     public function recentLocations()
     {
-		$this->saveVisitor(LOG_MODEL_ARTICLES, LOG_PAGE_INDEX);
+		$this->saveVisitor(LOG_MODEL_TOOLS, LOG_PAGE_RECENT_LOCATIONS);
 
 		// get the standard country names to display and sort by from settings record
 		$standardCountryNames = Entry::getSetting('settings-standard-country-names');

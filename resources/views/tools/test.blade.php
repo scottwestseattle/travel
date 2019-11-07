@@ -26,7 +26,7 @@
 			<table class="table">
 				<tr><th>Select</th><th>URL</th><th>Expected</th><th>Results</th></tr>
 					
-			<?php $count = 0; ?>
+			<?php $count = 0; $errors = 0; ?>
 			@foreach ($records as $record)
 				@if (!isset($record[2]['success']) || $record[2]['success'] === false)
 				<tr>
@@ -35,12 +35,19 @@
 					<td>{{$record[0]}}</td>
 					@if (isset($record[2]['results']))
 						<td>{{$record[2]['results']}}</td>
+						<?php $errors++; ?>
 					@endif
 				</tr>
 				@endif
 				<?php $count++; ?>
 			@endforeach
 			</table>
+			
+			@if ($errors == 0)
+				<h3>All Pages Loaded Correctly</h3>
+			@else
+				<h3>Errors ({{$errors}}): expected text not found on page</h3>
+			@endif
 			
 			<div style="margin:20px 0;">
 				<button type="submit" name="update" class="btn btn-primary">Run Tests</button>

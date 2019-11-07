@@ -32,7 +32,7 @@ $now = new DateTime();
 					@if (!isset($record['id']))
 						<td>{{$record['model']}}/{{$record['page']}}</td>
 					@else
-						<td>{{$record['model']}}/{{$record['page']}} (<a href="/entries/show/{{$record['id']}}">{{$record['id']}}</a>)</td>
+						<td>{{$record['model']}}/{{$record['page']}} (<a href="{{$record['url']}}/{{$record['id']}}">{{$record['id']}}</a>)</td>
 					@endif
 					
 					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a></td>

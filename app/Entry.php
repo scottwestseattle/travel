@@ -566,6 +566,8 @@ LEFT JOIN locations as country
 WHERE 1=1
 AND e.type_flag = 4
 AND e.deleted_flag = 0
+AND e.approved_flag = 1
+AND e.published_flag = 1
 AND city.name IS NOT NULL
 AND country.name IS NOT NULL
 AND YEAR(e.display_date) >= 2018

@@ -208,31 +208,17 @@ class FrontPageController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$showBots = false;
-		
-		if (isset($request->showbots))
-			$showBots = true;
+		$showBots = isset($request->showbots);
 			
 		$dates = Controller::getDateFilter($request, false, false);
 			 
 		$filter = Controller::getFilter($request, /* today = */ true);		
 
-		if (false && isset($sort) && $sort == 1)
-		{
-			$records = Visitor::select()
-				->where('site_id', SITE_ID)
-				->where('deleted_flag', 0)
-				->orderByRaw('updated_at DESC')
-				->get();
-		}
-		else
-		{		
-			$date = isset($dates['from_date']) ? $dates['from_date'] : null;
+		$date = isset($dates['from_date']) ? $dates['from_date'] : null;
+	
+		$records = Visitor::getVisitors($date);
 		
-			$records = Visitor::getVisitors($date);
-			
-			$records = self::removeRobots($records, $showBots);
-		}
+		$records = self::removeRobots($records, $showBots);
 				
 		$vdata = $this->getViewData([
 			'records' => $records,
@@ -241,7 +227,6 @@ class FrontPageController extends Controller
 			'bots' => $showBots,
 		]);
 
-						
 		return view('frontpage.visits', $vdata);
     }
 
@@ -301,6 +286,7 @@ class FrontPageController extends Controller
 			$out[$count]['host'] = $record->host_name;
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
+			$out[$count]['url'] = $record->state_region;
 			
 			$count++;
 		}

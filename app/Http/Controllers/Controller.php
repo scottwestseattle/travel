@@ -23,6 +23,7 @@ use App\Task;
 use App\Visitor;
 use App\Category;
 use App\Account;
+use App\Tools;
 
 define('ERROR_REDIRECT_PAGE', '/error');
 
@@ -125,6 +126,7 @@ define('LOG_MODEL_TOURS', 'tours');
 define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TEMPLATES', 'templates');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
+define('LOG_MODEL_TOOLS', 'tools');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');
@@ -151,6 +153,7 @@ define('LOG_PAGE_MAPS', 'maps');
 define('LOG_PAGE_LOCATION', 'location');
 define('LOG_PAGE_ABOUT', 'about');
 define('LOG_PAGE_CONFIRM', 'confirm login');
+define('LOG_PAGE_RECENT_LOCATIONS', 'recent-locations');
 
 // query sorting
 define('ORDERBY_APPROVED', 0);
@@ -299,7 +302,6 @@ class Controller extends BaseController
 		return $info;
 	}
 
-	
 	protected function saveVisitor($model, $page, $record_id = null)
 	{		
 		// ignore these
@@ -322,25 +324,12 @@ class Controller extends BaseController
 		
 		if (strlen($userAgent) == 0 && strlen($referrer) == 0)
 		{
-			return; // no host or referrer probably means that it's the ETG tester so don't count it
+			return; // no host or referrer probably means that it's the auto page tester so don't count it
 		}
 		
-		$visitor = null;
-		if (false)
-		{
-			// the original way without page info
-			$visitor = Visitor::select()
-				->where('ip_address', '=', $ip)
-				->where('deleted_flag', 0)
-				->first();
-		}
-			
-		if (!isset($visitor)) // new visitor
-		{
-			$visitor = new Visitor();
-			$visitor->ip_address = $ip;	
-		}
+		$visitor = new Visitor();
 		
+		$visitor->ip_address = $ip;	
 		$visitor->visit_count++;			
 		$visitor->site_id = SITE_ID;
 		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
@@ -353,6 +342,14 @@ class Controller extends BaseController
 		$visitor->page = $page;
 		$visitor->record_id = $record_id;
 		//no domain_name: $visitor->domain_name = $this->domainName;
+
+		//todo: borrowing the 'state_region' field to hold the page link root
+		if ($model == 'photos')
+			$visitor->state_region = '/photos/permalink';
+		else
+			$visitor->state_region = '/entries/show';
+		
+		//dump($visitor);
 
 		$visitor->save();		
 	}	
