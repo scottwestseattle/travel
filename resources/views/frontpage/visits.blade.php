@@ -36,7 +36,7 @@ $now = new DateTime();
 					@endif
 					
 					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a></td>
-					<td>{{$record['ref']}}</td>
+					<td><a target="_blank" href="{{$record['ref']}}">{{$record['ref']}}</a></td>
 					<td>{{$record['agent']}}</td>
 					<td>{{$record['host']}}</td>
 					<td><a href='/entries/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
