@@ -57,7 +57,19 @@ class EmailController extends Controller
     public function check(Request $request, $debug = false) 
 	{	
 		//$debug = true;
-
+		
+		// this happens sometimes and the transactions are added with no user id
+		if (Auth::id() == null)
+		{
+			$msg = 'User ID is null';
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'check()', null, $msg);
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg);
+			
+			return redirect('/transactions/filter');
+		}
+			
 		if (!function_exists('imap_open'))
 		{
 			$msg = 'Email is not available on this server';
@@ -647,6 +659,9 @@ class EmailController extends Controller
 		$record = new Transaction();
 				
 		$record->user_id = Auth::id();	
+		if ($record->user_id == null)
+			throw new \Exception('User ID not set');
+			
 		$record->transaction_date	= $date->format('Y-m-d');
 		$record->amount				= floatval($amount);
 		$record->reconciled_flag 	= 1;
