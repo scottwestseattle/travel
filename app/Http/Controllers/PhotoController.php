@@ -985,18 +985,20 @@ class PhotoController extends Controller
 
 		if (!isset($photo))
 		{
-			$msg = 'Specified Photo Not Found: ' . $id;
+			$msg = 'Page Not Found (404) for photo id: ' . $id;
 
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $msg);
 			
 			$link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
 			$desc = $this->getVisitorInfoDebug();
-
 			Event::logError(LOG_MODEL_PHOTOS, LOG_ACTION_VIEW, /* title = */ $msg, $desc, $id, null, null, $link);			
 			
-			return redirect('/');
+			$data['title'] = '404';
+			$data['name'] = 'Page not found';
+			return response()->view('errors.404', $data, 404);
+
+			//return redirect('/');
 		}
 		
 		// check parent type

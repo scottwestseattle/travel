@@ -250,17 +250,18 @@ class EntryController extends Controller
 			$entry->description = $this->formatLinks($entry->description);		
 		}
 		else
-		{
-			$msg = 'Permalink Not Found: ' . $permalink;
+		{        
+			$msg = 'Page Not Found (404) for permalink: ' . $permalink;
 			
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
+			//$request->session()->flash('message.level', 'danger');
+			//$request->session()->flash('message.content', $msg);
 			
 			$desc = $this->getVisitorInfoDebug();
-			
 			Event::logError(LOG_MODEL_ENTRIES, LOG_ACTION_VIEW, /* title = */ $msg, $desc);			
-			
-            return redirect('/entries/index');
+		
+			$data['title'] = '404';
+			$data['name'] = 'Page not found';
+			return response()->view('errors.404', $data, 404);
 		}
 		
 		$page_title = $entry->title;

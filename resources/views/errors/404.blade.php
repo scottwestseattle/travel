@@ -44,9 +44,9 @@
 
 <div class="page-size container">
 	<div class="flex-center position-ref full-height">
-		<div class="content">
-			<div style="font-size:3em; color:#636b6f; font-family:'Raleway', sans-serif;font-weight: 100;" class="title">
-                    Sorry, the page you are looking for could not be found.
+		<div class="content center">
+			<div style="margin-top:40px; font-size:3em; color:#636b6f; font-family:'Raleway', sans-serif;font-weight: 100;" class="title">
+                    The page you are looking for could not be found.
             </div>
         </div>
 	</div>
