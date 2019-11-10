@@ -234,7 +234,10 @@ class FrontPageController extends Controller
 	{    
 		$count = 0;
 		$out = [];
-		
+
+		// get the robot list from the settings record
+		$robots = Entry::getSetting('settings-user-agent-robots');
+
 		foreach($records as $record)
 		{
 			// shorten the field
@@ -243,22 +246,22 @@ class FrontPageController extends Controller
 			$new = null;
 			$found = null;
 
-			// get the robot list from the settings record			
-			$robots = Entry::getSetting('settings-user-agent-robots');
-
-			// check if $agent is in the robot list
-			foreach($robots as $robot => $replacement)
+			if (isset($robots) && count($robots) > 0)
 			{
-				//$needle = $robot;
-				if (($found = Tools::reduceString($robot, $agent, $replacement)) != null)
-				{		
-					$new = $found;
-					break;
-				}
-				else if (($found = Tools::reduceString($robot, $host, $replacement)) != null)
-				{		
-					$new = $found;
-					break;
+				// check if $agent is in the robot list
+				foreach($robots as $robot => $replacement)
+				{
+					//$needle = $robot;
+					if (($found = Tools::reduceString($robot, $agent, $replacement)) != null)
+					{		
+						$new = $found;
+						break;
+					}
+					else if (($found = Tools::reduceString($robot, $host, $replacement)) != null)
+					{		
+						$new = $found;
+						break;
+					}
 				}
 			}
 			
@@ -290,7 +293,7 @@ class FrontPageController extends Controller
 			
 			$count++;
 		}
-		
+
 		return $out;
 	}
 	

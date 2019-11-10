@@ -619,18 +619,21 @@ ORDER BY e.display_date DESC
 		catch(\Exception $e)
 		{
 			// todo: log me
-			dump($e);
+			//dump($e);
 		}
 	
-		$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
-
 		$locations = [];
-		foreach($lines as $country)
+		if (isset($record))
 		{
-			$country = Tools::getStandardCountryName($standardCountryNames, $country);
+			$lines = preg_split('/\r\n+/', $record->description, -1, PREG_SPLIT_NO_EMPTY);
+
+			foreach($lines as $country)
+			{
+				$country = Tools::getStandardCountryName($standardCountryNames, $country);
 			
-			if (!array_key_exists($country, $locations))
-				$locations[$country] = $country;
+				if (!array_key_exists($country, $locations))
+					$locations[$country] = $country;
+			}
 		}
 
 		return $locations;
