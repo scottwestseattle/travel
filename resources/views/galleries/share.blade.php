@@ -10,6 +10,16 @@
 
 		@foreach($galleries as $record)
 
+			@if (true)
+			
+			@if ($record->published_flag == 0 || $record->approved_flag == 0)
+				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-light">{{$record->title}}</button></a>
+			@else
+				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record->title}}</button></a>
+			@endif
+			
+			
+			@else
 			<div class='frontpage-box' style="display:inline-block; background-color: #f8f8f8;" >
 			
 				<!-- BACKGROUND PHOTO LINK -->
@@ -21,7 +31,8 @@
 				<div style='white-space: nowrap; overflow: hidden;' class='frontpage-box-text'>
 					<a href="/galleries/link/{{$entry->id}}/{{$record->id}}">{{$record->title}}</a>
 				</div>
-			</div>					
+			</div>	
+			@endif				
 						
 		@endforeach			
 	</div>

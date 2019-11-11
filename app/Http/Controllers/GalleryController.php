@@ -131,14 +131,13 @@ class GalleryController extends Controller
 		}
 		else
 		{
-			$msg = 'Permalink Entry Not Found: ' . $permalink;
-			
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
-			
+			$msg = 'Page Not Found (404) for gallery permalink: ' . $permalink;	
 			Event::logError(LOG_MODEL_GALLERIES, LOG_ACTION_VIEW, /* title = */ $msg);			
 			
-            return redirect('/entries/index');
+			$data['title'] = '404';
+			$data['name'] = 'Page not found';
+			
+			return response()->view('errors.404', $data, 404);
 		}
 			
 		$photos = Photo::select()
@@ -384,7 +383,7 @@ class GalleryController extends Controller
 		$galleries = $this->getEntriesByType(
 			ENTRY_TYPE_GALLERY
 			, /* approved = */ false
-			, /* limit = */ 16
+			, /* limit = */ 10000
 			, /* site_id = */ null
 			, /* orderBy = */ ORDERBY_DATE
 		);
