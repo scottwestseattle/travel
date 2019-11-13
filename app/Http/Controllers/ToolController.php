@@ -43,6 +43,8 @@ class ToolController extends Controller
 		['Seattle', '/tours/location/2', ''],
 		['China', '/tours/location/9', ''],
 		['Articles', '/articles', ''],
+		['Hotels', '/hotels', ''],
+		['Hostal', '/entries/hostal-europa-barcelona-spain-2019-11-10', ''],
 		['Myanmar', '/entries/recent-locations', ''],
 		];
 		
