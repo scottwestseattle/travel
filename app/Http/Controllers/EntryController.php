@@ -59,6 +59,20 @@ class EntryController extends Controller
     	return view('entries.articles', $vdata);
     }
 
+    public function hotels()
+    {		
+		$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_INDEX);
+
+		$records = $this->getEntriesByType(ENTRY_TYPE_HOTEL, /* approved = */ false); // get all because they are displayed by super admin
+			
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'page_title' => 'Hotels',
+		]);
+			
+    	return view('entries.hotels', $vdata);
+    }
+    
     public function indexadmin($type_flag = null)
     {		
 		if (!$this->isAdmin())
@@ -210,7 +224,7 @@ class EntryController extends Controller
 		$prev = null;
 		
 		// get the entry the Laravel way so we can access the gallery photo list
-		
+		$entry = null;
 		if ($this->isAdmin())
 		{
 			$entry = Entry::select()
@@ -291,11 +305,17 @@ class EntryController extends Controller
 			$backLinkText = __('content.Back to Article List');
 			$page_title = __('ui.Article') . ' - ' . $page_title;
 			
-			if (isset($entry->display_date))
-			{
-				$next = Entry::getNextPrevEntry($entry->display_date, $entry->id);
-				$prev = Entry::getNextPrevEntry($entry->display_date, $entry->id, /* next = */ false);
-			}
+			$next = Entry::getNextPrevEntry($entry);
+			$prev = Entry::getNextPrevEntry($entry, /* next = */ false);
+		}
+		else if ($entry->type_flag == ENTRY_TYPE_HOTEL)
+		{
+			$backLink = '/hotels';
+			$backLinkText = __('content.Back to Hotel List');
+			$page_title = __('content.Hotels') . ' - ' . $page_title;
+			
+			$next = Entry::getNextPrevEntry($entry);
+			$prev = Entry::getNextPrevEntry($entry, /* next = */ false);
 		}
 		else if ($entry->type_flag == ENTRY_TYPE_LESSON)
 		{

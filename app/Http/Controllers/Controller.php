@@ -79,17 +79,18 @@ define('SHOW_XS_ONLY', 'hidden-xl hidden-lg hidden-md hidden-sm');
 define('VISITOR_MAX_LENGTH', 200);
 
 // entries
-// -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=article, 6=note, 7=section, 8=gallery, 9=lesson, 99=other 	
+// -1=not set, 1=entry, 2=tour/hike, 3=blog, 4=blog entry, 5=hotel, 6=note, 7=section, 8=gallery, 9=lesson, 10=article, 99=other 	
 define('ENTRY_TYPE_NOTSET', 	-1);
 define('ENTRY_TYPE_ENTRY', 		1);
 define('ENTRY_TYPE_TOUR', 		2);
 define('ENTRY_TYPE_BLOG', 		3);
 define('ENTRY_TYPE_BLOG_ENTRY', 4);
-define('ENTRY_TYPE_ARTICLE', 	5);
+define('ENTRY_TYPE_HOTEL', 		5);
 define('ENTRY_TYPE_NOTE', 		6);
 define('ENTRY_TYPE_SECTION',	7);
 define('ENTRY_TYPE_GALLERY',	8);
 define('ENTRY_TYPE_LESSON',		9);
+define('ENTRY_TYPE_ARTICLE', 	10);
 define('ENTRY_TYPE_OTHER',		99);
 
 // sections
@@ -104,6 +105,7 @@ define('SECTION_WELCOME', 'section-welcome');
 define('SECTION_CASH', 'section-cash');
 define('SECTION_COMMENTS', 'section-comments');
 define('SECTION_LESSONS', 'section-lessons');
+define('SECTION_HOTELS', 'section-hotels');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -183,6 +185,7 @@ class Controller extends BaseController
 		ENTRY_TYPE_BLOG_ENTRY => 'Blog Post',
 		ENTRY_TYPE_ENTRY => 'Entry',
 		ENTRY_TYPE_GALLERY => 'Gallery',
+		ENTRY_TYPE_HOTEL => 'Hotel',
 		ENTRY_TYPE_NOTE => 'Note',
 		ENTRY_TYPE_OTHER => 'Other',
 		ENTRY_TYPE_SECTION => 'Section',
@@ -197,6 +200,7 @@ class Controller extends BaseController
 		ENTRY_TYPE_BLOG_ENTRY => 'entries',
 		ENTRY_TYPE_ENTRY => 'entries',
 		ENTRY_TYPE_GALLERY => 'galleries',
+		ENTRY_TYPE_HOTEL => 'entries',
 		ENTRY_TYPE_NOTE => 'entries',
 		ENTRY_TYPE_OTHER => 'entries',
 		ENTRY_TYPE_SECTION => 'entries',

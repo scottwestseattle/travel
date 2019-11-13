@@ -59,6 +59,9 @@
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
 							@endif
+							@if (isset($sections) && array_key_exists(SECTION_HOTELS, $sections))
+								<li><a href="/hotels"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('content.Hotels')</a></li>
+							@endif							
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
 							@endif
@@ -82,9 +85,6 @@
 							@if ($user_type >= 100)
 								<li><a href="/about">@lang('ui.About')</a></li>
 								<li><a href="/admin">@lang('ui.Admin')</a></li>
-								@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-									<li><a href="/articles">@lang('ui.Articles')</a></li>
-								@endif
 								@if (isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
 									<li><a href="/lessons">@lang('ui.Lessons')</a></li>
 								@endif
@@ -97,6 +97,9 @@
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.More') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
+										@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
+											<li><a href="/articles">@lang('ui.Articles')</a></li>
+										@endif
 										@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 											<li><a href="/blogs/indexadmin">@lang('ui.Blogs')</a></li>
 										@endif
@@ -104,6 +107,9 @@
 										<li><a href="/events/index">@lang('ui.Events')</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
 											<li><a href="/galleries">@lang('ui.Galleries')</a></li>
+										@endif
+										@if (isset($sections) && array_key_exists(SECTION_HOTELS, $sections))
+											<li><a href="/hotels">@lang('content.Hotels')</a></li>
 										@endif
 										<li><a href="/locations/indexadmin">@lang('ui.Locations')</a></li>
 										<li><a href="/photos/indexadmin">@lang('ui.Photos')</a></li>

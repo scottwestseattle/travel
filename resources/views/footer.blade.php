@@ -62,6 +62,9 @@
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
 								<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@LANG('ui.Blogs')</a></li>
 							@endif
+							@if (isset($sections) && array_key_exists(SECTION_HOTELS, $sections))
+								<li><a href="/hotels"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@LANG('content.Hotels')</a></li>
+							@endif
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
 								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-leaf"></span>@LANG('ui.Tours/Hikes')</a></li>
 							@endif

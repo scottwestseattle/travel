@@ -40,6 +40,7 @@ Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
 Route::get('/email/check', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
+Route::get('/hotels', 'EntryController@hotels');
 Route::get('/confirm', 'FrontPageController@confirm');
 Route::get('/spy', 'FrontPageController@spy');
 Route::get('/spyoff', 'FrontPageController@spyoff');

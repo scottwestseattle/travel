@@ -437,50 +437,58 @@ class Entry extends Base
 		return $record;
 	}
 
-
-	static protected function getNextPrevEntry($display_date, $id, $next = true)
+	static protected function getNextPrevEntry($entry, $next = true)
 	{
-		$record = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
-			->leftJoin('translations', function ($join) {
-				$join->on('entries.id', '=', 'translations.parent_id')
-					 ->where('translations.language', '=', App::getLocale())
-					 ->where('translations.parent_table', '=', 'entries');
-			})					 
-			->where('entries.site_id', SITE_ID)
-			->where('entries.deleted_flag', 0)
-			->where('entries.published_flag', 1)
-			->where('entries.approved_flag', 1)
-			->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
-			->where('entries.display_date', $next ? '=' : '=', $display_date)
-			->where('entries.id', $next ? '>' : '<', $id)
-			->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
-			->first();
-
-		if (!isset($record))
+		$record = null;
+		
+		if (isset($entry) && isset($entry->display_date))
+		{
+			$display_date = $entry->display_date;
+			$id = $entry->id;
+			$type_flag = $entry->type_flag;
+		
 			$record = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
 				->leftJoin('translations', function ($join) {
 					$join->on('entries.id', '=', 'translations.parent_id')
 						 ->where('translations.language', '=', App::getLocale())
 						 ->where('translations.parent_table', '=', 'entries');
-				})					 		
+				})					 
 				->where('entries.site_id', SITE_ID)
 				->where('entries.deleted_flag', 0)
 				->where('entries.published_flag', 1)
 				->where('entries.approved_flag', 1)
-				->where('entries.type_flag', ENTRY_TYPE_ARTICLE)
-				->where('entries.display_date', $next ? '>' : '<', $display_date)
+				->where('entries.type_flag', $type_flag)
+				->where('entries.display_date', $next ? '=' : '=', $display_date)
+				->where('entries.id', $next ? '>' : '<', $id)
 				->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
 				->first();
 
-		// copy translations in
-		if (isset($record->medium_col1))
-			$record->title = $record->medium_col1;			
-		if (isset($record->medium_col2))
-			$record->permalink = $record->medium_col2;
-		if (isset($record->large_col1))
-			$record->description = $record->large_col1;
-		if (isset($record->large_col2))
-			$record->description_short = $record->large_col2;
+			if (!isset($record))
+				$record = Entry::select(DB::raw('entries.*, translations.*, entries.id as id'))
+					->leftJoin('translations', function ($join) {
+						$join->on('entries.id', '=', 'translations.parent_id')
+							 ->where('translations.language', '=', App::getLocale())
+							 ->where('translations.parent_table', '=', 'entries');
+					})					 		
+					->where('entries.site_id', SITE_ID)
+					->where('entries.deleted_flag', 0)
+					->where('entries.published_flag', 1)
+					->where('entries.approved_flag', 1)
+					->where('entries.type_flag', $type_flag)
+					->where('entries.display_date', $next ? '>' : '<', $display_date)
+					->orderByRaw('entries.display_date ' . ($next ? 'ASC' : 'DESC') . ', entries.id ' . ($next ? 'ASC' : 'DESC '))			
+					->first();
+
+			// copy translations in
+			if (isset($record->medium_col1))
+				$record->title = $record->medium_col1;			
+			if (isset($record->medium_col2))
+				$record->permalink = $record->medium_col2;
+			if (isset($record->large_col1))
+				$record->description = $record->large_col1;
+			if (isset($record->large_col2))
+				$record->description_short = $record->large_col2;
+		}
 				
 		return $record;
 	}
@@ -510,6 +518,7 @@ class Entry extends Base
 		$stats = [];
 		
 		$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
+		$stats['hotels'] = Entry::getEntryCount(ENTRY_TYPE_HOTEL, /* allSites = */ false);
 		$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
 		$stats['blog-entries'] = Entry::getEntryCount(ENTRY_TYPE_BLOG_ENTRY, /* allSites = */ false);
 		$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);

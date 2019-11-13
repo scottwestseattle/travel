@@ -6,6 +6,17 @@ Changes
 
 Latest DB Changes
 
+2019-11-13
+
+UPDATE `entries` set type_flag = 10 WHERE 1 AND type_flag = 5 
+
+ALTER TABLE `entries` 
+CHANGE `type_flag` `type_flag` 
+TINYINT(4) 
+NOT NULL 
+DEFAULT '-1' 
+COMMENT '-1=Not Set, 1=Entry, 2=Tour/Hike, 3=Blog, 4=Blog Post, 5=Hotel, 6=Note, 7=Section, 8=Gallery, 9=Lesson, 10=Article, 99=Other';
+
 2019-05-10
 ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
 update `entries` set finished_flag = 1
