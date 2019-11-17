@@ -13,20 +13,23 @@
 	<h3>@LANG('content.Content Stats')</h3>
 	<table>
 		<tbody>
+			@if ($stats['articles'] > 0)
+				<tr><td>@LANG('ui.Articles'):</td><td>{{$stats['articles']}}</td></tr>
+			@endif
 			@if ($stats['blogs'] > 0)
 				<tr><td>@LANG('ui.Blogs'):</td><td>{{$stats['blogs']}}</td></tr>
 			@endif
-			@if ($stats['tours'] > 0)
-				<tr><td style="min-width:150px;">@LANG('ui.Tours'):</td><td>{{$stats['tours']}}</td></tr>
+			@if ($stats['blog_entries'] > 0)
+				<tr><td>@LANG('ui.Blog Posts'):</td><td>{{$stats['blog_entries']}}</td></tr>
 			@endif
 			@if ($stats['galleries'] > 0)
 				<tr><td>@LANG('ui.Galleries'):</td><td>{{$stats['galleries']}}</td></tr>
 			@endif
-			@if ($stats['articles'] > 0)
-				<tr><td>@LANG('ui.Articles'):</td><td>{{$stats['articles']}}</td></tr>
+			@if ($stats['hotels'] > 0)
+				<tr><td>@LANG('content.Hotels'):</td><td>{{$stats['hotels']}}</td></tr>
 			@endif
-			@if ($stats['blog_entries'] > 0)
-				<tr><td>@LANG('ui.Blog Posts'):</td><td>{{$stats['blog_entries']}}</td></tr>
+			@if ($stats['tours'] > 0)
+				<tr><td style="min-width:150px;">@LANG('ui.Tours'):</td><td>{{$stats['tours']}}</td></tr>
 			@endif
 			@if ($stats['total_pages'] > 0)
 				<tr><td style="padding-right:10px;"><b>@LANG('content.Total Content Pages'):</b></td><td><b>{{$stats['total_pages']}}</b></td></tr>

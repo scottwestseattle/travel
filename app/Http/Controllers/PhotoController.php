@@ -1000,11 +1000,9 @@ class PhotoController extends Controller
 
 			//return redirect('/');
 		}
-		
+	
 		// check parent type
-		$backLink = '/entries/' . $permalink;
-		$backLinkLabel = 'Back to Gallery';
-		if (false)
+		if (isset($photo->parent_id) && $photo->parent_id > 0)
 		{
 			$entry = Entry::select()
 				->where('deleted_flag', 0)
@@ -1015,11 +1013,12 @@ class PhotoController extends Controller
 			{
 				if ($entry->type_flag == ENTRY_TYPE_GALLERY)
 				{
-					// already set by default above
+					$backLink = '/galleries/' . $entry->permalink;
+					$backLinkLabel = 'Back to Gallery';
 				}
 				else
 				{
-					$backLink = $entry->permalink;
+					$backLink = '/entries/' . $entry->permalink;
 					$backLinkLabel = 'Back to Entry';
 					//dd($backLink);
 				}
@@ -1035,6 +1034,11 @@ class PhotoController extends Controller
 		
 				return redirect('/');
 			}
+		}
+		else
+		{
+			$backLink = '/photos/sliders';
+			$backLinkLabel = 'Back to List';
 		}
 
 		$this->saveVisitor(LOG_MODEL_PHOTOS, LOG_PAGE_GALLERY, $photo->id);
