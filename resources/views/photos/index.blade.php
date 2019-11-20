@@ -55,7 +55,7 @@
 			@foreach($photos as $photo)
 			<?php $fullpath = $path . $photo->filename; ?>
 				<tr>
-					<td>
+					<td style="xxxbackground-color:gray; max-width:500px;">
 						<?php
 							$alt_text = $photo->alt_text;
 							if (strlen($photo->location) > 0)
@@ -64,43 +64,46 @@
 						<a href="/photos/view/{{$photo->id}}">
 							<img title="{{ $alt_text }}" src="{{$fullpath}}" style="width: 100%; max-width:500px"/>
 						</a>
+						
+						<table>							
+							<tr><td>{{ $photo->alt_text }}</td></tr>
+							<tr><td>{{ $photo->location }}</td></tr>
+							<tr><td>{{ $photo->filename }}</td></tr>
+							@if (isset($photo->display_date))
+								<tr><td>{{ $photo->display_date }}</td></tr>
+							@endif
+							<tr><td>&nbsp;</td></tr>
+							<tr><td style="padding-top:15px;">
+							@if (isset($entry))
+								@component('control-dropdown-gallery-move', ['entry_id' => $entry->id, 'photo_id' => $photo->id, 'galleries' => $galleries])@endcomponent
+							@endif
+							</td></tr>
+						</table>						
 					</td>
 					
-					<td>
+					<td style="xxxbackground-color:red;">
 						<table>
-						
+
 							@if (Auth::user()->user_type >= 100)
 								@if ($photo->gallery_flag == 0)
 									<tr><td><span style="color:red;"><a href="/photos/setgallery/{{$photo->id}}">Show in Gallery</a></span></td></tr>								
 								@else
 									<tr><td><span style="color:green;"><a href="/photos/setgallery/{{$photo->id}}">Don't Show in Gallery</a></span></td></tr>
 								@endif																	
-								<tr><td>{{ $photo->filename }}</td></tr>
-							@endif					
-						
-							<tr><td>{{ $photo->alt_text }}</td></tr>
-							<tr><td>{{ $photo->location }}</td></tr>
-							
-							@if (isset($photo->display_date))
-								<tr><td>{{ $photo->display_date }}</td></tr>
 							@endif
 							
+							<tr><td>&nbsp;</td></tr>
 							
 							@if ($photo->main_flag === 1)
-							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span>{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
+							<tr><td style=""><!-- span class="glyphSliders glyphicon glyphicon-picture"></span -->{{ $photo->main_flag === 1 ? 'Main Photo' : '' }}</td></tr>
 							@else
-							<tr><td style=""><span class="glyphSliders glyphicon glyphicon-picture"></span><a href="/photos/setmain/{{$photo->id}}">Set as Main Photo</a></td></tr>							
+							<tr><td style=""><!-- span class="glyphSliders glyphicon glyphicon-picture"></span --><a href="/photos/setmain/{{$photo->id}}">Set as Main Photo</a></td></tr>							
 							@endif
 							
 							@if (Auth::user()->user_type >= 100)
 								<tr><td style="padding-top:15px;"><a href="/photos/edit/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-edit"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/confirmdelete/{{$photo->id}}"><span class="glyphSliders  glyphicon glyphicon-trash"></span></a></td></tr>
 								<tr><td style="padding-top:15px;"><a href="/photos/rotate/{{$photo->id}}"><span class="glyphSliders glyphicon glyphicon-repeat"></span></a></td></tr>
-								<tr><td style="padding-top:15px;">
-								@if (isset($entry))
-									@component('control-dropdown-gallery-move', ['entry_id' => $entry->id, 'photo_id' => $photo->id, 'galleries' => $galleries])@endcomponent
-								@endif
-								</td></tr>
 							@endif
 							
 						</table>

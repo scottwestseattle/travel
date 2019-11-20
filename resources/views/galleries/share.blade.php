@@ -13,9 +13,9 @@
 			@if (true)
 			
 			@if ($record->published_flag == 0 || $record->approved_flag == 0)
-				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-light">{{$record->title}}</button></a>
-			@else
 				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record->title}}</button></a>
+			@else
+				<a href="/galleries/link/{{$entry->id}}/{{$record->id}}"><button style="margin-bottom:10px;" type="button" class="btn btn-primary">{{$record->title}}</button></a>
 			@endif
 			
 			
