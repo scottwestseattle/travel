@@ -55,7 +55,7 @@
 			@foreach($photos as $photo)
 			<?php $fullpath = $path . $photo->filename; ?>
 				<tr>
-					<td style="xxxbackground-color:gray; max-width:500px;">
+					<td style="xxxbackground-color:gray; width:500px;">
 						<?php
 							$alt_text = $photo->alt_text;
 							if (strlen($photo->location) > 0)
@@ -81,7 +81,7 @@
 						</table>						
 					</td>
 					
-					<td style="xxxbackground-color:red;">
+					<td>
 						<table>
 
 							@if (Auth::user()->user_type >= 100)
