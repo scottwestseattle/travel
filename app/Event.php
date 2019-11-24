@@ -131,7 +131,12 @@ class Event extends Model
 		else
 		{
 			$ip = $_SERVER["REMOTE_ADDR"];
-		}	
+		}
+		
+		if (strlen($ip) <= strlen('1.1.1.1'))
+		{
+            $ip = 'localhost';
+        }	
 		
 		return $ip;
 	}

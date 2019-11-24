@@ -63,10 +63,14 @@ My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// Switchhing localhost projects on MacBook
+// Switching localhost projects on MacBook
+
 cd \etc\apache2
 sudo vi httpd.conf
-look for DocumentRoot and <Directory ...>
+# look for DocumentRoot and <Directory ...>
+
+# restart apache service
+sudo  apachectl restart
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

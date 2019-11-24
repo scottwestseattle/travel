@@ -353,6 +353,13 @@ class Controller extends BaseController
 		else
 			$visitor->state_region = '/entries/show';
 		
+		$ipInfo = Tools::getIpInfo($ip);
+		if (isset($ipInfo))
+		{
+            $visitor->country = $ipInfo['country'];
+            $visitor->city = $ipInfo['city'];
+        }		
+
 		//dump($visitor);
 
 		$visitor->save();		

@@ -8,6 +8,51 @@ use App\User;
 
 class Tools
 {
+	static public function getIpLocation($ip)
+	{
+	    $location = null;
+	    $ipInfo = self::getIpInfo($ip);
+
+	    if (isset($ipInfo))
+	    {
+			if (($city = self::getSafeArrayString($ipInfo, 'city', null)))
+			    $location = $city;
+
+			if (($country = self::getSafeArrayString($ipInfo, 'country', null)))
+			{
+			    if (strlen($location) > 0)
+			        $location .= ', ';
+
+			    $location .= $country;
+			}
+        }
+
+        return $location;
+    }
+
+	static public function getIpInfo($ip)
+	{
+		$info = null;
+
+        if (strlen($ip) > strlen('1.1.1.1'))
+        {
+            try
+            {
+                $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip);
+                $ipdat = @json_decode($ipInfo);
+
+                $info['country'] = $ipdat->geoplugin_countryName;
+                $info['city'] = $ipdat->geoplugin_city;
+            }
+            catch (\Exception $e)
+            {
+                dd($e->getMessage());
+            }
+        }
+
+		return $info;
+	}
+	
 	// if string contains $needle, reduce it to $reduce
 	static public function reduceString($needle, $haystack, $reduce = null)
 	{

@@ -34,8 +34,8 @@ $now = new DateTime();
 					@else
 						<td>{{$record['model']}}/{{$record['page']}} (<a href="{{$record['url']}}/{{$record['id']}}">{{$record['id']}}</a>)</td>
 					@endif
-					
-					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a></td>
+						
+					<td><a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a> <a target="_blank" href="https://www.google.com/maps/place/{{$record['location']}}"><span style="font-size:.7em;">{{$record['location']}}</span></a></td>
 					<td><a target="_blank" href="{{$record['ref']}}">{{$record['ref']}}</a></td>
 					<td>{{$record['agent']}}</td>
 					<td>{{$record['host']}}</td>

@@ -289,8 +289,26 @@ class FrontPageController extends Controller
 			$out[$count]['host'] = $record->host_name;
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
+			$out[$count]['location'] = $record->state_region;
 			$out[$count]['url'] = $record->state_region;
 			
+			$location = '';
+
+			if (isset($record->city))
+			    $location = $record->city;
+
+			if (isset($record->country))
+			{
+			    if (strlen($location) > 0)
+			        $location .= ', ';
+
+			    $location .= $record->country;
+			}
+
+            $location = (strlen($location) > 0) ? '(' . $location . ')' : '';
+
+			$out[$count]['location'] = $location;
+
 			$count++;
 		}
 
@@ -348,6 +366,8 @@ class FrontPageController extends Controller
 		// get today's visitors
 		//
 		$visitors = self::removeRobots(Visitor::getVisitors());
+		
+		// get unique visitors
 		$visitorsUnique = [];
 		foreach($visitors as $record)
 		{
@@ -361,7 +381,9 @@ class FrontPageController extends Controller
 		}
 
 		$ip = Event::getVisitorIp();
-						
+        $location = Tools::getIpLocation($ip);
+        $location = (strlen($location) > 0) ? '(' . $location . ')' : '';
+
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
@@ -371,6 +393,7 @@ class FrontPageController extends Controller
 			'visitorsUnique' => $visitorsUnique,
 			'comments' => $comments, 
 			'ip' => $ip, 
+			'location' => $location,
 			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor(),
 			'linksToFix' => $linksToFix,
