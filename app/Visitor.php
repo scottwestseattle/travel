@@ -8,6 +8,36 @@ use DateTime;
 
 class Visitor extends Base
 {
+    static public function getCountryInfo()
+    {
+    	$info = [];
+		$info['lastCountry'] = 'none';
+		$info['newestCountry'] = 'none';
+		$info['totalCountries'] = 0;
+    	
+		$record = Visitor::select('country', 'created_at')
+			//->where('site_id', 1)
+			->whereNotNull('country')
+			->orderByRaw('id DESC')
+			->first();
+
+		$info['lastCountry'] = $record->country;
+
+		$q = '
+			SELECT country, max(created_at), count(id)
+			FROM visitors
+			WHERE 1
+			AND country is not null
+			GROUP BY country
+		';
+		
+		$records = DB::select($q);
+		//dd($records);
+		$info['totalCountries'] = count($records);
+  	
+    	return $info;
+	}
+	
     static public function getVisitors($date = null)
     {		
 		if (isset($date))

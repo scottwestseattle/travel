@@ -93,3 +93,11 @@
 	width: 150px;
 }
 
+.flag-table {
+	margin-bottom: 30px;
+}
+
+.flag-table td:first-child {
+	padding-right: 20px;
+	font-weight: bold;
+}

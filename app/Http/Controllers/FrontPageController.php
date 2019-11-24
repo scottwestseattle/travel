@@ -539,11 +539,14 @@ class FrontPageController extends Controller
 		
 		$image = (file_exists($imagePath) === TRUE) ? $image : null;
 
+		$visitorCountryInfo = Visitor::getCountryInfo();
+		
         return view('frontpage.about', $this->getViewData([
 			'record' => $entry,
 			'stats' => $stats,
 			'image' => $image,
 			'countries' => $countries,
+			'visitorCountryInfo' => $visitorCountryInfo,
 		], 'About Page'));
     }
 	

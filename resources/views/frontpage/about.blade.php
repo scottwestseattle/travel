@@ -9,6 +9,34 @@
 <div class="container page-size main-font">	
 	
 	<h1>@LANG('ui.About')</h1>
+
+	<h3>Most Recent Visitors</h3>
+	<div>
+	
+		<div style="float:left; margin-right:20px; min-width:300px;">
+		<table class="flag-table">
+			<tbody>
+				<tr>
+					<td width="200" valign="top">Last Visitor Country:<br/>{{$visitorCountryInfo['lastCountry']}}</td>
+					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountry']}}.png" /></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+
+		<div style="min-width: 300px;">
+		<table class="flag-table">
+			<tbody>
+				<tr>
+					<td width="200" valign="top">Newest Visitor Country:<br/>{{$visitorCountryInfo['lastCountry']}}</td>
+					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountry']}}.png" /></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		
+		<p>{{$visitorCountryInfo['totalCountries']}} different countries have visited this site.</p>
+	</div>
 	
 	<h3>@LANG('content.Content Stats')</h3>
 	
@@ -73,11 +101,11 @@
 	<div style="clear:both;"></div>
 	
 	@if (isset($record))
-	<div class="entry-div" style="margin-top:30px;">
-		<div class="entry" style="">
-			<span name="description" style="font-size:1.5em;">{!! nl2br($record->description) !!}</span>				
+		<div class="entry-div">
+			<div class="entry">
+				<span name="description" style="font-size:1.5em;">{!! nl2br($record->description) !!}</span>				
+			</div>
 		</div>
-	</div>
 	@endif
 	
 	@if (false && isset($record->photo))
@@ -92,12 +120,12 @@
 		
 	<h3>Countries ({{count($countries)}})</h3>
 	<div>	
-	<p>
-	<?php $last = end($countries); ?>
-	@foreach($countries as $record)
-		<button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record}}</button>
-	@endforeach
-	</p>
+		<p>
+		<?php $last = end($countries); ?>
+		@foreach($countries as $record)
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record}}</button>
+		@endforeach
+		</p>
 	</div>
 		
 </div>
