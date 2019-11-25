@@ -314,7 +314,14 @@ class FrontPageController extends Controller
 
 		return $out;
 	}
-	
+
+    public function debugTest()
+    {
+		$comments = Comment::select()
+			->where('fake_column', 0)
+			->get();
+	}
+    	
     public function admin()
     {
 		if (!$this->isAdmin())
@@ -381,8 +388,10 @@ class FrontPageController extends Controller
 		}
 
 		$ip = Event::getVisitorIp();
-        $location = Tools::getIpLocation($ip);
-        $location = (strlen($location) > 0) ? '(' . $location . ')' : '';
+        $loc = Tools::getIpLocation($ip);
+        $location = $loc['location'];
+        $location = (strlen($location) > 0) ? $location : '';
+        $flag = $loc['flag'];
 
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
@@ -394,6 +403,7 @@ class FrontPageController extends Controller
 			'comments' => $comments, 
 			'ip' => $ip, 
 			'location' => $location,
+			'flag' => $flag,
 			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor(),
 			'linksToFix' => $linksToFix,
@@ -677,6 +687,7 @@ priceTaxes=$59.50
 
 		$spy = session('spy', null);
 		$spy = isset($spy) ? 'ON' : 'OFF';
+		setcookie('debug', true, time() + (86400 * 30), "/");	
 		
 		$vdata = $this->getViewData([
 			'spy' => $spy,
@@ -689,13 +700,26 @@ priceTaxes=$59.50
 		return redirect('/');
     }	
 
+    public function debug(Request $request)
+    {	
+		$debug = isset($_COOKIE['debug']) && $_COOKIE['debug'];
+				
+		setcookie('debug', !$debug, time() + (86400 * 30), "/");	
+		
+		$request->session()->flash('message.level', 'success');
+		$request->session()->flash('message.content', 'Debug mode is ' . ($debug ? 'OFF' : 'ON'));
+
+		return redirect('/admin');
+    }	
+    
     public function spyoff(Request $request)
     {	
 		session(['spy' => null]);
 
 		$spy = session('spy', null);
 		$spy = isset($spy) ? 'ON' : 'OFF';
-		
+		setcookie('debug', false, time() + (86400 * 30), "/");	
+
 		$vdata = $this->getViewData([
 			'spy' => $spy,
 		]);

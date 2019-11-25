@@ -10,8 +10,9 @@ class Tools
 {
 	static public function getIpLocation($ip)
 	{
-	    $location = null;
+	    $rc = [];
 	    $ipInfo = self::getIpInfo($ip);
+	    $location = null;
 
 	    if (isset($ipInfo))
 	    {
@@ -25,11 +26,12 @@ class Tools
 
 			    $location .= $country;
 			}
-			
-			$location .= ' ' . $ipInfo['countryCode'];
         }
+        
+        $rc['location'] = $location;
+        $rc['flag'] = '/img/flags/' . strtolower($ipInfo['countryCode']) . '.png';
 
-        return $location;
+        return $rc;
     }
 
 	static public function getIpInfo($ip)

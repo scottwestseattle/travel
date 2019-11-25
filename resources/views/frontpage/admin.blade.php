@@ -9,7 +9,7 @@
 		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
 			<li>Time: {{date("Y-m-d H:i:s")}}</li>
 			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
-			<li>My IP:&nbsp;{{$ip}} {{$location}}</li>
+			<li>IP:&nbsp;{{$ip}}&nbsp;<img height="20" src="{{$flag}}" />&nbsp;{{$location}}</li>
 			<li>{{base_path()}}</li>
 			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
 				&nbsp;&nbsp;<a href="/expedia">Expedia</a>
@@ -17,10 +17,11 @@
 				&nbsp;&nbsp;<a href="/eunoticereset">EU Notice</a>
 				&nbsp;&nbsp;<a href="/hash"><span class="glyphCustom glyphicon glyphicon-sunglasses"></span></a>				
 			</li>
-			@if (NULL != env('APP_DEBUG'))
-				<li style="color:red; font-weight:bold; font-size:1.2em;">Debug:&nbsp;ON (WARNING)</li>
+	
+			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
+				<li><span style="color:red; font-weight:bold; font-size:1.2em;">Debug:&nbsp;ON&nbsp;&nbsp;</span><a href="/debug">Turn Off</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
 			@else
-				<li>Debug:&nbsp;OFF</li>
+				<li>Debug:&nbsp;OFF&nbsp;&nbsp;<a href="/debug">Turn On</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
 			@endif
 		</ul>
 	</div>

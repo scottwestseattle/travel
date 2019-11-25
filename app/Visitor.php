@@ -53,7 +53,7 @@ class Visitor extends Base
 		$info['totalCountries'] = 0;
     	
 		$record = Visitor::select('country', 'continent', 'created_at')
-			//->where('site_id', 1)
+			->where('robot_flag', '!=', 1)
 			->whereNotNull('country')
 			->orderByRaw('id DESC')
 			->first();

@@ -39,7 +39,9 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    /* orig: 'debug' => env('APP_DEBUG', false), */
+    
+    'debug' => isset($_COOKIE['debug']) ? true : false,
 
     /*
     |--------------------------------------------------------------------------
