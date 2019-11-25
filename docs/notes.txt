@@ -1,13 +1,16 @@
-Changes
-- Use middleware for function auth
-- 
+
+update visitors set continent = "US" WHERE 1 AND continent IS NULL AND country = 'United States';
+
+SELECT ip_address, country, continent FROM `visitors` where 1 and continent is null and country is not null;
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Latest DB Changes
 
-2019-11-13
+2019-11-25
+ALTER TABLE `visitors` CHANGE `organization` `robot_flag` SMALLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
 
+2019-11-13
 UPDATE `entries` set type_flag = 10 WHERE 1 AND type_flag = 5 
 
 ALTER TABLE `entries` 

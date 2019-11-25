@@ -8,32 +8,84 @@ use DateTime;
 
 class Visitor extends Base
 {
+	public function isRobot()
+	{  
+		$rc = null;
+		
+		// get the robot list from the settings record
+		$robots = Entry::getSetting('settings-user-agent-robots');
+
+		if (isset($robots) && count($robots) > 0)
+		{
+			// shorten the field
+			$agent = $this->user_agent;
+			$host = $this->host_name;
+			$new = null;
+			$found = null;
+
+			// check if $agent is in the robot list
+			foreach($robots as $robot => $replacement)
+			{
+				//$needle = $robot;
+				if (($found = Tools::reduceString($robot, $agent, $replacement)) != null)
+				{		
+					$rc = $found;
+					break;
+				}
+				else if (($found = Tools::reduceString($robot, $host, $replacement)) != null)
+				{		
+					$rc = $found;
+					break;
+				}
+			}
+		}
+	
+		return isset($rc);
+	}
+	
     static public function getCountryInfo()
     {
     	$info = [];
 		$info['lastCountry'] = 'none';
+		$info['lastCountryCode'] = 'none';
 		$info['newestCountry'] = 'none';
+		$info['newestCountryCode'] = 'none';
 		$info['totalCountries'] = 0;
     	
-		$record = Visitor::select('country', 'created_at')
+		$record = Visitor::select('country', 'continent', 'created_at')
 			//->where('site_id', 1)
 			->whereNotNull('country')
 			->orderByRaw('id DESC')
 			->first();
 
-		$info['lastCountry'] = $record->country;
+		if (isset($record))
+		{
+			$info['lastCountry'] = $record->country;
+			$info['lastCountryCode'] = strtolower($record->continent);
+		}
 
-		$q = '
-			SELECT country, max(created_at), count(id)
-			FROM visitors
-			WHERE 1
-			AND country is not null
-			GROUP BY country
-		';
+		$q = '		
+			select * from (
+			SELECT country, continent as countryCode, min(created_at) as date, count(id) as count
+						FROM visitors
+						WHERE 1
+						AND country is not null
+						GROUP BY country, continent
+			) AS sub
+			ORDER BY date DESC
+			';
 		
 		$records = DB::select($q);
-		//dd($records);
+		//dump($records);
+
+		if (isset($records) && count($records) > 0)
+		{					
+			$info['newestCountry'] = $records[0]->country;
+			$info['newestCountryCode'] = strtolower($records[0]->countryCode);				
+		}
+		
 		$info['totalCountries'] = count($records);
+		$info['countries'] = $records;
   	
     	return $info;
 	}

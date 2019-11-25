@@ -357,8 +357,11 @@ class Controller extends BaseController
 		if (isset($ipInfo))
 		{
             $visitor->country = $ipInfo['country'];
+            $visitor->continent = $ipInfo['countryCode'];
             $visitor->city = $ipInfo['city'];
-        }		
+        }
+        
+        $visitor->robot_flag = $visitor->isRobot();
 
 		//dump($visitor);
 

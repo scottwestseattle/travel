@@ -18,7 +18,7 @@
 			<tbody>
 				<tr>
 					<td width="200" valign="top">Last Visitor Country:<br/>{{$visitorCountryInfo['lastCountry']}}</td>
-					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountry']}}.png" /></td>
+					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></td>
 				</tr>
 			</tbody>
 		</table>
@@ -28,14 +28,19 @@
 		<table class="flag-table">
 			<tbody>
 				<tr>
-					<td width="200" valign="top">Newest Visitor Country:<br/>{{$visitorCountryInfo['lastCountry']}}</td>
-					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountry']}}.png" /></td>
+					<td width="200" valign="top">Newest Visitor Country:<br/>{{$visitorCountryInfo['newestCountry']}}</td>
+					<td><img src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></td>
 				</tr>
 			</tbody>
 		</table>
 		</div>
 		
 		<p>{{$visitorCountryInfo['totalCountries']}} different countries have visited this site.</p>
+		<p>
+		@foreach($visitorCountryInfo['countries'] as $country)
+			<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" alt="{{$country->country}}" title="{{$country->country}}" />
+		@endforeach
+		</p>
 	</div>
 	
 	<h3>@LANG('content.Content Stats')</h3>

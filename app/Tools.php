@@ -25,6 +25,8 @@ class Tools
 
 			    $location .= $country;
 			}
+			
+			$location .= ' ' . $ipInfo['countryCode'];
         }
 
         return $location;
@@ -42,6 +44,7 @@ class Tools
                 $ipdat = @json_decode($ipInfo);
 
                 $info['country'] = $ipdat->geoplugin_countryName;
+                $info['countryCode'] = $ipdat->geoplugin_countryCode;
                 $info['city'] = $ipdat->geoplugin_city;
             }
             catch (\Exception $e)
