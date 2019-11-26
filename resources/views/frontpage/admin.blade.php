@@ -19,9 +19,9 @@
 			</li>
 	
 			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
-				<li><span style="color:red; font-weight:bold; font-size:1.2em;">Debug:&nbsp;ON&nbsp;&nbsp;</span><a href="/debug">Turn Off</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
+				<li><span style="color:red; font-weight:bold; font-size:1.2em;">Debug:&nbsp;ON&nbsp;&nbsp;</span><a href="/d-e-b-u-g">Turn Off</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
 			@else
-				<li>Debug:&nbsp;OFF&nbsp;&nbsp;<a href="/debug">Turn On</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
+				<li>Debug:&nbsp;OFF&nbsp;&nbsp;<a href="/d-e-b-u-g">Turn On</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
 			@endif
 		</ul>
 	</div>

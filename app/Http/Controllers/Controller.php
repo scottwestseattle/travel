@@ -234,7 +234,54 @@ class Controller extends BaseController
 			// set locale according to selected language
 			$locale = session('locale');
 			if (isset($locale))
+			{
 				App::setLocale($locale);
+			}
+			else
+			{
+				// see if the country has a language
+				$ip = Event::getVisitorIp();
+				$ipInfo = Tools::getIpInfo($ip);
+				if (isset($ipInfo))
+				{
+					//dd($ipInfo);
+					$cc = strtolower($ipInfo['countryCode']);
+					switch($cc)
+					{
+						// check for chinese
+						case 'cn':
+						case 'hk':
+						case 'tw':
+							App::setLocale('zh');
+							break;
+							
+						// check for spanish speaking countries
+						case 'es':
+						case 'ar':
+						case 'bo':
+						case 'cl':
+						case 'cr':
+						case 'cu':
+						case 'co':
+						case 'do':
+						case 'ec':
+						case 'hn':
+						case 'mx':
+						case 'ni':
+						case 'pa':
+						case 'pe':
+						case 'pr':
+						case 'sv':
+						case 've':
+						case 'uy':
+						case 'py':
+							App::setLocale('es');
+							break;
+						default:
+							break;
+					}
+				}	
+			}
 			
 			return $next($request);
 		});

@@ -56,7 +56,7 @@ Route::get('/phpinfo', 'ToolController@phpinfo')->middleware('auth');
 Route::get('/eunoticeaccept/', 'ToolController@eunoticeaccept');
 Route::get('/eunoticereset/', 'ToolController@eunoticereset');
 Route::get('/debugtest/', 'FrontPageController@debugTest');
-Route::get('/debug/', 'FrontPageController@debug')->middleware('auth');
+Route::get('/d-e-b-u-g/', 'FrontPageController@debug');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');
