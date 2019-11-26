@@ -8,7 +8,6 @@
 	
 	<h1>@LANG('content.Comments') ({{count($records)}})</h1>
 
-
 	<div class="text-center" style="margin-top: 50px;">
 		<div style="display: inline-block; width: 95%;">
 			<table>

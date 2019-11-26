@@ -108,6 +108,24 @@ class FrontPageController extends Controller
 		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ ($showFullGallery) ? PHP_INT_MAX : 10);
 		
 		//
+		// get latest comments
+		//
+		$comments = Comment::select()
+			->where('deleted_flag', 0)
+			->where('approved_flag', 1)
+			->where('parent_id', 0)
+			->orderByRaw('id DESC')
+			->limit(3)
+			->get();
+		
+		$maxTextLength = 100;	
+		for($i = 0; $i < count($comments); $i++)
+		{
+			if (strlen($comments[$i]->comment) > $maxTextLength)
+				$comments[$i]->comment = substr($comments[$i]->comment, 0, $maxTextLength) . '...';
+		}
+
+		//
 		// save visitor stats
 		//
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
@@ -135,6 +153,7 @@ class FrontPageController extends Controller
 			'latestLocations' => $latestLocations['recentLocations'],
 			'currentLocation' => $latestLocations['currentLocation'],
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
+			'comments' => $comments,
 		]);
 		
     	return view('frontpage.index', $vdata);
