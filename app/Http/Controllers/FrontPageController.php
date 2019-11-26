@@ -289,8 +289,7 @@ class FrontPageController extends Controller
 			$out[$count]['host'] = $record->host_name;
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
-			$out[$count]['location'] = $record->state_region;
-			$out[$count]['url'] = $record->state_region;
+			$out[$count]['url'] = $record->page_url;
 			
 			$location = '';
 
@@ -305,8 +304,9 @@ class FrontPageController extends Controller
 			    $location .= $record->country;
 			}
 
-            $location = (strlen($location) > 0) ? '(' . $location . ')' : '';
-
+			$flag = '/img/flags/' . strtolower($record->countryCode) . '.png';
+            $location = (strlen($location) > 0) ? '' . $location . ' &nbsp;<img height="12" src="' . $flag . '" />' : '';
+			
 			$out[$count]['location'] = $location;
 
 			$count++;

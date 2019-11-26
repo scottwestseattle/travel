@@ -7,6 +7,12 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 
 Latest DB Changes
 
+2019-11-26
+ALTER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
+ALTER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
+UPDATE `visitors` SET `countryCode` = `continent` WHERE 1 AND countryCode IS NULL AND continent IS NOT NULL 
+SELECT * FROM `visitors`  WHERE 1AND countryCode IS NULLAND continent IS NOT NULL ORDER BY `visitors`.`id`  DESC
+
 2019-11-25
 ALTER TABLE `visitors` CHANGE `organization` `robot_flag` SMALLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
 

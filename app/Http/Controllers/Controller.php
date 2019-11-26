@@ -347,17 +347,17 @@ class Controller extends BaseController
 		$visitor->record_id = $record_id;
 		//no domain_name: $visitor->domain_name = $this->domainName;
 
-		//todo: borrowing the 'state_region' field to hold the page link root
+		// save the url so we can link to the page visited from the visitor record
 		if ($model == 'photos')
-			$visitor->state_region = '/photos/permalink';
+			$visitor->page_url = '/photos/permalink';
 		else
-			$visitor->state_region = '/entries/show';
+			$visitor->page_url = '/entries/show';
 		
 		$ipInfo = Tools::getIpInfo($ip);
 		if (isset($ipInfo))
 		{
             $visitor->country = $ipInfo['country'];
-            $visitor->continent = $ipInfo['countryCode'];
+            $visitor->countryCode = $ipInfo['countryCode'];
             $visitor->city = $ipInfo['city'];
         }
         

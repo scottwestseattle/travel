@@ -52,7 +52,7 @@ class Visitor extends Base
 		$info['newestCountryCode'] = 'none';
 		$info['totalCountries'] = 0;
     	
-		$record = Visitor::select('country', 'continent', 'created_at')
+		$record = Visitor::select('country', 'countryCode', 'created_at')
 			->where('robot_flag', '!=', 1)
 			->whereNotNull('country')
 			->orderByRaw('id DESC')
@@ -61,20 +61,20 @@ class Visitor extends Base
 		if (isset($record))
 		{
 			$info['lastCountry'] = $record->country;
-			$info['lastCountryCode'] = strtolower($record->continent);
+			$info['lastCountryCode'] = strtolower($record->countryCode);
 		}
 
 		$q = '		
 			select * from (
-			SELECT country, continent as countryCode, min(created_at) as date, count(id) as count
+			SELECT country, countryCode, min(created_at) as date, count(id) as count
 						FROM visitors
 						WHERE 1
 						AND country is not null
-						GROUP BY country, continent
+						GROUP BY country, countryCode
 			) AS sub
 			ORDER BY date DESC
 			';
-		
+
 		$records = DB::select($q);
 		//dump($records);
 

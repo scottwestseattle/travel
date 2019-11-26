@@ -489,7 +489,7 @@ class EntryController extends Controller
 		$languages = [];
 		$languages[] = 'es';
 		$languages[] = 'zh';
-			
+//dd($entry);		
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
