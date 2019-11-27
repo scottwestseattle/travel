@@ -694,7 +694,7 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		@if (isset($section->description) && $section->description != '')
 			<h1>{{$section->title}}</h1>
 		@else
-			<h1>Current Location: {{$currentLocation}}</h1>
+			<h1>@LANG('content.Current Location'): @LANG('geo.' . $currentLocation)</h1>
 		@endif
 				
 		<!-- Main Photo or Map Location -->

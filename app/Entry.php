@@ -693,7 +693,7 @@ ORDER BY e.display_date DESC
 				if (isset($currentLocation))
 				{
 					// locations 2 - 11 are the recent locations
-					$recentLocations .= $record->name . '<br>';
+					$recentLocations .= trans('geo.' . $record->name) . '<br>';
 				}
 				else
 				{
