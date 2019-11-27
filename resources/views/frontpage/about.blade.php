@@ -10,14 +10,14 @@
 	
 	<h1>@LANG('ui.About')</h1>
 
-	<h3>Most Recent Visitors</h3>
+	<h3>@LANG('content.Most Recent Visitors')</h3>
 	<div>
 	
 		<div style="float:left; margin-right:20px; min-width:300px;">
 		<table class="flag-table">
 			<tbody>
 				<tr>
-					<td width="200" valign="top">Last Visitor Country:<br/>{{$visitorCountryInfo['lastCountry']}}</td>
+					<td width="200" valign="top">@LANG('content.Last Visitor Country:')<br/>@LANG('geo.' . $visitorCountryInfo['lastCountry'])</td>
 					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></td>
 				</tr>
 			</tbody>
@@ -28,17 +28,19 @@
 		<table class="flag-table">
 			<tbody>
 				<tr>
-					<td width="200" valign="top">Newest Visitor Country:<br/>{{$visitorCountryInfo['newestCountry']}}</td>
+					<td width="200" valign="top">@LANG('content.Newest Visitor Country:')<br/>@LANG('geo.' . $visitorCountryInfo['newestCountry'])</td>
 					<td><img src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></td>
 				</tr>
 			</tbody>
 		</table>
 		</div>
 		
-		<p>{{$visitorCountryInfo['totalCountries']}} different countries have visited this site.</p>
+		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site.')</p>
 		<p>
 		@foreach($visitorCountryInfo['countries'] as $country)
-			<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" alt="{{$country->country}}" title="{{$country->country}}" />
+			<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
+				alt="@LANG('geo.' . $country->country)" 
+				title="@LANG('geo.' . $country->country)" />
 		@endforeach
 		</p>
 	</div>
@@ -123,7 +125,7 @@
 		</div>	
 	@endif
 		
-	<h3>Countries ({{count($countries)}})</h3>
+	<h3>@LANG('content.Countries') ({{count($countries)}})</h3>
 	<div>	
 		<p>
 		<?php $last = end($countries); ?>

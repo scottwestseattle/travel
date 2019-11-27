@@ -66,10 +66,9 @@ class TranslationController extends Controller
              return redirect('/');
 
 		$vdata = $this->getViewData([
-			'records' => $records,
 		]);
 		
-		return view('entries.add', $vdata);
+		return view('translations.add', $vdata);
 	}
 	
     public function edit(Request $request, $filename)

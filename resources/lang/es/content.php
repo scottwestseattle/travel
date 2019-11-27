@@ -37,4 +37,12 @@ return [
 'Back to Comments' => 'Volver a Los Comentarios',
 'European Union Privacy Notice' => 'Este sitio web utiliza cookies para personalizar el contenido y analizar el tráfico.',
 'Recent Locations' => 'Ubicaciones Recientes',
+'Hotels' => 'Hoteles',
+'Hotel' => 'Hotel',
+'Back to Hotel List' => 'Volver a Hoteles',
+'Back to Article List' => 'Volver a los Artículos',
+'Most Recent Visitors' => 'Visitantes más recientes',
+'Last Visitor Country:' => 'Último país visitante:',
+'Newest Visitor Country:' => 'País de visitante más nuevo:',
+'different countries have visited this site.' => 'diferentes países han visitado este sitio.',
 ];

@@ -37,4 +37,12 @@ return [
 'Back to Comments' => '回到评论',
 'European Union Privacy Notice' => '该网站使用cookie来个性化内容和分析流量。',
 'Recent Locations' => '最近的位置',
+'Hotels' => '饭店',
+'Hotel' => '旅馆',
+'Back to Hotel List' => '返回酒店列表',
+'Back to Article List' => '返回文章清单',
+'Most Recent Visitors' => '最近的访客',
+'Last Visitor Country:' => '最后访问国家：',
+'Newest Visitor Country:' => '最新访客国家：',
+'different countries have visited this site.' => '不同的国家都访问了此站点。',
 ];
