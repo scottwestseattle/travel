@@ -45,4 +45,5 @@ return [
 'Last Visitor Country:' => 'Último país visitante:',
 'Newest Visitor Country:' => 'País de visitante más nuevo:',
 'different countries have visited this site.' => 'diferentes países han visitado este sitio.',
+'Countries' => 'Países Visitados',
 ];

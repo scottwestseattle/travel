@@ -86,7 +86,29 @@ class TranslationController extends Controller
 		
 		App::setLocale('zh');
 		$records[App::getLocale()] = Lang::get($filename);
-	
+
+		// English is the main translation file, make the other files match it's keys
+		if (count($records['en']) > count($records['es']) || count($records['en']) > count($records['zh']))
+		{
+			foreach($records['en'] as $key => $value)
+			{
+				if (!array_key_exists($key, $records['es']))
+				{
+					$records['es'][$key] = $value;
+				}
+
+				if (!array_key_exists($key, $records['zh']))
+				{
+					$records['zh'][$key] = $value;
+				}
+			}
+		}
+		
+		// sort the associative arrays by alpha
+		asort($records['en']);
+		asort($records['es']);
+		asort($records['zh']);
+
 		App::setLocale($locale);
 	
 		$vdata = $this->getViewData([

@@ -45,4 +45,5 @@ return [
 'Last Visitor Country:' => 'Last Visitor Country:',
 'Newest Visitor Country:' => 'Newest Visitor Country:',
 'different countries have visited this site.' => 'different countries have visited this site.',
+'Countries' => 'Countries Visited',
 ];
