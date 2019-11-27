@@ -324,7 +324,8 @@ class FrontPageController extends Controller
 			}
 
 			$flag = '/img/flags/' . strtolower($record->countryCode) . '.png';
-            $location = (strlen($location) > 0) ? '' . $location . ' &nbsp;<img height="12" src="' . $flag . '" />' : '';
+			$flag = '<img height="12" src="' . $flag . '" />';
+            $location = (strlen($location) > 0) ? $flag . ' ' . $location : '';
 			
 			$out[$count]['location'] = $location;
 
@@ -411,7 +412,9 @@ class FrontPageController extends Controller
         $location = $loc['location'];
         $location = (strlen($location) > 0) ? $location : '';
         $flag = $loc['flag'];
-
+        
+		//dd($visitors);
+		
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,

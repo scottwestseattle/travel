@@ -134,11 +134,22 @@
 		<h3>Today's Visitors:</h3>
 		<p style="font-size:1.5em;">Total: {{count($visitors)}}<p>
 		<p style="font-size:1.5em;">Unique: {{count($visitorsUnique)}}<p>
+		<table class="table table-striped">
+			<tbody>
+			@foreach($visitorsUnique as $record)
+				<tr>
+					<td>{{$record['date']}}</td>
+					<td>{{$record['ip']}}</td>
+					<td>{!!$record['location']!!}</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
 		<p><a href="/visitors">Show All Visitors</a></p>
 	</div>
 	@endif
 	
-	@if (count($users) > 0)
+	@if (false && count($users) > 0)
 	<div>	
 		<h3 style="">Last New User ({{count($users)}} Total)</h3>
 		<table class="table table-striped">
