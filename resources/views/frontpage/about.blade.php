@@ -126,11 +126,11 @@
 	@endif
 		
 	<h3>@LANG('content.Countries') ({{count($countries)}})</h3>
-	<div>	
+	<div>
 		<p>
 		<?php $last = end($countries); ?>
 		@foreach($countries as $record)
-			<button style="margin-bottom:10px;" type="button" class="btn btn-info">{{$record}}</button>
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@LANG('geo.' . $record)</button>
 		@endforeach
 		</p>
 	</div>

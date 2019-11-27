@@ -2,17 +2,17 @@
 
 @section('content')
 
+<?php $cnt = 0; $recs = $records['en']; ?>
+
 <div class="container">
 
 	@component('translations.menu-submenu', ['prefix' => $prefix])@endcomponent
 
-	<h1>@LANG('content.Translations')</h1>
+	<h1>@LANG('content.Translations')&nbsp;({{count($recs)}})</h1>
 
 	<form method="POST" action="/translations/update/{{$filename}}">
 					
 		<div class="form-group">		
-
-		<?php $cnt = 0; $recs = $records['en']; ?>
 				
 		<h3>@LANG('ui.Edit')</h3>
 		

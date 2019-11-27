@@ -1,4 +1,3 @@
-
 update visitors set continent = "US" WHERE 1 AND continent IS NULL AND country = 'United States';
 
 SELECT ip_address, country, continent FROM `visitors` where 1 and continent is null and country is not null;
@@ -8,63 +7,63 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 Latest DB Changes
 
 2019-11-26
-ALTER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
-ALTER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
+TER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
+TER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
 UPDATE `visitors` SET `countryCode` = `continent` WHERE 1 AND countryCode IS NULL AND continent IS NOT NULL 
 SELECT * FROM `visitors`  WHERE 1AND countryCode IS NULLAND continent IS NOT NULL ORDER BY `visitors`.`id`  DESC
 
 2019-11-25
-ALTER TABLE `visitors` CHANGE `organization` `robot_flag` SMALLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
+TER TABLE `visitors` CHANGE `organization` `robot_flag` SMLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
 
 2019-11-13
 UPDATE `entries` set type_flag = 10 WHERE 1 AND type_flag = 5 
 
-ALTER TABLE `entries` 
+TER TABLE `entries` 
 CHANGE `type_flag` `type_flag` 
 TINYINT(4) 
 NOT NULL 
 DEFAULT '-1' 
-COMMENT '-1=Not Set, 1=Entry, 2=Tour/Hike, 3=Blog, 4=Blog Post, 5=Hotel, 6=Note, 7=Section, 8=Gallery, 9=Lesson, 10=Article, 99=Other';
+COMMENT '-1=Not Set, 1=Entry, 2=Tour/Hike, 3=Blog, 4=Blog Post, 5=Hotel, 6=Note, 7=Section, 8=Glery, 9=Lesson, 10=Article, 99=Other';
 
 2019-05-10
-ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
+TER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
 update `entries` set finished_flag = 1
 
 2019-04-20
-ALTER TABLE `entries` ADD `major_number` SMALLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMALLINT NULL DEFAULT NULL AFTER `major_number`;
+TER TABLE `entries` ADD `major_number` SMLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMLINT NULL DEFAULT NULL AFTER `major_number`;
 
 2019-01-23
-ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
+TER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
 
 2018
 
 7/10
-ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
-ALTER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
+TER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
+TER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
 
 7/11
 update `visitors` set deleted_flag = 1 WHERE 1=1
 
 7/13
-ALTER TABLE `sites` CHANGE `telephone` `telephone` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+TER TABLE `sites` CHANGE `telephone` `telephone` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
 
 7/20
-ALTER TABLE `photos` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '-1' COMMENT '-1=not set, 0=slider, 1=entry, 2=receipt, 99=other';
+TER TABLE `photos` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '-1' COMMENT '-1=not set, 0=slider, 1=entry, 2=receipt, 99=other';
 update photos set type_flag = 0 where parent_id = 0; 
 UPDATE photos SET type_flag = 1 WHERE parent_id <> 0;
 UPDATE photos SET type_flag = 2 WHERE parent_id > 1000; 
 
 7/28
-ALTER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE `entries` ADD `photo_id` INT NULL AFTER `parent_id`;
+TER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+TER TABLE `entries` ADD `photo_id` INT NULL AFTER `parent_id`;
 
 09/28
-ALTER TABLE `entries` ADD `color_foreground` VARCHAR(20) NULL DEFAULT NULL AFTER `display_date`, ADD `color_background` VARCHAR(20) NULL DEFAULT NULL AFTER `color_foreground`;
-ALTER TABLE `activities` ADD `map_label` VARCHAR(100) NULL AFTER `map_link`, ADD `map_labelalt` VARCHAR(100) NULL AFTER `map_label`;
-ALTER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelalt`, ADD `map_label2` VARCHAR(100) NULL AFTER `map_link2`, ADD `map_labelalt2` VARCHAR(100) NULL AFTER `map_label2`;
+TER TABLE `entries` ADD `color_foreground` VARCHAR(20) NULL DEFAULT NULL AFTER `display_date`, ADD `color_background` VARCHAR(20) NULL DEFAULT NULL AFTER `color_foreground`;
+TER TABLE `activities` ADD `map_label` VARCHAR(100) NULL AFTER `map_link`, ADD `map_labelt` VARCHAR(100) NULL AFTER `map_label`;
+TER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelt`, ADD `map_label2` VARCHAR(100) NULL AFTER `map_link2`, ADD `map_labelt2` VARCHAR(100) NULL AFTER `map_label2`;
 
 09/29
-ALTER TABLE `photos` ADD `gallery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permalink` VARCHAR(255) NULL AFTER `gallery_flag`;
+TER TABLE `photos` ADD `glery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permink` VARCHAR(255) NULL AFTER `glery_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -72,7 +71,7 @@ My Booking Affiliate Link
 https://www.booking.com/index.html?aid=1535306
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// Switching localhost projects on MacBook
+// Switching lochost projects on MacBook
 
 cd \etc\apache2
 sudo vi httpd.conf
@@ -93,7 +92,7 @@ cd /wamp3.1.9/www/[project]/
 // create auth
 php artisan make:auth
 
-// drop all tables and migrate all
+// drop l tables and migrate l
 php artisan migrate:reset
 
 // add field to table
@@ -125,7 +124,7 @@ $color = '#5CB85C'; // green
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Windows 7 path:
-C:\app\scott\product\11.2.0\client_1;C:\app\scott\product\11.2.0\client_1\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Users\scott\AppData\Roaming\npm;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Microsoft\Web Platform Installer\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\11;C:\Program Files (x86)\MySQL\MySQL Utilities 1.3.6\;C:\wamp64\bin\php\php7.1.9;C:\Users\scott\AppData\Roaming\Composer\vendor\bin;C:\ProgramData\ComposerSetup\bin;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;c:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\
+C:\app\scott\product\11.2.0\client_1;C:\app\scott\product\11.2.0\client_1\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Users\scott\AppData\Roaming\npm;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Microsoft\Web Platform Instler\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\11;C:\Program Files (x86)\MySQL\MySQL Utilities 1.3.6\;C:\wamp64\bin\php\php7.1.9;C:\Users\scott\AppData\Roaming\Composer\vendor\bin;C:\ProgramData\ComposerSetup\bin;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;c:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -135,7 +134,7 @@ var data = new FormData();
 data.append("", "filename.ext"); //append file here
  
 var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
+xhr.withCredentis = true;
  
 xhr.addEventListener("readystatechange", function () {
   if (this.readyState === 4) {
@@ -179,11 +178,11 @@ function myFunction(){
         }
     } 
     else {
-        if (x.value == "") {
+        if (x.vue == "") {
             txt += "Select one or more files.";
         } else {
             txt += "The files property is not supported by your browser!";
-            txt  += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
+            txt  += "<br>The path of the selected file: " + x.vue; // If the browser does not support the files property, it will return the path of the selected file instead. 
         }
     }
     document.getElementById("demo").innerHTML = txt;
@@ -194,3 +193,4 @@ function myFunction(){
 
 </body>
 </html>
+

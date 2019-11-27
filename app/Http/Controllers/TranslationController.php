@@ -133,7 +133,7 @@ class TranslationController extends Controller
 		{
 			if (isset($request->records[$j]))
 			{
-				for ($i = 0; $i < 100; $i++) // each translation in the language
+				for ($i = 0; $i < 500; $i++) // each translation in the language
 				{
 					if (isset($request->records[$j][$i]))
 					{
