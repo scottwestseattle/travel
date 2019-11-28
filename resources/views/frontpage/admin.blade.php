@@ -5,7 +5,7 @@
 <div class="page-size container">
 	<!-- h2 style="">Admin Dashboard</h2 -->
 
-	<div style="text-align: center; margin: 20px 0; max-width:500px;">
+	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
 			<div style="margin-bottom:10px;">{{date("F d, Y - H:i:s")}}</div>
@@ -14,33 +14,31 @@
 			
 			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
 				<div style=" margin: 20px 0;">
-					<a style="color:red; font-size:1.2em; font-weight:bold;" href="/d-e-b-u-g">TURN DEBUG OFF</a>&nbsp;&nbsp;|&nbsp;
-					<a style="color:white;" href="/debugtest">Test</a>
+					<a class="btn btn-danger" href="/d-e-b-u-g">TURN DEBUG OFF</a>&nbsp;&nbsp;
+					<a class="btn btn-primary" href="/debugtest" role="button">Test</a>&nbsp;&nbsp;
+					<a class="btn btn-primary" href="/about" role="button">About</a>
 				</div>
 			@else
 				<div style=" margin: 20px 0;">
-					<a style="color:white;" href="/d-e-b-u-g">Turn Debug On</a>&nbsp;&nbsp;|&nbsp;
-					<a style="color:white;" href="/debugtest">Test</a>&nbsp;&nbsp;|&nbsp;
-					<a style="color:white;" href="/about">About</a>
+					<a class="btn btn-primary" href="/d-e-b-u-g" role="button">Debug</a>&nbsp;&nbsp;
+					<a class="btn btn-primary" href="/debugtest" role="button">Test</a>&nbsp;&nbsp;
+					<a class="btn btn-primary" href="/about" role="button">About</a>
 				</div>
 			@endif
-			
 		</div>
 	</div>	
 	
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Client</h3>
-			<div style="margin-bottom:10px;">{{$ip}}</div>
-			<div style="margin-bottom:10px;">{{$ipLocation['location']}}</div>
+			<div style="margin-bottom:10px;">{{$ip}} ({{$ipLocation['location']}})</div>
 			<div style="margin-bottom:20px;"><img height="{{$ipLocation['flagSize']}}" src="{{$ipLocation['flag']}}" /></div>
 			<div style="margin-bottom:20px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU Notice</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/hash"><span class="glyphCustom glyphicon glyphicon-sunglasses"></span></a>
+				&nbsp;&nbsp;<a style="color:white;" href="/hash">Hasher</a>
 			</div>
-
 		</div>
 	</div>	
 	
@@ -162,24 +160,27 @@
 			<p style="">{{count($visitorsUnique)}}</p>
 		</div>
 
-		<div class="drop-box text-center number-box darkGray" style="">
+		<div class="drop-box text-center number-box green" style="">
 			<div style="margin-bottom: 5px;">Newest</div>
 			<img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" />
 		</div>
 
-		<div style="clear: both; height:20px;"></div>	
+		<div style="clear: both; height:20px;"></div>
+		<div style="font-size:.7em;">			
+			<table class="table table-striped mt-10">
+				<tr><th>Date</th><th>Country</th><th>IP</th></tr>
+				<tbody>
+				@foreach($visitorsUnique as $record)
+					<tr>
+						<td>{{$record['date']}}</td>
+						<td style="font-size:1.3em;">{!!$record['location']!!}</td>
+						<td>{{$record['ip']}}</td>
+					</tr>
+				@endforeach
+				</tbody>
+			</table>
+		</div>
 		
-		<table class="table table-striped mt-10">
-			<tbody>
-			@foreach($visitorsUnique as $record)
-				<tr>
-					<td>{{$record['date']}}</td>
-					<td>{{$record['ip']}}</td>
-					<td>{!!$record['location']!!}</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
 		<p><a href="/visitors">Show All Visitors</a></p>
 		
 	</div>
@@ -299,16 +300,15 @@
 	
 	<div>
 		<h3 style="">Latest Events ({{count($events)}})</h3>
-		@component('menu-submenu-events-filter')@endcomponent	
+		@component('menu-submenu-events-filter')@endcomponent
+		
+		<divd style="font-size:.7em;">	
 		<table class="table table-striped">
 			<tbody>
 				<tr>
 					<th>Timestamp</th>
-					<th>Site</th>
-					<th>Type</th>
-					<th>Model</th>
-					<th>Action</th>
-					<th>Title</th>
+					<th>Page</th>
+					<th>Msg</th>
 				</tr>
 			@foreach($events as $record)
 				<?php
@@ -322,10 +322,7 @@
 				
 				<tr>
 					<td>{{$record->created_at}}</td>
-					<td>{{$record->site_id}}</td>
-					<td>{{$type}}</td>
-					<td>{{$record->model_flag}}</td>
-					<td>{{$record->action_flag}}</td>
+					<td>{{$record->model_flag}}/{{$record->action_flag}}</td>
 					@if (isset($record->error) && strtolower(substr($record->error, 0, 4)) == 'http')
 						<td><a href="{{$record->error}}">{{$record->title}}</a>
 						@if (isset($record->record_id))
@@ -333,7 +330,7 @@
 						@endif						
 						</td>
 					@elseif (isset($record->description) && strtolower(substr($record->description, 0, 4)) == 'http')
-						<td>{{$record->title}} ({{$record->description}})</td>
+						<t>{{$record->title}} ({{$record->description}})</td>
 					@else
 						<td>{{$record->title}}</td>
 					@endif
@@ -341,6 +338,7 @@
 			@endforeach
 			</tbody>
 		</table>
+		</div>
 
 		<a href="/events/index/">Show All Events</a>
 	</div>

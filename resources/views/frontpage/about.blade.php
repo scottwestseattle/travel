@@ -13,27 +13,17 @@
 	<h3>@LANG('content.Most Recent Visitors')</h3>
 	<div>
 	
-		<div style="float:left; margin-right:20px; min-width:300px;">
-		<table class="flag-table">
-			<tbody>
-				<tr>
-					<td width="200" valign="top">@LANG('content.Last Visitor Country:')<br/>@LANG('geo.' . $visitorCountryInfo['lastCountry'])</td>
-					<td><img src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="drop-box text-center flag-box gray" style="">
+			<div class="flag-box-title">@LANG('content.Last Visitor Country')</div>
+			<p><img width="100" src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></p>
+		</div>	
+
+		<div class="drop-box text-center flag-box gray" style="">
+			<div class="flag-box-title">@LANG('content.Newest Visitor Country')</div>
+			<p><img width="100" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></p>
 		</div>
 
-		<div style="min-width: 300px;">
-		<table class="flag-table">
-			<tbody>
-				<tr>
-					<td width="200" valign="top">@LANG('content.Newest Visitor Country:')<br/>@LANG('geo.' . $visitorCountryInfo['newestCountry'])</td>
-					<td><img src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></td>
-				</tr>
-			</tbody>
-		</table>
-		</div>
+		<div style="clear: both;"></div>
 		
 		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site.')</p>
 		<p>

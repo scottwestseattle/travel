@@ -27,6 +27,7 @@
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<!-- link href="{{ asset('css/default.css') }}" rel="stylesheet" -->
 	<link href="{{ asset('css/theme1.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/project.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
 	
 	<!-- App styles -->
