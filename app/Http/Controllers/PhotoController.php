@@ -753,6 +753,8 @@ class PhotoController extends Controller
 			'next' => $next,
 			'prev' => $prev,
 			'first' => $first,
+			'backLink' => '/galleries',
+			'backLinkLabel' => 'Back to Gallery',
 		]);		
 		
 		return view('photos.gallery', $vdata);

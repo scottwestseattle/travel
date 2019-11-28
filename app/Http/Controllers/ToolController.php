@@ -47,7 +47,17 @@ class ToolController extends Controller
 		['Hostal', '/entries/hostal-europa-barcelona-spain-2019-11-10', ''],
 		['Myanmar', '/entries/recent-locations', ''],
 		];
+	
+	// The CSS sandbox	
+	public function style()
+	{
+		$records = null;
 		
+		return view('tools.style', $this->getViewData([
+			'records' => $records, // for table styling tests
+		]));	
+	}
+	
     public function test(Request $request)
     {	
 		$executed = null;

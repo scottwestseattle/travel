@@ -3,28 +3,46 @@
 @section('content')
 
 <div class="page-size container">
-	<h2 style="">Admin Dashboard</h2>
+	<!-- h2 style="">Admin Dashboard</h2 -->
 
-	<div style="margin-bottom:40px;">
-		<ul style="font-size: 1.1em; list-style-type: none; padding-left: 0px;">
-			<li>Time: {{date("Y-m-d H:i:s")}}</li>
-			<li>Site: {{$site->site_name}}, id: {{$site->id}}</li>
-			<li>IP:&nbsp;{{$ip}}&nbsp;<img height="20" src="{{$flag}}" />&nbsp;{{$location}}</li>
-			<li>{{base_path()}}</li>
-			<li>New Visitor:&nbsp;{{$new_visitor ? 'Yes' : 'No'}}
-				&nbsp;&nbsp;<a href="/expedia">Expedia</a>
-				&nbsp;&nbsp;<a href="/travelocity">Travelocity</a>
-				&nbsp;&nbsp;<a href="/eunoticereset">EU Notice</a>
-				&nbsp;&nbsp;<a href="/hash"><span class="glyphCustom glyphicon glyphicon-sunglasses"></span></a>				
-			</li>
-	
+	<div style="text-align: center; margin: 20px 0; max-width:500px;">
+		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
+			<h3>Server</h3>
+			<div style="margin-bottom:10px;">{{date("F d, Y - H:i:s")}}</div>
+			<div style="margin-bottom:10px;">{{$site->site_name}} (id={{$site->id}})</div>
+			<div style="margin-bottom:10px; font-size:.8em;">{{base_path()}}</div>
+			
 			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
-				<li><span style="color:red; font-weight:bold; font-size:1.2em;">Debug:&nbsp;ON&nbsp;&nbsp;</span><a href="/d-e-b-u-g">Turn Off</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
+				<div style=" margin: 20px 0;">
+					<a style="color:red; font-size:1.2em; font-weight:bold;" href="/d-e-b-u-g">TURN DEBUG OFF</a>&nbsp;&nbsp;|&nbsp;
+					<a style="color:white;" href="/debugtest">Test</a>
+				</div>
 			@else
-				<li>Debug:&nbsp;OFF&nbsp;&nbsp;<a href="/d-e-b-u-g">Turn On</a>&nbsp;|&nbsp;<a href="/debugtest">Test</a></li>
+				<div style=" margin: 20px 0;">
+					<a style="color:white;" href="/d-e-b-u-g">Turn Debug On</a>&nbsp;&nbsp;|&nbsp;
+					<a style="color:white;" href="/debugtest">Test</a>&nbsp;&nbsp;|&nbsp;
+					<a style="color:white;" href="/about">About</a>
+				</div>
 			@endif
-		</ul>
-	</div>
+			
+		</div>
+	</div>	
+	
+	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
+		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
+			<h3>Client</h3>
+			<div style="margin-bottom:10px;">{{$ip}}</div>
+			<div style="margin-bottom:10px;">{{$ipLocation['location']}}</div>
+			<div style="margin-bottom:20px;"><img height="{{$ipLocation['flagSize']}}" src="{{$ipLocation['flag']}}" /></div>
+			<div style="margin-bottom:20px;">
+				<a style="color:white;" href="/expedia">Expedia</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU Notice</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/hash"><span class="glyphCustom glyphicon glyphicon-sunglasses"></span></a>
+			</div>
+
+		</div>
+	</div>	
 	
 	@if (isset($comments))
 	<div>	
@@ -129,12 +147,29 @@
 	<hr />
 	@endif
 	
-	@if (isset($visitors))			
-	<div style="margin-bottom:50px;">
+	@if (isset($visitors))	
+		
+	<div style="margin-bottom:20px;">
 		<h3>Today's Visitors:</h3>
-		<p style="font-size:1.5em;">Total: {{count($visitors)}}<p>
-		<p style="font-size:1.5em;">Unique: {{count($visitorsUnique)}}<p>
-		<table class="table table-striped">
+			
+		<div class="drop-box text-center number-box blue" style="">
+			<div>Total</div>
+			<p style="">{{count($visitors)}}</p>
+		</div>	
+
+		<div class="drop-box text-center number-box orange" style="">
+			<div>Unique</div>
+			<p style="">{{count($visitorsUnique)}}</p>
+		</div>
+
+		<div class="drop-box text-center number-box darkGray" style="">
+			<div style="margin-bottom: 5px;">Newest</div>
+			<img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" />
+		</div>
+
+		<div style="clear: both; height:20px;"></div>	
+		
+		<table class="table table-striped mt-10">
 			<tbody>
 			@foreach($visitorsUnique as $record)
 				<tr>
@@ -146,6 +181,7 @@
 			</tbody>
 		</table>
 		<p><a href="/visitors">Show All Visitors</a></p>
+		
 	</div>
 	@endif
 	
@@ -305,6 +341,7 @@
 			@endforeach
 			</tbody>
 		</table>
+
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />

@@ -20,7 +20,7 @@ return [
 'Content Photos' => '内容照片',
 'Content Stats' => '内容统计',
 'Countries' => '参观国家',
-'Current Location:' => '当前位置：',
+'Current Location' => '当前位置',
 'Edit Translations' => '编辑翻译',
 'English' => '英语',
 'Featured Photos' => '精选照片',
@@ -31,6 +31,7 @@ return [
 'Hotels' => '饭店',
 'Key' => '答案',
 'Last Visitor Country:' => '最后访问国家：',
+'Latest Locations:' => '最近的位置：',
 'Leave a Comment' => '发表评论',
 'Map Location:' => '地图位置',
 'Most Recent Visitors' => '最近的访客',
@@ -50,5 +51,4 @@ return [
 'Total Photos' => '照片总数',
 'Translations' => '翻译',
 'different countries have visited this site.' => '不同的国家都访问了此站点。',
-'Latest Locations:' => '最近的位置：',
 ];

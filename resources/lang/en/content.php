@@ -20,7 +20,7 @@ return [
 'Content Photos' => 'Content Photos',
 'Content Stats' => 'Content Stats',
 'Countries' => 'Countries Visited',
-'Current Location:' => 'Current Location:',
+'Current Location' => 'Current Location',
 'Edit Translations' => 'Edit Translations',
 'English' => 'English',
 'Featured Photos' => 'Featured Photos',
@@ -31,6 +31,7 @@ return [
 'Hotels' => 'Hotels',
 'Key' => 'Key',
 'Last Visitor Country:' => 'Last Visitor Country:',
+'Latest Locations:' => 'Latest Locations:',
 'Leave a Comment' => 'Leave a Comment',
 'Map Location:' => 'Map Location:',
 'Most Recent Visitors' => 'Most Recent Visitors',
@@ -50,5 +51,4 @@ return [
 'Total Photos' => 'Total Photos',
 'Translations' => 'Translations',
 'different countries have visited this site.' => 'different countries have visited this site.',
-'Latest Locations:' => 'Latest Locations:',
 ];

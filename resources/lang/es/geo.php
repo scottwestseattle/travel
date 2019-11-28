@@ -83,6 +83,7 @@ return [
 'Slovakia' => 'Eslovaquia',
 'Slovenia' => 'Eslovenia',
 'South Africa' => 'Sudáfrica',
+'South Korea' => 'Corea del Sur',
 'Republic of Korea' => 'Corea del Sur',
 'Spain' => 'España',
 'Sri Lanka' => 'Sri Lanka',
@@ -111,5 +112,5 @@ return [
 'Yemen' => 'Yemen',
 'Zambia' => 'Zambia',
 'Zimbabwe' => 'Zimbabue',
-'South Korea' => 'Corea del Sur',
+'Pakistan' => 'Pakistán',
 ];

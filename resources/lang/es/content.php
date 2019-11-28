@@ -20,7 +20,7 @@ return [
 'Content Photos' => 'Fotos de contenido',
 'Content Stats' => 'Estadísticas de Contenido',
 'Countries' => 'Países Visitados',
-'Current Location:' => 'Ubicación actual:',
+'Current Location' => 'Ubicación actual',
 'Edit Translations' => 'Editar Traducciones',
 'English' => 'Inglés',
 'Featured Photos' => 'Fotos destacadas',
@@ -31,6 +31,7 @@ return [
 'Hotels' => 'Hoteles',
 'Key' => 'Clave',
 'Last Visitor Country:' => 'Último país visitante:',
+'Latest Locations:' => 'Lugares más recientes:',
 'Leave a Comment' => 'Deje un Comentario',
 'Map Location:' => 'Ubicación del Mapa:',
 'Most Recent Visitors' => 'Visitantes más recientes',
@@ -50,5 +51,4 @@ return [
 'Total Photos' => 'Número total de fotos',
 'Translations' => 'Traducciones',
 'different countries have visited this site.' => 'diferentes países han visitado este sitio.',
-'Latest Locations:' => 'Lugares más recientes:',
 ];

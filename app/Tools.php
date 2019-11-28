@@ -10,7 +10,10 @@ class Tools
 {
 	static public function getIpLocation($ip)
 	{
-	    $rc = [];
+        $rc['flag'] = '/img/flags/blank.png';
+        $rc['flagSize'] = 0;
+		$rc['location'] = 'Unknown Location';
+		
 	    $ipInfo = self::getIpInfo($ip);
 	    $location = null;
 
@@ -26,10 +29,15 @@ class Tools
 
 			    $location .= $country;
 			}
+
+	        $rc['location'] = $location;
+	
+			if (($cc = self::getSafeArrayString($ipInfo, 'countryCode', null)))
+			{
+		        $rc['flag'] = '/img/flags/' . strtolower($cc) . '.png';
+		        $rc['flagSize'] = 30;
+		    }
         }
-        
-        $rc['location'] = $location;
-        $rc['flag'] = '/img/flags/' . strtolower($ipInfo['countryCode']) . '.png';
 
         return $rc;
     }
@@ -51,7 +59,8 @@ class Tools
             }
             catch (\Exception $e)
             {
-                dd($e->getMessage());
+				$msg = 'Error getting geo info: ' . $e->getMessage();
+				Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);
             }
         }
 

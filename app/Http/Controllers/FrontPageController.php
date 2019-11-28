@@ -410,10 +410,9 @@ class FrontPageController extends Controller
 		$ip = Event::getVisitorIp();
         $loc = Tools::getIpLocation($ip);
         $location = $loc['location'];
-        $location = (strlen($location) > 0) ? $location : '';
-        $flag = $loc['flag'];
-        
-		//dd($visitors);
+        $loc['location'] = (strlen($location) > 0) ? $location : '';
+	        
+		$visitorCountryInfo = Visitor::getCountryInfo();
 		
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
@@ -424,14 +423,14 @@ class FrontPageController extends Controller
 			'visitorsUnique' => $visitorsUnique,
 			'comments' => $comments, 
 			'ip' => $ip, 
-			'location' => $location,
-			'flag' => $flag,
+			'ipLocation' => $loc,
 			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor(),
 			'linksToFix' => $linksToFix,
 			'linksToTest' => $linksToTest,
 			'shortEntries' => $shortEntries,
 			'entryTypes' => Controller::getEntryTypes(),
+			'visitorCountryInfo' => $visitorCountryInfo,
 		], 'Admin Page'));
     }
 	
