@@ -5,10 +5,12 @@
 <div class="page-size container">
 	<!-- h2 style="">Admin Dashboard</h2 -->
 
+@if (true)
+
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
-			<div style="margin-bottom:10px;">{{date("F d, Y - H:i:s")}}</div>
+			<div style="margin-bottom:10px;">{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</div>
 			<div style="margin-bottom:10px;">{{$site->site_name}} (id={{$site->id}})</div>
 			<div style="margin-bottom:10px; font-size:.8em;">{{base_path()}}</div>
 			
@@ -26,13 +28,13 @@
 				</div>
 			@endif
 		</div>
-	</div>	
-	
+	</div>
+
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Client</h3>
 			<div style="margin-bottom:10px;">{{$ip}} ({{$ipLocation['location']}})</div>
-			<div style="margin-bottom:20px;"><img height="{{$ipLocation['flagSize']}}" src="{{$ipLocation['flag']}}" /></div>
+			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" /></div>
 			<div style="margin-bottom:20px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
@@ -40,7 +42,47 @@
 				&nbsp;&nbsp;<a style="color:white;" href="/hash">Hasher</a>
 			</div>
 		</div>
+	</div>
+	
+@else
+	
+	<div class="text-center drop-box stats-box blue" style="min-width:450px;">
+		<h2>Server</h2>
+		<p>{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</p>
+		<p>{{$site->site_name}} (id={{$site->id}})</p>
+		<p class="font-10">{{base_path()}}</p>
+		<div class="">
+		@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
+			<ul>
+				<li><a class="btn btn-danger" href="/d-e-b-u-g" role="button">TURN DEBUG OFF</a></li>
+				<li><a class="btn btn-primary" href="/debugtest" role="button">Test</a></li>
+				<li><a class="btn btn-primary" href="/about" role="button">About</a></li>
+			</ul>
+		@else
+			<ul>
+				<li><a class="btn btn-primary" href="/d-e-b-u-g" role="button">Debug</a></li>
+				<li><a class="btn btn-primary" href="/debugtest" role="button">Test</a></li>
+				<li><a class="btn btn-primary" href="/about" role="button">About</a></li>
+			</ul>
+		@endif
+		</div>
 	</div>	
+
+	<div class="text-center drop-box stats-box green" style="min-width: 450px;">
+		<h2>Client</h2>
+		<p>{{$ip}} ({{$ipLocation['location']}})</p>
+		<img height="35" src="{{$ipLocation['flag']}}" />
+		<ul>
+			<li><a href="/expedia">Expedia</a></li>
+			<li><a href="/travelocity">Travelocity</a></li>
+			<li><a href="/eunoticereset">EU Notice</a></li>
+			<li><a href="/hash">Hasher</a></li>
+		</ul>
+	</div>	
+
+@endif
+
+	<div style="clear: both;"></div>
 	
 	@if (isset($comments))
 	<div>	

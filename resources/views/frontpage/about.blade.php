@@ -30,9 +30,11 @@
 		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site.')</p>
 		<p>
 		@foreach($visitorCountryInfo['countries'] as $country)
-			<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
-				alt="@LANG('geo.' . $country->country)" 
-				title="@LANG('geo.' . $country->country)" />
+			<div style="display:inline-block; min-width:45px;">
+				<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
+					alt="@LANG('geo.' . $country->country)" 
+					title="@LANG('geo.' . $country->country)" />
+			</div>
 		@endforeach
 		</p>
 	</div>
