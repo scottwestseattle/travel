@@ -8,19 +8,26 @@ use App\User;
 
 class Tools
 {
-	static public function getIpLocation($ip)
+	static public function getIpLocation($ip = null)
 	{
         $rc['flag'] = '/img/flags/blank.png';
         $rc['flagSize'] = 0;
 		$rc['location'] = 'Unknown Location';
+		$rc['gygLocation'] = null;
 		
+		if (!isset($ip))
+			$ip = self::getIp();
+			
 	    $ipInfo = self::getIpInfo($ip);
 	    $location = null;
 
 	    if (isset($ipInfo))
 	    {
 			if (($city = self::getSafeArrayString($ipInfo, 'city', null)))
+			{
 			    $location = $city;
+			    $rc['gygLocation'] = $city;
+			}
 
 			if (($country = self::getSafeArrayString($ipInfo, 'country', null)))
 			{
@@ -28,6 +35,9 @@ class Tools
 			        $location .= ', ';
 
 			    $location .= $country;
+			    
+			    if (!isset($city))
+			    	$rc['gygLocation'] = $country;
 			}
 
 	        $rc['location'] = $location;

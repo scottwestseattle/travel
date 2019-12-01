@@ -129,7 +129,10 @@ class FrontPageController extends Controller
 		// save visitor stats
 		//
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
-		
+
+		// get city for GYG search		
+        $gygLocation = Tools::getIpLocation()['gygLocation'];
+
 		$vdata = $this->getViewData([
 			'site' => $site,
 			'posts' => $posts, 
@@ -154,6 +157,7 @@ class FrontPageController extends Controller
 			'currentLocation' => $latestLocations['currentLocation'],
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
 			'comments' => $comments,
+			'gygLocation' => $gygLocation,
 		]);
 		
     	return view('frontpage.index', $vdata);
@@ -714,8 +718,10 @@ priceTaxes=$59.50
 			'spy' => $spy,
 		]);
 		
+        $l = Tools::getIpLocation()['gygLocation'];
+		
 		$request->session()->flash('message.level', 'success');
-		$request->session()->flash('message.content', 'Spy mode is ' . $spy);
+		$request->session()->flash('message.content', 'Spy mode is ' . $spy . ' (' . $l . ')');
 
 		//return view('frontpage.spy', $vdata);
 		return redirect('/');

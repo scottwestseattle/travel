@@ -461,6 +461,7 @@ $sectionCount = 0;
 </section>
 @endif
 
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Photo Gallery -->
 <!--------------------------------------------------------------------------------------->
@@ -513,6 +514,32 @@ $sectionCount = 0;
 
 @endif
 
+
+<!--------------------------------------------------------------------------------------->
+<!-- SECTION: GYG Widget -->
+<!--------------------------------------------------------------------------------------->
+
+<div style="margin-top:20px;" >
+	<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="es-ES" data-gyg-widget="activities" 
+	data-gyg-number-of-items="3" data-gyg-currency="EUR" data-gyg-partner-id="RTJHCDQ" data-gyg-q="{{$gygLocation}}">
+	</div>
+</div>
+
+<script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
+
+@if (isset($gygLocation))
+<div class="text-center" style="margin:20px;">
+	<a target="_blank" href="https://www.getyourguide.com/s/?q={{$gygLocation}}&partner_id=RTJHCDQ" role="button" class="btn btn-info">
+		@lang('content.Show More Tours For') {{$gygLocation}}
+	</a>
+</div>
+@else
+<div class="text-center" style="margin:20px;">
+	<a target="_blank" href="https://www.getyourguide.com/s/?partner_id=RTJHCDQ" role="button" class="btn btn-info">
+		@lang('content.Show More Tours')
+	</a>
+</div>
+@endif
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Articles -->
@@ -848,6 +875,7 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		</div>
 		@endif
 		
+@if (false)
 		<!-- GOOGLE ADS -->
 		<div style="float:left; margin:20px;">
 		
@@ -862,7 +890,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			</script>
 
 		</div>		
-		
+@endif
+
 		<!-- BOOKING AFFILIATE -->
 		<div style="float:left; margin:20px;">
 
@@ -881,7 +910,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			</script>
 		
 		</div>
-		
+
+@if (false)		
 		<!-- GOOGLE ADS -->
 		<div style="float:left; margin:20px;">
 		
@@ -896,6 +926,7 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			</script>
 
 		</div>
+@endif
 
 		@if (false)
 		<!-- AMAZON BANNER -->		
