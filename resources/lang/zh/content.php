@@ -31,7 +31,7 @@ return [
 'Hotels' => '饭店',
 'Key' => '答案',
 'Last Visitor Country' => '最后访问国家',
-'Latest Locations' => '最近的位置',
+'Latest Locations:' => '最近的位置：',
 'Leave a Comment' => '发表评论',
 'Map Location:' => '地图位置',
 'Most Recent Visitors' => '最近的访客',
@@ -43,6 +43,7 @@ return [
 'Set Location' => '设置位置',
 'Set Map' => '设置地图',
 'Show All Comments' => '显示所有评论',
+'Show More Tours For' => '显示更多游览',
 'Site Map Pages' => '站点地图中的页面',
 'Spanish' => '西班牙语',
 'Static Pages' => '静态页面',
@@ -51,4 +52,5 @@ return [
 'Total Photos' => '照片总数',
 'Translations' => '翻译',
 'different countries have visited this site.' => '不同的国家都访问了此站点。',
+'Show More Tours' => '显示更多游览',
 ];

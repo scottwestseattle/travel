@@ -31,7 +31,7 @@ return [
 'Hotels' => 'Hotels',
 'Key' => 'Key',
 'Last Visitor Country' => 'Last Visitor Country',
-'Latest Locations' => 'Latest Locations',
+'Latest Locations:' => 'Latest Locations:',
 'Leave a Comment' => 'Leave a Comment',
 'Map Location:' => 'Map Location:',
 'Most Recent Visitors' => 'Most Recent Visitors',
@@ -43,6 +43,7 @@ return [
 'Set Location' => 'Set Location',
 'Set Map' => 'Set Map',
 'Show All Comments' => 'Show All Comments',
+'Show More Tours For' => 'Show More Tours For',
 'Site Map Pages' => 'Site Map Pages',
 'Spanish' => 'Spanish',
 'Static Pages' => 'Static Pages',
@@ -51,4 +52,5 @@ return [
 'Total Photos' => 'Total Photos',
 'Translations' => 'Translations',
 'different countries have visited this site.' => 'different countries have visited this site.',
+'Show More Tours' => 'Show More Tours',
 ];

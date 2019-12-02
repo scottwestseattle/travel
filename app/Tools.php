@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App;
 use Auth;
 use Lang;
 use App\User;
@@ -598,5 +599,28 @@ class Tools
 		}
 
 		return $rc;
+	}
+	
+    static public function translateDate($date)
+    {		
+		$dateFormat = "%B %e, %Y";
+				
+		if (App::getLocale() == 'es')
+		{
+			$dateFormat = "%e " . __('ui.of') . ' ' . __('ui.' . strftime("%B", strtotime($date))) . ", %Y";
+			
+		}
+		else if (App::getLocale() == 'zh')
+		{
+			// 2019年12月25日
+			$dateFormat = "%Y" . __('ui.year') . "%m" . __('ui.month') . "%e" . __('ui.date');
+		}
+		else
+		{
+		}	
+		
+		$date = strftime($dateFormat, strtotime($date));
+		
+		return $date;
 	}
 }

@@ -147,6 +147,9 @@ class Entry extends Base
 			case ORDERBY_DATE:
 				$orderByPhrase = 'ORDER BY entries.display_date DESC, entries.id DESC';
 				break;
+			case ORDERBY_VIEWS:
+				$orderByPhrase = 'ORDER BY entries.view_count DESC';
+				break;
 			default:
 				// already set above
 				break;

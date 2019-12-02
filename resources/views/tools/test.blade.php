@@ -14,6 +14,8 @@
 			@endif
 			
 			<button onclick="check(event);">Check All</button>
+			<button onclick="check(event, 100)">Check First 100</button>
+			<button onclick="check(event, -100)">Check Last 100</button>
 			<button onclick="check(event, 1)">Check First Half</button>
 			<button onclick="check(event, 2)">Check Last Half</button>
 			<button onclick="check(event, -1)">Clear All</button>
@@ -100,6 +102,26 @@ function check(event, checkFlag = 0)
 		// check all
 		for (i = 0; i < count; i++) {
 		  document.getElementById('test' + i).checked = true;
+		}
+	}
+	else if (checkFlag == 100)
+	{
+		// check first 100			
+		for (i = 0; i < count; i++) {
+		
+			if (i >= 100)
+				break;
+				
+			document.getElementById('test' + i).checked = true;
+		}
+	}
+	else if (checkFlag == -100)
+	{		
+		// check last 100
+		tests = 0;	
+		for (i = count - 1; i >= 0 && tests < 100; i--) {
+			document.getElementById('test' + i).checked = true;
+			tests++;
 		}
 	}
 	else

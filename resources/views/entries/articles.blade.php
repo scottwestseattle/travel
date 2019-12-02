@@ -23,25 +23,27 @@
 							</a>							
 						</td>
 						<td style="color:default; padding: 0 10px;">
-							<table>
-							<tbody>
+							<div style="font-size:11px;">
 								@if ($record->approved_flag != 1 || $record->published_flag != 1)
-								<tr><td style="font-size:1.3em;"><a style="color:default;" href="/entries/{{$record->permalink}}"><span style="color:red;">PRIVATE:</span> {{$record->title}}</a></td></tr>
+								<div style="margin-bottom:5px;"><a style="color:default;" href="/entries/{{$record->permalink}}"><span style="color:red;">PRIVATE:</span> {{$record->title}}</a></div>
 								@else
-								<tr><td style="font-size:1.3em;"><a style="color:default;" href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
-								@endif
-								@if (isset($record->display_date))
-								<tr><td>{{$record->display_date}}</td></tr>
+								<div style="font-size:{{strlen($record->title) > 50 ? '1' : '1.2'}}em; margin-bottom:5px;"><a style="color:default;" href="/entries/{{$record->permalink}}">{{$record->title}}</a></div>
 								@endif
 								@if (isset($record->location))
 									@if ($record->location_type != LOCATION_TYPE_COUNTRY)
-										<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+										<div style="font-size:1.1em; ">{{$record->location}}, {{$record->location_parent}}</div>
 									@else
-										<tr><td>{{$record->location}}</td></tr>
+										<div style="font-size:1.1em;">{{$record->location}}</div>
 									@endif
 								@endif
-							</tbody>
-							</table>
+																
+								@if (isset($record->display_date))
+									<div style="margin-top:5px;">{{App\Tools::translateDate($record->display_date)}}</div>
+								@endif	
+
+								<div>{{$record->view_count}} @LANG('ui.views')</div>
+
+							</div>
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td><td></td></tr>

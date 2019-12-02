@@ -100,7 +100,7 @@ class FrontPageController extends Controller
 		//
 		// get the articles
 		//
-		$articles = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5);
+		$articles = $this->getEntriesByType(ENTRY_TYPE_ARTICLE, true, 5, null, true /*, ORDERBY_VIEWS*/);
 
 		//
 		// get the gallery

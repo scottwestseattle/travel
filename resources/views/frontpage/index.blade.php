@@ -573,26 +573,28 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 								@component('entries.show-main-photo', ['record' => $record, 'class' => 'index-article'])@endcomponent
 							</a>							
 						</td>
+						
 						<td style="color:white; padding: 0 10px;">
-							<table>
-							<tbody>
-								<tr style=""><td style="font-size:14px;">
+							<div style="font-size:10px;">
+			
+								<div style="font-size:{{strlen($record->title) > 50 ? '1' : '1.2'}}em; font-weight:bold; margin-bottom: 5px;">
 									<a style="color:white;" href="/entries/{{$record->permalink}}">{{$record->title}}</a>
-								</td></tr>
-								@if (isset($record->display_date))
-								<tr><td style="font-size:12px;">{{$record->display_date}}</td></tr>
-								@endif
+								</div>
 								
 								@if (isset($record->location))
 									@if ($record->location_type != LOCATION_TYPE_COUNTRY)
-										<tr><td style="font-size:11px;">{{$record->location}}, {{$record->location_parent}}</td></tr>
+										<div style="font-size:1.1em; ">{{$record->location}}, {{$record->location_parent}}</div>
 									@else
-										<tr><td>{{$record->location}}</td></tr>
+										<div style="font-size:1.1em;">{{$record->location}}</div>
 									@endif
 								@endif
 								
-							</tbody>
-							</table>
+								@if (isset($record->display_date))
+									<div style="margin-top:5px;">{{App\Tools::translateDate($record->display_date)}}</div>
+								@endif	
+								
+								<div>{{$record->view_count}} @LANG('ui.views')</div>
+							</div>
 						</td>
 					</tr>
 					<tr><td>&nbsp;</td><td></td></tr>

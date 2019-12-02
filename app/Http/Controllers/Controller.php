@@ -161,6 +161,7 @@ define('LOG_PAGE_RECENT_LOCATIONS', 'recent-locations');
 define('ORDERBY_APPROVED', 0);
 define('ORDERBY_TITLE', 1);
 define('ORDERBY_DATE', 2);
+define('ORDERBY_VIEWS', 3);
 
 // translations
 define('TRANSLATIONS_FOLDER', '../resources/lang/');
@@ -1672,9 +1673,11 @@ class Controller extends BaseController
 		}
 	}
 	
-	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $makeThumbnail = true)
+	public function getEntriesByType($type_flag, $approved_flag = true, $limit = 0, $site_id = null, $makeThumbnail = true, $orderBy = ORDERBY_APPROVED)
 	{
-		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $site_id);
+		//dump($orderBy);
+		
+		$records = Entry::getEntriesByType($type_flag, $approved_flag, $limit, $site_id, $orderBy);
 		
 		// fix-up the translations
 		foreach($records as $record)
