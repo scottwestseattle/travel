@@ -718,10 +718,12 @@ priceTaxes=$59.50
 			'spy' => $spy,
 		]);
 		
-        $l = Tools::getIpLocation()['gygLocation'];
+		$loc = Tools::getIpLocation();
+		$gyg = $loc['gygLocation'];
+		$loc = $loc['location'];
 		
 		$request->session()->flash('message.level', 'success');
-		$request->session()->flash('message.content', 'Spy mode is ' . $spy . ' (' . $l . ')');
+		$request->session()->flash('message.content', 'Spy mode is ' . $spy . ' (' . $gyg . ') (' . $loc . ')');
 
 		//return view('frontpage.spy', $vdata);
 		return redirect('/');

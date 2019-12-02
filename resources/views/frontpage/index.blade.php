@@ -568,7 +568,6 @@ $sectionCount = 0;
 -moz-box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 ">
-					<!-- tr class="drop-box" style="width:100%; vertical-align:middle; box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.19);" -->
 						<td style="margin-bottom:10px; width:100px;" >
 							<a href="/entries/{{$record->permalink}}">
 								@component('entries.show-main-photo', ['record' => $record, 'class' => 'index-article'])@endcomponent
@@ -577,14 +576,16 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 						<td style="color:white; padding: 0 10px;">
 							<table>
 							<tbody>
-								<tr><td style="font-size:1.3em;"><a style="color:white;" href="/entries/{{$record->permalink}}">{{$record->title}}</a></td></tr>
+								<tr style=""><td style="font-size:14px;">
+									<a style="color:white;" href="/entries/{{$record->permalink}}">{{$record->title}}</a>
+								</td></tr>
 								@if (isset($record->display_date))
-								<tr><td>{{$record->display_date}}</td></tr>
+								<tr><td style="font-size:12px;">{{$record->display_date}}</td></tr>
 								@endif
 								
 								@if (isset($record->location))
 									@if ($record->location_type != LOCATION_TYPE_COUNTRY)
-										<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+										<tr><td style="font-size:11px;">{{$record->location}}, {{$record->location_parent}}</td></tr>
 									@else
 										<tr><td>{{$record->location}}</td></tr>
 									@endif
