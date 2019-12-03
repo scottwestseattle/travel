@@ -38,7 +38,7 @@ class Tools
 			    $location .= $country;
 			    
 			    if (!isset($city) || strlen($city) == 0)
-			    	$rc['gygLocation'] = $country;
+			    	$rc['gygLocation'] = __('geo.' . $country);
 			}
 
 	        $rc['location'] = $location;
