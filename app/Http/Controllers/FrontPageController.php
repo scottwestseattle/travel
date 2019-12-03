@@ -568,11 +568,18 @@ class FrontPageController extends Controller
 		if ($stats['total_pages'] == 0 && $stats['total_photos'] == 0)
 			$stats = null;
 		
-		// check for an image
+		// check for jpg image
 		$image = '/img/theme1/about-' . $this->domainName . '.jpg';
-		$imagePath = base_path() . '/public' . $image;
-		
+		$imagePath = base_path() . '/public' . $image;		
 		$image = (file_exists($imagePath) === TRUE) ? $image : null;
+		
+		if (!isset($image))
+		{
+			// check for png image
+			$image = '/img/theme1/about-' . $this->domainName . '.png';
+			$imagePath = base_path() . '/public' . $image;		
+			$image = (file_exists($imagePath) === TRUE) ? $image : null;
+		}
 
 		$visitorCountryInfo = Visitor::getCountryInfo();
 		
