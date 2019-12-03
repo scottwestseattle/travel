@@ -34,7 +34,7 @@
 		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Client</h3>
 			<div style="margin-bottom:10px;">{{$ip}} ({{$ipLocation['location']}})</div>
-			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" /></div>
+			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" /></div>
 			<div style="margin-bottom:20px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
@@ -71,7 +71,7 @@
 	<div class="text-center drop-box stats-box green" style="min-width: 450px;">
 		<h2>Client</h2>
 		<p>{{$ip}} ({{$ipLocation['location']}})</p>
-		<img height="35" src="{{$ipLocation['flag']}}" />
+		<img height="35" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" />
 		<ul>
 			<li><a href="/expedia">Expedia</a></li>
 			<li><a href="/travelocity">Travelocity</a></li>
@@ -204,7 +204,9 @@
 
 		<div class="drop-box text-center number-box green" style="">
 			<div style="margin-bottom: 5px;">Newest</div>
-			<img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" />
+			<img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
+				title="{{$visitorCountryInfo['newestCountry']}}" 
+				alt="{{$visitorCountryInfo['newestCountry']}}" />
 		</div>
 
 		<div style="clear: both; height:20px;"></div>
