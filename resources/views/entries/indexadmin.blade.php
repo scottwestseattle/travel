@@ -51,16 +51,16 @@ if (isset($title))
 					<td>
 						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}}&nbsp;({{$entryTypes[$record->type_flag] . ', ' . intval($record->photo_count) . ' photos'}})</a>
 
-						@if ($record->published_flag === 0)
-							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
-						@elseif ($record->approved_flag === 0)
-							<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
-						@endif
-						
-						<?php if (intval($record->view_count) > 0) : ?>
+						@if (intval($record->view_count) > 0)
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
-						<?php endif; ?>
-						
+						@endif
+
+						@if ($record->published_flag == 0 || $record->approved_flag == 0)
+							<a style="color: DarkRed; margin-left:5px;" href="/entries/publish/{{$record->id}}">
+								<span class="glyphCustom glyphicon glyphicon-sunglasses"></span>
+							</a>
+						@endif
+													
 						@if (strlen($record->permalink) === 0)
 							<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.No Permalink')</button></a></div>
 						@endif

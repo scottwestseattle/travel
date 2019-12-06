@@ -3,6 +3,7 @@
 @section('content')
 
 <?php 
+
 $main_photo = null;
 $regular_photos = 0;
 if (isset($photos))
@@ -171,15 +172,17 @@ else
 						<?php endif; ?>
 						
 						@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-							@if ($record->published_flag === 0)
-								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
-							@elseif ($record->approved_flag === 0)
-								<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
+						
+							@if ($record->published_flag == 0 || $record->approved_flag == 0)
+								<a style="font-size:1.2em; color: red; margin-left:5px;" href="/entries/publish/{{$record->id}}">
+									<span class="glyphCustom glyphicon glyphicon-flash"></span>
+								</a>
 							@endif
-							
+														
 							@if (!isset($record->permalink) || strlen($record->permalink) === 0)
 								<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
 							@endif
+							
 						@endif
 					</td>
 				</tr>
