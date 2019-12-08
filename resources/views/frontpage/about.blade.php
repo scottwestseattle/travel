@@ -11,7 +11,9 @@
 	<h1>@LANG('ui.About')</h1>
 
 	<div class="text-center">
-		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308"><img style="border: 1px solid black; width:100%; max-width:500px;" src="/img/banners/mobile-banner-booking.png" /></a>
+		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308">
+			<img style="border: 1px solid black; width:100%; max-width:500px;" src="/img/banners/banner-booking-about.png" />
+		</a>
 	</div>
 
 	<h3>@LANG('content.Most Recent Visitors')</h3>

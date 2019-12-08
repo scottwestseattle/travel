@@ -58,6 +58,7 @@ Route::get('/eunoticereset/', 'ToolController@eunoticereset');
 Route::get('/debugtest/', 'FrontPageController@debugTest');
 Route::get('/d-e-b-u-g/', 'FrontPageController@debug');
 Route::get('/style', 'ToolController@style');
+Route::get('/wp-admin', 'ToolController@wpAdmin');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');

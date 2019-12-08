@@ -701,4 +701,9 @@ LEFT JOIN photos
 			
     	return view('tools.recent-locations', $vdata);
 	}
+	
+	public function wpAdmin()
+    {
+    	return redirect('https://www.booking.com?aid=1535306');
+	}
 }
