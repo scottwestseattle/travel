@@ -476,7 +476,7 @@ class Tools
 	{
 		$ip = self::getIp();
 
-		return ($ip == '::1');
+		return ($ip == '::1' || $ip == 'localhost');
 	}
 	
 	static public function getIp()

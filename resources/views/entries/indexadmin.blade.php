@@ -56,8 +56,8 @@ if (isset($title))
 						@endif
 
 						@if ($record->published_flag == 0 || $record->approved_flag == 0)
-							<a style="color: DarkRed; margin-left:5px;" href="/entries/publish/{{$record->id}}">
-								<span class="glyphCustom glyphicon glyphicon-sunglasses"></span>
+							<a style="color: red; margin-left:5px;" href="/entries/publish/{{$record->id}}">
+								<span class="glyphCustom glyphicon glyphicon-flash"></span>
 							</a>
 						@endif
 													

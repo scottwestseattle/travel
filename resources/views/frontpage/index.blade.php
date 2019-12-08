@@ -462,6 +462,13 @@ $sectionCount = 0;
 @endif
 
 
+
+<!--------------------------------------------------------------------------------------->
+<!-- Booking Banner -->
+<!--------------------------------------------------------------------------------------->
+
+
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Photo Gallery -->
 <!--------------------------------------------------------------------------------------->
@@ -471,8 +478,13 @@ $sectionCount = 0;
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)
+
+	<div class="text-center" style="padding: 25px 10px 0 10px;">
+		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308"><img style="border: 1px solid black; width:100%; max-width:500px;" src="/img/banners/mobile-banner-booking.png" /></a>
+	</div>
+
 	<div class="text-center main-font">
-		<h1 style="margin:0;padding: 50px 0 30px 0">
+		<h1 style="margin:0;padding: 25px 0 30px 0">
 			@if (isset($section->title))
 				{{$section->title}}
 			@else
@@ -902,6 +914,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				<!-- Anything inside will go away once widget is loaded. -->
 				<a href="//www.booking.com?aid=1535306">Booking.com</a>
 			</ins>
+			
+			@if (!App\Tools::isLocalhost())
 			<script type="text/javascript">
 				(function(d, sc, u) {
 				  var s = d.createElement(sc), p = d.getElementsByTagName(sc)[0];
@@ -911,7 +925,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				  p.parentNode.insertBefore(s,p);
 				  })(document, 'script', '//aff.bstatic.com/static/affiliate_base/js/flexiproduct.js');
 			</script>
-		
+			@endif
+			
 		</div>
 
 @if (false)		

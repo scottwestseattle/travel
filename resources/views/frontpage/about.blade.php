@@ -10,18 +10,22 @@
 	
 	<h1>@LANG('ui.About')</h1>
 
+	<div class="text-center">
+		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308"><img style="border: 1px solid black; width:100%; max-width:500px;" src="/img/banners/mobile-banner-booking.png" /></a>
+	</div>
+
 	<h3>@LANG('content.Most Recent Visitors')</h3>
 	<div>
-	
+			
 		<div class="drop-box text-center flag-box gray" style="">
 			<div class="flag-box-title">@LANG('content.Last Visitor Country')</div>
-			<p><img width="100" src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></p>
+			<p><img height="70" src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></p>
 			<div class="flag-box-footer">@LANG('geo.' . $visitorCountryInfo['lastCountry'])</div>
 		</div>	
 
 		<div class="drop-box text-center flag-box gray" style="">
 			<div class="flag-box-title">@LANG('content.Newest Visitor Country')</div>
-			<p><img width="100" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></p>
+			<p><img height="70" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></p>
 			<div class="flag-box-footer">@LANG('geo.' . $visitorCountryInfo['newestCountry'])</div>
 		</div>
 
