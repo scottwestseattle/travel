@@ -461,14 +461,6 @@ $sectionCount = 0;
 </section>
 @endif
 
-
-
-<!--------------------------------------------------------------------------------------->
-<!-- Booking Banner -->
-<!--------------------------------------------------------------------------------------->
-
-
-
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Photo Gallery -->
 <!--------------------------------------------------------------------------------------->
@@ -479,12 +471,30 @@ $sectionCount = 0;
 
 @if (!$showFullGallery)
 
+	@if (true)
+	
 	<div class="text-center" style="padding: 25px 10px 0 10px;">
 		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308">
 			<img style="border: 1px solid black; width:100%; max-width:500px;" src="/img/banners/banner-booking-fp.png" />
 		</a>
 	</div>
-
+	
+	@else
+	
+	<div class="text-center" style="padding: 25px 10px 0 10px;">
+		<div style="margin:auto; border: solid 1px #0f367c; line-height:100px; height:100px; width:100%; max-width:500px; 
+			background-image:url('/img/banners/banner2.png');">
+			<div style="text-align: right;">
+				<a style="margin: 5px 20px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" href="https://booking.com" target="_blank" role="button">
+					<div style="font-size:13px">Explore the world with</div>
+					<div style="font-size:22px">Booking<span style="color:#449edd">.com</span></div>
+				</a> 
+			</div>
+		</div>
+	</div>	
+	
+	@endif
+	
 	<div class="text-center main-font">
 		<h1 style="margin:0;padding: 25px 0 30px 0">
 			@if (isset($section->title))

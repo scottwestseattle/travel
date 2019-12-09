@@ -6,7 +6,7 @@
 	<!-- h2 style="">Admin Dashboard</h2 -->
 
 @if (true)
-
+	
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
@@ -387,6 +387,18 @@
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />
+	
+	<div class="text-center" style="padding: 25px 10px 0 10px; margin:20px 10px;">
+		<div style="margin:auto; border: solid 1px #0f367c; line-height:100px; height:100px; width:100%; max-width:500px; 
+			background-image:url('/img/banners/banner2.png');">
+			<div style="text-align: right;">
+				<a style="margin: 5px 20px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" href="https://booking.com" target="_blank" role="button">
+					<div style="font-size:13px">Explore the world with</div>
+					<div style="font-size:22px">Booking<span style="color:#449edd">.com</span></div>
+				</a> 
+			</div>
+		</div>
+	</div>	
 	
 </div>
 @endsection
