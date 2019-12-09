@@ -16,9 +16,7 @@ class Tools
 		$rc['location'] = 'Unknown Location';
 		$rc['gygLocation'] = null;
 		
-		if (!isset($ip))
-			$ip = self::getIp();
-			
+		$ip = !isset($ip) ? $ip = self::getIp() : $ip;
 	    $ipInfo = self::getIpInfo($ip);
 	    $location = null;
 
@@ -67,6 +65,7 @@ class Tools
                 $info['country'] = $ipdat->geoplugin_countryName;
                 $info['countryCode'] = $ipdat->geoplugin_countryCode;
                 $info['city'] = $ipdat->geoplugin_city;
+                $info['locale'] = self::getLocale($info['countryCode']);
             }
             catch (\Exception $e)
             {
@@ -76,6 +75,71 @@ class Tools
         }
 
 		return $info;
+	}
+	
+	static public function getLocale($cc)
+	{
+		$rc = null;
+		
+		// 'language' code is needed for GYG, 'locale' is used to set Laravel Translation: en, es, or zh
+		$languages = [
+			'DE' => ['language' => 'de-DE', 'locale' => 'en'],
+			'FR' => ['language' => 'fr-FR', 'locale' => 'en'],
+			'DK' => ['language' => 'da-DK', 'locale' => 'en'],
+			'AT' => ['language' => 'de-AT', 'locale' => 'en'],
+			'CH' => ['language' => 'de-CH', 'locale' => 'en'],
+			'GB' => ['language' => 'en-GB', 'locale' => 'en'],
+			'IT' => ['language' => 'it-IT', 'locale' => 'en'],
+			'NL' => ['language' => 'nl-NL', 'locale' => 'en'],
+			'NO' => ['language' => 'no-NO', 'locale' => 'en'],
+			'PL' => ['language' => 'pl-PL', 'locale' => 'en'],
+			'PT' => ['language' => 'pt-PT', 'locale' => 'en'],
+			'BR' => ['language' => 'pt-BR', 'locale' => 'en'],
+			'FI' => ['language' => 'fi-FI', 'locale' => 'en'],
+			'SE' => ['language' => 'sv-SE', 'locale' => 'en'],
+			'TR' => ['language' => 'tr-TR', 'locale' => 'en'],
+			'RU' => ['language' => 'ru-RU', 'locale' => 'en'],
+			'JP' => ['language' => 'ja-JP', 'locale' => 'en'],
+			
+			// CN
+			'CN' => ['language' => 'zh-CN', 'locale' => 'zh'],
+			'TW' => ['language' => 'zh-TW', 'locale' => 'zh'],
+			'HK' => ['language' => 'zh-CN', 'locale' => 'zh'],
+
+			// ES
+			'MX' => ['language' => 'es-MX', 'locale' => 'es'],
+			'ES' => ['language' => 'es-ES', 'locale' => 'es'],
+			'AR' => ['language' => 'es-ES', 'locale' => 'es'],
+			'BO' => ['language' => 'es-ES', 'locale' => 'es'],
+			'CL' => ['language' => 'es-ES', 'locale' => 'es'],
+			'CR' => ['language' => 'es-ES', 'locale' => 'es'],
+			'CU' => ['language' => 'es-ES', 'locale' => 'es'],
+			'CO' => ['language' => 'es-ES', 'locale' => 'es'],
+			'DO' => ['language' => 'es-ES', 'locale' => 'es'],
+			'EC' => ['language' => 'es-ES', 'locale' => 'es'],
+			'HN' => ['language' => 'es-ES', 'locale' => 'es'],
+			'NI' => ['language' => 'es-ES', 'locale' => 'es'],
+			'PA' => ['language' => 'es-ES', 'locale' => 'es'],
+			'PE' => ['language' => 'es-ES', 'locale' => 'es'],
+			'PR' => ['language' => 'es-ES', 'locale' => 'es'],
+			'SV' => ['language' => 'es-ES', 'locale' => 'es'],
+			'VE' => ['language' => 'es-ES', 'locale' => 'es'],
+			'UY' => ['language' => 'es-ES', 'locale' => 'es'],
+			'PY' => ['language' => 'es-ES', 'locale' => 'es'],
+		];
+			
+		if (($rc = self::getSafeArrayString($languages, $cc, null)))
+		{
+			// country in the array is already set to $rc
+		}
+		else
+		{
+			// all countries not in the array get the default:
+			$rc['locale'] = 'en';
+			$rc['language'] = 'en-US';
+		}
+							
+		return $rc;
 	}
 	
 	// if string contains $needle, reduce it to $reduce
@@ -496,6 +560,9 @@ class Tools
 			$ip = $_SERVER["REMOTE_ADDR"];
 		}
 
+		if (strlen($ip) < strlen('1:1:1:1'))
+			$ip = 'localhost';
+			
 		return $ip;
 	}
 

@@ -608,9 +608,14 @@ LEFT JOIN photos
 		return $records;
 	}
 
-	public function language($locale)
+	public function language($locale = null)
 	{
-		if (ctype_alpha($locale))
+		if (!isset($locale))
+		{
+			session(['locale' => null]);
+			session()->forget('locale');
+		}
+		else if (ctype_alpha($locale))
 		{
 			session(['locale' => $locale]);
 		}

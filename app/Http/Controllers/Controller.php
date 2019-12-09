@@ -237,6 +237,7 @@ class Controller extends BaseController
 			if (isset($locale))
 			{
 				App::setLocale($locale);
+				//dump('session locale: ' . $locale);
 			}
 			else
 			{
@@ -246,41 +247,10 @@ class Controller extends BaseController
 				if (isset($ipInfo))
 				{
 					//dd($ipInfo);
-					$cc = strtolower($ipInfo['countryCode']);
-					switch($cc)
-					{
-						// check for chinese
-						case 'cn':
-						case 'hk':
-						case 'tw':
-							App::setLocale('zh');
-							break;
-							
-						// check for spanish speaking countries
-						case 'es':
-						case 'ar':
-						case 'bo':
-						case 'cl':
-						case 'cr':
-						case 'cu':
-						case 'co':
-						case 'do':
-						case 'ec':
-						case 'hn':
-						case 'mx':
-						case 'ni':
-						case 'pa':
-						case 'pe':
-						case 'pr':
-						case 'sv':
-						case 've':
-						case 'uy':
-						case 'py':
-							App::setLocale('es');
-							break;
-						default:
-							break;
-					}
+					$cc = $ipInfo['countryCode'];
+					$locale = Tools::getLocale($cc);
+					App::setLocale($locale['locale']);
+					//dump('ip info: locale=' . $locale['locale'] . ', cc=' . $cc . ' (' . $ipInfo['country'] . ')');
 				}	
 			}
 			
