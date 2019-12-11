@@ -129,6 +129,7 @@ define('LOG_MODEL_USERS', 'users');
 define('LOG_MODEL_TEMPLATES', 'templates');
 define('LOG_MODEL_TRANSLATIONS', 'translations');
 define('LOG_MODEL_TOOLS', 'tools');
+define('LOG_MODEL_VISITORS', 'visitors');
 
 define('LOG_ACTION_ACCESS', 'access');
 define('LOG_ACTION_ADD', 'add');

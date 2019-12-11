@@ -240,7 +240,7 @@ class FrontPageController extends Controller
 		$date = isset($dates['from_date']) ? $dates['from_date'] : null;
 	
 		$records = Visitor::getVisitors($date);
-		
+
 		$records = self::removeRobots($records, $showBots);
 				
 		$vdata = $this->getViewData([
@@ -305,7 +305,8 @@ class FrontPageController extends Controller
 				
 			// save the parts that we want to keep
 			$out[$count]['date'] = $record->updated_at;
-			$out[$count]['id'] = $record->record_id;
+			$out[$count]['id'] = $record->id;
+			$out[$count]['record_id'] = $record->record_id;
 			$out[$count]['page'] = $record->page;
 			$out[$count]['ref'] = $record->referrer;
 			$out[$count]['agent'] = $record->user_agent;

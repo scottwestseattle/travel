@@ -32,7 +32,6 @@ Route::get('/', 'FrontPageController@index');
 Route::get('/about', 'FrontPageController@about');
 Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/visits', 'FrontPageController@visits')->middleware('auth');;
-Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');;
 Route::get('/admin', 'FrontPageController@admin')->middleware('auth');
 Route::get('/home', 'HomeController@index');
 Route::get('/error', 'FrontPageController@error');
@@ -390,6 +389,11 @@ Route::group(['prefix' => 'frontpage'], function () {
 
 });
 
+// Visitors
+Route::group(['prefix' => 'visitors'], function () {
+	Route::get('/setlocation/{visitor}', 'VisitorController@setLocation')->middleware('auth');
+});
+
 // tours is a superclass of entries, uses entries for basic functions
 Route::group(['prefix' => 'tours'], function () {
 
@@ -621,3 +625,4 @@ Route::group(['prefix' => 'users'], function () {
 	Route::post('/delete/{user}','UsersController@delete')->middleware('auth');
 });
 
+Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');;

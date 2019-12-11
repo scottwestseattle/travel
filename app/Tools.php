@@ -39,9 +39,10 @@ class Tools
 		return $info;
     }
 
-	static public function getIpInfo()
+	static public function getIpInfo($ip = null)
 	{
-		$ip = self::getIp();
+		if (!isset($ip))
+			$ip = self::getIp();
 		
 		// test data for localhost
 		//$ip = "182.38.126.123";

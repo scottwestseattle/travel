@@ -37,13 +37,19 @@ $now = new DateTime();
 						
 					<td>
 						<a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a>
-						&nbsp;<a target="_blank" href="https://www.google.com/maps/place/{{$record['location']}}">
+						
+						@if (isset($record['location']) && strlen($record['location']) > 0)
+						<br/><a target="_blank" href="https://www.google.com/maps/place/{{$record['location']}}">
 						<span style="font-size:.7em;">{!!$record['location']!!}</span></a>
+						@else
+						<a href="/visitors/setlocation/{{$record['id']}}"><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a>
+						@endif
 					</td>
+					
 					<td><a target="_blank" href="{{$record['ref']}}">{{$record['ref']}}</a></td>
 					<td>{{$record['agent']}}</td>
 					<td>{{$record['host']}}</td>
-					<td><a href='/entries/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+					<td><a href='/visitors/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 				@endforeach
 
