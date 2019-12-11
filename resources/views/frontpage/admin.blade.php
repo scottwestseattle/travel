@@ -204,10 +204,10 @@
 		</div>
 
 		<div class="drop-box text-center number-box green" style="">
-			<div style="margin-bottom: 5px;">Newest</div>
-			<img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
+			<div style="margin-bottom: 5px;">Newest <span style="font-size:70%">({{count($visitorCountryInfo['countries'])}})</span></div>
+			<a href="/visitors/countries"><img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
 				title="{{$visitorCountryInfo['newestCountry']}}" 
-				alt="{{$visitorCountryInfo['newestCountry']}}" />
+				alt="{{$visitorCountryInfo['newestCountry']}}" /></a>
 		</div>
 
 		<div style="clear: both; height:20px;"></div>

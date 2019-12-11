@@ -27,7 +27,7 @@
 
 		<div class="drop-box text-center flag-box gray" style="">
 			<div class="flag-box-title">@LANG('content.Newest Visitor Country')</div>
-			<p><img height="70" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></p>
+			<p><a href="/visitors/countries"><img height="70" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></a></p>
 			<div class="flag-box-footer">@LANG('geo.' . $visitorCountryInfo['newestCountry'])</div>
 		</div>
 
