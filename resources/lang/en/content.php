@@ -43,6 +43,7 @@ return [
 'Set Location' => 'Set Location',
 'Set Map' => 'Set Map',
 'Show All Comments' => 'Show All Comments',
+'Show More Tours' => 'Show More Tours',
 'Show More Tours For' => 'Show More Tours For',
 'Site Map Pages' => 'Site Map Pages',
 'Spanish' => 'Spanish',
@@ -51,6 +52,6 @@ return [
 'Total Content Pages' => 'Total Content Pages',
 'Total Photos' => 'Total Photos',
 'Translations' => 'Translations',
-'different countries have visited this site.' => 'different countries have visited this site.',
-'Show More Tours' => 'Show More Tours',
+'different countries have visited this site' => 'different countries have visited this site',
+'show all' => 'show all',
 ];

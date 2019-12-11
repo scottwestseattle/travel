@@ -43,6 +43,7 @@ return [
 'Set Location' => 'Escoger Localización',
 'Set Map' => 'Establecer Mapa',
 'Show All Comments' => 'Mostrar Todos Los Comentarios',
+'Show More Tours' => 'Mostrar más Tours',
 'Show More Tours For' => 'Mostrar más tours para',
 'Site Map Pages' => 'Páginas en Mapa del Sitio',
 'Spanish' => 'Español',
@@ -51,6 +52,6 @@ return [
 'Total Content Pages' => 'Número de páginas de contenido',
 'Total Photos' => 'Número total de fotos',
 'Translations' => 'Traducciones',
-'different countries have visited this site.' => 'diferentes países han visitado este sitio.',
-'Show More Tours' => 'Mostrar más Tours',
+'different countries have visited this site' => 'diferentes países han visitado este sitio',
+'show all' => 'mostrar todos',
 ];

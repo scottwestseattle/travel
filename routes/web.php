@@ -392,6 +392,7 @@ Route::group(['prefix' => 'frontpage'], function () {
 // Visitors
 Route::group(['prefix' => 'visitors'], function () {
 	Route::get('/setlocation/{visitor}', 'VisitorController@setLocation')->middleware('auth');
+	Route::get('/countries', 'VisitorController@countries');
 });
 
 // tours is a superclass of entries, uses entries for basic functions

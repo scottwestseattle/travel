@@ -45,8 +45,8 @@ class Tools
 			$ip = self::getIp();
 		
 		// test data for localhost
-		//$ip = "182.38.126.123";
-		//dump($ip);
+		//$ip = "182.38.126.123";dump('Test IP: ' . $ip);
+		//$ip = "10.115.8.143";dump($ip);
 
 		$rc['ip'] = $ip;
 		$rc['country'] = null;
@@ -121,7 +121,15 @@ class Tools
 			$record = DB::select($q);	
 		
 			if (isset($record) && count($record) > 0)
+			{
+				if ($record[0]->country == '-') // the first or last range
+				{
+					$record = null;
+					throw new \Exception('IP is in the empty range: ' . $ip);
+				}
+	
 				$record = $record[0];
+			}
 				
 			//dump($record);
 		}

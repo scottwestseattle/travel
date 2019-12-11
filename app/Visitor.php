@@ -66,11 +66,11 @@ class Visitor extends Base
 
 		$q = '		
 			select * from (
-			SELECT country, countryCode, min(created_at) as date, count(id) as count
+				SELECT min(country) as country, countryCode, min(created_at) as date, count(id) as count
 						FROM visitors
 						WHERE 1
 						AND country is not null
-						GROUP BY country, countryCode
+						GROUP BY countryCode
 			) AS sub
 			ORDER BY date DESC
 			';

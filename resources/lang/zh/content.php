@@ -43,6 +43,7 @@ return [
 'Set Location' => '设置位置',
 'Set Map' => '设置地图',
 'Show All Comments' => '显示所有评论',
+'Show More Tours' => '显示更多游览',
 'Show More Tours For' => '显示更多游览',
 'Site Map Pages' => '站点地图中的页面',
 'Spanish' => '西班牙语',
@@ -51,6 +52,6 @@ return [
 'Total Content Pages' => '内容页数',
 'Total Photos' => '照片总数',
 'Translations' => '翻译',
-'different countries have visited this site.' => '不同的国家都访问了此站点。',
-'Show More Tours' => '显示更多游览',
+'different countries have visited this site' => '不同的国家都访问了此站点',
+'show all' => '显示所有',
 ];

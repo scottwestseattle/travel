@@ -10,6 +10,16 @@ use App\Tools;
 
 class VisitorController extends Controller
 {
+    public function countries()
+    {  
+		$countries = Visitor::getCountryInfo();
+		//dump($countries);
+		
+        return view('visitors.countries', $this->getViewData([
+			'records' => $countries,
+			], 'Visitor Countries'));
+	}
+		
     public function setLocation(Request $request, Visitor $visitor)
     {    	
 		if (!$this->isAdmin())
@@ -21,7 +31,7 @@ class VisitorController extends Controller
 		$geo = Tools::getIpInfo($record->ip_address);
 		//dump($geo);
 		
-		if (isset($geo))
+		if (isset($geo) && isset($geo['country']))
 		{
 			$record->country = $geo['country'];
 			$record->countryCode = $geo['countryCode'];
@@ -43,6 +53,11 @@ class VisitorController extends Controller
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());		
 			}
+		}
+		else
+		{
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Location not found');		
 		}	
 		
         return redirect('/visitors');

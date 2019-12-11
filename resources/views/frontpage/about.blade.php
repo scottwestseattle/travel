@@ -33,14 +33,18 @@
 
 		<div style="clear: both;"></div>
 		
-		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site.')</p>
+		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site')
+			&nbsp;(<a href="/visitors/countries">@LANG('content.show all')</a>)
+		</p>
 		<p>
+		<?php $cnt = 0; ?>
 		@foreach($visitorCountryInfo['countries'] as $country)
 			<div style="display:inline-block; min-width:45px;">
 				<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
 					alt="@LANG('geo.' . $country->country)" 
 					title="@LANG('geo.' . $country->country)" />
 			</div>
+			<?php $cnt++; if ($cnt >= 12) break; ?>
 		@endforeach
 		</p>
 	</div>
