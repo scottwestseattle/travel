@@ -131,8 +131,9 @@ class FrontPageController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 
 		// get city for GYG search		
-        $gygLocation = $this->getIpInfo()['gygLocation'];
-
+        $geo = $this->getIpInfo();
+		//dump($geo);
+		
 		$vdata = $this->getViewData([
 			'site' => $site,
 			'posts' => $posts, 
@@ -157,7 +158,7 @@ class FrontPageController extends Controller
 			'currentLocation' => $latestLocations['currentLocation'],
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
 			'comments' => $comments,
-			'gygLocation' => $gygLocation,
+			'geo' => $geo,
 		]);
 		
     	return view('frontpage.index', $vdata);

@@ -1,3 +1,5 @@
+SELECT * FROM `ip2locations` WHERE iplongStart <= 3649032129 AND iplongEnd >= 3649032129
+
 update visitors set continent = "US" WHERE 1 AND continent IS NULL AND country = 'United States';
 
 SELECT ip_address, country, continent FROM `visitors` where 1 and continent is null and country is not null;

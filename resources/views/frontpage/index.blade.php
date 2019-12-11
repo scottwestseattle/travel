@@ -544,17 +544,22 @@ $sectionCount = 0;
 <!--------------------------------------------------------------------------------------->
 
 <div style="margin-top:20px;" >
-	<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" data-gyg-locale-code="es-ES" data-gyg-widget="activities" 
-	data-gyg-number-of-items="3" data-gyg-currency="EUR" data-gyg-partner-id="RTJHCDQ" data-gyg-q="{{$gygLocation}}">
+	<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" 
+	data-gyg-locale-code="{{$geo['language']}}" 
+	data-gyg-widget="activities" 
+	data-gyg-number-of-items="3" 
+	data-gyg-currency="{{$geo['currency']}}" 
+	data-gyg-partner-id="RTJHCDQ" 
+	data-gyg-q="{{$geo['gygLocation']}}">
 	</div>
 </div>
 
 <script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
 
-@if (isset($gygLocation))
+@if (isset($geo) && isset($geo['gygLocation']))
 <div class="text-center" style="margin:20px;">
-	<a target="_blank" href="https://www.getyourguide.com/s/?q={{$gygLocation}}&partner_id=RTJHCDQ" role="button" class="btn btn-info">
-		@lang('content.Show More Tours For') {{$gygLocation}}
+	<a target="_blank" href="https://www.getyourguide.com/s/?q={{$geo['gygLocation']}}&partner_id=RTJHCDQ" role="button" class="btn btn-info">
+		@lang('content.Show More Tours For') {{$geo['gygLocation']}}
 	</a>
 </div>
 @else
