@@ -6,6 +6,7 @@
 /public/img/sliders
 /public/img/tours
 /public/img/banners
+/public/import
 /storage/*.key
 /storage/*
 /.idea

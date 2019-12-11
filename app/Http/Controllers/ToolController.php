@@ -12,6 +12,7 @@ use App\Entry;
 use App\Event;
 use App\Photo;
 use App\Location;
+use App\Tools;
 
 class ToolController extends Controller
 {
@@ -612,7 +613,7 @@ LEFT JOIN photos
 	{
 		if (!isset($locale))
 		{
-			session(['locale' => null]);
+			// if it's not set, clear the session data
 			session()->forget('locale');
 		}
 		else if (ctype_alpha($locale))
@@ -709,6 +710,19 @@ LEFT JOIN photos
 	
 	public function wpAdmin()
     {
+    	Event::logInfo(LOG_MODEL_TOOLS, LOG_ACTION_REGISTER, "user clicked on wp-admin or wp-admin.php");
+
     	return redirect('https://www.booking.com?aid=1535306');
+	}
+	
+	public function importCsv()
+    {
+		$records = Tools::importCsv();
+		
+		foreach($records as $record)
+		{
+		}
+		
+    	return redirect('/admin');
 	}
 }

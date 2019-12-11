@@ -2,79 +2,135 @@
 
 namespace App;
 
+use DB;
 use App;
 use Auth;
 use Lang;
 use App\User;
+use App\Ip2location;
 
 class Tools
 {
-	static public function getIpLocation($ip = null)
+	static private function formatLocation($info)
 	{
-        $rc['flag'] = '/img/flags/blank.png';
-        $rc['flagSize'] = 0;
-		$rc['location'] = 'Unknown Location';
-		$rc['gygLocation'] = null;
+	    $location = '';
+		$city = $info['city'];
+		$country = $info['country'];
 		
-		$ip = !isset($ip) ? $ip = self::getIp() : $ip;
-	    $ipInfo = self::getIpInfo($ip);
-	    $location = null;
+		if (strlen($city) > 0)
+		{
+			$info['gygLocation'] = $city;
+			$location = $city;
+		}
+		
+		if (strlen($country) > 0)
+		{
+			if (strlen($location) > 0)
+				$location .= ', ';
 
-	    if (isset($ipInfo))
-	    {
-			if (($city = self::getSafeArrayString($ipInfo, 'city', null)))
-			{
-			    $location = $city;
-			    $rc['gygLocation'] = $city;
-			}
+			$location .= $country;
+			
+			if (strlen($city) == 0)
+				$info['gygLocation'] = __('geo.' . $country);
+		}
 
-			if (($country = self::getSafeArrayString($ipInfo, 'country', null)))
-			{
-			    if (strlen($location) > 0)
-			        $location .= ', ';
+	    $info['location'] = $location;
 
-			    $location .= $country;
-			    
-			    if (!isset($city) || strlen($city) == 0)
-			    	$rc['gygLocation'] = __('geo.' . $country);
-			}
-
-	        $rc['location'] = $location;
-	
-			if (($cc = self::getSafeArrayString($ipInfo, 'countryCode', null)))
-			{
-		        $rc['flag'] = '/img/flags/' . strtolower($cc) . '.png';
-		        $rc['flagSize'] = 30;
-		    }
-        }
-
-        return $rc;
+		return $info;
     }
 
-	static public function getIpInfo($ip)
+	static public function getIpInfo()
 	{
-		$info = null;
+		$ip = self::getIp();
+		
+		// test data for localhost
+		//$ip = "182.38.126.123";
+		//dump($ip);
+
+		$rc['ip'] = $ip;
+		$rc['country'] = null;
+		$rc['countryCode'] = null;	// ex: US
+		$rc['city'] = null;
+		$rc['locale'] = 'en';
+		$rc['language'] = 'en-US';
+        $rc['flag'] = '/img/flags/blank.png';
+        $rc['flagSize'] = 0;
+		$rc['location'] = 'Unknown';
+		$rc['gygLocation'] = null;	// ex: Madrid, Spain
 
         if (strlen($ip) > strlen('1.1.1.1'))
         {
             try
             {
-                $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip);
-                $ipdat = @json_decode($ipInfo);
-
-                $info['country'] = $ipdat->geoplugin_countryName;
-                $info['countryCode'] = $ipdat->geoplugin_countryCode;
-                $info['city'] = $ipdat->geoplugin_city;
-                $info['locale'] = self::getLocale($info['countryCode']);
+                //$ipInfo = file_get_contents("https://www.geoplugin.net/json.gp?ip=" . $ip);
+                //$ipdat = @json_decode($ipInfo);
+                
+                $info = self::getIpGeo($ip);
+                if (isset($info))
+                {
+                	$cc = $info->countryCode;                	
+					$rc['countryCode'] = $cc;
+					$rc['country'] = $info->country;
+					$rc['city'] = $info->city;
+				
+					if (isset($cc))
+					{
+						$rc['flag'] = '/img/flags/' . strtolower($cc) . '.png';
+						$rc['flagSize'] = 30;
+					
+						// get locale and language for country
+						$locale = self::getLocale($cc);
+						$rc['locale'] = $locale['locale'];
+						$rc['language'] = $locale['language'];
+				
+						// get location display text
+						$rc = self::formatLocation($rc);
+					}
+				}
             }
             catch (\Exception $e)
             {
-				$msg = 'Error getting geo info: ' . $e->getMessage();
+				$msg = 'Error getting ip info: ' . $e->getMessage();
 				Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);
+				//request()->session()->flash('message.level', 'danger');
+				//request()->session()->flash('message.content', 'Error getting geolocation (check event log)');
             }
         }
 
-		return $info;
+		//dump($rc);
+		return $rc;
+	}
+	
+	static public function getIpGeo($ip)
+	{
+		$record = null;
+		
+		$ipl = ip2long($ip);
+		//dump($ipl);	
+			
+		try
+		{
+			$q = '
+			SELECT * FROM `ip2locations` 
+				WHERE 1
+				AND iplongEnd >= ' . $ipl . ' AND iplongStart <= ' . $ipl . 
+				' LIMIT 1;'
+				;
+				
+			$record = DB::select($q);	
+		
+			if (isset($record) && count($record) > 0)
+				$record = $record[0];
+				
+			//dump($record);
+		}
+		catch (\Exception $e)
+		{
+			$msg = 'Error getting geo info: ' . $e->getMessage();
+			Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);
+		}
+            		
+		return $record;
 	}
 	
 	static public function getLocale($cc)
@@ -560,8 +616,8 @@ class Tools
 			$ip = $_SERVER["REMOTE_ADDR"];
 		}
 
-		if (strlen($ip) < strlen('1:1:1:1'))
-			$ip = 'localhost';
+		//if (strlen($ip) < strlen('1:1:1:1'))
+		//	$ip = 'localhost';
 			
 		return $ip;
 	}
@@ -689,5 +745,84 @@ class Tools
 		$date = strftime($dateFormat, strtotime($date));
 		
 		return $date;
+	}
+	
+    static public function importCsv()
+    {		
+		//$records = Ip2location::all();
+		//$records->truncate();
+
+		// Open the file for reading
+		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3 copy.csv";
+		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3.csv";
+		
+		if (($h = fopen($file, "r")) !== FALSE) 
+		{
+			$max = 0;
+			$maxName = '';
+			$cnt = 0;
+
+			$start = Ip2location::select()->count();
+			dump($start);
+			dump(date('H-i-s') . ' - ' . $cnt);
+//dd('stop');
+			// Convert each line into the local $data variable
+			while (($line = fgetcsv($h, 1000, ",")) !== FALSE) 
+			{
+				if ($cnt >= $start)
+				{
+//dd($line);
+					// Read the data from a single line
+					$ip = new Ip2location();
+		
+					$ip->iplongStart = $line[0];			
+					$ip->iplongEnd = $line[1];
+					$ip->countryCode = $line[2];
+					$ip->country = $line[3];
+					$ip->region = $line[4];
+					$ip->city = $line[5];
+				
+					if (strlen($ip->city) > $max)
+					{
+						$max = strlen($ip->city);
+						$maxName = $ip->city;
+					}
+					
+					if (false && strlen($ip->region) > $max)
+					{
+						$max = strlen($ip->region);
+						$maxName = $ip->region;
+					}
+					
+					if (strlen($ip->country) > $max)
+					{
+						$max = strlen($ip->country);
+						$maxName = $ip->country;
+					}
+
+					$ip->save();
+				
+					if (false && $cnt % 100000 == 0)
+					{
+						set_time_limit(30);	// add more seconds to keep it from timing out
+						dump(date('H-i-s') . ' - ' . $cnt);
+					}
+	
+ 				}
+ 					
+ 				if (($cnt - $start) >= 100000)
+					break;
+										
+				$cnt++;		
+			}
+			
+			// Close the file
+			fclose($h);
+
+dump('count = ' . $cnt);
+dd($maxName . ': ' . $max);
+		}
+
+		return;
 	}
 }

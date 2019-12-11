@@ -178,6 +178,7 @@ class Controller extends BaseController
 	private $viewData = [];
 	private $euNoticeAccepted = false;
 	private $euNotice = "ui.euNotice";
+	private $_ipInfo = null;
 	
 	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
@@ -222,15 +223,10 @@ class Controller extends BaseController
 		}
 
 		// session don't work in constructors, work arround:
-		$this->middleware(function ($request, $next){
-
+		$this->middleware(function ($request, $next)
+		{
 			// check for EU notice
 			$this->euNoticeAccepted = session('eunotice', false);
-			
-//session()->flash('message.level', 'success');
-//session()->flash('message.content', 'Notice: ' . session('eunotice'));
-//session(['eunotice' => !$this->euNoticeAccepted]);
-//dd($this->euNoticeAccepted);
 
 			// set locale according to selected language
 			$locale = session('locale');
@@ -242,20 +238,27 @@ class Controller extends BaseController
 			else
 			{
 				// see if the country has a language
-				$ip = Event::getVisitorIp();
-				$ipInfo = Tools::getIpInfo($ip);
+				$ipInfo = $this->getIpInfo();
 				if (isset($ipInfo))
 				{
-					//dd($ipInfo);
-					$cc = $ipInfo['countryCode'];
-					$locale = Tools::getLocale($cc);
-					App::setLocale($locale['locale']);
+					App::setLocale($ipInfo['locale']);
 					//dump('ip info: locale=' . $locale['locale'] . ', cc=' . $cc . ' (' . $ipInfo['country'] . ')');
-				}	
+				}
+				
 			}
 			
 			return $next($request);
 		});
+	}
+	
+	protected function getIpInfo()
+	{
+		if (!isset($this->_ipInfo))
+		{
+			$this->_ipInfo = Tools::getIpInfo();
+		}
+		
+		return $this->_ipInfo;
 	}
 
 	static public function getDomainName()
@@ -371,7 +374,7 @@ class Controller extends BaseController
 		else
 			$visitor->page_url = '/entries/show';
 		
-		$ipInfo = Tools::getIpInfo($ip);
+		$ipInfo = $this->getIpInfo();
 		if (isset($ipInfo))
 		{
             $visitor->country = $ipInfo['country'];

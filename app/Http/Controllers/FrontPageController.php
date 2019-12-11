@@ -131,7 +131,7 @@ class FrontPageController extends Controller
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
 
 		// get city for GYG search		
-        $gygLocation = Tools::getIpLocation()['gygLocation'];
+        $gygLocation = $this->getIpInfo()['gygLocation'];
 
 		$vdata = $this->getViewData([
 			'site' => $site,
@@ -412,7 +412,7 @@ class FrontPageController extends Controller
 		}
 
 		$ip = Event::getVisitorIp();
-        $loc = Tools::getIpLocation($ip);
+        $loc = $this->getIpInfo();
         $location = $loc['location'];
         $loc['location'] = (strlen($location) > 0) ? $location : '';
 	        
@@ -725,7 +725,7 @@ priceTaxes=$59.50
 			'spy' => $spy,
 		]);
 		
-		$loc = Tools::getIpLocation();
+		$loc = $this->getIpInfo();
 		$gyg = $loc['gygLocation'];
 		$loc = $loc['location'];
 		

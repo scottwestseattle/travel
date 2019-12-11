@@ -33,7 +33,8 @@
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Client</h3>
-			<div style="margin-bottom:10px;">{{$ip}} ({{$ipLocation['location']}})</div>
+			<?php //dump($ipLocation); ?>
+			<div style="margin-bottom:10px;">{{$ip . ' (' . $ipLocation['location'] . ' ' . $ipLocation['locale'] . ' ' . $ipLocation['language'] . ')'}}</div>
 			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" /></div>
 			<div style="margin-bottom:20px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
