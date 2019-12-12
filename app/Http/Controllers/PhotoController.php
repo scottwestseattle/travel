@@ -1061,6 +1061,7 @@ class PhotoController extends Controller
 			'first' => $first,
 			'backLink' => $backLink,
 			'backLinkLabel' => $backLinkLabel,
+			'bannerIndex' => mt_rand(1, BANNERS_FP_COUNT), // random banner index
 		]);		
 		
 		return view('photos.gallery', $vdata);

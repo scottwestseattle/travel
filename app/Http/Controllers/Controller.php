@@ -167,6 +167,8 @@ define('ORDERBY_VIEWS', 3);
 // translations
 define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
+define('BANNERS_FP_COUNT', 11);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

@@ -135,7 +135,7 @@ class FrontPageController extends Controller
 		//dump($geo);
 		
 		// get random banner index for fp ad
-		$bannerIndex = mt_rand(1, 3);
+		$bannerIndex = mt_rand(1, BANNERS_FP_COUNT);
 		
 		$vdata = $this->getViewData([
 			'site' => $site,
