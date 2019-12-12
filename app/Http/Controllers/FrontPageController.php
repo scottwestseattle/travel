@@ -244,10 +244,11 @@ class FrontPageController extends Controller
 
 		$date = isset($dates['from_date']) ? $dates['from_date'] : null;
 	
-		$records = Visitor::getVisitors($date);
+		$records = Visitor::getUniqueVisitors($date);
 
 		$records = self::removeRobots($records, $showBots);
-				
+		// dd($records);
+		
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'dates' => Controller::getDateControlDates(),
@@ -319,6 +320,7 @@ class FrontPageController extends Controller
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
 			$out[$count]['url'] = $record->page_url;
+			// $out[$count]['count'] = isset($record->count) ? $record->count : 0;
 			
 			$location = '';
 

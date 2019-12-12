@@ -1,5 +1,14 @@
 <?php
 
+/*
+SELECT count(id) as count, max(id) as id, max(record_id) as record_id, max(model) as model, max(page_url) as page_url
+					, max(countryCode) as countryCode, max(updated_at) as updated_at, max(page) as page, ip_address
+					, max(referrer) as referrer, max(user_agent) as user_agent, max(host_name) as host_name
+				FROM visitors 
+				WHERE 1=1 
+				GROUP BY ip_address
+*/
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
@@ -125,6 +134,50 @@ class Visitor extends Base
 					
 		$records = DB::select($q, [SITE_ID, $fromDate, $toDate]);
 		
+		return $records;
+    }
+    
+    static public function getUniqueVisitors($date = null)
+    {		
+		if (isset($date))
+		{
+			$date = DateTime::createFromFormat('Y-m-d', $date);
+			
+			$month = intval($date->format("m"));
+			$year = intval($date->format("Y"));
+			$day = intval($date->format("d"));
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = intval(date("d"));
+		}
+
+		$fromTime = ' 00:00:00';
+		$toTime = ' 23:23:59';
+		
+		$fromDate = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
+		$toDate = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;
+
+		$q = '
+			SELECT * from (
+				SELECT max(id) as id, max(record_id) as record_id, max(model) as model, max(page_url) as page_url
+					, max(countryCode) as countryCode, max(country) as country, max(city) as city
+					, max(updated_at) as updated_at, max(page) as page, ip_address
+					, max(referrer) as referrer, max(user_agent) as user_agent, max(host_name) as host_name
+				FROM visitors 
+				WHERE 1=1 
+				AND deleted_flag = 0 
+				AND (robot_flag = 0 OR robot_flag IS NULL) 
+				AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) 
+				GROUP BY ip_address
+ 			) as v
+			ORDER BY updated_at DESC 
+		';
+					
+		$records = DB::select($q, [$fromDate, $toDate]);
+//dd($date);	
 		return $records;
     }
 }

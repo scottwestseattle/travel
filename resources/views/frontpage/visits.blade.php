@@ -24,32 +24,31 @@ $now = new DateTime();
 	
 		<table class="table table-striped">
 			<tbody>
-				<tr><th>Timestamp</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th><th></th></tr>
+				<tr><th>Timestamp</th><th>Page</th><th>IP</th><th>Referrer</th><th>User</th><th>Host</th></tr>
 				@foreach($records as $record)
 				<tr>
 					<td>{{$record['date']}}</td>
 					
-					@if (!isset($record['id']))
+					@if (!isset($record['record_id']))
 						<td>{{$record['model']}}/{{$record['page']}}</td>
 					@else
-						<td>{{$record['model']}}/{{$record['page']}} (<a href="{{$record['url']}}/{{$record['id']}}">{{$record['id']}}</a>)</td>
+						<td>{{$record['model']}}/{{$record['page']}} (<a href="{{$record['url']}}/{{$record['record_id']}}">{{$record['record_id']}}</a>)</td>
 					@endif
 						
 					<td>
 						<a target="_blank" href="https://whatismyipaddress.com/ip/{{$record['ip']}}">{{$record['ip']}}</a>
 						
 						@if (isset($record['location']) && strlen($record['location']) > 0)
-						<br/><a target="_blank" href="https://www.google.com/maps/place/{{$record['location']}}">
-						<span style="font-size:.7em;">{!!$record['location']!!}</span></a>
+							<br/><a target="_blank" href="https://www.google.com/maps/place/{{$record['location']}}">
+							<span style="font-size:.7em;">{!!$record['location']!!}</span></a>
 						@else
-						<a href="/visitors/setlocation/{{$record['id']}}"><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a>
+							<a href="/visitors/setlocation/{{$record['id']}}"><span class="glyphCustom glyphicon glyphicon-map-marker"></span></a>
 						@endif
 					</td>
 					
 					<td><a target="_blank" href="{{$record['ref']}}">{{$record['ref']}}</a></td>
 					<td>{{$record['agent']}}</td>
 					<td>{{$record['host']}}</td>
-					<td><a href='/visitors/confirmdelete/{{$record['id']}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 				</tr>
 				@endforeach
 
