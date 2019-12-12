@@ -134,6 +134,9 @@ class FrontPageController extends Controller
         $geo = $this->getIpInfo();
 		//dump($geo);
 		
+		// get random banner index for fp ad
+		$bannerIndex = mt_rand(1, 3);
+		
 		$vdata = $this->getViewData([
 			'site' => $site,
 			'posts' => $posts, 
@@ -159,6 +162,7 @@ class FrontPageController extends Controller
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
 			'comments' => $comments,
 			'geo' => $geo,
+			'bannerIndex' => $bannerIndex,
 		]);
 		
     	return view('frontpage.index', $vdata);

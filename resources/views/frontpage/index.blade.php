@@ -471,7 +471,7 @@ $sectionCount = 0;
 
 @if (!$showFullGallery)
 
-	@if (true)
+	@if (false)
 	
 	<div class="text-center" style="padding: 25px 10px 0 10px;">
 		<a target="_blank" href="https://www.booking.com/index.html?aid=1535308">
@@ -482,15 +482,17 @@ $sectionCount = 0;
 	@else
 	
 	<div class="text-center" style="padding: 25px 10px 0 10px;">
-		<div style="margin:auto; border: solid 1px #0f367c; line-height:100px; height:100px; width:100%; max-width:500px; 
-			background-image:url('/img/banners/banner2.png');">
+		<a href="https://booking.com" target="_blank" >
+		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
+			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
 			<div style="text-align: right;">
-				<a style="margin: 5px 20px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" href="https://booking.com" target="_blank" role="button">
-					<div style="font-size:13px">Explore the world with</div>
-					<div style="font-size:22px">Booking<span style="color:#449edd">.com</span></div>
+				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" href="https://booking.com" target="_blank" role="button">
+					<div style="font-size:11px">@LANG('ads.Explore the world with')</div>
+					<div style="font-size:18px">Booking<span style="color:#449edd">@LANG('ads..com')</span></div>
 				</a> 
 			</div>
 		</div>
+		</a>
 	</div>	
 	
 	@endif
@@ -504,6 +506,7 @@ $sectionCount = 0;
 			@endif
 		</h1>
 	</div>
+	
 @endif
 
 	<!------------------------------------------------------------------------------------------------------------->
