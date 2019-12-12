@@ -481,19 +481,20 @@ $sectionCount = 0;
 	
 	@else
 	
+	<a href="https://www.booking.com/index.html?aid=1535308" target="_blank" >
 	<div class="text-center" style="padding: 25px 10px 0 10px;">
-		<a href="https://booking.com" target="_blank" >
 		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
 			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
 			<div style="text-align: right;">
-				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" href="https://booking.com" target="_blank" role="button">
+				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" 
+					href="https://www.booking.com/index.html?aid=1535308" target="_blank" role="button">
 					<div style="font-size:11px">@LANG('ads.Explore the world with')</div>
 					<div style="font-size:18px">Booking<span style="color:#449edd">@LANG('ads..com')</span></div>
 				</a> 
 			</div>
 		</div>
-		</a>
 	</div>	
+	</a>
 	
 	@endif
 	
