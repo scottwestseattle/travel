@@ -45,8 +45,8 @@ class Tools
 			$ip = self::getIp();
 		
 		// test data for localhost
-		//$ip = "182.38.126.123";dump('Test IP: ' . $ip);
-		//$ip = "10.115.8.143";dump($ip);
+		//$ip = "10.115.8.143";dump($ip); 				// ip not found test
+		//$ip = "59.42.37.137"; dump('Test IP: ' . $ip); // China IP Test
 
 		$rc['ip'] = $ip;
 		$rc['country'] = null;
