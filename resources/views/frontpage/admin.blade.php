@@ -389,9 +389,11 @@
 	</div>
 	<hr />
 	
-	<div class="text-center" style="padding: 25px 10px 0 10px; margin:20px 10px;">
+	<?php $bannerIndex = isset($bannerIndex) ? $bannerIndex : 11; ?>
+	<div class="text-center" style="padding: 25px 10px 0 10px; margin:20px 0;">
+	<a href="https://www.booking.com/index.html?aid=1535308" target="_blank" >
 		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
-			background-image:url('/img/banners/banner-booking-zebras.png');">
+			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
 			<div style="text-align: right;">
 				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" 
 					href="https://www.booking.com/index.html?aid=1535308" target="_blank" role="button">
@@ -400,6 +402,7 @@
 				</a> 
 			</div>
 		</div>
+	</a>
 	</div>	
 	
 </div>

@@ -443,6 +443,7 @@ class FrontPageController extends Controller
 			'shortEntries' => $shortEntries,
 			'entryTypes' => Controller::getEntryTypes(),
 			'visitorCountryInfo' => $visitorCountryInfo,
+			'bannerIndex' => mt_rand(1, BANNERS_FP_COUNT), // random banner index
 		], 'Admin Page'));
     }
 	
