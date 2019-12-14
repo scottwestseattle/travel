@@ -111,7 +111,7 @@ else // not logged in
     </div>
 	
 	@if (isset($sections) && isset($site))
-		@component('footer', ['sections' => $sections, 'site' => $site])@endcomponent			
+		@component('footer', ['sections' => $sections, 'site' => $site, 'geo' => $geo])@endcomponent			
 	@else
 		@component('footer')@endcomponent			
 	@endif

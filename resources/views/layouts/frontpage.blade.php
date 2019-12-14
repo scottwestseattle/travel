@@ -88,7 +88,7 @@
 		
     </div>
 
-	@component('footer', ['sections' => $sections, 'site' => $site])@endcomponent			
+	@component('footer', ['sections' => $sections, 'site' => $site, 'geo' => $geo])@endcomponent			
 		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

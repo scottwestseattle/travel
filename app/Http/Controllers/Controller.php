@@ -461,6 +461,7 @@ class Controller extends BaseController
 		$this->viewData['domainName'] = $this->domainName;
 		$this->viewData['euNoticeAccepted'] = $this->euNoticeAccepted;
 		$this->viewData['euNotice'] = $this->euNotice;
+		$this->viewData['geo'] = $this->getIPInfo();
 		
 		if ($this->domainName == 'localhost')
 			$this->viewData['localhost'] = true;

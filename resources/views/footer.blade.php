@@ -29,10 +29,19 @@
 						<div style="margin:15px 0px 25px 0px" class="col-md-3">
 
 @if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
-						
-<ins class="bookingaff" data-aid="1535308" data-target_aid="1535306" data-prod="banner" data-width="200" data-height="200" data-banner_id="67896" data-lang="en-US">
-    <!-- Anything inside will go away once widget is loaded. -->
-    <a href="//www.booking.com?aid=1535306">Booking.com</a>
+					
+<ins class="bookingaff" 
+	data-aid="1535308" 
+	data-target_aid="1535308" 
+	data-prod="banner" 
+	data-width="200" 
+	data-height="200" 
+	data-banner_id="67896" 
+	data-lang="{{isset($geo) ? $geo['language'] : 'es-US'}}">
+	
+    <!-- Anything inside here will go away once widget is loaded. -->
+    <a href="//www.booking.com?aid=1535308">Booking.com</a>
+    <!-- end -->
 </ins>
 <script type="text/javascript">
     (function(d, sc, u) {

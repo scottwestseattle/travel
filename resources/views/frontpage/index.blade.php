@@ -484,7 +484,8 @@ $sectionCount = 0;
 	<a href="https://www.booking.com/index.html?aid=1535308" target="_blank" >
 	<div class="text-center" style="padding: 25px 10px 0 10px;">
 		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
-			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
+			xbackground-size:100%; xbackground-repeat: no-repeat; 
+			background-image:url('/img/banners/banner-booking-fp{{(false) ? 11 : $bannerIndex}}.png');">
 			<div style="text-align: right;">
 				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" 
 					href="https://www.booking.com/index.html?aid=1535308" target="_blank" role="button">
@@ -934,7 +935,13 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		<!-- BOOKING AFFILIATE -->
 		<div style="float:left; margin:20px;">
 
-			<ins class="bookingaff" data-aid="1535322" data-target_aid="1535306" data-prod="banner" data-width="300" data-height="250" data-lang="en-US">
+			<ins class="bookingaff" 
+				data-aid="1535322" 
+				data-target_aid="1535306" 
+				data-prod="banner" 
+				data-width="300" 
+				data-height="250" 
+				data-lang="{{isset($geo) ? $geo['language'] : 'es-US'}}">
 				<!-- Anything inside will go away once widget is loaded. -->
 				<a href="//www.booking.com?aid=1535306">Booking.com</a>
 			</ins>
