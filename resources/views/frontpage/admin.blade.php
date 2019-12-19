@@ -45,6 +45,25 @@
 		</div>
 	</div>
 	
+	<div>
+		<div class="drop-box text-center number-box blue" style="">
+			<div>Total</div>
+			<p style="">{{count($visitors)}}</p>
+		</div>	
+
+		<div class="drop-box text-center number-box orange" style="">
+			<div>Unique</div>
+			<p style="">{{count($visitorsUnique)}}</p>
+		</div>
+
+		<div class="drop-box text-center number-box green" style="">
+			<div style="margin-bottom: 5px;">Newest<span style="font-size:65%"> of {{count($visitorCountryInfo['countries'])}}</span></div>
+			<a href="/visitors/countries"><img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
+				title="{{$visitorCountryInfo['newestCountry']}}" 
+				alt="{{$visitorCountryInfo['newestCountry']}}" /></a>
+		</div>
+	</div>
+	
 @else
 	
 	<div class="text-center drop-box stats-box blue" style="min-width:450px;">
@@ -192,23 +211,6 @@
 		
 	<div style="margin-bottom:20px;">
 		<h3>Today's Visitors:</h3>
-			
-		<div class="drop-box text-center number-box blue" style="">
-			<div>Total</div>
-			<p style="">{{count($visitors)}}</p>
-		</div>	
-
-		<div class="drop-box text-center number-box orange" style="">
-			<div>Unique</div>
-			<p style="">{{count($visitorsUnique)}}</p>
-		</div>
-
-		<div class="drop-box text-center number-box green" style="">
-			<div style="margin-bottom: 5px;">Newest<span style="font-size:65%"> of {{count($visitorCountryInfo['countries'])}}</span></div>
-			<a href="/visitors/countries"><img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
-				title="{{$visitorCountryInfo['newestCountry']}}" 
-				alt="{{$visitorCountryInfo['newestCountry']}}" /></a>
-		</div>
 
 		<div style="clear: both; height:20px;"></div>
 		<div style="font-size:.7em;">			
@@ -343,6 +345,22 @@
 	<hr />
 	@endif
 	
+	<?php $bannerIndex = isset($bannerIndex) ? $bannerIndex : 11; ?>
+	<div class="text-center" style="padding: 25px 10px 0 10px; margin:20px 0;">
+	<a href="https://www.booking.com/index.html?aid=1535308" target="_blank" >
+		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
+			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
+			<div style="text-align: right;">
+				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" 
+					href="https://www.booking.com/index.html?aid=1535308" target="_blank" role="button">
+					<div style="font-size:11px">@LANG('ads.Explore the world with')</div>
+					<div style="font-size:18px">Booking<span style="color:#449edd">@LANG('ads..com')</span></div>
+				</a> 
+			</div>
+		</div>
+	</a>
+	</div>	
+	
 	<div>
 		<h3 style="">Latest Events ({{count($events)}})</h3>
 		@component('menu-submenu-events-filter')@endcomponent
@@ -388,22 +406,6 @@
 		<a href="/events/index/">Show All Events</a>
 	</div>
 	<hr />
-	
-	<?php $bannerIndex = isset($bannerIndex) ? $bannerIndex : 11; ?>
-	<div class="text-center" style="padding: 25px 10px 0 10px; margin:20px 0;">
-	<a href="https://www.booking.com/index.html?aid=1535308" target="_blank" >
-		<div style="margin:auto; border: solid 1px #0f367c; line-height:75px; height:75px; width:100%; max-width:500px; 
-			background-image:url('/img/banners/banner-booking-fp{{$bannerIndex}}.png');">
-			<div style="text-align: right;">
-				<a style="margin: 5px 5px 0 0; vertical-align: top; background-color:#0f367c; color:white;" class="btn btn-info" 
-					href="https://www.booking.com/index.html?aid=1535308" target="_blank" role="button">
-					<div style="font-size:11px">@LANG('ads.Explore the world with')</div>
-					<div style="font-size:18px">Booking<span style="color:#449edd">@LANG('ads..com')</span></div>
-				</a> 
-			</div>
-		</div>
-	</a>
-	</div>	
 	
 </div>
 @endsection
