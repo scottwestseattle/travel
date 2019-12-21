@@ -35,7 +35,7 @@ return [
 'Leave a Comment' => 'Leave a Comment',
 'Map Location:' => 'Map Location:',
 'Most Recent Visitors' => 'Most Recent Visitors',
-'Newest Visitor Country' => 'Newest Visitor Country',
+'Newest Visitor Country' => 'Newest Country',
 'Photo Pages' => 'Photo Pages',
 'Photo Taken on' => 'Photo Taken on',
 'Previous Locations:' => 'Previous Locations:',
@@ -54,4 +54,5 @@ return [
 'Translations' => 'Translations',
 'different countries have visited this site' => 'different countries have visited this site',
 'show all' => 'show all',
+'Visitor Countries' => 'Visitor Countries',
 ];

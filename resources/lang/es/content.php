@@ -54,4 +54,5 @@ return [
 'Translations' => 'Traducciones',
 'different countries have visited this site' => 'diferentes países han visitado este sitio',
 'show all' => 'mostrar todos',
+'Visitor Countries' => 'Países visitantes',
 ];
