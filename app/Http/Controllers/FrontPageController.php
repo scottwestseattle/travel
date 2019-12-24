@@ -182,16 +182,27 @@ class FrontPageController extends Controller
 		if ($count >= ($sliderCount))
 		{
 			// get a random slider and then only send the 10 sliders on each side of it
-			
-			$rnd = ($count > 0 && !isset($firstslider)) ? mt_rand(0, $count - 1) : 0;
-			
-			$first = $rnd - $padding;
-			if ($first < 0)
-				$first = $count + $first;
-				
-			$last = $rnd + $padding;
-			if ($last > $count)
-				$last = -($count - $last);
+						
+			if ($count > 0)
+			{
+				if (isset($firstslider))
+				{
+					$first = $count - 10;
+					$last = $count - 1;
+				}
+				else
+				{
+					$rnd = mt_rand(0, $count - 1);
+					
+					$first = $rnd - $padding;
+					if ($first < 0)
+						$first = $count + $first;
+						
+					$last = $rnd + $padding;
+					if ($last > $count)
+						$last = -($count - $last);
+				}
+			}
 				
 			//dump('count=' . $count . ', rnd=' . $rnd . ', first=' . $first . ', last=' . $last);
 				
