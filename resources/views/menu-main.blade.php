@@ -84,19 +84,15 @@
                         @else							
 							@if ($user_type >= 100)
 								<li><a href="/about">@lang('ui.About')</a></li>
-								<li><a href="/admin">@lang('ui.Admin')</a></li>
 								@if (isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
 									<li><a href="/lessons">@lang('ui.Lessons')</a></li>
 								@endif
 								<li><a href="/entries/indexadmin/{{ENTRY_TYPE_ENTRY}}/">@lang('ui.Entries')</a></li>
-								@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-									<li><a href="/tours/index">@lang('ui.Tours')</a></li>
-								@endif
-								<li><a href="/visitors/">@lang('ui.Visitors')</a></li>
-
+								<li><a href="/visitors/">@lang('ui.Visitors')</a></li>										
 								<li class="dropdown">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.More') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
+										<li><a href="/admin">@lang('ui.Admin')</a></li>
 										@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
 											<li><a href="/articles">@lang('ui.Articles')</a></li>
 										@endif

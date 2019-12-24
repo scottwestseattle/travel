@@ -6,12 +6,14 @@
 
 	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
 
-	<h1>Copy {{$title}}</h1>
+	<h3>Copy {{$title}}</h3>
 
 	<form method="POST" action="/{{$prefix}}/create">
 
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 	
+		<div><button type="submit" name="copy" class="btn btn-primary btn-xs">Copy</button></div>
+		
 		<label for="description" class="control-label">Description:</label>
 		<input type="text" name="description" class="form-control" value="{{$record->description}}"></input>
 					
@@ -35,6 +37,7 @@
 			
 		<div class="clear">		
 			<label for="amount" class="control-label">Amount:</label>
+
 			<input type="text" name="amount" class="form-control" value="{{$record->amount}}" />
 			
 			<label for="notes" class="control-label">Notes:</label>

@@ -6,11 +6,13 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 
-	<h1>Add {{$title}}</h1>
+	<h3>Add {{$title}}</h3>
                
 	<form method="POST" action="/{{$prefix}}/create">
 									
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+		
+		<div><button type="submit" name="copy" class="btn btn-primary btn-xs">Save</button></div>
 		
 		<label for="description" class="control-label">Description:</label>
 		<input type="text" name="description" class="form-control" />
