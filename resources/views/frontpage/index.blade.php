@@ -896,41 +896,6 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 	
 		<!-- div class="" style="font-size: 4em; margin-bottom:20px;"><span class="glyphicon glyphicon-bed"></span></div -->
 		<h1>{{$section->title}}</h1>
-		<!-- h1>Affiliate Partners</h1 -->	
-		
-		@if (false)
-		<!-- AMAZON ADS -->
-		<div style="float:left; margin:20px;">
-			<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=12&l=ur1&category=amazonhomepage&f=ifr&linkID=19442e58f18ebdac206c630f92678c97&t=travelwebs024-20&tracking_id=travelwebs024-20" width="300" height="250" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
-		</div>
-		
-		<!-- AGODA AFFILIATE -->
-		<div style="float:left; margin:20px;">
-		
-			<div id="adgshp2008177892"></div>
-			<script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script><script type="text/javascript">
-			var stg = new Object(); stg.crt="9181526501892";stg.version="1.04"; stg.id=stg.name="adgshp2008177892"; stg.width="300px"; stg.height="250px";stg.ReferenceKey="0xsHqxj9SidZIQaBKVV3aA=="; stg.Layout="OblongStatic"; stg.Language="en-us";stg.Cid="1806200"; stg.OverideConf=false; new AgdSherpa(stg,3).initialize();
-			</script>
-			
-		</div>
-		@endif
-		
-@if (false)
-		<!-- GOOGLE ADS -->
-		<div style="float:left; margin:20px;">
-		
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<!-- Front Page Ad 300 x 250 -->
-			<ins class="adsbygoogle"
-				 style="display:inline-block;width:300px;height:250px"
-				 data-ad-client="ca-pub-3301644572924270"
-				 data-ad-slot="8699059746"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>
-
-		</div>		
-@endif
 
 		<!-- BOOKING AFFILIATE -->
 		<div style="float:left; margin:20px;">
@@ -960,44 +925,10 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 			
 		</div>
 
-@if (false)		
-		<!-- GOOGLE ADS -->
-		<div style="float:left; margin:20px;">
-		
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<!-- Front Page Ad 300 x 250 -->
-			<ins class="adsbygoogle"
-				 style="display:inline-block;width:300px;height:250px"
-				 data-ad-client="ca-pub-3301644572924270"
-				 data-ad-slot="8699059746"></ins>
-			<script>
-			(adsbygoogle = window.adsbygoogle || []).push({});
-			</script>
-
-		</div>
-@endif
-
-		@if (false)
-		<!-- AMAZON BANNER -->		
-		<div style="clear:both; display:block;">
-
-			<script type="text/javascript">
-			amzn_assoc_placement = "adunit0";
-			amzn_assoc_tracking_id = "travelwebs024-20";
-			amzn_assoc_ad_mode = "search";
-			amzn_assoc_ad_type = "smart";
-			amzn_assoc_marketplace = "amazon";
-			amzn_assoc_region = "US";
-			amzn_assoc_default_search_phrase = "last minute deals";
-			amzn_assoc_default_category = "All";
-			amzn_assoc_linkid = "d2d59fc32979ade8cd0bea9018e29981";
-			amzn_assoc_design = "in_content";
-			</script>
-			<script src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
-
-		</div>	
-		@endif
-		
+		<!-- GYG LINK -->
+		<div style="float:left; margin:20px; border: 1px black solid; background-color:#054589;">
+			<a target="_blank" href="https://www.getyourguide.com/?partner_id=RTJHCDQ"><img width="300" src="/img/banners/gyg-block.png" /></a>
+		</div>		
 	</div>
 </div>
 </section>
