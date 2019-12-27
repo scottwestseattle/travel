@@ -44,7 +44,7 @@
 
 				<div style="clear:both; margin:20px 0; font-size:20px;" class="">
 					<a href='#' onclick="javascript:createPhotoName('alt_text', 'location', 'filename')";>
-						<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
+						<span id="" class="glyphCustom glyphicon glyphicon-link" style="font-size:1.3em; margin-left:5px;"></span>
 					</a>						
 
 					<button style="height:25px; padding:3px; margin: 0 0 8px 10px; font-size:12px;" type="submit" name="update" class="btn btn-primary">Upload</button>

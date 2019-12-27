@@ -283,6 +283,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/edit/{transaction}','TransactionController@edit')->middleware('auth');
 	Route::post('/update/{transaction}','TransactionController@update')->middleware('auth');
 	Route::get('/inlineupdate/{transaction}/{amount}', 'TransactionController@inlineupdate')->middleware('auth');
+	Route::get('/update-category/{transaction}/{category_id}/{subcategory_id}','TransactionController@updateCategory')->middleware('auth');
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{transaction}', 'TransactionController@confirmdelete')->middleware('auth');

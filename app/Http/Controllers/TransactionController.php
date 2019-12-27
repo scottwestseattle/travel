@@ -279,6 +279,34 @@ class TransactionController extends Controller
 		return $rc;
 	}
 	
+    public function updateCategory(Request $request, Transaction $transaction, $category_id, $subcategory_id)
+    {
+		if (!$this->isAdmin())
+             return 'Error: not admin';
+
+		$record = $transaction;
+		$record->category_id = intval($category_id);
+		$record->subcategory_id = intval($subcategory_id);
+		$msg = 'Updating Transaction Category to: ' . $record->category_id;
+		$rc = '';
+		
+		try
+		{
+			$record->save();
+
+			$msg .=  ' -- ' . $rc;
+			Event::logEdit(LOG_MODEL, $record->description, $record->id, $msg);			
+		}
+		catch (\Exception $e) 
+		{
+			$rc = 'ERROR (check Events)';
+			$msg .=  ' -- ' . $rc;
+			Event::logException(LOG_MODEL, LOG_ACTION_EDIT, $msg, null, $e->getMessage());		
+		}
+
+		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 
+	}
+	
 	public function view($id)
     {
 		if (!$this->isAdmin())
