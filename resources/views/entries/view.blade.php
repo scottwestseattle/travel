@@ -305,6 +305,13 @@
 			<tr><td>&nbsp;</td><td></td></tr>
 			@endforeach
 			</table>
+			
+			<div class='text-center'>
+				<a href="/comments">
+					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
+				</a>
+			</div>
+			
 		</div>
 	</div>	
 	@endif

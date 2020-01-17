@@ -962,11 +962,6 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
 			</div>
 						
-			<div class='text-center'>
-				<a href="/comments">
-					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
-				</a>
-			</div>
 			{{ csrf_field() }}
 
 		</form>
@@ -1001,6 +996,13 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 		
 		@endforeach
 		</table>
+		
+		<div class='text-center' style="margin-bottom: 10px;">
+			<a href="/comments">
+				<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
+			</a>
+		</div>
+		
 	</div>
 </div>
 

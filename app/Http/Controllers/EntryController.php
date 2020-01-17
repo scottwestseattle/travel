@@ -336,6 +336,7 @@ class EntryController extends Controller
 			->where('deleted_flag', 0)
 			->where('approved_flag', 1)
 			->where('parent_id', $entry->id)
+			->orderByDesc('id')
 			->get();
 
 		$vdata = $this->getViewData([
