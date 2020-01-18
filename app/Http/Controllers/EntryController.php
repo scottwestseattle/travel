@@ -517,6 +517,7 @@ class EntryController extends Controller
 			
 			$record->type_flag 			= $request->type_flag;
 			
+			$prevTitle = $record->title;
 			$record->title 				= $this->trimNull($request->title);
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description_short	= $this->trimNull($request->description_short);
@@ -571,7 +572,7 @@ class EntryController extends Controller
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id);			
+				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
 				
 				$request->session()->flash('message.level', 'success');
 				$request->session()->flash('message.content', 'Entry has been updated');
