@@ -686,7 +686,7 @@ class EntryController extends Controller
 
 			$entry->save();
 			
-			return redirect($this->getReferer($request, '/entries/index')); 
+			return redirect($this->getReferer($request, '/entries/' . $entry->permalink)); 
 		}
 		else
 		{

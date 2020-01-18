@@ -28,9 +28,9 @@ else
 		@component('entries.menu-submenu', ['record' => $record])@endcomponent
 		
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-			@if ($record->published_flag === 0)
+			@if ($record->published_flag == 0)
 				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
-			@elseif ($record->approved_flag === 0)
+			@elseif ($record->approved_flag == 0)
 				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
 			@endif
 		@endif

@@ -385,7 +385,8 @@ class Controller extends BaseController
             $visitor->city = $ipInfo['city'];
         }
         
-        $visitor->robot_flag = /* sbw: !isset($ipInfo) || */ $visitor->isRobot();
+        //todo: wait $visitor->robot_flag = !isset($ipInfo) || $visitor->isRobot();
+        $visitor->robot_flag = $visitor->isRobot();
 		
 		//dump($visitor);
 

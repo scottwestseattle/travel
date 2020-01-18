@@ -71,7 +71,8 @@ class Tools
                 $info = self::getIpGeo($ip);
 				//dump($info);
 				
-                if (isset($info) && isset($info->countryCode))
+                //todo: wait if (isset($info) && isset($info->countryCode))
+                if (isset($info))
                 {
                 	$cc = $info->countryCode;                	
 					$rc['countryCode'] = $cc;
@@ -135,10 +136,11 @@ class Tools
 	
 				$record = $record[0];
 			}
-			else
-			{
-				throw new \Exception('IP not found: ' . $ip);
-			}
+			//todo: wait
+			//else
+			//{
+			//	throw new \Exception('IP not found: ' . $ip);
+			//}
 				
 			//dump($record);
 		}
