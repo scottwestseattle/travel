@@ -70,9 +70,8 @@ class Tools
                 
                 $info = self::getIpGeo($ip);
 				//dump($info);
-				
-                //todo: wait if (isset($info) && isset($info->countryCode))
-                if (isset($info))
+
+                if (isset($info) && isset($info->countryCode))
                 {
                 	$cc = $info->countryCode;                	
 					$rc['countryCode'] = $cc;
@@ -111,12 +110,11 @@ class Tools
 	static public function getIpGeo($ip)
 	{
 		$record = null;
-		
+	
 		$ipl = ip2long($ip);
-		//dump($ipl);	
-			
+
 		try
-		{
+		{				
 			$q = '
 			SELECT * FROM `ip2locations` 
 				WHERE 1
@@ -125,11 +123,20 @@ class Tools
 				;
 				
 			$record = DB::select($q);	
-		
+
 			if (isset($record) && count($record) > 0)
 			{
 				if ($record[0]->country == '-') // the first or last range
 				{
+					// quick check to see if real IP is in REMOTE_ADDR
+					$remote = $_SERVER["REMOTE_ADDR"];
+					if ($ip != $remote && strlen($remote) > 0 && ip2long($remote))
+					{
+						// recurse to try REMOTE_ADDR
+						Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, 'IP is in empty range: ' . $ip . ', trying REMOTE_ADDR: ' . $remote, null, null);						
+						return self::getIpGeo($remote);
+					}
+					
 					$record = null;
 					throw new \Exception('IP is in the empty range: ' . $ip);
 				}
@@ -156,8 +163,6 @@ class Tools
 				$msg .= (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"]: 'none';			
 				$msg .= ', remote=';
 				$msg .= (!empty($_SERVER["REMOTE_ADDR"])) ? $_SERVER["REMOTE_ADDR"]: 'none';
-				$msg .= ', server=';
-				$msg .= (!empty($_SERVER["SERVER_NAME"])) ? $_SERVER["SERVER_NAME"]: 'none';
 				$msg .= ')';
 				
 				Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);

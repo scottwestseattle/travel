@@ -380,6 +380,15 @@ class Controller extends BaseController
 		$ipInfo = $this->getIpInfo();
 		if (isset($ipInfo))
 		{
+			// check if we're not using the main ip because it didn't match the active range
+			if ($ipInfo['ip'] != $ip && ip2long($ipInfo['ip'])) // AND check if the REMOTE_ADDR IP is legit
+			{
+				$visitor->ip_address = $ipInfo['ip'];
+				
+				$msg = 'Replacing IP (' . $ip . ') with REMOTE_ADDR IP (' . $ipInfo['ip'] . ')';
+				Event::logInfo(LOG_MODEL_VISITORS, LOG_ACTION_ADD, $msg);
+			}
+			
             $visitor->country = $ipInfo['country'];
             $visitor->countryCode = $ipInfo['countryCode'];
             $visitor->city = $ipInfo['city'];
