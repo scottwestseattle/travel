@@ -121,11 +121,12 @@ class GalleryController extends Controller
 						
 		if (isset($entry))
 		{
+			$this->countView($entry); // do this before record changed, otherwise changes will be saved
+			
 			// copy translations in
 			if (isset($entry->medium_col1))
 				$entry->title = $entry->medium_col1;
 
-			$this->countView($entry);
 			$entry->description = nl2br($entry->description);
 			$entry->description = $this->formatLinks($entry->description);		
 		}

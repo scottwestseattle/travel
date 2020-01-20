@@ -69,7 +69,6 @@ class Tools
                 //$ipdat = @json_decode($ipInfo);
                 
                 $info = self::getIpGeo($ip);
-				//dump($info);
 
                 if (isset($info) && isset($info->countryCode))
                 {

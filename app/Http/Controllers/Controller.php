@@ -2013,6 +2013,7 @@ class Controller extends BaseController
 		}
 		else
 		{
+			//dump($entry->title);
 			$entry->view_count++;
 			$entry->save();	
 		}

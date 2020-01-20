@@ -138,10 +138,13 @@ class CommentController extends Controller
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'Save Error' . $record->name, null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'Save Error: ' . $record->name, null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());		
+			$request->session()->flash('message.content', 'Error Saving Comment - Please try again');
+
+			// if a spammer entered a long comment, just send them to booking
+			return redirect('https://www.booking.com/index.html?aid=1535308');
 		}	
 			
 		return redirect($this->getReferer($request, '/' . PREFIX . '/')); 
