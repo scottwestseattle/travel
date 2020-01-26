@@ -14,16 +14,12 @@
 	
 		@component('entries.menu-submenu', ['record' => $record])@endcomponent
 		
-		@if (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id)
-		<div class="publish-pills">
-			<ul class="nav nav-pills">
-				@if ($record->published_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">@LANG('ui.Private')</a></li>
-				@elseif ($record->approved_flag === 0)
-					<li class="active"><a href="/entries/publish/{{$record->id}}">@LANG('ui.Pending Approval')</a></li>
-				@endif
-			</ul>
-		</div>
+		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+			@if ($record->published_flag == 0)
+				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
+			@elseif ($record->approved_flag == 0)
+				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
+			@endif
 		@endif
 				
 	@endguest
@@ -44,7 +40,7 @@
 				<a href="/blogs/show/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Back to Blog')<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
 				
 				@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-					<a href="/blogs/addpost/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Add New Post')<span style="margin-left:5px;" class="glyphicon glyphicon-plus-sign"></span></button></a>	
+					<a href="/blogs/addpost/{{$record->parent_id}}"><button type="button" class="btn btn-blog-nav">@LANG('content.Add New Post')<span style="margin-left:5px;" class="glyphicon glyphicon-plus-sign"></span></button></a>
 				@endif				
 			@else
 				<a href="{{$backLink}}"><button type="button" class="btn btn-blog-nav">@LANG($backLinkText)<span style="margin-left:5px;" class="glyphicon glyphicon-circle-arrow-up"></span></button></a>
@@ -305,6 +301,13 @@
 			<tr><td>&nbsp;</td><td></td></tr>
 			@endforeach
 			</table>
+			
+			<div class='text-center'>
+				<a href="/comments">
+					<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('content.Show All Comments')</button>
+				</a>
+			</div>
+			
 		</div>
 	</div>	
 	@endif

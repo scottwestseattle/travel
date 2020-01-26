@@ -336,6 +336,7 @@ class EntryController extends Controller
 			->where('deleted_flag', 0)
 			->where('approved_flag', 1)
 			->where('parent_id', $entry->id)
+			->orderByDesc('id')
 			->get();
 
 		$vdata = $this->getViewData([
@@ -516,6 +517,7 @@ class EntryController extends Controller
 			
 			$record->type_flag 			= $request->type_flag;
 			
+			$prevTitle = $record->title;
 			$record->title 				= $this->trimNull($request->title);
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description_short	= $this->trimNull($request->description_short);
@@ -570,7 +572,7 @@ class EntryController extends Controller
 			{
 				$record->save();
 
-				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id);			
+				Event::logEdit(LOG_MODEL_ENTRIES, $record->title, $record->id, $prevTitle . '  ' . $record->title);			
 				
 				$request->session()->flash('message.level', 'success');
 				$request->session()->flash('message.content', 'Entry has been updated');
@@ -684,7 +686,7 @@ class EntryController extends Controller
 
 			$entry->save();
 			
-			return redirect($this->getReferer($request, '/entries/index')); 
+			return redirect($this->getReferer($request, '/entries/' . $entry->permalink)); 
 		}
 		else
 		{

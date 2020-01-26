@@ -43,7 +43,8 @@ class Tools
 	{
 		if (!isset($ip))
 			$ip = self::getIp();
-		
+		//dump($ip);
+
 		// test data for localhost
 		//$ip = "10.115.8.143";dump($ip); 				// ip not found test
 		//$ip = "59.42.37.137"; dump('Test IP: ' . $ip); // China IP Test
@@ -68,7 +69,8 @@ class Tools
                 //$ipdat = @json_decode($ipInfo);
                 
                 $info = self::getIpGeo($ip);
-                if (isset($info))
+
+                if (isset($info) && isset($info->countryCode))
                 {
                 	$cc = $info->countryCode;                	
 					$rc['countryCode'] = $cc;
@@ -107,12 +109,11 @@ class Tools
 	static public function getIpGeo($ip)
 	{
 		$record = null;
-		
+	
 		$ipl = ip2long($ip);
-		//dump($ipl);	
-			
+
 		try
-		{
+		{				
 			$q = '
 			SELECT * FROM `ip2locations` 
 				WHERE 1
@@ -121,24 +122,50 @@ class Tools
 				;
 				
 			$record = DB::select($q);	
-		
+
 			if (isset($record) && count($record) > 0)
 			{
 				if ($record[0]->country == '-') // the first or last range
 				{
+					// quick check to see if real IP is in REMOTE_ADDR
+					$remote = $_SERVER["REMOTE_ADDR"];
+					if ($ip != $remote && strlen($remote) > 0 && ip2long($remote))
+					{
+						// recurse to try REMOTE_ADDR
+						Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, 'IP is in empty range: ' . $ip . ', trying REMOTE_ADDR: ' . $remote, null, null);						
+						return self::getIpGeo($remote);
+					}
+					
 					$record = null;
 					throw new \Exception('IP is in the empty range: ' . $ip);
 				}
 	
 				$record = $record[0];
 			}
+			//todo: wait
+			//else
+			//{
+			//	throw new \Exception('IP not found: ' . $ip);
+			//}
 				
 			//dump($record);
 		}
 		catch (\Exception $e)
 		{
-			$msg = 'Error getting geo info: ' . $e->getMessage();
-			Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);
+			if (true) // stopped logging these because many robots have IPs out of range
+			{
+				$msg = 'Error getting geo info: ' . $e->getMessage();
+			
+				$msg .= ' (ip=';
+				$msg .= (!empty($_SERVER["HTTP_CLIENT_IP"])) ? $_SERVER["HTTP_CLIENT_IP"] : 'none';
+				$msg .= ', forward=';
+				$msg .= (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"]: 'none';			
+				$msg .= ', remote=';
+				$msg .= (!empty($_SERVER["REMOTE_ADDR"])) ? $_SERVER["REMOTE_ADDR"]: 'none';
+				$msg .= ')';
+				
+				Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, $msg, null, null);
+			}
 		}
             		
 		return $record;
