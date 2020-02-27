@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Auth;
 
 class Base extends Model
 {
@@ -11,5 +12,10 @@ class Base extends Model
     {
 		$this->deleted_flag = 1;
 		$this->save();
-    }		
+    }	
+    
+	static protected function isAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
+	}	
 }

@@ -57,7 +57,7 @@
 		</div>
 
 		<div class="drop-box text-center number-box green" style="">
-			<div style="margin-bottom: 5px;">Newest<span style="font-size:65%"> of {{count($visitorCountryInfo['countries'])}}</span></div>
+			<div style="margin-bottom: 5px;">Newest<span style="font-size:8px;"> of {{count($visitorCountryInfo['countries'])}}</span></div>
 			<a href="/visitors/countries"><img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
 				title="{{$visitorCountryInfo['newestCountry']}}" 
 				alt="{{$visitorCountryInfo['newestCountry']}}" /></a>
@@ -109,11 +109,12 @@
 		<h3 style="color:red;">Comments to Approve ({{count($comments)}})</h3>
 		<table class="table table-striped">
 			<tbody>
-				<tr><th></th><th>Created</th><th>Name</th><th>Comment</th><th></th></tr>
+				<tr><th></th><th>Date</th><th>Entry</th><th>Name</th><th>Comment</th><th></th></tr>
 				@foreach($comments as $record)
 					<tr>
 						<td style="width:10px;"><a href='/comments/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
-						<td>{{$record->created_at}}</td>
+						<td>{{date("M d, Y", strtotime($record->created_at))}}</td>
+						<td><a href="/entries/show/{{$record->parent_id}}">{{$record->parent_id}}<a></td>
 						<td><a href="/comments/publish/{{ $record->id }}">{{$record->name}}</a></td>
 						<td>{{$record->comment}}</td>
 						<td><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>

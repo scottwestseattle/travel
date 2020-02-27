@@ -426,16 +426,30 @@ class Entry extends Base
 
 	static protected function getNextPrevBlogEntry($display_date, $parent_id, $next = true)
 	{
-		$record = Entry::select()
-			->where('site_id', SITE_ID)
-			->where('deleted_flag', 0)
-			->where('published_flag', 1)
-			->where('approved_flag', 1)
-			->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
-			->where('display_date', $next ? '>' : '<', $display_date)
-			->where('parent_id', $parent_id)
-			->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC '))
-			->first();
+		if (self::isAdmin())
+		{
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', $next ? '>' : '<', $display_date)
+				->where('parent_id', $parent_id)
+				->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC '))
+				->first();
+		}
+		else
+		{
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('published_flag', 1)
+				->where('approved_flag', 1)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->where('display_date', $next ? '>' : '<', $display_date)
+				->where('parent_id', $parent_id)
+				->orderByRaw('display_date ' . ($next ? 'ASC' : 'DESC '))
+				->first();
+		}
 
 		return $record;
 	}
