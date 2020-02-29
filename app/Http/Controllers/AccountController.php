@@ -92,6 +92,7 @@ class AccountController extends Controller
 		$record->name				= $this->trimNull($request->name);
 		$record->starting_balance	= $this->trimNull($request->starting_balance);
 		$record->account_type_flag	= isset($request->account_type_flag) ? $request->account_type_flag : 0;		
+		$record->notes				= $this->trimNull($request->notes);
 		
 		try
 		{
@@ -136,13 +137,14 @@ class AccountController extends Controller
 		
 		$record->name = $this->copyDirty($record->name, $request->name, $isDirty, $changes);
 		$record->starting_balance = $this->copyDirty($record->starting_balance, $request->starting_balance, $isDirty, $changes);
+		$record->notes = $this->copyDirty($record->notes, $request->notes, $isDirty, $changes);
 		
 		$v = isset($request->account_type_flag) ? intval($request->account_type_flag) : 0;		
 		$record->account_type_flag = $this->copyDirty($record->account_type_flag, $v, $isDirty, $changes);
 
 		$v = isset($request->hidden_flag) ? 1 : 0;		
 		$record->hidden_flag = $this->copyDirty($record->hidden_flag, $v, $isDirty, $changes);
-		
+				
 		if ($isDirty)
 		{						
 			try

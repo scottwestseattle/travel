@@ -32,6 +32,11 @@
 				<label for="account_type_flag" class="radio-label">Credit Card</label>			
 			</div>		
 		</div>
+
+		<div class="form-group clear">
+			<label for="notes" class="control-label">Notes:</label>
+			<input type="text" name="notes" class="form-control" value="{{$record->notes}}"></input>	
+		</div>
 		
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">Update</button>

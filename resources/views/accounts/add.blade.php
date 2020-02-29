@@ -16,6 +16,9 @@
 		<label for="starting_balance" class="control-label">Starting Balance:</label>
 		<input type="text" name="starting_balance" class="form-control" />
 			
+		<label for="notes" class="control-label">Notes:</label>
+		<input type="text" name="notes" class="form-control"></input>	
+		
 		<div class="form-group">
 			<div class="radio-group-item">
 				<input type="radio" name="account_type_flag" value="1" class="form-control-inline">
