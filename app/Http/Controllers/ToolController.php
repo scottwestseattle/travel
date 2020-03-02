@@ -506,6 +506,11 @@ LEFT JOIN photos
 		$hash = trim($request->get('hash'));
 		$hashed = ToolController::getHash($hash);
 
+		if (Tools::startsWith($hash, 'First'))
+			$hashed .= '!';
+		else
+			$hashed .= '#';
+
 		return view('tools.hash', $this->getViewData([
 			'hash' => $hash,
 			'hashed' => $hashed,
