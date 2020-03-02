@@ -506,7 +506,7 @@ LEFT JOIN photos
 		$hash = trim($request->get('hash'));
 		$hashed = ToolController::getHash($hash);
 
-		if (Tools::startsWith($hash, 'First'))
+		if (Tools::startsWith($hash, 'F'))
 			$hashed .= '!';
 		else
 			$hashed .= '#';
