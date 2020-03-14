@@ -9,23 +9,26 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 
 Latest DB Changes
 
-2020-01-02
+2020-03-05
+ALTER TABLE `ip2locations` CHANGE `country` `country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
+ALTER TABLE `ip2locations` CHANGE `city` `city` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 
+2020-01-02
 update `ip2locations` set country = 'Czechia' WHERE 1 AND countryCode = 'cz';
 
 2019-11-26
-TER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
-TER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
+ALTER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
+ALTER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
 UPDATE `visitors` SET `countryCode` = `continent` WHERE 1 AND countryCode IS NULL AND continent IS NOT NULL 
 SELECT * FROM `visitors`  WHERE 1AND countryCode IS NULLAND continent IS NOT NULL ORDER BY `visitors`.`id`  DESC
 
 2019-11-25
-TER TABLE `visitors` CHANGE `organization` `robot_flag` SMLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
+ALTER TABLE `visitors` CHANGE `organization` `robot_flag` SMLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
 
 2019-11-13
 UPDATE `entries` set type_flag = 10 WHERE 1 AND type_flag = 5 
 
-TER TABLE `entries` 
+ALTER TABLE `entries` 
 CHANGE `type_flag` `type_flag` 
 TINYINT(4) 
 NOT NULL 
@@ -33,20 +36,20 @@ DEFAULT '-1'
 COMMENT '-1=Not Set, 1=Entry, 2=Tour/Hike, 3=Blog, 4=Blog Post, 5=Hotel, 6=Note, 7=Section, 8=Glery, 9=Lesson, 10=Article, 99=Other';
 
 2019-05-10
-TER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
+ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
 update `entries` set finished_flag = 1
 
 2019-04-20
-TER TABLE `entries` ADD `major_number` SMLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMLINT NULL DEFAULT NULL AFTER `major_number`;
+ALTER TABLE `entries` ADD `major_number` SMLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMLINT NULL DEFAULT NULL AFTER `major_number`;
 
 2019-01-23
-TER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
+ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
 
 2018
 
 7/10
-TER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
-TER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
+ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
+ALTER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
 
 7/11
 update `visitors` set deleted_flag = 1 WHERE 1=1

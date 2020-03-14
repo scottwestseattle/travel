@@ -36,10 +36,11 @@
 			<?php //dump($ipLocation); ?>
 			<div style="font-size:12px; margin-bottom:10px;">{{$ip . ' (' . $ipLocation['location'] . ' ' . $ipLocation['locale'] . ' ' . $ipLocation['language'] . ')'}}</div>
 			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" /></div>
-			<div style="margin-bottom:20px;">
+			<div style="margin-bottom:20px; font-size:12px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU Notice</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/importgeo">Geo</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/hash">Hasher</a>
 			</div>
 		</div>

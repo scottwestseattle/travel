@@ -42,6 +42,7 @@ return [
 'FACILITIES' => 'INSTALACIONES',
 'Featured Photos' => 'Fotos Destacadas',
 'February' => 'febrero',
+'Finished' => 'Terminado',
 'Galleries' => 'Galerías',
 'Gallery' => 'Galería',
 'Highlights' => 'Aspectos más Destacados',
@@ -119,5 +120,5 @@ return [
 'year' => 'año',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Finished' => 'Terminado',
+'Parent' => 'Principal',
 ];

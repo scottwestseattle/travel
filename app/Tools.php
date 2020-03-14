@@ -786,7 +786,7 @@ class Tools
 		return $date;
 	}
 	
-    static public function importCsv()
+    static public function importGeo()
     {		
 		//$records = Ip2location::all();
 		//$records->truncate();
@@ -795,71 +795,89 @@ class Tools
 		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3 copy.csv";
 		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3.csv";
 		
-		if (($h = fopen($file, "r")) !== FALSE) 
+		try
 		{
-			$max = 0;
-			$maxName = '';
-			$cnt = 0;
-
-			$start = Ip2location::select()->count();
-			dump($start);
-			dump(date('H-i-s') . ' - ' . $cnt);
-//dd('stop');
-			// Convert each line into the local $data variable
-			while (($line = fgetcsv($h, 1000, ",")) !== FALSE) 
+			if (($h = fopen($file, "r")) !== FALSE) 
 			{
-				if ($cnt >= $start)
+				$max = 0;
+				$maxName = '';
+				$cnt = 0;
+
+				set_time_limit(0);	// sets it to run as long as needed
+				
+				$start = Ip2location::select()->count();
+				dump($start);
+				dump(date('H-i-s') . ' - ' . $cnt);
+	//dd('stop');
+				// Convert each line into the local $data variable
+				while (($line = fgetcsv($h, 1000, ",")) !== FALSE) 
 				{
-//dd($line);
-					// Read the data from a single line
-					$ip = new Ip2location();
-		
-					$ip->iplongStart = $line[0];			
-					$ip->iplongEnd = $line[1];
-					$ip->countryCode = $line[2];
-					$ip->country = $line[3];
-					$ip->region = $line[4];
-					$ip->city = $line[5];
-				
-					if (strlen($ip->city) > $max)
+					if ($cnt >= $start)
 					{
-						$max = strlen($ip->city);
-						$maxName = $ip->city;
-					}
-					
-					if (false && strlen($ip->region) > $max)
-					{
-						$max = strlen($ip->region);
-						$maxName = $ip->region;
-					}
-					
-					if (strlen($ip->country) > $max)
-					{
-						$max = strlen($ip->country);
-						$maxName = $ip->country;
-					}
-
-					$ip->save();
-				
-					if (false && $cnt % 100000 == 0)
-					{
-						set_time_limit(30);	// add more seconds to keep it from timing out
-						dump(date('H-i-s') . ' - ' . $cnt);
-					}
-	
- 				}
- 					
- 				if (($cnt - $start) >= 100000)
-					break;
-										
-				$cnt++;		
-			}
+	//dd($line);
+						// Read the data from a single line
+						$ip = new Ip2location();
 			
-			// Close the file
-			fclose($h);
+						$ip->iplongStart = $line[0];			
+						$ip->iplongEnd = $line[1];
+						$ip->countryCode = $line[2];
+						$ip->country = $line[3];
+						$ip->region = $line[4];
+						$ip->city = $line[5];
+					
+						if (strlen($ip->city) > $max)
+						{
+							$max = strlen($ip->city);
+							$maxName = $ip->city;
+						}
+						
+						if (false && strlen($ip->region) > $max)
+						{
+							$max = strlen($ip->region);
+							$maxName = $ip->region;
+						}
+						
+						if (strlen($ip->country) > $max)
+						{
+							$max = strlen($ip->country);
+							$maxName = $ip->country;
+						}
 
-dump('count = ' . $cnt);
-dd($maxName . ': ' . $max);
+						$ip->save();
+						try
+						{
+						}
+						catch (\Exception $e)
+						{
+							//dd($e);
+						}
+					
+						if (false && $cnt % 100000 == 0)
+						{
+							set_time_limit(30);	// add more seconds to keep it from timing out
+							//dump(date('H-i-s') . ' - ' . $cnt);
+						}
+		
+					}
+						
+					// test without limit
+					if (($cnt - $start) >= 200000)
+						break;
+											
+					$cnt++;		
+				}
+				
+				// Close the file
+				fclose($h);
+
+	dump('count = ' . $cnt);
+	dd($maxName . ': ' . $max);
+			}
+		}
+        catch (\Exception $e)
+		{
+			request()->session()->flash('message.level', 'danger');
+			request()->session()->flash('message.content', 'Error importing geo: ' . $e->getMessage());			
 		}
 
 		return;

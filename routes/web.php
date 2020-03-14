@@ -59,7 +59,7 @@ Route::get('/d-e-b-u-g/', 'FrontPageController@debug');
 Route::get('/style', 'ToolController@style');
 Route::get('/wp-admin', 'ToolController@wpAdmin');
 Route::get('/wp-admin.php', 'ToolController@wpAdmin');
-Route::get('/importcsv', 'ToolController@importCsv');
+Route::get('/importgeo', 'ToolController@importGeo');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');

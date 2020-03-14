@@ -42,6 +42,7 @@ return [
 'FACILITIES' => '设备',
 'Featured Photos' => '精选照片',
 'February' => 'February',
+'Finished' => '已完成',
 'Galleries' => '画廊',
 'Gallery' => '画廊',
 'Highlights' => '强调',
@@ -119,5 +120,5 @@ return [
 'year' => '年',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Finished' => '已完成',
+'Parent' => '主要记录',
 ];

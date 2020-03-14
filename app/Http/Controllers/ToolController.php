@@ -720,14 +720,10 @@ LEFT JOIN photos
     	return redirect('https://www.booking.com?aid=1535306');
 	}
 	
-	public function importCsv()
+	public function importGeo()
     {
-		$records = Tools::importCsv();
-		
-		foreach($records as $record)
-		{
-		}
-		
+		$records = Tools::importGeo();
+
     	return redirect('/admin');
 	}
 }

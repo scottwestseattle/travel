@@ -42,6 +42,7 @@ return [
 'FACILITIES' => 'FACILITIES',
 'Featured Photos' => 'Featured Photos',
 'February' => 'February',
+'Finished' => 'Finished',
 'Galleries' => 'Galleries',
 'Gallery' => 'Gallery',
 'Highlights' => 'Highlights',
@@ -119,5 +120,5 @@ return [
 'year' => 'year',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Finished' => 'Finished',
+'Parent' => 'Parent',
 ];
