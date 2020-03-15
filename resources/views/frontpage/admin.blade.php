@@ -213,8 +213,16 @@
 		
 	<div style="margin-bottom:20px;">
 		<h3>Today's Visitors:</h3>
-
-		<div style="clear: both; height:20px;"></div>
+		<p>
+		@foreach($visitorCountryInfo['countriesToday'] as $country)
+			<div style="display:inline-block; min-width:45px;">
+				<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
+					alt="@LANG('geo.' . $country->country)" 
+					title="@LANG('geo.' . $country->country)" />
+			</div>
+		@endforeach		
+		</p>
+		<div style="clear: both; height:0px;"></div>
 		<div style="font-size:.7em;">			
 			<table class="table table-striped mt-10">
 				<tr><th>Date</th><th>Country</th><th>IP</th></tr>

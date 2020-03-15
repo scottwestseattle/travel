@@ -6,6 +6,7 @@ use DB;
 use App;
 use Auth;
 use Lang;
+use DateTime;
 use App\User;
 use App\Ip2location;
 
@@ -882,4 +883,31 @@ class Tools
 
 		return;
 	}
+	
+	static public function getDateRange($date = null)
+	{	
+		if (isset($date))
+		{
+			$date = DateTime::createFromFormat('Y-m-d', $date);
+			
+			$month = intval($date->format("m"));
+			$year = intval($date->format("Y"));
+			$day = intval($date->format("d"));
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = intval(date("d"));
+		}
+
+		$fromTime = ' 00:00:00';
+		$toTime = ' 23:23:59';
+		
+		// build the date range
+		$dates['fromDate'] = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
+		$dates['toDate'] = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;	
+			
+		return $dates;
+	}	
 }

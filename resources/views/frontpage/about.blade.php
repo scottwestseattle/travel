@@ -32,8 +32,19 @@
 		</div>
 
 		<div style="clear: both;"></div>
+
+		<p>{{$visitorCountryInfo['totalCountriesToday']}} @LANG('content.countries have visited this site today')</p>
+		<p>
+		@foreach($visitorCountryInfo['countriesToday'] as $country)
+			<div style="display:inline-block; min-width:45px;">
+				<img style="margin: 0 5px 5px 0;" height="30" src="/img/flags/{{strtolower($country->countryCode)}}.png" 
+					alt="@LANG('geo.' . $country->country)" 
+					title="@LANG('geo.' . $country->country)" />
+			</div>
+		@endforeach
+		</p>
 		
-		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.different countries have visited this site')
+		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.total countries have visited this site')
 			&nbsp;(<a href="/visitors/countries">@LANG('content.show all')</a>)
 		</p>
 		<p>
