@@ -44,9 +44,7 @@
 		@endforeach
 		</p>
 		
-		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.total countries have visited this site')
-			&nbsp;(<a href="/visitors/countries">@LANG('content.show all')</a>)
-		</p>
+		<p>{{$visitorCountryInfo['totalCountries']}} @LANG('content.total countries have visited this site')</p>
 		<p>
 		<?php $cnt = 0; ?>
 		@foreach($visitorCountryInfo['countries'] as $country)
@@ -55,9 +53,10 @@
 					alt="@LANG('geo.' . $country->country)" 
 					title="@LANG('geo.' . $country->country)" />
 			</div>
-			<?php $cnt++; if ($cnt >= 12) break; ?>
+			<?php $cnt++; if ($cnt >= 24) break; ?>
 		@endforeach
 		</p>
+		<a href="/visitors/countries">@LANG('content.show all')</a>
 	</div>
 	
 	<h3>@LANG('content.Content Stats')</h3>

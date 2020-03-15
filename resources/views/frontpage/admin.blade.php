@@ -212,7 +212,7 @@
 	@if (isset($visitors))	
 		
 	<div style="margin-bottom:20px;">
-		<h3>Today's Visitors:</h3>
+		<h3>Today's Visitors <span style="font-size:12px;">({{$visitorCountryInfo['totalCountriesToday']}} countries)</span></h3>
 		<p>
 		@foreach($visitorCountryInfo['countriesToday'] as $country)
 			<div style="display:inline-block; min-width:45px;">
