@@ -493,15 +493,25 @@ class EmailController extends Controller
 			$amount = -$amount;
 						
 			// get the date
-			$date_raw = $this->parseTag($body_raw, 'has been authorized on ', 10, -1); 
+			$date_raw = $this->parseTag($body_raw, 'has been authorized on ', 12, -1); 
 			$date2 = str_replace(',', '', $date_raw);
 			//echo '|' . $date2 . '|';
+			
+			// try normal date format like: "03/21/2020"
 			$date = DateTime::createFromFormat('m/d/Y', $date2);
-			//debug($date);die;
 			if ($date == NULL)
 			{
-				die("Date conversion 3 failed, from text: " . $date2);
+				// try date format like: "Mar 21 2020"
+				$date = DateTime::createFromFormat('M d Y', $date2);
+				if ($date == NULL)
+				{
+					dump($body_raw);
+					dump($date2);
+					die("Date conversion 3 failed, from text: " . $date2);
+				}
 			}
+			//dump($date_raw);
+			//dd($date2);
 									
 			// get the account number, last four digits
 			$account = $this->parseTag($body_raw, 'account ending in ', 4, -1); 
@@ -601,7 +611,8 @@ class EmailController extends Controller
 			$date = new DateTime($date2);
 			if ($date == NULL)
 			{
-				die("Date conversion 3 failed, from text: " . $date2);
+				dump($body_raw);
+				die("Date conversion 4 failed, from text: " . $date2);
 			}
 					
 			// get the description
