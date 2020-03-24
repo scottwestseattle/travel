@@ -41,8 +41,13 @@
 				</td>	
 		
 				<td><a target="_blank" href="{{$record->parent_id > 0 ? '/entries/show/'. $record->parent_id : '/'}}">{{$record->parent_id > 0 ? $record->parent_id : 'Front Page'}}</a></td>
-				<td>{{$record->name}}</td>
-				<td><a href="/{{$prefix}}/view/{{$record->id}}">{{strlen($record->comment) > 50 ? substr($record->comment,0,50)."..." : $record->comment}}</a></td>
+				<td>{{$record->name}} </td>
+				<td>
+					<a href="/{{$prefix}}/view/{{$record->id}}">{{strlen($record->comment) > 50 ? substr($record->comment,0,50)."..." : $record->comment}}</a>
+					@if (isset($record->visitor))
+						<br/>({{$record->visitor->ip_address}} / {{$record->visitor->country}})
+					@endif
+				</td>
 				<td>{{$record->approved_flag}}</td>
 
 				<td class="glyphCol">

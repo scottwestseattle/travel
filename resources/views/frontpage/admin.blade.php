@@ -117,7 +117,12 @@
 						<td>{{date("M d, Y", strtotime($record->created_at))}}</td>
 						<td><a href="/entries/show/{{$record->parent_id}}">{{$record->parent_id}}<a></td>
 						<td><a href="/comments/publish/{{ $record->id }}">{{$record->name}}</a></td>
-						<td>{{$record->comment}}</td>
+						<td>
+							{{$record->comment}}
+							@if (isset($record->visitor))
+								<br/>({{$record->visitor->ip_address}} / {{$record->visitor->country}})
+							@endif						
+						</td>
 						<td><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 					</tr>
 				@endforeach

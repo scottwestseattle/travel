@@ -129,6 +129,10 @@ class CommentController extends Controller
 		
 		try
 		{
+			// save the visitor info so we can see where the comments are coming from
+			$visitorId = $this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
+			$record->visitor_id = $visitorId;
+
 			$record->save();
 			
 			Event::logAdd(LOG_MODEL, $record->name, $record->comment, $record->id);

@@ -9,6 +9,9 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 
 Latest DB Changes
 
+2020-03-24
+ALTER TABLE `comments` ADD `visitor_id` INT NULL AFTER `parent_id`;
+
 2020-03-05
 ALTER TABLE `ip2locations` CHANGE `country` `country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 ALTER TABLE `ip2locations` CHANGE `city` `city` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;

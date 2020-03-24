@@ -52,7 +52,8 @@ return [
 'Total Content Pages' => 'Total Content Pages',
 'Total Photos' => 'Total Photos',
 'Translations' => 'Translations',
-'different countries have visited this site' => 'different countries have visited this site',
-'show all' => 'show all',
 'Visitor Countries' => 'Visitor Countries',
+'total countries have visited this site' => 'total countries have visited this site',
+'countries have visited this site today' => 'countries have visited this site today',
+'show all' => 'show all',
 ];

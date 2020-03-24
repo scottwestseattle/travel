@@ -347,12 +347,14 @@ class Controller extends BaseController
 		$host = null;
 		$referrer = null;
 		$userAgent = null;
+		$visitorId = null;
 		
 		$ip = $this->getVisitorInfo($host, $referrer, $userAgent);
 		
 		if (strlen($userAgent) == 0 && strlen($referrer) == 0)
 		{
-			return; // no host or referrer probably means that it's the auto page tester so don't count it
+			// no host or referrer probably means that it's the auto page tester so don't count it
+			return $visitorId; 
 		}
 		
 		$visitor = new Visitor();
@@ -399,7 +401,10 @@ class Controller extends BaseController
 		
 		//dump($visitor);
 
-		$visitor->save();		
+		$visitor->save();
+		$visitorId = $visitor->id;
+
+		return $visitorId;
 	}	
 
 	protected function trunc($string, $length)

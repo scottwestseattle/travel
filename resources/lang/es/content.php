@@ -52,7 +52,8 @@ return [
 'Total Content Pages' => 'Número de páginas de contenido',
 'Total Photos' => 'Número total de fotos',
 'Translations' => 'Traducciones',
-'different countries have visited this site' => 'diferentes países han visitado este sitio',
-'show all' => 'mostrar todos',
 'Visitor Countries' => 'Países visitantes',
+'total countries have visited this site' => 'países han visitado este sitio en total',
+'countries have visited this site today' => 'países han visitado este sitio hoy',
+'show all' => 'mostrar todos',
 ];
