@@ -12,6 +12,14 @@ Latest DB Changes
 2020-03-24
 ALTER TABLE `comments` ADD `visitor_id` INT NULL AFTER `parent_id`;
 
+ALTER TABLE `transactions` ADD `symbol` VARCHAR(10) NULL COMMENT 'stock symbol' AFTER `deleted_flag`;
+ALTER TABLE `transactions` ADD `shares` MEDIUMINT NULL COMMENT 'number of shares' AFTER `symbol`;
+ALTER TABLE `transactions` ADD `share_price` DECIMAL(10,4) NULL AFTER `shares`;
+ALTER TABLE `transactions` ADD `action_flag` TINYINT NULL COMMENT '1=Buy, 2=Sell, 99=other' AFTER `share_price`;
+ALTER TABLE `transactions` ADD `lot_id` INT NULL COMMENT 'lot to match buy and sell transactions' AFTER `action_flag`;
+ALTER TABLE `transactions` ADD `commission` DECIMAL(10,2) NULL COMMENT 'buy/sell commission' AFTER `share_price`;
+ALTER TABLE `transactions` ADD `fees` DECIMAL(10,2) NULL COMMENT 'buy/sell fees' AFTER `commission`;
+
 2020-03-05
 ALTER TABLE `ip2locations` CHANGE `country` `country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 ALTER TABLE `ip2locations` CHANGE `city` `city` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
