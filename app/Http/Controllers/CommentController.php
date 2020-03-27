@@ -103,7 +103,7 @@ class CommentController extends Controller
 	}
 		
     public function create(Request $request)
-    {			
+    {		
 		$record = new Comment();
 		
 		$record->site_id = SITE_ID;
@@ -114,6 +114,13 @@ class CommentController extends Controller
 
 		if (isset($record->name) && isset($record->comment))
 		{
+			if (true || strpos($record->comment, "http") !== false || strpos($record->comment, "com") !== false)
+			{
+				Event::logAdd(LOG_MODEL, 'COMMENT NOT ADDED: ' . $record->name, $record->comment, 0);
+
+				// send spammers away
+				return redirect('https://www.booking.com/index.html?aid=1535308');
+			}
 		}
 		else
 		{

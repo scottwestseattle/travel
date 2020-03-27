@@ -133,7 +133,7 @@ class Tools
 					if ($ip != $remote && strlen($remote) > 0 && ip2long($remote))
 					{
 						// recurse to try REMOTE_ADDR
-						Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, 'IP is in empty range: ' . $ip . ', trying REMOTE_ADDR: ' . $remote, null, null);						
+						//todo: stop using these?? Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, 'IP is in empty range: ' . $ip . ', trying REMOTE_ADDR: ' . $remote, null, null);						
 						return self::getIpGeo($remote);
 					}
 					

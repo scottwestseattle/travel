@@ -9,14 +9,18 @@
 	<h1>Add {{$title}}</h1>
                
 	<form method="POST" action="/{{$prefix}}/create">
-							
-		<label for="name" class="control-label">Name:</label>
-		<input type="text" name="name" class="form-control" />
+			
+		<div class="form-group">
+			<label for="name" class="control-label">Name:</label>
+			<input type="text" name="name" class="form-control" />
+		</div>
 			
 		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'parent_id', 'options' => $categories, 'selected_option' => null])@endcomponent				
-			
-		<label for="notes" class="control-label">Notes:</label>
-		<input type="text" name="notes" class="form-control" />
+		
+		<div class="clear">
+			<label for="notes" class="control-label">Notes:</label>
+			<input type="text" name="notes" class="form-control" />
+		</div>
 
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">Add</button>
