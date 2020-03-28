@@ -265,6 +265,8 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
 	Route::get('/trades/{all?}', 'TransactionController@trades')->middleware('auth');
 	Route::post('/trades','TransactionController@trades')->middleware('auth');
+	Route::get('/positions', 'TransactionController@positions')->middleware('auth');
+	Route::post('/positions','TransactionController@positions')->middleware('auth');
 	
 	// balances
 	Route::get('/balances','TransactionController@balances')->middleware('auth');

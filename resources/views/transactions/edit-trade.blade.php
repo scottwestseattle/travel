@@ -4,7 +4,7 @@
 
 <div class="container">
 
-	@component($prefix . '.menu-submenu', ['record' => $record, 'prefix' => $prefix])@endcomponent
+	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
 
 	<h3>Edit Trade</h3>
 
@@ -37,7 +37,7 @@
 			<label for="symbol" class="control-label">Symbol:</label>
 			<input type="text" name="symbol" class="form-control" value="{{$record->symbol}}" />
 			<label for="shares" class="control-label">Number of Shares:</label>
-			<input type="text" name="shares" class="form-control" value="{{$record->shares}}" />
+			<input type="text" name="shares" class="form-control" value="{{abs($record->shares)}}" />
 			<label for="share_price" class="control-label">Price Per Share:</label>
 			<input type="text" name="share_price" class="form-control" value="{{$record->share_price}}" />
 			<div class="control-label">{{$record->description}}</div>

@@ -190,9 +190,9 @@ class TransactionController extends Controller
 				$action = "Sell";
 			}
 			
-			$record->description = "$action $record->symbol, $record->shares shares @ \$$record->share_price";
+			$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->share_price";
 			$record->amount	= (intval($record->shares) * floatval($record->share_price)) + floatval($record->commission) + floatval($record->fees);
-			$record->amount = $record->isBuy() ? -$record->amount : $record->amount; // if it's a debit, make it negative
+			//$record->amount = $record->isBuy() ? -$record->amount : $record->amount; // if it's a debit, make it negative
 		}
 		else
 		{
@@ -315,22 +315,27 @@ class TransactionController extends Controller
 				
 				if (!isset($record->lot_id))
 					$record->lot_id = $record->id;
+					
+				$record->shares = abs($record->shares);
 			}
 			else
 			{
 				$action = 'Sell';
-				$fees = -$fees; // fees and commission come out of the proceeds
+				$fees = -abs($fees); // fees and commission come out of the proceeds
+				$record->shares = -abs($record->shares);				
 			}
 
 			// set the description
-			$request->description = "$action $record->symbol, $record->shares shares @ \$$record->share_price";			
+			$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->share_price";			
 
 			// compute the total amount
-			$request->amount = (intval($record->shares) * floatval($record->share_price)) + $fees;
+			$request->amount = (intval(-$record->shares) * floatval($record->share_price)) + $fees;
 		}
 
-		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
-		$record->amount = ($record->isDebit() || $record->isBuy()) ? -$record->amount : $record->amount; // if it's a debit or a buy, make it negative
+		$record->amount = $this->copyDirty(abs($record->amount), floatval($request->amount), $isDirty, $changes);
+		
+		if ($record->isDebit() && $record->amount > 0) // if it's a debit, make it negative (buys are already set to negative negative above because of negative shares)
+			$record->amount = -$record->amount; 
 		
 		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
 						
@@ -600,6 +605,46 @@ class TransactionController extends Controller
 		]);
 							
 		return view(PREFIX . '.trades', $vdata);
+    }
+  
+    public function positions(Request $request)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$accountId = false;
+
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$categories = Controller::getCategories(LOG_ACTION_SELECT);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
+		
+		$records = null;
+		$total = 0.0;
+		try
+		{
+			$records = Transaction::getPositions($filter);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());
+		
+			return redirect('/error');
+		}	
+						
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'accounts' => $accounts,
+			'categories' => $categories,
+			'subcategories' => $subcategories,			
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $filter,
+		]);
+							
+		return view(PREFIX . '.positions', $vdata);
     }
     
     public function balances(Request $request)

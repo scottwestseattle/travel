@@ -389,5 +389,28 @@ AND reconciled_flag = 1
 
 		return $records;
     }
-		
+	
+    static public function getPositions()
+    {
+		$q = '
+			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
+				, trx.symbol, trx.shares, trx.share_price, trx.lot_id 
+				, accounts.name as account
+				, categories.name as category
+				, subcategories.name as subcategory, subcategories.id as subcategory_id 
+			FROM transactions as trx
+			JOIN accounts ON accounts.id = trx.parent_id
+			JOIN categories ON categories.id = trx.category_id
+			JOIN categories as subcategories ON subcategories.id = trx.subcategory_id
+			WHERE 1=1 
+			AND trx.user_id = ?
+			AND trx.deleted_flag = 0
+			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')			
+			ORDER BY trx.transaction_date DESC, trx.id DESC 
+		';
+
+		$records = DB::select($q, [Auth::id()]);
+
+		return $records;
+    }	
 }

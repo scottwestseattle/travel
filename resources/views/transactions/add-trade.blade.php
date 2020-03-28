@@ -4,7 +4,7 @@
 
 <div class="container">
 
-	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
+	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
 
 	<h3>Add Trade</h3>
                
@@ -36,7 +36,7 @@
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />
 				
 				<label for="shares" class="control-label">Number of Shares:</label>
-				<input type="text" name="shares" class="form-control" xvalue="{{$trade->shares}}" autofocus />
+				<input type="text" name="shares" class="form-control" xvalue="{{abs($trade->shares)}}" autofocus />
 					
 				@if (false)
 				<label for="lot_id" class="control-label">Lot:</label>
