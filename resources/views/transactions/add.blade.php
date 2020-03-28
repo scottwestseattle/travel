@@ -13,7 +13,7 @@
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
 		
 		<div><button type="submit" name="copy" class="btn btn-primary btn-xs">Save</button></div>
-		
+
 		<div class="form-group">
 			<div class="radio-group-item">
 				<input type="radio" name="type_flag" value="1" class="form-control-inline" checked="check">
@@ -25,17 +25,19 @@
 				<label for="type_flag" class="radio-label">Credit</label>			
 			</div>
 		</div>		
-		
-		<label for="description" class="control-label">Description:</label>
-		<input type="text" name="description" class="form-control" />
+
+		<div class="clear">
+			<label for="description" class="control-label">Description:</label>
+			<input type="text" name="description" class="form-control" />
+		</div>
 
 		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'empty' => 'Select', 'selected_option' => null])@endcomponent	
 		
 		@component('control-dropdown-menu', ['prompt' => 'Category:', 'field_name' => 'category_id', 'options' => $categories, 'empty' => 'Select', 'selected_option' => null, 'onchange' => 'onCategoryChange(this.value)'])@endcomponent				
 
 		@component('control-dropdown-menu', ['prompt' => 'Subcategory:', 'field_name' => 'subcategory_id', 'options' => $subcategories, 'empty' => 'Select', 'selected_option' => null])@endcomponent				
-		
-		<div class="clear">		
+
+		<div class="clear">
 			<label for="amount" class="control-label">Amount:</label>
 			<input type="text" name="amount" class="form-control" />
 			

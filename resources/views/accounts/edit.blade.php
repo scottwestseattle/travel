@@ -31,6 +31,11 @@
 				<input type="radio" name="account_type_flag" value="2" class="form-control-inline" {{$record->account_type_flag == 2 ? 'checked' : ''}} />
 				<label for="account_type_flag" class="radio-label">Credit Card</label>			
 			</div>		
+			
+			<div class="radio-group-item">
+				<input type="radio" name="account_type_flag" value="3" class="form-control-inline" {{$record->account_type_flag == 3 ? 'checked' : ''}} />
+				<label for="account_type_flag" class="radio-label">Brokerage</label>			
+			</div>		
 		</div>
 
 		<div class="form-group clear">

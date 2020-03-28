@@ -89,12 +89,52 @@ class TransactionController extends Controller
 		return view(PREFIX . '.index', $vdata);
     }
 	
-    public function add(Request $request)
+	
+	public function add(Request $request)
+	{
+		// normal, non-trade transaction
+		return $this->addTransaction($request);
+	}
+
+    public function addTrade(Request $request, $symbol = null)
+    {
+		// do it like this because it could be a trade with no lot
+		$trade['trade'] = true;
+		$trade['lot'] = null;
+		
+		if (isset($symbol))
+		{
+			$records = DB::table('transactions')
+				->where('deleted_flag', 0)
+				->where('symbol', $symbol)
+				->get();
+
+			/* how to get total shares
+			SELECT symbol, sum(shares) as shares FROM `transactions` 
+			WHERE 1
+			AND symbol = ?
+			AND type_flag in (3,4)
+			AND lot_id = 7040
+			GROUP BY symbol				
+			*/
+				
+			// if there is already more than one trade, then the lot has been sold
+			if (isset($records))// && count($records) == 1)
+			{
+				$trade['lot'] = $records->first();
+			}
+		}
+
+		// trade transaction
+		return $this->addTransaction($request, $trade);
+	}
+	
+    public function addTransaction(Request $request, $trade = null)
     {
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
+		$accounts = Controller::getAccounts(LOG_ACTION_ADD, $trade ? ACCOUNT_TYPE_BROKERAGE : null);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
 				
@@ -104,9 +144,12 @@ class TransactionController extends Controller
 			'subcategories' => $subcategories,
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
+			'trade' => $trade['lot'],
 		]);
-		 
-		return view(PREFIX . '.add', $vdata);
+		
+		$view = isset($trade) ? 'add-trade' : 'add';
+		
+		return view('transactions.' . $view, $vdata);
 	}
 
 	public function create(Request $request)
@@ -115,30 +158,69 @@ class TransactionController extends Controller
              return redirect('/');
            			
 		$record = new Transaction();
-		
+			
 		$filter = Controller::getFilter($request);
-		$record->transaction_date	= $this->trimNull($filter['from_date']);
 		
-		$record->user_id = Auth::id();	
-		$record->description		= $this->trimNull($request->description);
+		$record->user_id 			= Auth::id();	
+		$record->transaction_date	= $this->trimNull($filter['from_date']);		
 		$record->notes				= $this->trimNull($request->notes);
 		$record->parent_id			= $request->parent_id;
-		$record->category_id		= $request->category_id;
-		$record->subcategory_id		= $request->subcategory_id;
-		$record->amount				= floatval($request->amount);
-
+		
 		$v = isset($request->type_flag) ? $request->type_flag : 0;
 		$record->type_flag = $v;
+		$record->symbol	= $this->trimNull(strtoupper($request->symbol));
 		
+		if ($record->isTrade())
+		{
+			$record->shares				= $this->trimNull($request->shares);
+			$record->share_price		= $this->trimNull($request->share_price);
+			$record->commission			= $this->trimNull($request->commission);
+			$record->fees				= $this->trimNull($request->fees);
+			$record->lot_id				= $request->lot_id; // already null for buys
+			$record->category_id		= CATEGORY_ID_TRADE;
+			
+			if ($record->isBuy())
+			{
+				$record->subcategory_id	= SUBCATEGORY_ID_BUY;
+				$action = "Buy";
+			}
+			else
+			{
+				$record->subcategory_id	= SUBCATEGORY_ID_SELL;
+				$action = "Sell";
+			}
+			
+			$record->description = "$action $record->symbol, $record->shares shares @ \$$record->share_price";
+			$record->amount	= (intval($record->shares) * floatval($record->share_price)) + floatval($record->commission) + floatval($record->fees);
+			$record->amount = $record->isBuy() ? -$record->amount : $record->amount; // if it's a debit, make it negative
+		}
+		else
+		{
+			$record->description		= $this->trimNull($request->description);
+			$record->category_id		= $request->category_id;
+			$record->subcategory_id		= $request->subcategory_id;
+			$record->amount				= floatval($request->amount);
+			
+			$record->amount = ($record->isDebit()) ? -$record->amount : $record->amount; // if it's a debit, make it negative
+		}
+
 		$v = isset($request->reconciled_flag) ? 1 : 0;
 		$record->reconciled_flag = $v;
-			
-		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
-		$record->amount = ($record->type_flag == 1) ? -$record->amount : $record->amount; // if it's a debit, make it negative
 		
 		try
 		{
+			if (!isset($record->parent_id) || $record->parent_id <= 0)
+				throw new \Exception('Error Adding Trade: Account Not Set');
+
 			$record->save();
+			
+			// use the new 'buy' record id as the lot id
+			if ($record->isBuy())
+			{
+				$record->lot_id = $record->id;
+				$record->save();
+			}
+			
 			Event::logAdd(LOG_MODEL, $record->description, $record->amount, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
@@ -152,7 +234,9 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 		
-		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 		
+		$view = isset($record->symbol) ? '/trades/' : '/filter/';
+
+		return redirect($this->getReferer($request, '/' . PREFIX . $view));
 	}
 	
 	public function edit(Transaction $transaction)
@@ -170,7 +254,7 @@ class TransactionController extends Controller
              return redirect('/');
 		
 		$filter = Controller::getDateControlSelectedDate($record->transaction_date);		
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
+		$accounts = Controller::getAccounts(LOG_ACTION_ADD, ACCOUNT_TYPE_BROKERAGE);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD, $record->category_id);
 		$transaction->amount = abs($transaction->amount);
@@ -183,8 +267,10 @@ class TransactionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $filter,
 		]);
-		 
-		return view(PREFIX . '.edit', $vdata);
+
+		$view = $record->isTrade() ? 'edit-trade' : 'edit';
+		
+		return view(PREFIX . '.' . $view, $vdata);
     }
 		
     public function update(Request $request, Transaction $transaction)
@@ -199,18 +285,55 @@ class TransactionController extends Controller
 		 
 		$isDirty = false;
 		$changes = '';
-				
+
 		$record->user_id = Auth::id();	
-		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
 		$record->notes = $this->copyDirty($record->notes, $request->notes, $isDirty, $changes);
 		$record->vendor_memo = $this->copyDirty($record->vendor_memo, $request->vendor_memo, $isDirty, $changes);
 		$record->parent_id = $this->copyDirty($record->parent_id, $request->parent_id, $isDirty, $changes);
 		$record->category_id = $this->copyDirty($record->category_id, $request->category_id, $isDirty, $changes);
-		$record->subcategory_id = $this->copyDirty($record->subcategory_id, $request->subcategory_id, $isDirty, $changes);		
+		$record->subcategory_id = $this->copyDirty($record->subcategory_id, $request->subcategory_id, $isDirty, $changes);
 		
+		// set transaction type
 		$v = isset($request->type_flag) ? $request->type_flag : 0;
 		$record->type_flag = $this->copyDirty($record->type_flag, $v, $isDirty, $changes);
+
+		// trades
+		$record->symbol = $this->copyDirty($record->symbol, $request->symbol, $isDirty, $changes);
+		$record->shares = $this->copyDirty($record->shares, $request->shares, $isDirty, $changes);
+		$record->share_price = $this->copyDirty($record->share_price, $request->share_price, $isDirty, $changes);		
+		$record->commission = $this->copyDirty($record->commission, $request->commission, $isDirty, $changes);		
+		$record->fees = $this->copyDirty($record->fees, $request->fees, $isDirty, $changes);		
+		$record->lot_id = $this->copyDirty($record->lot_id, $request->lot_id, $isDirty, $changes);
 				
+		if ($record->isTrade())
+		{
+			$fees = floatval($record->commission) + floatval($record->fees);
+			
+			if ($record->isBuy())
+			{
+				$action = 'Buy';
+				
+				if (!isset($record->lot_id))
+					$record->lot_id = $record->id;
+			}
+			else
+			{
+				$action = 'Sell';
+				$fees = -$fees; // fees and commission come out of the proceeds
+			}
+
+			// set the description
+			$request->description = "$action $record->symbol, $record->shares shares @ \$$record->share_price";			
+
+			// compute the total amount
+			$request->amount = (intval($record->shares) * floatval($record->share_price)) + $fees;
+		}
+
+		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
+		$record->amount = ($record->isDebit() || $record->isBuy()) ? -$record->amount : $record->amount; // if it's a debit or a buy, make it negative
+		
+		$record->description = $this->copyDirty($record->description, $request->description, $isDirty, $changes);
+						
 		$v = isset($request->reconciled_flag) ? 1 : 0;
 		$record->reconciled_flag = $this->copyDirty($record->reconciled_flag, $v, $isDirty, $changes);		
 
@@ -218,14 +341,15 @@ class TransactionController extends Controller
 		$filter = Controller::getFilter($request);
 		$date = $this->trimNull($filter['from_date']);
 		$record->transaction_date = $this->copyDirty($record->transaction_date, $date, $isDirty, $changes);
-		
-		$record->amount = $this->copyDirty(abs($record->amount), abs(floatval($request->amount)), $isDirty, $changes);
-		$record->amount = ($record->type_flag == 1) ? -$record->amount : $record->amount; // if it's a debit, make it negative
-					
+				
 		if ($isDirty)
 		{						
 			try
 			{
+				if (!isset($record->parent_id) || $record->parent_id <= 0)
+					throw new \Exception('Error Updating Trade: Account Not Set');
+					
+				//dd($record);
 				$record->save();
 
 				Event::logEdit(LOG_MODEL, $record->description, $record->id, $changes);			
@@ -247,7 +371,8 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', 'No changes made to ' . $this->title);
 		}
 
-		return redirect($this->getReferer($request, '/' . PREFIX . '/filter/')); 
+		$view = $record->isTrade() ? 'trades' : 'filter';
+		return redirect($this->getReferer($request, '/' . PREFIX . '/' . $view . '/')); 
 	}
 	
     public function inlineupdate(Transaction $transaction, $amount)
@@ -424,6 +549,58 @@ class TransactionController extends Controller
 							
 		return view(PREFIX . '.filter', $vdata);
     }	
+	
+    public function trades(Request $request, $showAllDates = true)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+		
+		$showAllDates = strtolower(Controller::trimNullStatic($showAllDates, /* alphanum = */ true));
+		$showAllDates = ($showAllDates == 'all');
+
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$accountId = false;
+		if ($showAllDates || $filter['showalldates_flag'])
+		{
+			$filter['showalldates_flag'] = true; // in case we're using the command line
+			
+			// account id is needed to get starting balance to make the totals correct below
+			// it is only used when showing all records for a selected account
+			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
+		}
+
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$categories = Controller::getCategories(LOG_ACTION_SELECT);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
+		$records = null;
+		$total = 0.0;
+		try
+		{
+			$records = Transaction::getTrades($filter);
+			$totals = Transaction::getTotal($records, $accountId);
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());
+		
+			return redirect('/error');
+		}	
+						
+		$vdata = $this->getViewData([
+			'records' => $records,
+			'totals' => $totals,
+			'accounts' => $accounts,
+			'categories' => $categories,
+			'subcategories' => $subcategories,			
+			'dates' => Controller::getDateControlDates(),
+			'filter' => $filter,
+		]);
+							
+		return view(PREFIX . '.trades', $vdata);
+    }
     
     public function balances(Request $request)
     {	

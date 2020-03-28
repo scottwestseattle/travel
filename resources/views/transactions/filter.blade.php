@@ -126,9 +126,9 @@ function inlineEditSubmit(id)
 		<div class="clear"></div>
 		
 		@if ($filter['showphotos_flag'])
-		<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
+			<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
 		@else
-		<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{round($totals['total'], 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . round($totals['reconciled'], 2) . '' : '' }}</h3>
+			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{round($totals['total'], 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . round($totals['reconciled'], 2) . '' : '' }}</h3>
 		@endif
 		
 		<table class="table">
@@ -154,17 +154,24 @@ function inlineEditSubmit(id)
 					@else
 						<td class="glyphCol"><a href='/{{$prefix}}/reconcile/{{$record->id}}/0'><span class="glyphCustom glyphicon glyphicon-star"></span></a></td>
 					@endif
+					
+					@if (App\Transaction::isTradeStatic($record))
+						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					@else
 						<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-						<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
-						@if ($filter['showphotos_flag'])
-							<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{$record->photo ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
-						@endif
+					@endif
+					
+					<td class="glyphCol"><a href='/{{$prefix}}/copy/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-duplicate"></span></a></td>
+					@if ($filter['showphotos_flag'])
+						<td class="glyphCol"><a href='/photos/direct/{{$record->id}}/2'><span style="color:{{$record->photo ? 'default' : 'red'}};" class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
+					@endif
 						<td style="color:default;">{{$record->transaction_date}}</td>
 						
 						<td style="color:{{$color}};">
 							<span id="amount{{$record->id}}">{{$record->amount}}</span>
 							<br/>
 							
+							@if (!App\Transaction::isTradeStatic($record))
 							<a href='#' onclick="event.preventDefault(); inlineEditStart({{$record->id}});">
 								<span id="inlineEditMenu{{$record->id}}">
 									<span style="" class="glyphCustom glyphicon glyphicon-option-horizontal"></span>
@@ -177,6 +184,7 @@ function inlineEditSubmit(id)
 								<button type="submit" onclick="event.preventDefault(); inlineEditSubmit({{$record->id}});" name="inlineOk" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">OK</button>
 								<button type="cancel" onclick="inlineEditCancel({{$record->id}});" name="inlineCancel" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">Cancel</button>
 							</span>
+							@endif
 						</td>
 						
 						@if (isset($record->transfer_id))

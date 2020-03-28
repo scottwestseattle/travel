@@ -169,6 +169,22 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 
 define('BANNERS_FP_COUNT', 11);
 
+// hard-coded category/subcategory id's
+define('CATEGORY_ID_TRADE', 209);
+define('SUBCATEGORY_ID_BUY', 210);
+define('SUBCATEGORY_ID_SELL', 211);
+
+// Transaction Types
+define('TRANSACTION_TYPE_DEBIT', 1);
+define('TRANSACTION_TYPE_CREDIT', 2);
+define('TRANSACTION_TYPE_BUY', 3);
+define('TRANSACTION_TYPE_SELL', 4);
+
+// Account Types
+define('ACCOUNT_TYPE_SAVINGS', 1);
+define('ACCOUNT_TYPE_CREDIT', 2);
+define('ACCOUNT_TYPE_BROKERAGE', 3);
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -1360,10 +1376,10 @@ class Controller extends BaseController
 		return $records;
 	}
 	
-    public function getAccounts($action)
+    public function getAccounts($action, $accountType = null)
     {
 		$error = '';
-		$records = Account::getArray($error);
+		$records = Account::getArray($error, $accountType);
 		
 		if (count($records) == 0)
 			Event::logError(LOG_MODEL, $action, 'Error Creating Account List', null, null, $error);

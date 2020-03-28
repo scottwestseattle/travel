@@ -29,6 +29,11 @@
 				<input type="radio" name="account_type_flag" value="2" class="form-control-inline">
 				<label for="account_type_flag" class="radio-label">Credit Card, Loan</label>			
 			</div>
+			
+			<div class="radio-group-item">
+				<input type="radio" name="account_type_flag" value="3" class="form-control-inline">
+				<label for="account_type_flag" class="radio-label">Brokerage Account</label>			
+			</div>
 		</div>
 		
 		<div class="submit-button">

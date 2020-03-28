@@ -263,6 +263,8 @@ Route::group(['prefix' => 'transactions'], function () {
 	// filter
 	Route::get('/filter/{all?}','TransactionController@filter')->middleware('auth');
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
+	Route::get('/trades/{all?}', 'TransactionController@trades')->middleware('auth');
+	Route::post('/trades','TransactionController@trades')->middleware('auth');
 	
 	// balances
 	Route::get('/balances','TransactionController@balances')->middleware('auth');
@@ -278,9 +280,11 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::post('/transfercreate','TransactionController@transfercreate')->middleware('auth');
 	Route::get('/add','TransactionController@add')->middleware('auth');
 	Route::post('/create','TransactionController@create')->middleware('auth');
+	Route::get('/add-trade/{lot_id?}','TransactionController@addTrade')->middleware('auth');
 
 	// edit/update
 	Route::get('/edit/{transaction}','TransactionController@edit')->middleware('auth');
+	Route::get('/edit-trade/{transaction}','TransactionController@edit')->middleware('auth');
 	Route::post('/update/{transaction}','TransactionController@update')->middleware('auth');
 	Route::get('/inlineupdate/{transaction}/{amount}', 'TransactionController@inlineupdate')->middleware('auth');
 	Route::get('/update-category/{transaction}/{category_id}/{subcategory_id}','TransactionController@updateCategory')->middleware('auth');
@@ -288,7 +292,6 @@ Route::group(['prefix' => 'transactions'], function () {
 	// delete / confirm delete
 	Route::get('/confirmdelete/{transaction}', 'TransactionController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{transaction}', 'TransactionController@delete')->middleware('auth');
-		
 });
 
 // Accounts

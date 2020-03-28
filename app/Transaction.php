@@ -14,6 +14,46 @@ class Transaction extends Base
     	return $this->belongsTo(User::class);
     }
 
+	static public function isTradeStatic($record)
+	{
+		return (self::isBuyStatic($record) || self::isSellStatic($record));
+	}
+	
+	public function isTrade()
+	{
+		return ($this->isBuy() || $this->isSell());
+	}
+
+	static public function isBuyStatic($record)
+	{
+		return ($record->type_flag == TRANSACTION_TYPE_BUY);
+	}
+
+	static public function isSellStatic($record)
+	{
+		return ($record->type_flag == TRANSACTION_TYPE_SELL);
+	}
+	
+	public function isBuy()
+	{
+		return ($this->type_flag == TRANSACTION_TYPE_BUY);
+	}
+	
+	public function isSell()
+	{
+		return ($this->type_flag == TRANSACTION_TYPE_SELL);
+	}
+
+	public function isDebit()
+	{
+		return ($this->type_flag == TRANSACTION_TYPE_DEBIT);
+	}
+
+	public function isCredit()
+	{
+		return ($this->type_flag == TRANSACTION_TYPE_CREDIT);
+	}
+	
     static public function getByVendor($memo)
     {
     	//dump($memo);
@@ -82,7 +122,7 @@ class Transaction extends Base
 
 		return $records;
     }
-	
+		
     static public function getTotal($records, $accountId = false)
     {
 		$total = 0.0;
@@ -97,7 +137,7 @@ class Transaction extends Base
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
 				
-			if (!$record->photo)
+			if (isset($record->photo) && !$record->photo)
 				$noPhotos++;
 			
 			$total += $amount;
@@ -316,5 +356,38 @@ AND reconciled_flag = 1
 		}
 		
 		return $records;
-    }	
+    }
+
+    static public function getTrades()
+    {
+		$q = '
+			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
+				, trx.symbol, trx.shares, trx.share_price, trx.lot_id 
+				, accounts.name as account
+				, categories.name as category
+				, subcategories.name as subcategory, subcategories.id as subcategory_id 
+			FROM transactions as trx
+			JOIN accounts ON accounts.id = trx.parent_id
+			JOIN categories ON categories.id = trx.category_id
+			JOIN categories as subcategories ON subcategories.id = trx.subcategory_id
+			WHERE 1=1 
+			AND trx.user_id = ?
+			AND trx.deleted_flag = 0
+			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')			
+			ORDER BY trx.transaction_date DESC, trx.id DESC 
+		';
+		
+/*
+		$records = DB::table('transactions')
+                     ->select(DB::raw('count(*) as user_count, status'))
+//                     ->where('status', '<>', 1)
+//                     ->groupBy('status')
+                     ->get();		
+*/
+
+		$records = DB::select($q, [Auth::id()]);
+
+		return $records;
+    }
+		
 }
