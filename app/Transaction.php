@@ -358,7 +358,7 @@ AND reconciled_flag = 1
 		return $records;
     }
 
-    static public function getTrades()
+    static public function getTrades($filter)
     {
 		$q = '
 			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
@@ -373,19 +373,28 @@ AND reconciled_flag = 1
 			WHERE 1=1 
 			AND trx.user_id = ?
 			AND trx.deleted_flag = 0
-			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')			
+			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')
+			';
+
+		
+		if ($filter['showalldates_flag'] == 0) // use date filter
+			$q .= ' AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) ';
+		
+		if ($filter['account_id'] > 0)
+			$q .= ' AND trx.parent_id = ' . intval($filter['account_id']) . '';			
+			
+		if (isset($filter['search']) && strlen($filter['search']) > 0)
+		{
+			$q .= ' AND ( trx.symbol like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';
+			$q .= '     )';
+		}		
+			
+		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
-		
-/*
-		$records = DB::table('transactions')
-                     ->select(DB::raw('count(*) as user_count, status'))
-//                     ->where('status', '<>', 1)
-//                     ->groupBy('status')
-                     ->get();		
-*/
-
-		$records = DB::select($q, [Auth::id()]);
+	
+		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
 
 		return $records;
     }
@@ -393,24 +402,32 @@ AND reconciled_flag = 1
     static public function getPositions()
     {
 		$q = '
-			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
-				, trx.symbol, trx.shares, trx.share_price, trx.lot_id 
-				, accounts.name as account
-				, categories.name as category
-				, subcategories.name as subcategory, subcategories.id as subcategory_id 
-			FROM transactions as trx
-			JOIN accounts ON accounts.id = trx.parent_id
-			JOIN categories ON categories.id = trx.category_id
-			JOIN categories as subcategories ON subcategories.id = trx.subcategory_id
-			WHERE 1=1 
-			AND trx.user_id = ?
-			AND trx.deleted_flag = 0
-			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')			
-			ORDER BY trx.transaction_date DESC, trx.id DESC 
+			SELECT trx.symbol, sum(trx.shares) as total_shares, count(trx.id) as trades, sum(trx.amount) as pl
+				FROM transactions as trx
+				JOIN accounts ON accounts.id = trx.parent_id
+				JOIN categories ON categories.id = trx.category_id
+				JOIN categories as subcategories ON subcategories.id = trx.subcategory_id
+				WHERE 1=1 
+				AND trx.user_id = ?
+				AND trx.deleted_flag = 0
+				AND trx.type_flag in (3,4)			
+				GROUP BY trx.symbol
+				ORDER BY trx.symbol
 		';
 
-		$records = DB::select($q, [Auth::id()]);
-
-		return $records;
+		$records = DB::select($q, [Auth::id(), TRANSACTION_TYPE_BUY, TRANSACTION_TYPE_SELL]);
+		//dd($records);
+		
+		$positions = [];
+		if (isset($records))
+		{
+			foreach($records as $record)
+			{
+				if ($record->total_shares > 0)
+					$positions[] = $record;
+			}
+		}
+		
+		return $positions;
     }	
 }

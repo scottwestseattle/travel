@@ -282,7 +282,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::post('/transfercreate','TransactionController@transfercreate')->middleware('auth');
 	Route::get('/add','TransactionController@add')->middleware('auth');
 	Route::post('/create','TransactionController@create')->middleware('auth');
-	Route::get('/add-trade/{lot_id?}','TransactionController@addTrade')->middleware('auth');
+	Route::get('/add-trade/{transaction?}','TransactionController@addTrade')->middleware('auth');
 
 	// edit/update
 	Route::get('/edit/{transaction}','TransactionController@edit')->middleware('auth');

@@ -10,7 +10,7 @@
 				<td><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 			@else
 			<td style="font-size:12px; width:60px;">
-				<a style="font-size:12px; padding:1px 4px; margin:5px 5px 9px 0px;" class="btn btn-primary" href="/transactions/trades">Trades</a>
+				<a style="font-size:12px; padding:1px 4px; margin:5px 5px 9px 0px;" class="btn btn-primary" href="/transactions/trades/all">Trades</a>
 			</td>
 			@endif
 		</tr></table>

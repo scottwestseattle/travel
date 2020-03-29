@@ -66,7 +66,7 @@
 					
 					<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
 					<tr>
-						<td class="glyphCol"><a href='/{{$prefix}}/add-trade/{{$record->symbol}}'>Trade</a></td>
+						<td class="glyphCol"><a href='/{{$prefix}}/add-trade/{{$record->id}}'>Trade</a></td>
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td style="color:default;">{{$record->transaction_date}}</td>						
 						<td>{{App\Transaction::isBuyStatic($record) ? 'BUY' : 'SELL'}}</td>
@@ -79,10 +79,11 @@
 						
 						<td>{{$record->share_price}}</td>
 						
-						<td>{{$record->amount}}</td>
+						<td>{{$record->amount}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->amount <= 0) || (App\Transaction::isBuyStatic($record) && $record->amount >= 0) )
-							<span style="color:red;">({{$record->amount}})</span>
+							<span style="color:red;">(wrong)</span>
 						@endif						
+						</td>
 						
 						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
 						<td>{{$record->notes}}</td>

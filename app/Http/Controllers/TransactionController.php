@@ -96,11 +96,11 @@ class TransactionController extends Controller
 		return $this->addTransaction($request);
 	}
 
-    public function addTrade(Request $request, $symbol = null)
+    public function addTrade(Request $request, Transaction $transaction = null)
     {
 		// do it like this because it could be a trade with no lot
 		$trade['trade'] = true;
-		$trade['lot'] = null;
+		$trade['lot'] = $transaction;
 		
 		if (isset($symbol))
 		{
@@ -109,15 +109,6 @@ class TransactionController extends Controller
 				->where('symbol', $symbol)
 				->get();
 
-			/* how to get total shares
-			SELECT symbol, sum(shares) as shares FROM `transactions` 
-			WHERE 1
-			AND symbol = ?
-			AND type_flag in (3,4)
-			AND lot_id = 7040
-			GROUP BY symbol				
-			*/
-				
 			// if there is already more than one trade, then the lot has been sold
 			if (isset($records))// && count($records) == 1)
 			{
@@ -175,9 +166,11 @@ class TransactionController extends Controller
 			$record->shares				= $this->trimNull($request->shares);
 			$record->share_price		= $this->trimNull($request->share_price);
 			$record->commission			= $this->trimNull($request->commission);
-			$record->fees				= $this->trimNull($request->fees);
+			$record->fees				= $this->trimNull($request->fees);			
 			$record->lot_id				= $request->lot_id; // already null for buys
 			$record->category_id		= CATEGORY_ID_TRADE;
+			
+			$fees = floatval($record->commission) + floatval($record->fees);
 			
 			if ($record->isBuy())
 			{
@@ -188,11 +181,15 @@ class TransactionController extends Controller
 			{
 				$record->subcategory_id	= SUBCATEGORY_ID_SELL;
 				$action = "Sell";
+				$record->shares = -abs($record->shares);
+				$fees = -$fees; // fees come out of the proceeds
 			}
 			
 			$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->share_price";
-			$record->amount	= (intval($record->shares) * floatval($record->share_price)) + floatval($record->commission) + floatval($record->fees);
-			//$record->amount = $record->isBuy() ? -$record->amount : $record->amount; // if it's a debit, make it negative
+			
+			// compute the trade amount
+			$total = (abs(intval($record->shares)) * floatval($record->share_price)) + $fees;
+			$record->amount = $record->isBuy() ? -$total : $total; // buys are negative
 		}
 		else
 		{
@@ -201,7 +198,7 @@ class TransactionController extends Controller
 			$record->subcategory_id		= $request->subcategory_id;
 			$record->amount				= floatval($request->amount);
 			
-			$record->amount = ($record->isDebit()) ? -$record->amount : $record->amount; // if it's a debit, make it negative
+			$record->amount = ($record->isDebit()) ? -$record->amount : $record->amount; // debits are negative
 		}
 
 		$v = isset($request->reconciled_flag) ? 1 : 0;
@@ -212,6 +209,8 @@ class TransactionController extends Controller
 			if (!isset($record->parent_id) || $record->parent_id <= 0)
 				throw new \Exception('Error Adding Trade: Account Not Set');
 
+			//dd($record);
+			
 			$record->save();
 			
 			// use the new 'buy' record id as the lot id
@@ -317,19 +316,18 @@ class TransactionController extends Controller
 					$record->lot_id = $record->id;
 					
 				$record->shares = abs($record->shares);
+				$amount = (intval($record->shares) * floatval($record->share_price)) + $fees;
+				$request->amount = -$amount;
 			}
 			else
 			{
 				$action = 'Sell';
-				$fees = -abs($fees); // fees and commission come out of the proceeds
+				$request->amount = (intval($record->shares) * floatval($record->share_price)) - $fees;
 				$record->shares = -abs($record->shares);				
 			}
 
 			// set the description
 			$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->share_price";			
-
-			// compute the total amount
-			$request->amount = (intval(-$record->shares) * floatval($record->share_price)) + $fees;
 		}
 
 		$record->amount = $this->copyDirty(abs($record->amount), floatval($request->amount), $isDirty, $changes);
@@ -574,7 +572,7 @@ class TransactionController extends Controller
 			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
 		}
 
-		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
 		$records = null;
@@ -583,6 +581,8 @@ class TransactionController extends Controller
 		{
 			$records = Transaction::getTrades($filter);
 			$totals = Transaction::getTotal($records, $accountId);
+			//$info = Transaction::getTradeInfo($filter);
+			//dd($info);
 		}
 		catch (\Exception $e) 
 		{
@@ -615,7 +615,7 @@ class TransactionController extends Controller
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
 		$accountId = false;
 
-		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
+		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
 		
