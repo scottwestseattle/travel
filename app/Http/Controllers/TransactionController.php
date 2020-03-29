@@ -99,7 +99,7 @@ class TransactionController extends Controller
     public function addTrade(Request $request, Transaction $transaction = null)
     {
 		// do it like this because it could be a trade with no lot
-		$trade['trade'] = true;
+		$trade['trade'] = 'buy';
 		$trade['lot'] = $transaction;
 		
 		if (isset($symbol))
@@ -120,6 +120,16 @@ class TransactionController extends Controller
 		return $this->addTransaction($request, $trade);
 	}
 	
+    public function sell(Request $request, Transaction $transaction = null)
+    {
+		// do it like this because it could be a trade with no lot
+		$trade['trade'] = 'sell';
+		$trade['lot'] = $transaction;
+
+		// trade transaction
+		return $this->addTransaction($request, $trade);
+	}	
+	
     public function addTransaction(Request $request, $trade = null)
     {
 		if (!$this->isAdmin())
@@ -136,6 +146,7 @@ class TransactionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
 			'trade' => $trade['lot'],
+			'tradeType' => $trade['trade'],
 		]);
 		
 		$view = isset($trade) ? 'add-trade' : 'add';
@@ -176,6 +187,7 @@ class TransactionController extends Controller
 			{
 				$record->subcategory_id	= SUBCATEGORY_ID_BUY;
 				$action = "Buy";
+				$record->shares_unsold = $record->shares;
 			}
 			else
 			{
@@ -310,7 +322,9 @@ class TransactionController extends Controller
 			
 			if ($record->isBuy())
 			{
+				$record->subcategory_id = SUBCATEGORY_ID_BUY;
 				$action = 'Buy';
+				$record->shares_unsold = $this->copyDirty($record->shares_unsold, $request->shares_unsold, $isDirty, $changes);
 				
 				if (!isset($record->lot_id))
 					$record->lot_id = $record->id;
@@ -321,6 +335,7 @@ class TransactionController extends Controller
 			}
 			else
 			{
+				$record->subcategory_id = SUBCATEGORY_ID_SELL;
 				$action = 'Sell';
 				$request->amount = (intval($record->shares) * floatval($record->share_price)) - $fees;
 				$record->shares = -abs($record->shares);				
@@ -574,19 +589,19 @@ class TransactionController extends Controller
 
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
+		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, CATEGORY_ID_TRADE);
+		$symbols = Controller::getSymbols(LOG_ACTION_SELECT);
+
 		$records = null;
 		$total = 0.0;
 		try
 		{
 			$records = Transaction::getTrades($filter);
-			$totals = Transaction::getTotal($records, $accountId);
-			//$info = Transaction::getTradeInfo($filter);
-			//dd($info);
+			$totals = Transaction::getTradesTotal($records);
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Trade List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());
@@ -599,7 +614,8 @@ class TransactionController extends Controller
 			'totals' => $totals,
 			'accounts' => $accounts,
 			'categories' => $categories,
-			'subcategories' => $subcategories,			
+			'subcategories' => $subcategories,
+			'symbols' => $symbols,
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $filter,
 		]);

@@ -160,6 +160,39 @@ class Transaction extends Base
 		return $rc;
     }
 
+    static public function getTradesTotal($records)
+    {
+		$total = 0.0;
+		$reconciled = 0.0;
+		$shares = 0;
+		$rc = [];
+
+		foreach($records as $record)
+		{
+			$amount = round(floatval($record->amount), 2);
+
+			if ($record->reconciled_flag == 1)
+				$reconciled += $amount;
+			
+			$total += $amount;
+			$shares += intval($record->shares);
+		}
+		
+		// this has to be done or else it shows -0 because of a tiny fraction
+		$total = round($total, 2);
+		$reconciled = round($reconciled, 2);
+		
+		$rc['total'] = $total;
+		$rc['shares'] = $shares;
+		
+		if ($total != $reconciled)
+		{
+			$rc['reconciled'] = $reconciled;
+		}
+
+		return $rc;
+    }
+	
     static public function getFilter($filter)
     {		
 		$q = '
@@ -203,8 +236,7 @@ class Transaction extends Base
 		}
 
 		if (isset($filter['unreconciled_flag']) && $filter['unreconciled_flag'] == 1)
-			$q .= ' AND trx.reconciled_flag = 0 ';
-		
+			$q .= ' AND trx.reconciled_flag = 0 ';		
 		
 		$q .= '
 			GROUP BY trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
@@ -362,7 +394,7 @@ AND reconciled_flag = 1
     {
 		$q = '
 			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
-				, trx.symbol, trx.shares, trx.share_price, trx.lot_id 
+				, trx.symbol, trx.shares, trx.share_price, trx.lot_id, trx.shares_unsold 
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
@@ -376,17 +408,39 @@ AND reconciled_flag = 1
 			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')
 			';
 
-		
 		if ($filter['showalldates_flag'] == 0) // use date filter
 			$q .= ' AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) ';
 		
+		if (isset($filter['unreconciled_flag']) && $filter['unreconciled_flag'] == 1)
+			$q .= ' AND trx.reconciled_flag = 0 ';		
+		
+		if (isset($filter['sold_flag']) && $filter['sold_flag'] == 1)
+		{
+			$q .= ' AND (trx.shares_unsold = 0 OR trx.shares_unsold IS NULL OR trx.type_flag = ' . TRANSACTION_TYPE_SELL . ') ';
+		}
+
+		if (isset($filter['unsold_flag']) && $filter['unsold_flag'] == 1)
+			$q .= ' AND trx.shares_unsold > 0 ';
+			
 		if ($filter['account_id'] > 0)
 			$q .= ' AND trx.parent_id = ' . intval($filter['account_id']) . '';			
 			
+		if ($filter['subcategory_id'] > 0)
+			$q .= ' AND trx.subcategory_id = ' . intval($filter['subcategory_id']) . '';
+
+		if (isset($filter['symbol']) && $filter['symbol'])
+			$q .= ' AND trx.symbol = "' . $filter['symbol'] . '"';
+
 		if (isset($filter['search']) && strlen($filter['search']) > 0)
 		{
-			$q .= ' AND ( trx.symbol like "%' . $filter['search'] . '%"';
+			$q .= ' AND ( trx.amount like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.shares like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.share_price like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.fees like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.commission like "%' . $filter['search'] . '%"';
 			$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.description like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.lot_id like "%' . $filter['search'] . '%"';
 			$q .= '     )';
 		}		
 			
@@ -430,4 +484,40 @@ AND reconciled_flag = 1
 		
 		return $positions;
     }	
+	
+    static public function getSymbolArray(&$error)
+    {
+		// get account list
+		$array = [];
+		$accountType = isset($accountType) ? $accountType : '%';
+		
+		try
+		{
+			$records = Transaction::select('symbol')
+				->where('user_id', Auth::id())
+				->where('deleted_flag', 0)
+				->where('type_flag', TRANSACTION_TYPE_BUY)
+				->groupBy('symbol')
+				->orderByRaw('symbol')
+				->get();
+				
+			//dd($records);
+			
+			if (isset($records) && count($records) > 0)
+			{
+				foreach($records as $record)
+					$array[$record->symbol] = $record->symbol;
+			}
+			else
+			{
+				$error .= 'No Symbols found';
+			}
+		}
+		catch (\Exception $e) 
+		{
+			$error .= $e->getMessage();
+		}			
+					
+		return $array;
+	}	
 }

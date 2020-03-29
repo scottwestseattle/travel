@@ -24,6 +24,7 @@ use App\Visitor;
 use App\Category;
 use App\Account;
 use App\Tools;
+use App\Transaction;
 
 define('ERROR_REDIRECT_PAGE', '/error');
 
@@ -1386,6 +1387,17 @@ class Controller extends BaseController
 
 		return $records;
 	}
+	
+    public function getSymbols($action)
+    {
+		$error = '';
+		$records = Transaction::getSymbolArray($error);
+		
+		if (count($records) == 0)
+			Event::logError(LOG_MODEL, $action, 'Error Getting Symbol List', null, null, $error);
+		
+		return $records;
+	}	
 		
     static protected function getDateControlDates()
     {
@@ -1446,6 +1458,9 @@ class Controller extends BaseController
 		$filter['unmerged_flag'] = false;
 		$filter['showalldates_flag'] = false;
 		$filter['showphotos_flag'] = false;
+		$filter['sold_flag'] = false;
+		$filter['unsold_flag'] = false;
+		$filter['symbol'] = false;
 		
 		if (isset($request))
 		{
@@ -1494,6 +1509,21 @@ class Controller extends BaseController
 			if (isset($request->showphotos_flag))
 			{
 				$filter['showphotos_flag'] = $request->showphotos_flag;
+			}
+			
+			if (isset($request->sold_flag))
+			{
+				$filter['sold_flag'] = $request->sold_flag;
+			}	
+			
+			if (isset($request->unsold_flag))
+			{
+				$filter['unsold_flag'] = $request->unsold_flag;
+			}	
+			
+			if (isset($request->symbol))
+			{
+				$filter['symbol'] = $request->symbol;
 			}	
 		}
 		

@@ -9,6 +9,9 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 
 Latest DB Changes
 
+2020-03-29
+ALTER TABLE `transactions` ADD `shares_unsold` MEDIUMINT NULL AFTER `shares`;
+
 2020-03-25
 ALTER TABLE `transactions` ADD `symbol` VARCHAR(10) NULL COMMENT 'stock symbol' AFTER `deleted_flag`;
 ALTER TABLE `transactions` ADD `shares` MEDIUMINT NULL COMMENT 'number of shares' AFTER `symbol`;

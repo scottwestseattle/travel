@@ -109,7 +109,7 @@ class Event extends Model
 		}
 		catch (\Exception $e)
 		{
-			// database failed so show even message
+			// database failed so show event message
 			dump('DB Error Adding Event: ' . $title);
 			dump($e->getMessage());
 			dump('Check end of log file in ~/storage/logs');

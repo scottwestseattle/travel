@@ -283,6 +283,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/add','TransactionController@add')->middleware('auth');
 	Route::post('/create','TransactionController@create')->middleware('auth');
 	Route::get('/add-trade/{transaction?}','TransactionController@addTrade')->middleware('auth');
+	Route::get('/sell/{transaction?}','TransactionController@sell')->middleware('auth');
 
 	// edit/update
 	Route::get('/edit/{transaction}','TransactionController@edit')->middleware('auth');

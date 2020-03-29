@@ -38,6 +38,8 @@
 			<input type="text" name="symbol" class="form-control" value="{{$record->symbol}}" />
 			<label for="shares" class="control-label">Number of Shares:</label>
 			<input type="text" name="shares" class="form-control" value="{{abs($record->shares)}}" />
+			<label for="shares_unsold" class="control-label">Shares Unsold:</label>
+			<input type="text" name="shares_unsold" class="form-control" value="{{$record->shares_unsold}}" />
 			<label for="share_price" class="control-label">Price Per Share:</label>
 			<input type="text" name="share_price" class="form-control" value="{{$record->share_price}}" />
 			<div class="control-label">{{$record->description}}</div>

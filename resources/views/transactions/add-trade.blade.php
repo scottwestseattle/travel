@@ -16,12 +16,12 @@
 
 		<div class="form-group">	
 			<div class="radio-group-item">
-				<input type="radio" name="type_flag" value="3" class="form-control-inline" {{!isset($trade) ? 'checked' : ''}}>
+				<input type="radio" name="type_flag" value="3" class="form-control-inline" {{$tradeType == 'buy' ? 'checked' : ''}}>
 				<label for="type_flag" class="radio-label">Buy</label>			
 			</div>
 
 			<div class="radio-group-item">
-				<input type="radio" name="type_flag" value="4" class="form-control-inline" {{isset($trade) ? 'checked' : ''}}>
+				<input type="radio" name="type_flag" value="4" class="form-control-inline" {{$tradeType == 'sell' ? 'checked' : ''}}>
 				<label for="type_flag" class="radio-label">Sell</label>			
 			</div>
 		</div>		
@@ -35,12 +35,15 @@
 				<label for="symbol" class="control-label">Symbol:</label>
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />
 				
-				<label for="shares" class="control-label">Number of Shares:</label>
-				<input type="text" name="shares" class="form-control" xvalue="{{abs($trade->shares)}}" autofocus />
+				@if ($tradeType == 'sell')
+					<label for="shares" class="control-label">Number of Shares:</label>
+					<input type="text" name="shares" class="form-control" value="{{abs($trade->shares)}}" />
 					
-				@if (false)
-				<label for="lot_id" class="control-label">Lot:</label>
-				<input type="text" name="lot_id" class="form-control" xvalue="{{$trade->lot_id}}" />
+					<label for="lot_id" class="control-label">Lot:</label>
+					<input type="text" name="lot_id" class="form-control" value="{{$trade->lot_id}}" />
+				@else
+					<label for="shares" class="control-label">Number of Shares:</label>
+					<input type="text" name="shares" class="form-control" autofocus />
 				@endif
 			@else
 				<label for="symbol" class="control-label">Symbol:</label>
@@ -50,7 +53,9 @@
 				<input type="text" name="shares" class="form-control" />				
 			@endif
 			
-			<input type="hidden" name="lot_id" id="lot_id" value="" /><!-- lot_id will be generated -->
+			@if ($tradeType == 'buy')
+				<input type="hidden" name="lot_id" id="lot_id" value="" /><!-- lot_id will be generated -->
+			@endif
 			
 			<label for="share_price" class="control-label">Price Per Share:</label>
 			<input type="text" name="share_price" class="form-control" {{isset($trade) ? 'autofocus' : ''}} />
