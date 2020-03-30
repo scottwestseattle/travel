@@ -408,7 +408,7 @@ AND reconciled_flag = 1
 			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')
 			';
 
-		if ($filter['showalldates_flag'] == 0) // use date filter
+		if ( $filter['showalldates_flag'] == 0 && isset($filter['from_date']) && isset($filter['to_date']) ) // use date filter
 			$q .= ' AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) ';
 		
 		if (isset($filter['unreconciled_flag']) && $filter['unreconciled_flag'] == 1)

@@ -568,24 +568,30 @@ class TransactionController extends Controller
 		return view(PREFIX . '.filter', $vdata);
     }	
 	
-    public function trades(Request $request, $showAllDates = true)
-    {	
+    public function trades(Request $request)
+    {
+		$filter = Controller::getFilter($request);
+		return $this->showTrades($request, $filter);
+	}
+
+    public function positions(Request $request)
+    {
+		$filter = Controller::getFilter($request);
+		$filter['unsold_flag'] = true;
+		return $this->showTrades($request, $filter);
+	}
+
+    public function profit(Request $request)
+    {
+		$filter = Controller::getFilter($request);
+		$filter['sold_flag'] = true;
+		return $this->showTrades($request, $filter);
+	}
+	
+    public function showTrades(Request $request, $filter)
+	{
 		if (!$this->isAdmin())
              return redirect('/');
-		
-		$showAllDates = strtolower(Controller::trimNullStatic($showAllDates, /* alphanum = */ true));
-		$showAllDates = ($showAllDates == 'all');
-
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-		$accountId = false;
-		if ($showAllDates || $filter['showalldates_flag'])
-		{
-			$filter['showalldates_flag'] = true; // in case we're using the command line
-			
-			// account id is needed to get starting balance to make the totals correct below
-			// it is only used when showing all records for a selected account
-			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
-		}
 
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
@@ -623,7 +629,7 @@ class TransactionController extends Controller
 		return view(PREFIX . '.trades', $vdata);
     }
   
-    public function positions(Request $request)
+    public function xpositions(Request $request)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
