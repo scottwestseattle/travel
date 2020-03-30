@@ -519,5 +519,32 @@ AND reconciled_flag = 1
 		}			
 					
 		return $array;
+	}
+
+    static public function getQuote($symbol)
+    {
+		$quote = null;
+		$url = "https://finance.yahoo.com/quote/$symbol?p=$symbol";
+		if (true)
+		{
+			$page = file_get_contents($url);		
+			$pos = strpos($page, 'quote-market-notice');
+			$text = substr($page, $pos - 175, 100);
+		}
+		else
+		{
+			//test
+			$text = "start>1,900.25<end";
+			$text = "start>265.0125<end";
+			dump($text);
+		}
+		preg_match_all('/\>[0-9,.]+</', $text, $matches); // match one or more numbers (with optional '.' and ',') between '>' and '<', for example: ">1,920.50<"
+		//dump($matches);
+		
+		$quote = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
+		$quote = trim($quote, '><');
+		$quote = str_replace(',', '', $quote);
+		
+		return floatval($quote);
 	}	
 }

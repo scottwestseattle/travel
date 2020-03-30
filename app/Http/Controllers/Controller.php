@@ -1461,6 +1461,8 @@ class Controller extends BaseController
 		$filter['sold_flag'] = false;
 		$filter['unsold_flag'] = false;
 		$filter['symbol'] = false;
+		$filter['view'] = false;
+		$filter['quotes'] = false;
 		
 		if (isset($request))
 		{

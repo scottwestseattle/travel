@@ -264,8 +264,9 @@ class TransactionController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$filter = Controller::getDateControlSelectedDate($record->transaction_date);		
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD, ACCOUNT_TYPE_BROKERAGE);
+		$filter = Controller::getDateControlSelectedDate($record->transaction_date);	
+
+		$accounts = Controller::getAccounts(LOG_ACTION_ADD, $transaction->isTrade() ? ACCOUNT_TYPE_BROKERAGE : null);		
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD, $record->category_id);
 		$transaction->amount = abs($transaction->amount);
@@ -571,6 +572,8 @@ class TransactionController extends Controller
     public function trades(Request $request)
     {
 		$filter = Controller::getFilter($request);
+		$filter['view'] = 'trades';
+		
 		return $this->showTrades($request, $filter);
 	}
 
@@ -578,13 +581,18 @@ class TransactionController extends Controller
     {
 		$filter = Controller::getFilter($request);
 		$filter['unsold_flag'] = true;
-		return $this->showTrades($request, $filter);
+		$filter['view'] = 'positions';
+		$filter['quotes'] = true;		
+		
+		return $this->showTrades($request, $filter, 'positions');
 	}
 
     public function profit(Request $request)
     {
 		$filter = Controller::getFilter($request);
 		$filter['sold_flag'] = true;
+		$filter['view'] = 'trades';
+		
 		return $this->showTrades($request, $filter);
 	}
 	
@@ -604,6 +612,12 @@ class TransactionController extends Controller
 		{
 			$records = Transaction::getTrades($filter);
 			$totals = Transaction::getTradesTotal($records);
+			
+			if ($filter['quotes']) // when to get quotes
+			{
+				$totals['VOO'] = Transaction::getQuote('VOO');
+				$totals['AMZN'] = Transaction::getQuote('AMZN');
+			}
 		}
 		catch (\Exception $e) 
 		{
@@ -625,8 +639,8 @@ class TransactionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $filter,
 		]);
-							
-		return view(PREFIX . '.trades', $vdata);
+		
+		return view(PREFIX . '.' . $filter['view'], $vdata);
     }
   
     public function xpositions(Request $request)
