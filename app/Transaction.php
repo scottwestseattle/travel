@@ -218,6 +218,7 @@ class Transaction extends Base
 			WHERE 1=1 
 			AND trx.user_id = ?
 			AND trx.deleted_flag = 0
+			AND trx.type_flag in (1,2)
 		';
 		
 		if ($filter['showalldates_flag'] == 0) // use date filter

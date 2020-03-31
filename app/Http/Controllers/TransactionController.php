@@ -622,8 +622,8 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());
 		
 			return redirect('/error');
-		}	
-						
+		}
+
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'totals' => $totals,
@@ -637,47 +637,7 @@ class TransactionController extends Controller
 		
 		return view(PREFIX . '.' . $filter['view'], $vdata);
     }
-  
-    public function xpositions(Request $request)
-    {	
-		if (!$this->isAdmin())
-             return redirect('/');
-		
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-		$accountId = false;
-
-		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
-		$categories = Controller::getCategories(LOG_ACTION_SELECT);
-		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
-		
-		$records = null;
-		$total = 0.0;
-		try
-		{
-			$records = Transaction::getPositions($filter);
-		}
-		catch (\Exception $e) 
-		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
-
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());
-		
-			return redirect('/error');
-		}	
-						
-		$vdata = $this->getViewData([
-			'records' => $records,
-			'accounts' => $accounts,
-			'categories' => $categories,
-			'subcategories' => $subcategories,			
-			'dates' => Controller::getDateControlDates(),
-			'filter' => $filter,
-		]);
-							
-		return view(PREFIX . '.positions', $vdata);
-    }
-    
+ 
     public function balances(Request $request)
     {	
 		if (!$this->isAdmin())
