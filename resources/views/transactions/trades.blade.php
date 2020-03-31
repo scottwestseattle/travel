@@ -73,7 +73,7 @@
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td style="color:default;">{{$record->transaction_date}}</td>						
 						<td>{{App\Transaction::isBuyStatic($record) ? 'BUY' : 'SELL'}}</td>
-						<td>{{$record->symbol}}</td>
+						<td><a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a></td>
 						<td>{{abs($record->shares)}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
 							<span style="color:red;">({{$record->shares}})</span>

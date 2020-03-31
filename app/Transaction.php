@@ -160,7 +160,7 @@ class Transaction extends Base
 		return $rc;
     }
 
-    static public function getTradesTotal($records)
+    static public function getTradesTotal($records, $filter)
     {
 		$total = 0.0;
 		$reconciled = 0.0;
@@ -176,6 +176,12 @@ class Transaction extends Base
 			
 			$total += $amount;
 			$shares += intval($record->shares);
+			
+			// only get quotes when requested AND once per symbol
+			if ($filter['quotes'] && !array_key_exists($record->symbol, $rc))
+			{
+				$rc[$record->symbol] = self::getQuote($record->symbol);
+			}
 		}
 		
 		// this has to be done or else it shows -0 because of a tiny fraction
@@ -529,7 +535,8 @@ AND reconciled_flag = 1
 		{
 			$page = file_get_contents($url);		
 			$pos = strpos($page, 'quote-market-notice');
-			$text = substr($page, $pos - 175, 100);
+			$text = substr($page, $pos - 175, 200);
+			//dump($text);
 		}
 		else
 		{
@@ -538,13 +545,27 @@ AND reconciled_flag = 1
 			$text = "start>265.0125<end";
 			dump($text);
 		}
-		preg_match_all('/\>[0-9,.]+</', $text, $matches); // match one or more numbers (with optional '.' and ',') between '>' and '<', for example: ">1,920.50<"
+		
+		// match one or more numbers (with optional ',.+-%() ') between '>' and '<', for example: ">1,920.50<" or ">-1.38 (-0.57%)<"
+		preg_match_all('/\>[0-9,.\+\-\%\(\) ]+</', $text, $matches); 
 		//dump($matches);
 		
+		// fix up the quote
 		$quote = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
 		$quote = trim($quote, '><');
 		$quote = str_replace(',', '', $quote);
 		
-		return floatval($quote);
+		// fix up the change
+		$change = (count($matches) > 0 && count($matches[0]) > 1) ? $matches[0][1] : '';
+		$change = trim($change, '><');
+		$change = str_replace(' (', ', ', $change);
+		$change = trim($change, ')');
+		$up = ($change[0] == '-') ? false : true;
+		
+		$rc['quote'] = floatval($quote);
+		$rc['change'] = $change;
+		$rc['up'] = $up;
+		
+		return $rc;
 	}	
 }

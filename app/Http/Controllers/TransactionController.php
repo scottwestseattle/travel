@@ -582,7 +582,7 @@ class TransactionController extends Controller
 		$filter = Controller::getFilter($request);
 		$filter['unsold_flag'] = true;
 		$filter['view'] = 'positions';
-		$filter['quotes'] = true;		
+		$filter['quotes'] = true;	
 		
 		return $this->showTrades($request, $filter, 'positions');
 	}
@@ -611,13 +611,8 @@ class TransactionController extends Controller
 		try
 		{
 			$records = Transaction::getTrades($filter);
-			$totals = Transaction::getTradesTotal($records);
-			
-			if ($filter['quotes']) // when to get quotes
-			{
-				$totals['VOO'] = Transaction::getQuote('VOO');
-				$totals['AMZN'] = Transaction::getQuote('AMZN');
-			}
+			$totals = Transaction::getTradesTotal($records, $filter);
+			//dump($totals);
 		}
 		catch (\Exception $e) 
 		{

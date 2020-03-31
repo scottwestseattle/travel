@@ -9,7 +9,7 @@
 
 	<div class="form-group">
 		<label name="" class="">Enter Text:</label>	
-		<input type="text" name="hash" class="form-control" style="width: 90%; max-width:200px;" value="{{ $hash }}" />
+		<input type="text" name="hash" class="form-control" style="width: 90%; max-width:200px;" value="{{ $hash }}" autofocus />
 	</div>
 	
 	<div id="flash" class="form-group">

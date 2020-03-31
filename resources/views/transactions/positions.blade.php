@@ -52,7 +52,8 @@
 			@if (isset($records))
 				@foreach($records as $record)
 					<?php 
-						$pl = (floatval($totals[$record->symbol]) * abs($record->shares)) - abs($record->amount); 
+						$quote = $totals[$record->symbol];
+						$pl = (floatval($quote['quote']) * abs($record->shares)) - abs($record->amount); 
 						$color = ($pl < 0) ? 'red' : 'black';
 					?>
 					<tr>
@@ -60,8 +61,8 @@
 						
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						
-						<td>
-							{{$record->symbol}} <span style="font-size:11px;"><a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">({{$totals[$record->symbol]}})</a></span>
+						<td>						
+							<a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a> <span style="font-size:11px; color:{{$quote['up'] ? 'black' : 'red'}};">({{$quote['quote']}}, {{$quote['change']}})</span>
 							<br/>
 							<span style="font-size:11px;">{{$record->account}}</span>
 						</td>

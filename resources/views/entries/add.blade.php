@@ -75,7 +75,7 @@ window.onload = function(){
 		
 	// for blog entries, put the date in the title field as a starting title
 	var d = new Date().getDay();
-	var days = ['Sunday', 'Monday', 'Tuestday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 	
 	input.value = days[d] + ', ' + $("#month option:selected").text() + ' ' + $("#day option:selected").text() + ', ' + $("#year option:selected").text();
 };
