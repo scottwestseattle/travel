@@ -123,24 +123,32 @@ class Transaction extends Base
 		return $records;
     }
 		
-    static public function getTotal($records, $accountId = false)
+    static public function getTotal($records, $filter = null, $accountId = false)
     {
 		$total = 0.0;
 		$reconciled = 0.0;
 		$noPhotos = 0;
 		$rc = [];
+		$monthFlag = isset($filter) && $filter['month_flag'];
 
 		foreach($records as $record)
 		{
 			$amount = round(floatval($record->amount), 2);
-
-			if ($record->reconciled_flag == 1)
-				$reconciled += $amount;
 				
 			if (isset($record->photo) && !$record->photo)
 				$noPhotos++;
 			
-			$total += $amount;
+			if ($monthFlag && $record->category_id == CATEGORY_ID_TRANSFER)
+			{
+				// skip the transfers because they jack-up the totals for the statement month view
+			}
+			else
+			{
+				if ($record->reconciled_flag == 1)
+					$reconciled += $amount;
+
+				$total += $amount;
+			}
 		}
 		
 		// this has to be done or else it shows -0 because of a tiny fraction
@@ -203,7 +211,7 @@ class Transaction extends Base
     {		
 		$q = '
 			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
-				, trx.reconciled_flag, trx.transfer_id
+				, trx.reconciled_flag, trx.transfer_id, trx.category_id
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
@@ -247,7 +255,7 @@ class Transaction extends Base
 		
 		$q .= '
 			GROUP BY trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
-				, trx.reconciled_flag, trx.transfer_id
+				, trx.reconciled_flag, trx.transfer_id, trx.category_id
 				, accounts.name
 				, categories.name
 				, subcategories.name

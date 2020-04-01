@@ -5,7 +5,7 @@
 	@if (isset($prompt))
 	<label for="{{$field_name}}">{{$prompt}}</label>
 	@endif
-	
+		
 	<a href='#' onclick="event.preventDefault(); javascript:changeDate(-1, 'year', 'month', 'day')";>
 		<span id="" class="glyphCustom glyphicon glyphicon-minus-sign" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
@@ -53,8 +53,13 @@
 	</a>						
 	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day', true)";>
 		<span id="" class="glyphCustom glyphicon glyphicon-calendar" style="font-size:1.3em; margin-left:5px;"></span>
-	</a>						
+	</a>
 
+	@if (isset($monthCheckbox) && $monthCheckbox)
+	<input type="checkbox" name="month_flag" id="month_flag" class="form-control-inline" value="1" {{ $filter['month_flag'] == 1 ? 'checked' : '' }} />
+	<label for="month_flag" class="checkbox-label">Month</label>
+	@endif
+	
 @if (isset($div))	
 </div>	
 @endif

@@ -526,6 +526,8 @@ class TransactionController extends Controller
 		$showAllDates = ($showAllDates == 'all');
 
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		//dump($filter);
+		
 		$accountId = false;
 		if ($showAllDates || $filter['showalldates_flag'])
 		{
@@ -544,7 +546,7 @@ class TransactionController extends Controller
 		try
 		{
 			$records = Transaction::getFilter($filter);
-			$totals = Transaction::getTotal($records, $accountId);
+			$totals = Transaction::getTotal($records, $filter, $accountId);
 		}
 		catch (\Exception $e) 
 		{
@@ -706,7 +708,7 @@ class TransactionController extends Controller
 			try
 			{
 				$records = Transaction::getFilter($filter);
-				$totals = Transaction::getTotal($records, $accountId);
+				$totals = Transaction::getTotal($records, $filter, $accountId);
 			}
 			catch (\Exception $e) 
 			{
@@ -810,7 +812,7 @@ class TransactionController extends Controller
 		try
 		{
 			$records = Transaction::getFilter($filter);
-			$totals = Transaction::getTotal($records);
+			$totals = Transaction::getTotal($records, $filter);
 		}
 		catch (\Exception $e) 
 		{

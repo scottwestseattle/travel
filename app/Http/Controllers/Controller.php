@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DateTime;
+use DateInterval;
 
 define('SITE_ID', intval(env('SITE_ID')));
 define('PHOTO_SERVER', env('PHOTO_SERVER'));
@@ -171,6 +172,7 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 define('BANNERS_FP_COUNT', 11);
 
 // hard-coded category/subcategory id's
+define('CATEGORY_ID_TRANSFER', 9);
 define('CATEGORY_ID_TRADE', 209);
 define('SUBCATEGORY_ID_BUY', 210);
 define('SUBCATEGORY_ID_SELL', 211);
@@ -1532,14 +1534,16 @@ class Controller extends BaseController
 		return $filter;
 	}
 	
-    static protected function getDateFilter($request = false, $today, $monthFlag)
+    static protected function getDateFilter($request = false, $today, $showFullMonth)
     {
 		$dates = [];
 		
 		$dates['selected_month'] = false;
 		$dates['selected_day'] = false;
 		$dates['selected_year'] = false;
+		$dates['month_flag'] = false;
 		
+		$showStatementMonth = false;
 		$month = 0;
 		$year = 0;
 		$day = 0;
@@ -1553,11 +1557,17 @@ class Controller extends BaseController
 			
 			if (isset($request->day))
 				if (($day = intval($request->day)) > 0)
+				{
 					$dates['selected_day'] = $day;
+					
+					// if day is set and the 'month' checkbox  is checked, then show the month ending on selected day
+					$showStatementMonth = isset($request->month_flag);
+					$dates['month_flag'] = $showStatementMonth;
+				}
 			
 			if (isset($request->year))
 				if (($year = intval($request->year)) > 0)
-					$dates['selected_year'] = $year;
+					$dates['selected_year'] = $year;					
 		}
 		else
 		{
@@ -1566,8 +1576,8 @@ class Controller extends BaseController
 				$month = intval(date("m"));
 				$year = intval(date("Y"));
 
-				// if we're showing a month then we put then day will be false
-				$day = $monthFlag ? false : intval(date("d"));
+				// if we're showing the full month, then unset the 'day'
+				$day = $showFullMonth ? false : intval(date("d"));
 
 				// if nothing is set use current month
 				$dates['selected_day'] = $day;
@@ -1620,7 +1630,27 @@ class Controller extends BaseController
 		
 		if ($day > 0)
 		{
-			$fromDay = $day;
+			if ($showStatementMonth) // show the month ending on the specified day (to match bank statements)
+			{	
+				// put the 'to' date together so we can make a DateTime
+				$date = new DateTime($fromYear . '-' . $fromMonth . '-' . $day);
+				
+				// use DateInterval to subtract one month and then add one day.  do it this way to handle month and year edge cases
+				// bank statement ranges look like this: 2019-01-13 to 2020-01-12
+				$date->sub(new DateInterval('P1M')); // subtract one month
+				$date->add(new DateInterval('P1D')); // add one day
+				//dd($date);
+				
+				// take it apart again so it works with existing code below
+				$fromYear = $date->format('Y');
+				$fromMonth = $date->format('m');
+				$fromDay = $date->format('d');
+			}
+			else // just show one day
+			{
+				$fromDay = $day;
+			}
+			
 			$toDay = $day;
 		}
 		
