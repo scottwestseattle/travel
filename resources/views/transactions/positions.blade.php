@@ -67,7 +67,7 @@
 							<span style="font-size:11px;">{{$record->account}}</span>
 						</td>
 						
-						<td>{{abs($record->shares)}} @ {{$record->share_price}}
+						<td>{{abs($record->shares)}} @ {{$record->buy_price}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
 							<span style="color:red;">({{$record->shares}})</span>
 						@endif

@@ -722,8 +722,10 @@ LEFT JOIN photos
 	
 	public function importGeo()
     {
-		$records = Tools::importGeo();
+		$status = Tools::importGeo();
 
-    	return redirect('/admin');
+    	return view('tools.importgeo', $this->getViewData([
+			'status' => $status,
+		]));
 	}
 }

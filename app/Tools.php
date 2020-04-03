@@ -134,11 +134,11 @@ class Tools
 					{
 						// recurse to try REMOTE_ADDR
 						//todo: stop using these?? Event::logException(LOG_MODEL_TOOLS, LOG_ACTION_SELECT, 'IP is in empty range: ' . $ip . ', trying REMOTE_ADDR: ' . $remote, null, null);						
-						return self::getIpGeo($remote);
+						//return self::getIpGeo($remote);
 					}
 					
 					$record = null;
-					throw new \Exception('IP is in the empty range: ' . $ip);
+					throw new \Exception('IP is in the empty range: ' . $ip . ', remote: ' . $remote);
 				}
 	
 				$record = $record[0];
@@ -793,8 +793,18 @@ class Tools
 		//$records->truncate();
 
 		// Open the file for reading
-		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3 copy.csv";
-		$file = base_path() . "/public/import/IP2LOCATION-LITE-DB3.csv";
+		$importFile = "/public/import/IP2LOCATION-LITE-DB3.CSV";
+		$file = base_path() . $importFile;
+		$rc['endCount'] = false;
+		$rc['startCount'] = false;
+		$rc['error'] = false;
+		
+		if (!file_exists($file))
+		{
+			$rc['error'] = 'Import file not found: ' . $importFile;
+			
+			return $rc;
+		}
 		
 		try
 		{
@@ -807,15 +817,16 @@ class Tools
 				set_time_limit(0);	// sets it to run as long as needed
 				
 				$start = Ip2location::select()->count();
-				dump($start);
-				dump(date('H-i-s') . ' - ' . $cnt);
-	//dd('stop');
+				$rc['startCount'] = $start;
+				
+				//dump($start);
+				//dump(date('H-i-s') . ' - ' . $cnt);
+	
 				// Convert each line into the local $data variable
 				while (($line = fgetcsv($h, 1000, ",")) !== FALSE) 
 				{
 					if ($cnt >= $start)
 					{
-	//dd($line);
 						// Read the data from a single line
 						$ip = new Ip2location();
 			
@@ -871,8 +882,11 @@ class Tools
 				// Close the file
 				fclose($h);
 
-	dump('count = ' . $cnt);
-	dd($maxName . ': ' . $max);
+				// get the record count
+				$rc['endCount'] = Ip2location::select()->count();
+				
+				//dump('count = ' . $cnt);
+				//dump($maxName . ': ' . $max);
 			}
 		}
         catch (\Exception $e)
@@ -881,7 +895,7 @@ class Tools
 			request()->session()->flash('message.content', 'Error importing geo: ' . $e->getMessage());			
 		}
 
-		return;
+		return $rc;
 	}
 	
 	static public function getDateRange($date = null)

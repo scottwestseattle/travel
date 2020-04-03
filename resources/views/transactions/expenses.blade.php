@@ -16,20 +16,45 @@
 
 		<div class="clear"></div>
 		
-		<h3>Expenses</h3>
+		<?php
+			$in = isset($income) && count($income) > 0 ? $income[0]->grand_total : 0.0;
+			$out = isset($expenses) && count($expenses) > 0 ? $expenses[0]->grand_total : 0.0;
+			$net = $in + $out;
+		?>
+		
+		<h3 style="margin-bottom:30px;"><strong>Income:</strong> {{$in}}, <strong>Expenses:</strong> {{$out}}, <strong>Net:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{$net}}</span></h3>
+
+		<h4>Income</h4>
+		
+		<table class="table">
+			<tbody>
+			@if (isset($income))
+				@foreach($income as $record)
+				@if ($record->first == 1)
+				<tr><!-- put in the category record -->
+					<td>{{$record->category}}</td>
+					<td></td>
+					<td></td>
+					<td>{{$record->total}}</td>
+				</tr>				
+				@endif
+				<tr><!-- put in the subcategory record -->
+					<td></td>
+					<td>{{$record->subcategory}}</td>
+					<td>{{$record->subtotal}}</td>
+					<td></td>
+				</tr>
+				@endforeach
+			@endif
+			</tbody>
+		</table>		
+		
+		<h4>Expenses</h4>
 
 		<table class="table">
-			<thead>
-				<tr>
-					<th>Category</th>
-					<th>Subcategory</th>
-					<th>Subtotal</th>
-					<th>Total</th>
-				</tr>
-			</thead>
 			<tbody>
-			@if (isset($records))
-				@foreach($records as $record)
+			@if (isset($expenses))
+				@foreach($expenses as $record)
 				@if ($record->first == 1)
 				<tr><!-- put in the category record -->
 					<td>{{$record->category}}</td>

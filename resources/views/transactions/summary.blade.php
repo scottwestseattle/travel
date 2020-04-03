@@ -12,16 +12,16 @@
 		<thead>
 			<tr>
 				<th>Year</th>
-				<th>P/L</th>
+				<th>Net</th>
 			</tr>
 		</thead>
 		<tbody>
 		@if (isset($annualBalances))
 			@foreach($annualBalances as $record)
-			<tr>					
-				<td>{{$record->year}}</td>
-				<td>{{$record->balance}}</td>
-			</tr>
+				<tr style="color:{{($record->balance < 0.0) ? 'red' : 'default'}};">
+					<td>{{$record->year}}</td>
+					<td>{{$record->balance}}</td>
+				</tr>
 			@endforeach
 		@endif
 		</tbody>
@@ -34,7 +34,7 @@
 		<thead>
 			<tr>
 				<th>Month</th>
-				<th>Balance</th>
+				<th>Net</th>
 				<th>Credits</th>
 				<th>Debits</th>
 			</tr>
@@ -42,16 +42,12 @@
 		<tbody>
 		@if (isset($monthlyBalances))
 			@foreach($monthlyBalances as $record)
-			@if ($record->balance < 0.0)
-			<tr style="color: red;">					
-			@else
-			<tr style="">					
-			@endif
-				<td>{{$record->month}}</td>
-				<td>{{$record->balance}}</td>
-				<td>{{$record->credit}}</td>
-				<td>{{$record->debit}}</td>
-			</tr>
+				<tr style="color:{{($record->balance < 0.0) ? 'red' : 'default'}};">
+					<td>{{$record->month}}</td>
+					<td>{{$record->balance}}</td>
+					<td>{{number_format(floatval($record->credit), 2)}}</td>
+					<td>{{number_format(floatval($record->debit), 2)}}</td>
+				</tr>
 			@endforeach
 		@endif
 		</tbody>

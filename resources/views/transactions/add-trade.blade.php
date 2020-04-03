@@ -36,6 +36,9 @@
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />
 				
 				@if ($tradeType == 'sell')
+					<label for="buy_price" class="control-label">Buy Price:</label>
+					<input type="text" name="buy_price" class="form-control" value="{{abs($trade->buy_price)}}" />
+				
 					<label for="shares" class="control-label">Number of Shares:</label>
 					<input type="text" name="shares" class="form-control" value="{{abs($trade->shares)}}" />
 					
@@ -44,21 +47,27 @@
 				@else
 					<label for="shares" class="control-label">Number of Shares:</label>
 					<input type="text" name="shares" class="form-control" autofocus />
+					
+					<label for="buy_price" class="control-label">Buy Price:</label>
+					<input type="text" name="buy_price" class="form-control" />
 				@endif
 			@else
 				<label for="symbol" class="control-label">Symbol:</label>
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" autofocus />
 				
 				<label for="shares" class="control-label">Number of Shares:</label>
-				<input type="text" name="shares" class="form-control" />				
+				<input type="text" name="shares" class="form-control" />
+
+				<label for="buy_price" class="control-label">Buy Price:</label>
+				<input type="text" name="buy_price" class="form-control" value="{{abs($trade->buy_price)}}" />				
 			@endif
 			
 			@if ($tradeType == 'buy')
 				<input type="hidden" name="lot_id" id="lot_id" value="" /><!-- lot_id will be generated -->
 			@endif
 			
-			<label for="share_price" class="control-label">Price Per Share:</label>
-			<input type="text" name="share_price" class="form-control" {{isset($trade) ? 'autofocus' : ''}} />
+			<label for="sell_price" class="control-label">Sell Price:</label>
+			<input type="text" name="sell_price" class="form-control" {{isset($trade) ? 'autofocus' : ''}} />
 			
 			<label for="commission" class="control-label">Commission:</label>
 			<input type="text" name="commission" class="form-control" />

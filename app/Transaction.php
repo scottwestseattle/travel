@@ -127,9 +127,12 @@ class Transaction extends Base
     {
 		$total = 0.0;
 		$reconciled = 0.0;
+		$startingBalance = 0.0;
 		$noPhotos = 0;
 		$rc = [];
 		$monthFlag = isset($filter) && $filter['month_flag'];
+		$allDates = isset($filter) && $filter['showalldates_flag'];
+		$search = isset($filter) && $filter['search'];
 
 		foreach($records as $record)
 		{
@@ -155,7 +158,19 @@ class Transaction extends Base
 		$total = round($total, 2);
 		$reconciled = round($reconciled, 2);
 		
-		$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
+		//dump($filter);
+		if ($search)
+		{
+			// don't add starting balance if we're searching
+		}
+		else
+		{
+			if ($allDates)
+			{
+				// only add starting balance if we're looking at one account and showing all dates
+				$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
+			}
+		}
 
 		$rc['total'] = $total + $startingBalance;
 		$rc['no_photos'] = $noPhotos;
@@ -280,6 +295,7 @@ class Transaction extends Base
 			WHERE 1=1  
 			AND user_id = ? 
 			AND deleted_flag = 0 
+			AND type_flag in (1,2)			
 			GROUP BY YEAR(transaction_date)  
 		';
 					
@@ -300,13 +316,14 @@ class Transaction extends Base
 			WHERE 1=1  
 			AND t.user_id = ? 
 			AND t.deleted_flag = 0 
-			AND t.description <> "Transfer" 
+			AND t.category_id <> ?
+			AND t.type_flag in (1,2)			
 			GROUP BY month, sortmonth
 			ORDER BY sortmonth DESC
 			LIMIT ? 
 		';
 			
-		$records = DB::select($q, [Auth::id(), $limit]);
+		$records = DB::select($q, [Auth::id(), CATEGORY_ID_TRANSFER, $limit]);
 				
 		return $records;
     }
@@ -321,6 +338,7 @@ class Transaction extends Base
 			WHERE 1=1  
 			AND user_id = ? 
 			AND deleted_flag = 0 
+			AND type_flag in (1,2)
 		';
 			
 		$records = DB::select($q, [Auth::id()]);
@@ -344,6 +362,7 @@ class Transaction extends Base
 			AND reconciled_flag = 1
 			AND transaction_date <= STR_TO_DATE(?, "%Y-%m-%d") 
 			AND parent_id = ?
+			AND type_flag in (1,2)
 		';
 		
 /*
@@ -361,8 +380,18 @@ AND reconciled_flag = 1
 		
 		return $balance;
     }
-    
+
+    static public function getIncome($filter)
+    {
+		return self::getIncomeExpenses($filter, true);
+	}
+
     static public function getExpenses($filter)
+    {			
+		return self::getIncomeExpenses($filter);
+	}	
+	
+    static public function getIncomeExpenses($filter, $income = false)
     {			
 		$q = '
 			SELECT sum(t.amount) as subtotal, 0 as total, 0 as first
@@ -374,15 +403,24 @@ AND reconciled_flag = 1
 			WHERE 1=1  
 			AND t.user_id = ? 
 			AND t.deleted_flag = 0 
-			AND t.description <> "Transfer" 
  			AND (t.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND t.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) 
-			GROUP BY subcategory, category
+			';
+			
+		if ($income)
+			$q .= ' AND t.category_id = ' . CATEGORY_ID_INCOME;
+		else
+			$q .= ' AND t.category_id != ' . CATEGORY_ID_INCOME;
+					
+		$q .= ' 
+			AND t.category_id NOT IN (?, ?) 
+			GROUP BY subcategory, category 
 			ORDER BY c.name ASC 
 		;';
 			
-		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
-			
+		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date'], CATEGORY_ID_TRANSFER, CATEGORY_ID_TRADE]);
+
 		$totals = [];
+		$totals['total'] = 0.0;
 		
 		// add up the subtotals to get the category total
 		foreach($records as $record)
@@ -392,16 +430,20 @@ AND reconciled_flag = 1
 				$totals[$record->category] = 0;
 				$record->first = 1;
 			}
-				
-			$totals[$record->category] += floatval($record->subtotal);
+			
+			$subtotal = floatval($record->subtotal);
+			$totals[$record->category] += $subtotal;
+			$totals['total'] += $subtotal;
 		}
 		
 		// put the total on each record for easy access in the view
 		foreach($records as $record)
 		{
 			$record->total = $totals[$record->category];
+			$record->grand_total = $totals['total'];
 		}
 		
+		//dump($totals);
 		return $records;
     }
 
@@ -409,7 +451,7 @@ AND reconciled_flag = 1
     {
 		$q = '
 			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
-				, trx.symbol, trx.shares, trx.share_price, trx.lot_id, trx.shares_unsold 
+				, trx.symbol, trx.shares, trx.buy_price, trx.lot_id, trx.shares_unsold 
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
@@ -450,7 +492,7 @@ AND reconciled_flag = 1
 		{
 			$q .= ' AND ( trx.amount like "%' . $filter['search'] . '%"';
 			$q .= '       OR trx.shares like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.share_price like "%' . $filter['search'] . '%"';
+			$q .= '       OR trx.buy_price like "%' . $filter['search'] . '%"';
 			$q .= '       OR trx.fees like "%' . $filter['search'] . '%"';
 			$q .= '       OR trx.commission like "%' . $filter['search'] . '%"';
 			$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';

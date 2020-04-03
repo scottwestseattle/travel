@@ -9,6 +9,11 @@ SELECT ip_address, country, continent FROM `visitors` where 1 and continent is n
 
 Latest DB Changes
 
+2020-04-01
+ALTER TABLE `transactions` CHANGE `share_price` `buy_price` DECIMAL(10,4) NULL DEFAULT NULL;
+ALTER TABLE `transactions` ADD `sell_price` DECIMAL(10,4) NULL AFTER `buy_price`;
+ALTER TABLE `transactions` ADD `profit` DECIMAL(10,2) NULL AFTER `sell_price`;
+
 2020-03-29
 ALTER TABLE `transactions` ADD `shares_unsold` MEDIUMINT NULL AFTER `shares`;
 
@@ -16,8 +21,8 @@ ALTER TABLE `transactions` ADD `shares_unsold` MEDIUMINT NULL AFTER `shares`;
 ALTER TABLE `transactions` ADD `symbol` VARCHAR(10) NULL COMMENT 'stock symbol' AFTER `deleted_flag`;
 ALTER TABLE `transactions` ADD `shares` MEDIUMINT NULL COMMENT 'number of shares' AFTER `symbol`;
 ALTER TABLE `transactions` ADD `share_price` DECIMAL(10,4) NULL AFTER `shares`;
-ALTER TABLE `transactions` ADD `lot_id` INT NULL COMMENT 'lot to match buy and sell transactions' AFTER `action_flag`;
-ALTER TABLE `transactions` ADD `commission` DECIMAL(10,2) NULL COMMENT 'buy/sell commission' AFTER `share_price`;
+ALTER TABLE `transactions` ADD `lot_id` INT NULL COMMENT 'lot to match buy and sell transactions' AFTER `share_price`;
+ALTER TABLE `transactions` ADD `commission` DECIMAL(10,2) NULL COMMENT 'buy/sell commission' AFTER `lot_id`;
 ALTER TABLE `transactions` ADD `fees` DECIMAL(10,2) NULL COMMENT 'buy/sell fees' AFTER `commission`;
 
 2020-03-24

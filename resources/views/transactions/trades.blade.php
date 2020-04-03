@@ -80,7 +80,7 @@
 						@endif
 						</td>
 						
-						<td>{{$record->share_price}}</td>
+						<td>{{$record->buy_price}}</td>
 						
 						<td>{{$record->amount}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->amount <= 0) || (App\Transaction::isBuyStatic($record) && $record->amount >= 0) )
