@@ -636,8 +636,8 @@ class Tools
 				// 12 test countries
 				//
 				"66.146.237.252", 	// 00 Canada with no city
-				//"59.42.37.137", 	 // 01 China (can't use during big test because language will change)
-				//"187.232.156.219", // 02 Mexico  (can't use during big test because language will change)
+				"59.42.37.137", 	// 01 China (can't use during big test because language will change)
+				"187.232.156.219", // 02 Mexico  (can't use during big test because language will change)
 				"176.88.23.218", 	// 03 Turkey
 				"178.65.167.56", 	// 04 Russia
 				"114.119.163.185", 	// 05 Singapore
@@ -661,7 +661,7 @@ class Tools
 			];
 			
 			$rand = mt_rand(0, count($testIps) - 1);
-			//$rand = 12; // last entry in db;
+			$rand = 2; // china
 			//$ip = long2ip(3758096383);
 			
 			$ip = $testIps[$rand];

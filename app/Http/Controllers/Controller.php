@@ -262,8 +262,9 @@ class Controller extends BaseController
 
 			// set locale according to selected language
 			$locale = session('locale');
-			if (false && isset($locale))
+			if (isset($locale))
 			{
+				// if it's set from the main menu, then it overrides the geo-enabled locale
 				App::setLocale($locale);
 				//dump('session locale: ' . $locale);
 			}
