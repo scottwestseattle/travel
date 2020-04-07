@@ -29,7 +29,7 @@ class Visitor extends Base
 			// shorten the field
 			$agent = $this->user_agent;
 			$host = $this->host_name;
-			$new = null;
+			$referrer = $this->referrer;
 			$found = null;
 
 			// check if $agent is in the robot list
@@ -46,11 +46,16 @@ class Visitor extends Base
 					$rc = $found;
 					break;
 				}
+				else if (($found = Tools::reduceString($robot, $referrer, $replacement)) != null)
+				{		
+					$rc = $found;
+					break;
+				}
 			}
 		}
 
-		if (false && isset($rc))
-			dump('robot');
+		//if (isset($rc))
+		//	dump('robot');
 		
 		return isset($rc);
 	}

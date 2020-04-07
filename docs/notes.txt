@@ -5,6 +5,10 @@ update visitors set continent = "US" WHERE 1 AND continent IS NULL AND country =
 
 SELECT ip_address, country, continent FROM `visitors` where 1 and continent is null and country is not null;
 
+select * from `visitors` where (referrer like '%anti-crisis-seo%' OR referrer like '%fikirandray%') and robot_flag = 0 ORDER by id desc
+
+select created_at, id,  ip_address, referrer from `visitors` where referrer is not null and (robot_flag = 0 OR robot_flag is null) limit 500
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Latest DB Changes
