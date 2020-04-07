@@ -68,6 +68,7 @@ return [
 'PARTNERS' => 'PARTNERS',
 'PHOTOS' => 'PHOTOS',
 'PUBLIC TRANSPORTATION' => 'PUBLIC TRANSPORTATION',
+'Parent' => 'Parent',
 'Pending Approval' => 'Pending Approval',
 'Show Phone Number' => 'Phone Number',
 'Photos' => 'Photos',
@@ -120,5 +121,5 @@ return [
 'year' => 'year',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Parent' => 'Parent',
+'Trades' => 'Trades',
 ];

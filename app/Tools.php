@@ -12,7 +12,9 @@ use App\Ip2location;
 
 class Tools
 {
-	static private function formatLocation($info)
+	static private $_ip = null;
+	
+	static private function formatLocationDELETE($info)
 	{
 	    $location = '';
 		$city = $info['city'];
@@ -40,21 +42,18 @@ class Tools
 		return $info;
     }
 
-	static public function getIpInfo($ip = null)
+	static private function getIpInfoDELETE($ip = null)
 	{
 		if (!isset($ip))
 			$ip = self::getIp();
 		//dump($ip);
 
-		// test data for localhost
-		//$ip = "10.115.8.143";dump($ip); 				// ip not found test
-		//$ip = "59.42.37.137"; dump('Test IP: ' . $ip); // China IP Test
-
 		$rc['ip'] = $ip;
+		$rc['ipGood'] = false;
 		$rc['country'] = null;
 		$rc['countryCode'] = null;	// ex: US
 		$rc['city'] = null;
-		$rc['locale'] = 'en';
+		$rc['locale'] = null;
 		$rc['language'] = 'en-US';
 		$rc['currency'] = 'USD';
         $rc['flag'] = '/img/flags/blank.png';
@@ -91,6 +90,9 @@ class Tools
 				
 						// get location display text
 						$rc = self::formatLocation($rc);
+						
+						// consider it a good IP
+						$rc['ipGood'] = true;
 					}
 				}
             }
@@ -107,7 +109,7 @@ class Tools
 		return $rc;
 	}
 	
-	static public function getIpGeo($ip)
+	static private function getIpGeoDELETE($ip)
 	{
 		$record = null;
 	
@@ -125,8 +127,15 @@ class Tools
 			$record = DB::select($q);	
 
 			if (isset($record) && count($record) > 0)
-			{
-				if ($record[0]->country == '-') // the first or last range
+			{				
+				if ($record[0]->countryCode == '-') // out of range
+				{
+					$record[0]->city = null;
+					$record[0]->country = null;
+					$record[0]->countryCode = null;
+				}
+				
+				if (false && $record[0]->country == '-') // the first or last range
 				{
 					// quick check to see if real IP is in REMOTE_ADDR
 					$remote = $_SERVER["REMOTE_ADDR"];
@@ -143,17 +152,12 @@ class Tools
 	
 				$record = $record[0];
 			}
-			//todo: wait
-			//else
-			//{
-			//	throw new \Exception('IP not found: ' . $ip);
-			//}
 				
 			//dump($record);
 		}
 		catch (\Exception $e)
 		{
-			if (true) // stopped logging these because many robots have IPs out of range
+			if (false) // stopped logging these because many robots have IPs out of range
 			{
 				$msg = 'Error getting geo info: ' . $e->getMessage();
 			
@@ -172,7 +176,7 @@ class Tools
 		return $record;
 	}
 	
-	static public function getLocale($cc)
+	static public function getLocaleDELETE($cc)
 	{
 		$rc = null;
 		
@@ -601,6 +605,73 @@ class Tools
 		request()->session()->flash('message.content', $content);
     }
 
+	static public function getIp()
+	{
+		if (isset(self::$_ip))
+			return self::$_ip;
+		
+		if (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+		{
+			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+		elseif (!empty($_SERVER["HTTP_CLIENT_IP"]))
+		{
+			$ip = $_SERVER["HTTP_CLIENT_IP"];
+		}
+		else
+		{
+			$ip = $_SERVER["REMOTE_ADDR"];
+		}
+		
+		if (strlen($ip) <= strlen('1.1.1.1'))
+		{
+            $ip = 'localhost';
+        }	
+		
+		if (false)
+		{
+			// test data for localhost
+			$testIps = [
+				//
+				// 12 test countries
+				//
+				"66.146.237.252", 	// 00 Canada with no city
+				//"59.42.37.137", 	 // 01 China (can't use during big test because language will change)
+				//"187.232.156.219", // 02 Mexico  (can't use during big test because language will change)
+				"176.88.23.218", 	// 03 Turkey
+				"178.65.167.56", 	// 04 Russia
+				"114.119.163.185", 	// 05 Singapore
+				"45.139.48.15", 	// 06 Liechtenstein
+				"137.226.113.34", 	// 07 Germany
+				"47.30.145.5", 		// 08 India
+				"186.235.248.161", 	// 09 Brazil
+				"46.56.72.44", 		// 10 Belarus
+				"37.209.168.26", 	// 11 Bulgaria
+				"223.255.255.255",  // 12 Australia (last range in db)
+				
+				//
+				// error tests
+				//
+				"10.115.8.143",		// Invalid internal IP
+				"127.0.0.1",		// localhost
+				"localhost",		// localhost
+				"two words",		// invalid format
+				"12345",			// invalid format
+				
+			];
+			
+			$rand = mt_rand(0, count($testIps) - 1);
+			//$rand = 12; // last entry in db;
+			//$ip = long2ip(3758096383);
+			
+			$ip = $testIps[$rand];
+		}
+
+		self::$_ip = $ip;
+		
+		return self::$_ip;
+	}
+	
 	static public function getDomainName()
 	{
 		$v = null;
@@ -615,51 +686,6 @@ class Tools
 		}
 
 		return $v;
-	}
-
-	static public function getSiteTitle($withDomainName = true)
-	{
-		$d = self::getDomainName();
-		$s = '';
-		
-		if ($d == 'spanish50.com')
-			$s = Lang::get('content.Site Title Spanish');
-		else
-			$s = Lang::get('content.Site Title English');
-		
-		$s = $withDomainName ? $d . ' - ' . $s : $s;
-		
-		return $s;
-	}
-
-	static public function isLocalhost()
-	{
-		$ip = self::getIp();
-
-		return ($ip == '::1' || $ip == 'localhost');
-	}
-	
-	static public function getIp()
-	{
-		$ip = null;
-
-		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
-		{
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
-		{
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		else
-		{
-			$ip = $_SERVER["REMOTE_ADDR"];
-		}
-
-		//if (strlen($ip) < strlen('1:1:1:1'))
-		//	$ip = 'localhost';
-			
-		return $ip;
 	}
 
 	static public function trunc($string, $length)
@@ -855,13 +881,14 @@ class Tools
 							$maxName = $ip->country;
 						}
 
-						$ip->save();
 						try
 						{
+							$ip->save();
 						}
 						catch (\Exception $e)
 						{
-							//dd($e);
+							dump($ip);
+							dd($e);
 						}
 					
 						if (false && $cnt % 100000 == 0)
@@ -919,8 +946,8 @@ class Tools
 		$toTime = ' 23:23:59';
 		
 		// build the date range
-		$dates['fromDate'] = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
-		$dates['toDate'] = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;	
+		$dates['from_date'] = '' . $year . '-' . $month . '-' . $day . ' ' . $fromTime;
+		$dates['to_date'] = '' . $year . '-' . $month . '-' . $day . ' ' . $toTime;	
 			
 		return $dates;
 	}	

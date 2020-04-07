@@ -11,8 +11,12 @@
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
 			<div style="margin-bottom:10px;">{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</div>
-			<div style="margin-bottom:10px;">{{$site->site_name}} (id={{$site->id}})</div>
+			<div style="margin-bottom:10px; font-size:.8em;">{{$site->site_name}} (SITE_ID={{$site->id}} {{DATABASE}})</div>
 			<div style="margin-bottom:10px; font-size:.8em;">{{base_path()}}</div>
+			<div style="margin-bottom:10px; font-size:.8em;">Geo Load Time: {{$geoLoadTime}}</div>
+			@if ($ignoreErrors)
+				<div style="margin-bottom:10px;"><strong>IGNORING ERRORS FOR TESTING!</strong></div>
+			@endif
 			
 			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
 				<div style=" margin: 20px 0;">
@@ -33,9 +37,14 @@
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Client</h3>
-			<?php //dump($ipLocation); ?>
-			<div style="font-size:12px; margin-bottom:10px;">{{$ip . ' (' . $ipLocation['location'] . ' ' . $ipLocation['locale'] . ' ' . $ipLocation['language'] . ')'}}</div>
-			<div style="margin-bottom:20px;"><img height="40" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" /></div>
+			<?php //dump($geo); ?>
+			@if ($geo->isValid())
+				<div style="font-size:12px; margin-bottom:10px;">{{$geo->ip() . ' (' . $geo->location() . ' ' . $geo->locale() . ' ' . $geo->language() . ')'}}</div>
+			@else
+				<div style="font-size:12px; margin-bottom:10px;">{{$geo->ip()}} <span style=""><strong>({{ip2long($geo->ip())}})</strong></span></div>
+				<div style="font-size:12px; margin-bottom:10px;">INVALID IP / NO GEO</div>
+			@endif
+			<div style="margin-bottom:20px;"><img height="40" src="{{$geo->flag()}}" title="{{$geo->location()}}" alt="{{$geo->location()}}" /></div>
 			<div style="margin-bottom:20px; font-size:12px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>

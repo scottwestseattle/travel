@@ -16,8 +16,11 @@ $now = new DateTime();
 		</div>
 		
 		<div style="padding:10px 0 0 20px;">
-			<input style="width:20px;" type="checkbox" name="showbots" id="showbots" class="form-control-inline" {{ $bots ? 'checked' : '' }} />
+			<input style="width:20px;" type="checkbox" name="showbots" id="showbots" class="form-control-inline" {{ $filter['showBots'] ? 'checked' : '' }} />
 			<label for="showbots" class="checkbox-label">Show Bots</label>
+			
+			<input style="width:20px;" type="checkbox" name="showall" id="showall" class="form-control-inline" {{ $filter['showAll'] ? 'checked' : '' }} />
+			<label for="showall" class="checkbox-label">Show All</label>
 		</div>
 		
 		<h1 style="font-size:1.3em;">Visitors ({{count($records)}}) ({{$now->format('Y-m-d H:i:s')}})</h1>

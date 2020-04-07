@@ -44,7 +44,7 @@
 		<div class="clear"></div>
 		
 		<h4>
-			Positions ({{count($records)}}), Cost: ${{round(abs($totals['total']), 2)}}{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}{{$totals['shares'] > 0 ? ', Shares: ' . $totals['shares'] : ''}}
+			Positions ({{count($records)}}), Cost: <span style="color:black">${{number_format(round(abs($totals['total']), 2))}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}, Shares: <span style="color:black">{{$totals['shares']}}</span>, Gain: <span style="color:{{$totals['profit'] > 0.0 ? 'black' : 'red'}}">${{number_format($totals['profit'])}}</span>
 		</h4>
 		
 		<table class="table table-sm">

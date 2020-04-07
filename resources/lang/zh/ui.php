@@ -68,6 +68,7 @@ return [
 'PARTNERS' => '联盟合作伙伴',
 'PHOTOS' => '相片',
 'PUBLIC TRANSPORTATION' => '公共交通工具',
+'Parent' => '主要记录',
 'Pending Approval' => '待批准',
 'Show Phone Number' => '电话号码',
 'Photos' => '相片',
@@ -120,5 +121,5 @@ return [
 'year' => '年',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Parent' => '主要记录',
+'Trades' => '股票交易',
 ];

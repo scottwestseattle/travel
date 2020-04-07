@@ -48,7 +48,10 @@ class Visitor extends Base
 				}
 			}
 		}
-	
+
+		if (false && isset($rc))
+			dump('robot');
+		
 		return isset($rc);
 	}
 
@@ -76,7 +79,7 @@ class Visitor extends Base
 			ORDER BY date DESC
 			';
 
-		$records = DB::select($q, [$dates['fromDate'], $dates['toDate']]);
+		$records = DB::select($q, [$dates['from_date'], $dates['to_date']]);
 		//dump($records);
 
 		return $records;
@@ -129,29 +132,35 @@ class Visitor extends Base
     	return $info;
 	}
 	
-    static public function getVisitors($date = null)
+    static public function getVisitors($filter = null)
     {
+		if (isset($filter))
+		{
+			if (($rc = Tools::getSafeArrayString($filter, 'showAll', null)))
+				if (!$rc)
+					return self::getUniqueVisitors($filter);
+		}
+		else
+		{
+			$filter = Tools::getDateRange();
+		}
+	
 		$q = '
 			SELECT *
 			FROM visitors 
 			WHERE 1=1 
-			AND site_id = ?
 			AND deleted_flag = 0 
- 			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) 
+			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d")) 
 			ORDER BY id DESC 
 		';
-	
-		$dates = Tools::getDateRange($date);
-		
-		$records = DB::select($q, [SITE_ID, $dates['fromDate'], $dates['toDate']]);
+			
+		$records = DB::select($q, [$filter['from_date'], $filter['to_date']]);
 		
 		return $records;
     }
     
-    static public function getUniqueVisitors($date = null)
+    static public function getUniqueVisitors($filter)
     {
-		$dates = Tools::getDateRange($date);
-
 		$q = '
 			SELECT * from (
 				SELECT max(id) as id, max(record_id) as record_id, max(model) as model, max(page_url) as page_url
@@ -161,15 +170,20 @@ class Visitor extends Base
 				FROM visitors 
 				WHERE 1=1 
 				AND deleted_flag = 0 
-				AND (robot_flag = 0 OR robot_flag IS NULL) 
-				AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) 
+		';
+		
+		if (!$filter['showBots'])
+			$q .= '	AND (robot_flag = 0 OR robot_flag IS NULL) ';
+			
+		$q .= '
+				AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d")) 
 				GROUP BY ip_address
  			) as v
 			ORDER BY updated_at DESC 
 		';
-					
-		$records = DB::select($q, [$dates['fromDate'], $dates['toDate']]);
-//dd($date);	
+			
+		$records = DB::select($q, [$filter['from_date'], $filter['to_date']]);
+	
 		return $records;
     }
 }

@@ -726,7 +726,7 @@ ORDER BY e.display_date DESC
 					else
 					{
 						if (!isset($domainName))
-							$domainName = Tools::getDomainName();
+							$domainName = Tools::getServerName();
 					
 						$currentLocationPhoto = '/img/theme1/' . PHOTOS_PLACEHOLDER_PREFIX . $domainName . '.jpg';
 					}

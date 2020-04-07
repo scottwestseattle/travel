@@ -9,8 +9,9 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DateTime;
 use DateInterval;
 
-define('SITE_ID', intval(env('SITE_ID')));
+define('SITE_ID', intval(env('SITE_ID', 1)));
 define('PHOTO_SERVER', env('PHOTO_SERVER'));
+define('DATABASE', env('DB_DATABASE'));
 
 use DB;
 use Auth;
@@ -26,6 +27,7 @@ use App\Category;
 use App\Account;
 use App\Tools;
 use App\Transaction;
+use App\Geo;
 
 define('ERROR_REDIRECT_PAGE', '/error');
 
@@ -148,6 +150,7 @@ define('LOG_ACTION_INDEX', 'index');
 define('LOG_ACTION_PERMALINK', 'permalink');
 define('LOG_ACTION_REGISTER', 'register');
 
+define('LOG_PAGE_ADMIN', 'admin');
 define('LOG_PAGE_INDEX', 'index');
 define('LOG_PAGE_VIEW', 'view');
 define('LOG_PAGE_SHOW', 'show');
@@ -200,7 +203,12 @@ class Controller extends BaseController
 	private $viewData = [];
 	private $euNoticeAccepted = false;
 	private $euNotice = "ui.euNotice";
-	private $_ipInfo = null;
+	
+	private $_ignoreErrors = false; //sbw: turn me off for prod!!
+	public function ignoreErrors()
+	{
+		return $this->_ignoreErrors;
+	}
 	
 	static private $entryTypes = [
 		ENTRY_TYPE_NOTSET => 'Not Set',
@@ -232,17 +240,19 @@ class Controller extends BaseController
 		ENTRY_TYPE_LESSON => 'entries',
 	];
 	
+	private $_geo = null;
+
+	public function geo()
+	{
+		if (!isset($this->_geo))
+			$this->_geo = new Geo;
+		
+		return $this->_geo;
+	}
+	
 	public function __construct()
-	{		
-		if (array_key_exists("SERVER_NAME", $_SERVER))
-		{			
-			$dn = $_SERVER["SERVER_NAME"];
-						
-			if ($this->startsWith($dn, 'www.'))
-				$dn = substr($dn, 4);
-			
-			$this->domainName = $dn;
-		}
+	{
+		$this->domainName = $this->geo()->serverName();
 
 		// session don't work in constructors, work arround:
 		$this->middleware(function ($request, $next)
@@ -252,7 +262,7 @@ class Controller extends BaseController
 
 			// set locale according to selected language
 			$locale = session('locale');
-			if (isset($locale))
+			if (false && isset($locale))
 			{
 				App::setLocale($locale);
 				//dump('session locale: ' . $locale);
@@ -260,41 +270,14 @@ class Controller extends BaseController
 			else
 			{
 				// see if the country has a language
-				$ipInfo = $this->getIpInfo();
-				if (isset($ipInfo))
-				{
-					App::setLocale($ipInfo['locale']);
-					//dump('ip info: locale=' . $locale['locale'] . ', cc=' . $cc . ' (' . $ipInfo['country'] . ')');
-				}
-				
+				if (($locale = $this->geo()->locale()))
+					App::setLocale($locale);
 			}
 			
 			return $next($request);
 		});
 	}
-	
-	protected function getIpInfo()
-	{
-		if (!isset($this->_ipInfo))
-		{
-			$this->_ipInfo = Tools::getIpInfo();
-		}
-		
-		return $this->_ipInfo;
-	}
 
-	static public function getDomainName()
-	{
-		$dn = 'Domain Unknown';
-				
-		if (array_key_exists("SERVER_NAME", $_SERVER))
-		{			
-			$dn = $_SERVER["SERVER_NAME"];
-		}
-		
-		return $dn;
-	}
-	
 	static public function getEntryTypes()
 	{		
 		return Controller::$entryTypes;
@@ -305,22 +288,12 @@ class Controller extends BaseController
 		return Controller::$entryUrls;
 	}
 
-	protected function getReferrer()
-	{
-		$referrer = null;
-		
-		if (array_key_exists("HTTP_REFERER", $_SERVER))
-			$referrer = $_SERVER["HTTP_REFERER"];
-			
-		return $referrer;	
-	}
-		
-	protected function getVisitorInfo(&$host, &$referrer, &$userAgent)
+	private function getVisitorInfoDELETE(&$host, &$referrer, &$userAgent)
 	{
 		//
 		// get visitor info
 		//
-		$ip = Event::getVisitorIp();
+		$ip = Tools::getIp();
 						
 		$host = gethostbyaddr($_SERVER['REMOTE_ADDR']);		
 
@@ -337,54 +310,65 @@ class Controller extends BaseController
 	
 	protected function getVisitorInfoDebug()
 	{
-		// get info about visitor
-		$info = $referrer = $host = $agent = null;
-		$ip = $this->getVisitorInfo($host, $referrer, $agent);
-		$referrer = isset($referrer) ? $referrer : 'null';
-		$ip = isset($ip) ? $ip : 'null';
-		$host = isset($host) ? $host : 'null';
-		$agent = isset($agent) ? $agent : 'null';
-		$info = 'referrer:' . $referrer . ', ip:' . $ip . ', host:' . $host . ', agent:' . $agent;
-			
-		return $info;
+		return $this->geo()->visitorInfoDebug();		
 	}
 
 	protected function saveVisitor($model, $page, $record_id = null)
-	{		
-		// ignore these
-		if (strtolower($this->domainName) == 'blog.scotthub.com')
-			return;
-
-		$spy = session('spy', null);
-		if (isset($spy))
-			return; // spy mode, don't count views
-				
-		if ($this->isAdmin())
-			return; // admin user, don't count views
-
-		$save = false;
-		$host = null;
-		$referrer = null;
-		$userAgent = null;
-		$visitorId = null;
+	{
+		$debug = true;
 		
-		$ip = $this->getVisitorInfo($host, $referrer, $userAgent);
-		
-		if (strlen($userAgent) == 0 && strlen($referrer) == 0)
+		if ($debug)
 		{
-			// no host or referrer probably means that it's the auto page tester so don't count it
-			return $visitorId; 
+			// don't ignore any users
+		}
+		else
+		{
+			//
+			// ignore these
+			//
+			if (strtolower($this->domainName) == 'blog.scotthub.com')
+				return;
+
+			$spy = session('spy', null);
+			if (isset($spy))
+				return; // spy mode, don't count views
+					
+			if ($this->isAdmin())
+				return; // admin user, don't count views
+		}
+
+		$geo = $this->geo();
+		$ip = $geo->ip();
+		
+		$testing = (isset($_COOKIE['testing']) && $_COOKIE['testing']);
+		if ($testing)
+		{
+			return; // page test running, don't save visitors
+			$host = "testing";
+			$userAgent = "testing";
+			$referrer = "testing";
+		}
+		else
+		{
+			$host = $this->trunc($geo->host(), VISITOR_MAX_LENGTH);
+			$userAgent = $this->trunc($geo->userAgent(), VISITOR_MAX_LENGTH);
+			$referrer = $this->trunc($geo->referrer(), VISITOR_MAX_LENGTH);
 		}
 		
-		$visitor = new Visitor();
+		$visitorId = null;
 		
-		$visitor->ip_address = $ip;	
+
+		//dump('save visitor: ' . $ip);
+		
+		$visitor = new Visitor();
+				
+		$visitor->ip_address = $ip;
 		$visitor->visit_count++;			
 		$visitor->site_id = SITE_ID;
-		$visitor->host_name = $this->trunc($host, VISITOR_MAX_LENGTH);
-		$visitor->user_agent = $this->trunc($userAgent, VISITOR_MAX_LENGTH);
+		$visitor->host_name = $host;
+		$visitor->user_agent = $userAgent;
 		//$visitor->user_agent = "host=" . $host . ', refer=' . $referrer . ', user=' . $userAgent;
-		$visitor->referrer = $this->trunc($referrer, VISITOR_MAX_LENGTH);
+		$visitor->referrer = $referrer;
 		
 		// new fields
 		$visitor->model = $model;
@@ -398,25 +382,16 @@ class Controller extends BaseController
 		else
 			$visitor->page_url = '/entries/show';
 		
-		$ipInfo = $this->getIpInfo();
-		if (isset($ipInfo))
-		{
-			// check if we're not using the main ip because it didn't match the active range
-			if ($ipInfo['ip'] != $ip && ip2long($ipInfo['ip'])) // AND check if the REMOTE_ADDR IP is legit
-			{
-				$visitor->ip_address = $ipInfo['ip'];
-				
-				$msg = 'Replacing IP (' . $ip . ') with REMOTE_ADDR IP (' . $ipInfo['ip'] . ')';
-				Event::logInfo(LOG_MODEL_VISITORS, LOG_ACTION_ADD, $msg);
-			}
-			
-            $visitor->country = $ipInfo['country'];
-            $visitor->countryCode = $ipInfo['countryCode'];
-            $visitor->city = $ipInfo['city'];
+		if ($geo->isValid())
+		{			
+            $visitor->country = $geo->country();
+            $visitor->countryCode = $geo->countryCode();
+            $visitor->city = $geo->city();
         }
         
-        //todo: wait $visitor->robot_flag = !isset($ipInfo) || $visitor->isRobot();
-        $visitor->robot_flag = $visitor->isRobot();
+		//dump($geo);
+		
+        $visitor->robot_flag = $visitor->isRobot() || !$geo->isValid();
 		
 		//dump($visitor);
 
@@ -437,7 +412,7 @@ class Controller extends BaseController
 	
 	protected function isNewVisitor()
 	{
-		$ip = Event::getVisitorIp();
+		$ip = Tools::getIp();
 		
 		$visitor = Visitor::select()
 			->where('ip_address', '=', $ip)
@@ -495,10 +470,8 @@ class Controller extends BaseController
 		$this->viewData['domainName'] = $this->domainName;
 		$this->viewData['euNoticeAccepted'] = $this->euNoticeAccepted;
 		$this->viewData['euNotice'] = $this->euNotice;
-		$this->viewData['geo'] = $this->getIPInfo();
-		
-		if ($this->domainName == 'localhost')
-			$this->viewData['localhost'] = true;
+		$this->viewData['geo'] = $this->geo();
+		$this->viewData['localhost'] = $this->geo()->isLocalhost();
 
 		if (isset($page_title))
 		{
@@ -1202,8 +1175,14 @@ class Controller extends BaseController
 		}
 		else
 		{
-			$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID . ', domain: ' . $this->domainName;
-			Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+			if (!$this->geo()->isLocalhost())
+			{
+				if (!$this->_ignoreErrors)
+				{
+					$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID . ', domain: ' . $this->domainName;
+					Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+				}
+			}
 			
 			// create a dummy site so everything will still work
 			$this->site = new Site;
@@ -1725,7 +1704,7 @@ class Controller extends BaseController
 			$record->photo_title = $record->photo_title_gallery;
 			
 			if ($makeThumbnail)
-				Controller::makeThumbnail($record);
+				$this->makeThumbnail($record);
 		}
 		else if (isset($record->photo))
 		{
@@ -1733,7 +1712,7 @@ class Controller extends BaseController
 			$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
 			
 			if ($makeThumbnail)
-				Controller::makeThumbnail($record);
+				$this->makeThumbnail($record);
 		}
 		else
 		{
@@ -1767,7 +1746,7 @@ class Controller extends BaseController
 		return $records;
 	}
 	
-	static public function getPhotosByParent($parent_id)
+	public function getPhotosByParent($parent_id)
 	{
 		$records = Photo::getByParent($parent_id);
 		
@@ -1779,14 +1758,14 @@ class Controller extends BaseController
 				$record->photo = $record->photo_gallery;
 				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path_gallery, $record->site_id);
 				
-				Controller::makeThumbnail($record);
+				$this->makeThumbnail($record);
 			}
 			else if (isset($record->photo))
 			{
 				// photo name already set correctly
 				$record->photo_path = Controller::getPhotoPathRemote($record->photo_path, $record->site_id);
 				
-				Controller::makeThumbnail($record);
+				$this->makeThumbnail($record);
 			}
 			else
 			{
@@ -1800,7 +1779,7 @@ class Controller extends BaseController
 		return $records;
 	}
 	
-	static public function makeThumbnail($record)
+	public function makeThumbnail($record)
 	{
 		if ($record->site_id != SITE_ID)
 		{
@@ -1808,7 +1787,8 @@ class Controller extends BaseController
 			return;
 		}
 			
-		$tnFolder = base_path() . '/public' . $record->photo_path . '/' . PHOTOS_THUMBNAIL_FOLDER; 
+		$tnFolderBase = base_path() . '/public' . $record->photo_path;
+		$tnFolder = $tnFolderBase . '/' . PHOTOS_THUMBNAIL_FOLDER; 
 		$found = false;
 
 		if (is_dir($tnFolder))
@@ -1824,6 +1804,17 @@ class Controller extends BaseController
 		}
 		else
 		{
+			// create the TN folder and the TN for this photo
+			try
+			{
+				mkdir($tnFolderBase, 0755);
+			}
+			catch (\Exception $e) 
+			{	
+				// log exception
+				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder base: ' . $tnFolderBase, null, $e->getMessage());
+			}	
+			
 			// create the TN folder and the TN for this photo
 			try
 			{
@@ -1858,20 +1849,25 @@ class Controller extends BaseController
 			catch (\Exception $e) 
 			{	
 				// log exception
-				$msg = Controller::getDomainName() . ': Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
-				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+				if (!$this->_ignoreErrors)
+				{
+					$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
+					Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+				}
 			}				
 		}
 		
 		$record->photo_path = $record->photo_path . '/tn';
 	}
 	
-	static public function makeThumbnailDirect($photo_path, $photo)
+	public function makeThumbnailDirect($photo_path, $photo)
 	{
-		$tnFolder = base_path() . '/public' . $photo_path;
-		if (!Controller::endsWith($tnFolder, '/'))
-			$tnFolder .= '/';
-		$tnFolder .= PHOTOS_THUMBNAIL_FOLDER; 
+		$tnFolderBase = base_path() . '/public' . $photo_path;
+		
+		if (!Controller::endsWith($tnFolderBase, '/'))
+			$tnFolderBase .= '/';
+			
+		$tnFolder = $tnFolderBase . PHOTOS_THUMBNAIL_FOLDER; 
 	 
 		$found = false;
 		
@@ -1889,12 +1885,26 @@ class Controller extends BaseController
 		else
 		{
 			// create the TN folder and the TN for this photo
-			try
+			if (!is_dir($tnFolderBase))
 			{
+				try
+				{
+					mkdir($tnFolderBase, 0755);
+				}
+				catch (\Exception $e) 
+				{	
+					// log exception
+					Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder base: ' . $tnFolderBase, null, $e->getMessage());
+				}
+			}
+
+			try
+			{	
 				mkdir($tnFolder, 0755);
 			}
 			catch (\Exception $e) 
 			{	
+dump($e);
 				// log exception
 				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder: ' . $tnFolder, null, $e->getMessage());
 			}			
@@ -1921,9 +1931,12 @@ class Controller extends BaseController
 			}
 			catch (\Exception $e) 
 			{	
-				// log exception
-				$msg = Controller::getDomainName() . ': Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
-				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+				if (!$this->_ignoreErrors)
+				{
+					// log exception
+					$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
+					Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+				}
 			}				
 		}
 		
@@ -1945,6 +1958,11 @@ class Controller extends BaseController
 		$file = Controller::appendPath($file, $filename);
 		$fileThumb = Controller::appendPath($toPath, $filenameTo);
 				
+		if (!file_exists($file))
+		{
+			throw new \Exception('File to make TN from not found');
+		}
+		
 		$image_info = getimagesize($file);	
 		switch($image_info["mime"])
 		{

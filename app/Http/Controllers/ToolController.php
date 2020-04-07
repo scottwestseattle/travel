@@ -20,19 +20,16 @@ class ToolController extends Controller
 	private $tests = [
 		['EXPECTED NOT FOUND', '/', ''],
 		['Affiliates', '/', ''],
-		['Buddha', '/', ''],
+		['Welcome', '/', ''],
 		['Show All Galleries', '/', ''],
 		['Tours, Hikes, Things To Do', '/', ''],
-		['USA', '/', ''],
 		['Show All Articles', '/', ''],
 		['Show All Blogs', '/', ''],
 		['Login', '/login', ''],
-		['Register', '/register', ''],
 		['Reset Password', '/password/reset', ''],
-		['About', '/about', ''],
-		['Todos Derechos Reservados', '/gallery', ''],
+		['Visited', '/about', ''],
 		['All Rights Reserved', '/galleries', ''],
-		['Featured Photos', '/photos/sliders', ''],
+		['Prev', '/photos/sliders', ''],
 		['Siem Reap', '/photos/view/64', ''],
 		['Epic Euro Trip', '/blogs/index', ''],
 		['Show All Posts', '/blogs/show/105', ''],
@@ -61,12 +58,13 @@ class ToolController extends Controller
 	
     public function test(Request $request)
     {	
-		$executed = null;
+		$executed = false;
 		
 		$url = strtolower(Controller::getSite()->site_url);
 		if (
 				$url == 'codespace.us'
 			 || $url == 'travel.codespace.us'
+			 || $url == 'test.scotthub.com'
 			 || $url == 'spanish50.com'
 			 || $url == 'english50.com'
 			 || $url == 'localhost'
@@ -77,25 +75,75 @@ class ToolController extends Controller
 
 		$tests = array_merge($this->tests, ToolController::getTestEntries());
 
+		$testCount = isset($_COOKIE['testCount']) ? intval($_COOKIE['testCount']) : 0;
+		
+		if ($testCount >= count($tests))
+			$testCount = 0;
+
+		$start = $testCount;
+			
 		if (isset($request->test_server))
 		{
 			$executed = true;
 			$executedTests = [];
 			$count = 0;
 			
+			// do only the tests that are checked
 			for ($i = 0; $i < count($tests); $i++)
 			{			
 				// if item is checked
 				if (isset($request->{'test'.$i}))
 				{
 					$results = $this->testPage($request->test_server . $tests[$i][1], $tests[$i][0]);
+					if ($results['error'])
+						break;
+						
+					$executedTests[$count][0] = $tests[$i][0];
+					$executedTests[$count][1] = $tests[$i][1];
+					$executedTests[$count][2] = $results;
+					
+					$count++;
+					
+					if ($i == 0)
+					{
+						// todo: quick fix to reset the cookie
+						setcookie('testCount', 0, time() + (60 * 10) /* 10 mins */, "/");
+					}
+				}
+			}
+			
+			// only run these if none checked; 'testCount' cookie keeps track of progress
+			if ($count == 0)
+			{
+				for ($i = $start; $i < count($tests); $i++)
+				{			
+					$results = $this->testPage($request->test_server . $tests[$i][1], $tests[$i][0]);
+					if ($results['error'])
+						break;
 					
 					$executedTests[$count][0] = $tests[$i][0];
 					$executedTests[$count][1] = $tests[$i][1];
 					$executedTests[$count][2] = $results;
 					
 					$count++;
+					$testCount++;
+					setcookie('testCount', $testCount, time() + (60 * 10) /* 10 mins */, "/");
+					
+					//temp: first 20 take a lot longer, so abort early
+					if ($start == 0 && $count >= 20)
+						break;
+
+					if ($start == 20 && $count >= 30)
+						break;
+						
+					if ($count >= 50)
+						break;
 				}
+			}
+			else
+			{
+				// todo: quick fix to reset the cookie
+				//setcookie('testCount', 0, time() + (60 * 10) /* 10 mins */, "/");
 			}
 			
 			$tests = $executedTests;
@@ -105,6 +153,7 @@ class ToolController extends Controller
 			'records' => $tests,
 			'test_server' => $server,
 			'executed' => $executed,
+			'testCount' => $testCount,
 		]));
 	}
 	
@@ -173,14 +222,23 @@ class ToolController extends Controller
 		$text = '';
 		$results['url'] = $url;
 		$results['expected'] = $expected;
-
+		$results['error'] = false;
+		
 		try
 		{
 			$text = $this->file_get_contents_curl($url);
+			if (!isset($text))
+			{
+				$results['error'] = true;
+				return $results;
+			}
 			
+			$expected = str_replace("&", "&amp;",  $expected);
+			$expected = str_replace("'", "&#039;", $expected);
+
 			if (strpos($text, $expected) === false)
 			{
-//dd('expected: ' . $expected . '|' . $text);
+				//dd('expected: ' . $expected . '|' . $text);
 				$results['results'] = 'EXPECTED NOT FOUND';
 				$results['success'] = false;
 			}
@@ -202,10 +260,24 @@ class ToolController extends Controller
 	private function file_get_contents_curl($url) 
 	{
 		$ch = curl_init();
+		
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
 		curl_setopt($ch, CURLOPT_URL, $url);
-		$data = curl_exec($ch);
+		curl_setopt($ch, CURLOPT_COOKIE, 'testing=testing'); // so visitor won't be saved
+
+		$data = null;
+		try
+		{
+			// catch doesn't work for 'Maximum execution time of 120 seconds exceeded'
+			$data = curl_exec($ch);
+		}
+		catch (\Exception $e) 
+		{
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Test Timed-out');
+		}
+		
 		curl_close($ch);
 		
 		return $data;
@@ -326,7 +398,6 @@ LEFT JOIN photos
 		$urls = [
 			'/',
 			'/login',
-			'/register',
 			'/about',
 			'/comments',
 		];

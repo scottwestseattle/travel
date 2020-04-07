@@ -68,6 +68,7 @@ return [
 'PARTNERS' => 'ASOCIADOS',
 'PHOTOS' => 'FOTOS',
 'PUBLIC TRANSPORTATION' => 'TRANSPORTE PÚBLICO',
+'Parent' => 'Principal',
 'Pending Approval' => 'Aprobación Pendiente',
 'Show Phone Number' => 'Número de Teléfono',
 'Photos' => 'Fotos',
@@ -120,5 +121,5 @@ return [
 'year' => 'año',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Parent' => 'Principal',
+'Trades' => 'Acciones',
 ];

@@ -36,7 +36,7 @@
 					@endif
 
 					<div style="float:left;" class="dropdown" >
-						<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><img width="25" src="/img/theme1/language-{{App::getLocale()}}.png" /></a>
+						<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><img width="25" src="/img/theme1/language-{{strtolower(App::getLocale())}}.png" /></a>
 						<ul class="dropdown-menu">
 							<li><a href="/language/en"><img src="/img/theme1/language-en.png" /></a></li>
 							<li><a href="/language/es"><img src="/img/theme1/language-es.png" /></a></li>

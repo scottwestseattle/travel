@@ -188,6 +188,7 @@ class Transaction extends Base
 		$total = 0.0;
 		$reconciled = 0.0;
 		$shares = 0;
+		$profit = 0.0;
 		$rc = [];
 
 		foreach($records as $record)
@@ -200,10 +201,19 @@ class Transaction extends Base
 			$total += $amount;
 			$shares += intval($record->shares);
 			
-			// only get quotes when requested AND once per symbol
-			if ($filter['quotes'] && !array_key_exists($record->symbol, $rc))
+			// only get quotes when requested
+			if ($filter['quotes'])
 			{
-				$rc[$record->symbol] = self::getQuote($record->symbol);
+				// only get quotes once per symbol
+				if (!array_key_exists($record->symbol, $rc))
+				{
+					$quote = self::getQuote($record->symbol);
+					$rc[$record->symbol] = $quote;
+				}
+				
+				$quote = floatval($rc[$record->symbol]['quote']);
+				$profit += ($quote * abs($record->shares)) - abs($record->amount);
+				//dump($quote . ': ' . $profit);
 			}
 		}
 		
@@ -213,12 +223,14 @@ class Transaction extends Base
 		
 		$rc['total'] = $total;
 		$rc['shares'] = $shares;
+		$rc['profit'] = $profit;
 		
 		if ($total != $reconciled)
 		{
 			$rc['reconciled'] = $reconciled;
 		}
-
+		
+		//dump($rc);
 		return $rc;
     }
 	

@@ -114,7 +114,8 @@ class CommentController extends Controller
 
 		if (isset($record->name) && isset($record->comment))
 		{
-			if (true || strpos($record->comment, "http") !== false || strpos($record->comment, "com") !== false)
+			// turn off comments except for admins
+			if (!$this->isAdmin() || strpos($record->comment, "http") !== false || strpos($record->comment, ".com") !== false)
 			{
 				Event::logAdd(LOG_MODEL, 'COMMENT NOT ADDED: ' . $record->name, $record->comment, 0);
 

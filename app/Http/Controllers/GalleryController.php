@@ -90,7 +90,7 @@ class GalleryController extends Controller
 		$fixed = [];
 		foreach($photos as $record)
 		{
-			Controller::makeThumbnailDirect($photo_path, $record->filename);
+			$this->makeThumbnailDirect($photo_path, $record->filename);
 			$fixed[] = Photo::setPermalink($record);
 		}
 		$photos = $fixed;
@@ -156,7 +156,7 @@ class GalleryController extends Controller
 		$fixed = [];
 		foreach($photos as $record)
 		{
-			Controller::makeThumbnailDirect($photo_path, $record->filename);
+			$this->makeThumbnailDirect($photo_path, $record->filename);
 			$fixed[] = Photo::setPermalink($record);
 		}
 		$photos = $fixed;

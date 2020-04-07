@@ -129,10 +129,6 @@ class FrontPageController extends Controller
 		// save visitor stats
 		//
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
-
-		// get city for GYG search		
-        $geo = $this->getIpInfo();
-		//dump($geo);
 		
 		// get random banner index for fp ad
 		$bannerIndex = mt_rand(1, BANNERS_FP_COUNT);
@@ -161,7 +157,7 @@ class FrontPageController extends Controller
 			'currentLocation' => $latestLocations['currentLocation'],
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
 			'comments' => $comments,
-			'geo' => $geo,
+			'geo' => $this->geo(),
 			'bannerIndex' => $bannerIndex,
 		]);
 		
@@ -246,25 +242,20 @@ class FrontPageController extends Controller
     {			
 		if (!$this->isAdmin())
              return redirect('/');
-
-		$showBots = isset($request->showbots);
 			
-		$dates = Controller::getDateFilter($request, false, false);
-			 
-		$filter = Controller::getFilter($request, /* today = */ true);		
-
-		$date = isset($dates['from_date']) ? $dates['from_date'] : null;
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
+		$filter['showBots'] = isset($request->showbots);
+		$filter['showAll'] = isset($request->showall);
 	
-		$records = Visitor::getUniqueVisitors($date);
-
-		$records = self::removeRobots($records, $showBots);
-		// dd($records);
+		$records = Visitor::getVisitors($filter);
 		
+		$records = self::removeRobots($records, $filter['showBots']);
+		// dd($records);
+
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'dates' => Controller::getDateControlDates(),
-			'filter' => Controller::getFilter($request, /* today = */ true),
-			'bots' => $showBots,
+			'filter' => $filter,
 		]);
 
 		return view('frontpage.visits', $vdata);
@@ -370,6 +361,8 @@ class FrontPageController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
+		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ADMIN);
+			 
 		//
 		// get todo list
 		//
@@ -429,11 +422,6 @@ class FrontPageController extends Controller
 				$visitorsUnique[$record['ip']] = $record;
 			}
 		}
-
-		$ip = Event::getVisitorIp();
-        $loc = $this->getIpInfo();
-        $location = $loc['location'];
-        $loc['location'] = (strlen($location) > 0) ? $location : '';
 	        
 		$visitorCountryInfo = Visitor::getCountryInfo();
 		
@@ -445,8 +433,7 @@ class FrontPageController extends Controller
 			'visitors' => $visitors,
 			'visitorsUnique' => $visitorsUnique,
 			'comments' => $comments, 
-			'ip' => $ip, 
-			'ipLocation' => $loc,
+			'geo' => $this->geo(), 
 			'todo' => $todo,
 			'new_visitor' => $this->isNewVisitor(),
 			'linksToFix' => $linksToFix,
@@ -455,6 +442,8 @@ class FrontPageController extends Controller
 			'entryTypes' => Controller::getEntryTypes(),
 			'visitorCountryInfo' => $visitorCountryInfo,
 			'bannerIndex' => mt_rand(1, BANNERS_FP_COUNT), // random banner index
+			'geoLoadTime' => $this->geo()->loadTime(),
+			'ignoreErrors' => $this->ignoreErrors(),
 		], 'Admin Page'));
     }
 	
@@ -739,20 +728,24 @@ priceTaxes=$59.50
 
 		$spy = session('spy', null);
 		$spy = isset($spy) ? 'ON' : 'OFF';
-		setcookie('debug', true, time() + (86400 * 30), "/");	
 		
 		$vdata = $this->getViewData([
 			'spy' => $spy,
 		]);
 		
-		$loc = $this->getIpInfo();
-		$gyg = $loc['gygLocation'];
-		$loc = $loc['location'];
+		$msg = 'Spy mode is ' . $spy;
+
+		// show some extra geo data
+		if ($this->geo()->isValid())
+		{
+			$gyg = $this->geo()->gygLocation();
+			$loc = $this->geo()->location();
+			$msg .= ' (' . $gyg . ') (' . $loc . ')';
+		}
 		
 		$request->session()->flash('message.level', 'success');
-		$request->session()->flash('message.content', 'Spy mode is ' . $spy . ' (' . $gyg . ') (' . $loc . ')');
+		$request->session()->flash('message.content', $msg);
 
-		//return view('frontpage.spy', $vdata);
 		return redirect('/');
     }	
 

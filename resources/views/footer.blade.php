@@ -37,12 +37,14 @@
 	data-width="200" 
 	data-height="200" 
 	data-banner_id="67896" 
-	data-lang="{{isset($geo) ? $geo['language'] : 'es-US'}}">
+	data-lang="{{$geo->isValid() ? $geo->language() : 'es-US'}}">
 	
     <!-- Anything inside here will go away once widget is loaded. -->
     <a href="//www.booking.com?aid=1535308">Booking.com</a>
     <!-- end -->
+	
 </ins>
+
 <script type="text/javascript">
     (function(d, sc, u) {
       var s = d.createElement(sc), p = d.getElementsByTagName(sc)[0];

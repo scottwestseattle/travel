@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use App\Entry;
 use App\Event;
 use App\Activity;
@@ -10,7 +11,7 @@ use App\User;
 use App\Photo;
 use App\Location;
 use App\Visitor;
-use DB;
+use App\Tools;
 
 define("LONGNAME", "Hike, Bike, Boat");
 
@@ -193,7 +194,7 @@ class HomeController extends Controller
 			->limit(10)
 			->get();
 			
-		$ip = Event::getVisitorIp();
+		$ip = Tools::getIp();
 			
 		return view('admin', ['records' => $activities, 'users' => $users, 'visitors' => $visitors, 'ip' => $ip, 'new_visitor' => $this->isNewVisitor()]);
     }

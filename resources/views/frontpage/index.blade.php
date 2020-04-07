@@ -553,21 +553,21 @@ $sectionCount = 0;
 
 <div style="margin-top:20px;" >
 	<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" 
-	data-gyg-locale-code="{{$geo['language']}}" 
+	data-gyg-locale-code="{{$geo->language()}}" 
 	data-gyg-widget="activities" 
 	data-gyg-number-of-items="3" 
-	data-gyg-currency="{{$geo['currency']}}" 
+	data-gyg-currency="{{$geo->currency()}}" 
 	data-gyg-partner-id="RTJHCDQ" 
-	data-gyg-q="{{$geo['gygLocation']}}">
+	data-gyg-q="{{$geo->gygLocation()}}">
 	</div>
 </div>
 
 <script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
 
-@if (isset($geo) && isset($geo['gygLocation']))
+@if ($geo->isValid()))
 <div class="text-center" style="margin:20px;">
-	<a target="_blank" href="https://www.getyourguide.com/s/?q={{$geo['gygLocation']}}&partner_id=RTJHCDQ" role="button" class="btn btn-info">
-		@lang('content.Show More Tours For') {{$geo['gygLocation']}}
+	<a target="_blank" href="https://www.getyourguide.com/s/?q={{$geo->gygLocation()}}&partner_id=RTJHCDQ" role="button" class="btn btn-info">
+		@lang('content.Show More Tours For') {{$geo->gygLocation()}}
 	</a>
 </div>
 @else
@@ -906,12 +906,12 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 				data-prod="banner" 
 				data-width="300" 
 				data-height="250" 
-				data-lang="{{isset($geo) ? $geo['language'] : 'es-US'}}">
+				data-lang="{{$geo->isValid() ? $geo->language() : 'es-US'}}">
 				<!-- Anything inside will go away once widget is loaded. -->
 				<a href="//www.booking.com?aid=1535306">Booking.com</a>
 			</ins>
 			
-			@if (!App\Tools::isLocalhost())
+			@if (!$geo->isLocalhost())
 			<script type="text/javascript">
 				(function(d, sc, u) {
 				  var s = d.createElement(sc), p = d.getElementsByTagName(sc)[0];

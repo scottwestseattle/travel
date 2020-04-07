@@ -21,9 +21,16 @@
 			<button onclick="check(event, -1)">Clear All</button>
 			
 			<div style="margin:20px 0;">
+			@if ($executed)
+				<a class="btn btn-success" href="/test">Reload Tests</a>
+			@else
 				<button type="submit" name="update" class="btn btn-primary">Run Tests</button>
-				&nbsp;&nbsp;&nbsp;<a href="/test">Reload Tests</a>
+			@endif
 			</div>	
+			
+			<h3>
+			Tests Completed: {{$testCount}}
+			</h3>
 
 			<table class="table">
 				<tr><th>Select</th><th>URL</th><th>Expected</th><th>Results</th></tr>
@@ -45,14 +52,20 @@
 			@endforeach
 			</table>
 			
-			@if ($errors == 0)
-				<h3>All Pages Loaded Correctly</h3>
-			@else
-				<h3>Errors ({{$errors}}): expected text not found on page</h3>
+			@if ($executed)
+				@if ($errors == 0)
+					<h3>All Pages Loaded Correctly</h3>
+				@else
+					<h3>Errors ({{$errors}}): expected text not found on page</h3>
+				@endif
 			@endif
 			
 			<div style="margin:20px 0;">
+			@if ($executed)
+				<a class="btn btn-success" href="/test">Reload Tests</a>
+			@else
 				<button type="submit" name="update" class="btn btn-primary">Run Tests</button>
+			@endif
 			</div>	
 			
 		</div>			

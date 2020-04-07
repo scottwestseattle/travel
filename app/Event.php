@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
+//use App\Tools;
+use App\Geo;
 
 class Event extends Model
 {
@@ -88,7 +90,7 @@ class Event extends Model
 			
 		$record = new Event();
 		
-		$record->ip_address		= Event::getVisitorIp();
+		$record->ip_address		= Tools::getIp();
 		$record->site_id 		= SITE_ID;
 		$record->user_id 		= Auth::id();
 			
@@ -96,7 +98,7 @@ class Event extends Model
 		$record->model_flag		= $model;
 		$record->action_flag	= $action;
 		
-		$record->title 			= $title;
+		$record->title 			= substr($title, 0, 255);
 		
 		$record->description	= $description;
 		$record->record_id 		= $record_id;		
@@ -115,30 +117,4 @@ class Event extends Model
 			dump('Check end of log file in ~/storage/logs');
 		}			
     }
-	
-	static public function getVisitorIp()
-	{
-		$ip = null;
-		
-		if (!empty($_SERVER["HTTP_CLIENT_IP"]))
-		{
-			$ip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
-		{
-			$ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		else
-		{
-			$ip = $_SERVER["REMOTE_ADDR"];
-		}
-		
-		if (strlen($ip) <= strlen('1.1.1.1'))
-		{
-            $ip = 'localhost';
-        }	
-		
-		return $ip;
-	}
-	
 }
