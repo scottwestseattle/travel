@@ -63,7 +63,7 @@
 
 		<div class="drop-box text-center number-box orange" style="">
 			<div>Unique</div>
-			<p style="">{{count($visitorsUnique)}}</p>
+			<p style="">{{count($visitors)}}</p>
 		</div>
 
 		<div class="drop-box text-center number-box green" style="">
@@ -241,10 +241,10 @@
 			<table class="table table-striped mt-10">
 				<tr><th>Date</th><th>Country</th><th>IP</th></tr>
 				<tbody>
-				@foreach($visitorsUnique as $record)
+				@foreach($visitors as $record)
 					<tr>
 						<td>{{$record['date']}}</td>
-						<td style="font-size:1.3em;">{!!$record['location']!!}</td>
+						<td style="font-size:1.3em;">{!!$record['location']!!} ({{$record['count']}})</td>
 						<td>{{$record['ip']}}</td>
 					</tr>
 				@endforeach

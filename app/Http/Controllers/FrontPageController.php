@@ -274,6 +274,7 @@ class FrontPageController extends Controller
 			// shorten the field
 			$agent = $record->user_agent;
 			$host = $record->host_name;
+			$referrer = $record->referrer;
 			$new = null;
 			$found = null;
 
@@ -289,6 +290,11 @@ class FrontPageController extends Controller
 						break;
 					}
 					else if (($found = Tools::reduceString($robot, $host, $replacement)) != null)
+					{		
+						$new = $found;
+						break;
+					}
+					else if (($found = Tools::reduceString($robot, $referrer, $replacement)) != null)
 					{		
 						$new = $found;
 						break;
@@ -321,8 +327,8 @@ class FrontPageController extends Controller
 			$out[$count]['host'] = $record->host_name;
 			$out[$count]['model'] = $record->model;
 			$out[$count]['ip'] = $record->ip_address;
-			$out[$count]['url'] = $record->page_url;
-			// $out[$count]['count'] = isset($record->count) ? $record->count : 0;
+			$out[$count]['url'] = $record->page_url;			
+			$out[$count]['count'] = isset($record->ip_count) ? $record->ip_count : null;
 			
 			$location = '';
 
@@ -409,19 +415,7 @@ class FrontPageController extends Controller
 		// get today's visitors
 		//
 		$visitors = self::removeRobots(Visitor::getVisitors());
-		
-		// get unique visitors
-		$visitorsUnique = [];
-		foreach($visitors as $record)
-		{
-			if (array_key_exists($record['ip'], $visitorsUnique))
-			{
-			}
-			else
-			{
-				$visitorsUnique[$record['ip']] = $record;
-			}
-		}
+		//dd($visitors);
 	        
 		$visitorCountryInfo = Visitor::getCountryInfo();
 		
@@ -431,7 +425,6 @@ class FrontPageController extends Controller
 			'records' => $entries, 
 			'users' => $users, 
 			'visitors' => $visitors,
-			'visitorsUnique' => $visitorsUnique,
 			'comments' => $comments, 
 			'geo' => $this->geo(), 
 			'todo' => $todo,

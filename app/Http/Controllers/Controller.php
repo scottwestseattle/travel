@@ -316,7 +316,7 @@ class Controller extends BaseController
 
 	protected function saveVisitor($model, $page, $record_id = null)
 	{
-		$debug = true;
+		$debug = false;
 		
 		if ($debug)
 		{
@@ -327,9 +327,6 @@ class Controller extends BaseController
 			//
 			// ignore these
 			//
-			if (strtolower($this->domainName) == 'blog.scotthub.com')
-				return;
-
 			$spy = session('spy', null);
 			if (isset($spy))
 				return; // spy mode, don't count views
@@ -357,7 +354,6 @@ class Controller extends BaseController
 		}
 		
 		$visitorId = null;
-		
 
 		//dump('save visitor: ' . $ip);
 		

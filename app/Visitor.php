@@ -71,7 +71,7 @@ class Visitor extends Base
 						AND country is not null
 			';
 			
-		$dates = Tools::getDateRange();
+		$dates = Tools::getDateTimeRange();
 		if ($today)
 		{
 			//dd($dates);
@@ -137,7 +137,7 @@ class Visitor extends Base
     	return $info;
 	}
 	
-    static public function getVisitors($filter = null)
+    static public function getVisitorsOLDDELETE($filter = null)
     {
 		if (isset($filter))
 		{
@@ -147,7 +147,7 @@ class Visitor extends Base
 		}
 		else
 		{
-			$filter = Tools::getDateRange();
+			$filter = Tools::getDateTimeRange();
 		}
 	
 		$q = '
@@ -155,38 +155,71 @@ class Visitor extends Base
 			FROM visitors 
 			WHERE 1=1 
 			AND deleted_flag = 0 
-			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d")) 
+			AND robot_flag <> 1
+			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) 
 			ORDER BY id DESC 
 		';
-			
+
 		$records = DB::select($q, [$filter['from_date'], $filter['to_date']]);
-		
+
+		//dump($records);		
 		return $records;
     }
     
-    static public function getUniqueVisitors($filter)
+    static public function getVisitors($filter = null)
     {
+		$filter = isset($filter) ? $filter : Tools::getDateTimeRange();
+
 		$q = '
 			SELECT * from (
-				SELECT max(id) as id, max(record_id) as record_id, max(model) as model, max(page_url) as page_url
+		';
+		
+		// 'show all' means don't group on IP
+		if (Tools::getSafeArrayString($filter, 'showAll', false))
+		{
+			$q .= '
+				SELECT * 
+			';
+		}
+		else
+		{
+			$q .= '
+				SELECT max(id) as id, count(id) as ip_count, max(record_id) as record_id, max(model) as model, max(page_url) as page_url
 					, max(countryCode) as countryCode, max(country) as country, max(city) as city
 					, max(updated_at) as updated_at, max(page) as page, ip_address
 					, max(referrer) as referrer, max(user_agent) as user_agent, max(host_name) as host_name
-				FROM visitors 
-				WHERE 1=1 
-				AND deleted_flag = 0 
+			';
+		}	
+
+		$q .= '
+			FROM visitors 
+			WHERE 1=1 
+			AND deleted_flag = 0 
 		';
 		
-		if (!$filter['showBots'])
-			$q .= '	AND (robot_flag = 0 OR robot_flag IS NULL) ';
-			
+		if (!Tools::getSafeArrayString($filter, 'showBots', false))
+			$q .= '	AND robot_flag <> 1 ';
+
+		// always use the date fields
 		$q .= '
-				AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d")) 
-				GROUP BY ip_address
- 			) as v
-			ORDER BY updated_at DESC 
+			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
 		';
 			
+		// 'show all' means don't group on IP
+		if (!Tools::getSafeArrayString($filter, 'showAll', false))
+		{
+			$q .= '
+				GROUP BY ip_address
+			';
+		}
+		
+		$q .= '
+ 			) as v
+			ORDER BY updated_at DESC 
+			';
+			
+		//dump($q);
+		
 		$records = DB::select($q, [$filter['from_date'], $filter['to_date']]);
 	
 		return $records;

@@ -925,7 +925,7 @@ class Tools
 		return $rc;
 	}
 	
-	static public function getDateRange($date = null)
+	static public function getDateTimeRange($date = null)
 	{	
 		if (isset($date))
 		{
@@ -951,4 +951,28 @@ class Tools
 			
 		return $dates;
 	}	
+	
+	static public function getDateRange($date = null)
+	{	
+		if (isset($date))
+		{
+			$date = DateTime::createFromFormat('Y-m-d', $date);
+			
+			$month = intval($date->format("m"));
+			$year = intval($date->format("Y"));
+			$day = intval($date->format("d"));
+		}
+		else
+		{
+			$month = intval(date("m"));
+			$year = intval(date("Y"));
+			$day = intval(date("d"));
+		}
+
+		// build the date range
+		$dates['from_date'] = '' . $year . '-' . $month . '-' . $day;
+		$dates['to_date'] = '' . $year . '-' . $month . '-' . $day;	
+			
+		return $dates;
+	}		
 }
