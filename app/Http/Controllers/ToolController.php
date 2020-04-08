@@ -19,6 +19,8 @@ class ToolController extends Controller
 	//fields: ['Expected Result', 'url to test', 'error message returned']
 	private $tests = [
 		['EXPECTED NOT FOUND', '/', ''],
+		['Comments', '/comments', ''],
+		['Countries', '/visitors/countries', ''],
 		['Affiliates', '/', ''],
 		['Welcome', '/', ''],
 		['Show All Galleries', '/', ''],
@@ -61,14 +63,7 @@ class ToolController extends Controller
 		$executed = false;
 		
 		$url = strtolower(Controller::getSite()->site_url);
-		if (
-				$url == 'codespace.us'
-			 || $url == 'travel.codespace.us'
-			 || $url == 'test.scotthub.com'
-			 || $url == 'spanish50.com'
-			 || $url == 'english50.com'
-			 || $url == 'localhost'
-			)
+		if ($url == 'localhost')
 			$server = 'http://' . $url;
 		else
 			$server = 'https://' . $url;
@@ -399,7 +394,7 @@ LEFT JOIN photos
 			'/',
 			'/login',
 			'/about',
-			'/comments',
+			'/visitors/countries',
 		];
 		
 		$site = Controller::getSiteByDomainName($domainName);
@@ -450,6 +445,12 @@ LEFT JOIN photos
 			
 			$urls = array_merge($urls, ToolController::getSiteMapPhotos());
 		}
+		
+		if (Controller::getSection(SECTION_COMMENTS, $sections) != null)
+		{
+			$urls[] = '/comments';
+		}
+		
 		
 		if (isset($urls))
 		{

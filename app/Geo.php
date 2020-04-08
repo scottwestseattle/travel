@@ -10,12 +10,6 @@ class Geo extends Base
 {
 	// if geo info was found and loaded
 	private $_loaded = false;	// has the geo info been loaded?
-
-	private $_loadTime = -1;
-	public function loadTime()
-	{
-		return $this->_loadTime;
-	}
 	
 	private $_test = false;		// is the page test running?
 	public function setTest($test)
@@ -81,7 +75,17 @@ class Geo extends Base
 		return $this->_userAgent;
 	}
 		
+	//
 	// from ip2location table
+	//
+	
+	private $_loadTime = -1;
+	public function loadTime()
+	{
+		$this->loadGeo();
+		return $this->_loadTime;
+	}
+	
 	private $_countryCode = null;
 	public function countryCode()
 	{		

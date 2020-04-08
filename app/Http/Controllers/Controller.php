@@ -162,6 +162,7 @@ define('LOG_PAGE_LOCATION', 'location');
 define('LOG_PAGE_ABOUT', 'about');
 define('LOG_PAGE_CONFIRM', 'confirm login');
 define('LOG_PAGE_RECENT_LOCATIONS', 'recent-locations');
+define('LOG_PAGE_CREATE', 'create');
 
 // query sorting
 define('ORDERBY_APPROVED', 0);
@@ -393,9 +394,8 @@ class Controller extends BaseController
 		//dump($visitor);
 
 		$visitor->save();
-		$visitorId = $visitor->id;
 
-		return $visitorId;
+		return $visitor;
 	}	
 
 	protected function trunc($string, $length)
@@ -1171,23 +1171,26 @@ class Controller extends BaseController
 			// massage data?
 		}
 		else
-		{
-			if (!$this->geo()->isLocalhost())
+		{			
+			// don't continue because it could be a domain like 'mail.scotthub.com' 
+			if ($this->geo()->isLocalhost())
 			{
-				if (!$this->_ignoreErrors)
-				{
-					$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID . ', domain: ' . $this->domainName;
-					Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
-				}
+				// create a dummy site so everything will still work
+				$this->site = new Site;
+				$this->site->site_name = $this->domainName . ' - Web Site';
+				$this->site->site_url = $this->domainName;
+				$this->site->telephone = '+1 800 555-5555';
+				$this->site->email = 'name@email.com';
+				$this->site->site_title = 'Information Web Site';			
 			}
-			
-			// create a dummy site so everything will still work
-			$this->site = new Site;
-			$this->site->site_name = $this->domainName . ' - Web Site';
-			$this->site->site_url = $this->domainName;
-			$this->site->telephone = '+1 800 555-5555';
-			$this->site->email = 'name@email.com';
-			$this->site->site_title = 'Information Web Site';
+			else
+			{
+				$msg = 'Front Page: Site Not Found, Site ID: ' . SITE_ID . ', domain: ' . $this->domainName;
+				Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
+				
+				// stop it here because there's no graceful way to shut it down
+				die;
+			}
 		}
 		
 		return $this->site;

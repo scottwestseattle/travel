@@ -114,14 +114,21 @@ class CommentController extends Controller
 
 		if (isset($record->name) && isset($record->comment))
 		{
-			// turn off comments except for admins
-			if (!$this->isAdmin() || strpos($record->comment, "http") !== false || strpos($record->comment, ".com") !== false)
+			// save the visitor info so we can see where the comments are coming from
+			$visitor = $this->saveVisitor(LOG_MODEL, LOG_PAGE_CREATE);
+
+			if (isset($visitor) && $visitor->robot_flag)
 			{
-				Event::logAdd(LOG_MODEL, 'COMMENT NOT ADDED: ' . $record->name, $record->comment, 0);
+				// turn off comments except for admins
+				Event::logError(LOG_MODEL, LOG_ACTION_ADD, 'COMMENT NOT ADDED: ' 
+					. $record->name . ' (' . $this->geo()->referrer() . ')'
+					, $record->comment);
 
 				// send spammers away
 				return redirect('https://www.booking.com/index.html?aid=1535308');
 			}
+			
+			$record->visitor_id = isset($visitor) ? $visitor->id : null;
 		}
 		else
 		{
@@ -137,10 +144,6 @@ class CommentController extends Controller
 		
 		try
 		{
-			// save the visitor info so we can see where the comments are coming from
-			$visitorId = $this->saveVisitor(LOG_MODEL, LOG_PAGE_INDEX);
-			$record->visitor_id = $visitorId;
-
 			$record->save();
 			
 			Event::logAdd(LOG_MODEL, $record->name, $record->comment, $record->id);
