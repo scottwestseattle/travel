@@ -5,10 +5,6 @@
 @if (isset($site))
 	@if ($site->site_url == 'GrittyTravel.com')
 		<meta name="google-site-verification" content="i7p4o3hPqvPXmI5kIW5RV4FPCWSH_dtRr-O7I8mI2WM" />
-	@elseif ($site->site_url == 'EpicTravelGuide.com')
-		<meta name="google-site-verification" content="MEp4jIJmKsPp12t-haoya25iUKZ6m4rrp2oUVPMPmv4" />
-	@elseif ($site->site_url == 'HikeBikeBoat.com')
-		<meta name="google-site-verification" content="bG25umkXbLrLjb4gUdQM4dk59Ot5jrIIwlZKK6Jt1gY" />	
 	@elseif ($site->site_url == 'ScottHub.com')
 		<meta name="google-site-verification" content="qYo4zBjsZSY-XJByMrHDUDKO_mTKFZ9tJKO2WdQTmPo" />	
 	@endif
@@ -19,13 +15,13 @@
 
 	
 	<!-- set up the favicon.ico -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4993fd">
-<meta name="msapplication-TileColor" content="#4993fd">
-<meta name="theme-color" content="#ffffff">
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#4993fd">
+	<meta name="msapplication-TileColor" content="#4993fd">
+	<meta name="theme-color" content="#ffffff">
 	
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -45,7 +41,9 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
-	@if (!isset($localhost))
+	@if (isset($localhost) && $localhost)
+		<?php //dump('localhost'); ?>
+	@else
 		<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
 	@endif
 	

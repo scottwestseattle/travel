@@ -53,7 +53,8 @@ return [
 'Total Photos' => 'Total Photos',
 'Translations' => 'Translations',
 'Visitor Countries' => 'Visitor Countries',
-'total countries have visited this site' => 'total countries have visited this site',
 'countries have visited this site today' => 'countries have visited this site today',
 'show all' => 'show all',
+'total countries have visited this site' => 'total countries have visited this site',
+'country has visited this site today' => 'country has visited this site today',
 ];

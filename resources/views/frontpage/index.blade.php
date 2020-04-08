@@ -424,13 +424,7 @@ $sectionCount = 0;
 			$fp = base_path() . '/public' . $p; 
 		?>
 		@if (file_exists($fp))
-			@if (strtolower($domainName) == 'hikebikeboat.com')
-				<img style="max-width:200px;" src="{{$p}}" />
-			@elseif (strtolower($domainName) == 'blog.scotthub.com')
-				<img style="width: 95%; max-width: 400px;" src="{{$p}}" />
-			@else
-				<img style="width:95%; max-width:200px;" src="{{$p}}" />
-			@endif
+			<img style="width:95%; max-width:200px;" src="{{$p}}" />
 		@endif
 		</div>
 	@endif
@@ -551,18 +545,35 @@ $sectionCount = 0;
 <!-- SECTION: GYG Widget -->
 <!--------------------------------------------------------------------------------------->
 
-<div style="margin-top:20px;" >
-	<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" 
-	data-gyg-locale-code="{{$geo->language()}}" 
-	data-gyg-widget="activities" 
-	data-gyg-number-of-items="3" 
-	data-gyg-currency="{{$geo->currency()}}" 
-	data-gyg-partner-id="RTJHCDQ" 
-	data-gyg-q="{{$geo->gygLocation()}}">
-	</div>
-</div>
+@if ($geo->isLocalhost())
 
-<script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
+	<!-- skip these for localhost in case we're working with no internet connection -->
+	<div class="text-center" style="margin-top:40px;" >
+		<h3>GYG Widget goes here in production</h3>
+	</div>
+	
+	<!-- GYG LINK -->
+	<div class="text-center" style="margin:20px; border: 1px black solid; background-color:#054589;">
+		<a target="_blank" href="https://www.getyourguide.com/?partner_id=RTJHCDQ"><img width="300" src="/img/banners/gyg-block.png" /></a>
+	</div>		
+	
+	
+@else
+
+	<div style="margin-top:20px;" >
+		<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" 
+		data-gyg-locale-code="{{$geo->language()}}" 
+		data-gyg-widget="activities" 
+		data-gyg-number-of-items="3" 
+		data-gyg-currency="{{$geo->currency()}}" 
+		data-gyg-partner-id="RTJHCDQ" 
+		data-gyg-q="{{$geo->gygLocation()}}">
+		</div>
+	</div>
+
+	<script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
+
+@endif
 
 @if ($geo->isValid()))
 <div class="text-center" style="margin:20px;">

@@ -33,7 +33,11 @@
 
 		<div style="clear: both;"></div>
 
-		<p>{{$visitorCountryInfo['totalCountriesToday']}} @LANG('content.countries have visited this site today')</p>
+		@if (intval($visitorCountryInfo['totalCountriesToday']) == 1)
+			<p>{{$visitorCountryInfo['totalCountriesToday']}} @LANG('content.country has visited this site today')</p>
+		@else
+			<p>{{$visitorCountryInfo['totalCountriesToday']}} @LANG('content.countries have visited this site today')</p>
+		@endif
 		<p>
 		@foreach($visitorCountryInfo['countriesToday'] as $country)
 			<div style="display:inline-block; min-width:45px;">

@@ -53,7 +53,8 @@ return [
 'Total Photos' => '照片总数',
 'Translations' => '翻译',
 'Visitor Countries' => '参观国家',
-'total countries have visited this site' => '不同的国家都访问了此站点',
 'countries have visited this site today' => '今天有不同的国家访问过此站点',
 'show all' => '显示所有',
+'total countries have visited this site' => '不同的国家都访问了此站点',
+'country has visited this site today' => '国家今天已经访问了此站点',
 ];

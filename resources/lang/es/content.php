@@ -53,7 +53,8 @@ return [
 'Total Photos' => 'Número total de fotos',
 'Translations' => 'Traducciones',
 'Visitor Countries' => 'Países visitantes',
-'total countries have visited this site' => 'países han visitado este sitio en total',
 'countries have visited this site today' => 'países han visitado este sitio hoy',
 'show all' => 'mostrar todos',
+'total countries have visited this site' => 'países han visitado este sitio en total',
+'country has visited this site today' => 'país ha visitado este sitio hoy',
 ];
