@@ -1173,7 +1173,7 @@ class Controller extends BaseController
 		else
 		{			
 			// don't continue because it could be a domain like 'mail.scotthub.com' 
-			if ($this->geo()->isLocalhost())
+			if (false && $this->geo()->isLocalhost())
 			{
 				// create a dummy site so everything will still work
 				$this->site = new Site;

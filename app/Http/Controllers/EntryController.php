@@ -244,6 +244,7 @@ class EntryController extends Controller
 				->first();
 		}
 			
+		$isRobot = false;
 		$gallery = null;
 		if (isset($entry))
 		{
@@ -255,7 +256,8 @@ class EntryController extends Controller
 			$entry = Entry::get($permalink); // new way with translation included
 
 			$id = isset($entry) ? $entry->id : null;
-			$this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+			$visitor = $this->saveVisitor(LOG_MODEL_ENTRIES, LOG_PAGE_PERMALINK, $id);
+			$isRobot = isset($visitor) && $visitor->robot_flag;
 		}
 						
 		if (isset($entry))
@@ -350,6 +352,7 @@ class EntryController extends Controller
 			'page_title' => $page_title,
 			'display_date' => Controller::translateDate($entry->display_date),
 			'comments' => $comments,
+			'isRobot' => false, // $isRobot, //todo: not yet because ome spam robot is coming from fikirandroy page (don't want them to switch pages)
 		]);
 		
 		return view('entries.view', $vdata);

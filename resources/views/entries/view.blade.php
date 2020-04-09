@@ -242,6 +242,7 @@
 	<!-- Comment Form                   -->
 	<!------------------------------------>
 	
+	@if (!$isRobot)
 	<div class="text-center" style="margin-top: 50px; background-color: #f1f1f1; border-radius:15px;">
 		<div style="display: inline-block; width: 95%; max-width:500px;">	
 			<div style="" class="sectionHeader main-font">	
@@ -268,7 +269,8 @@
 				</form>
 			</div>
 		</div>
-	</div>	
+	</div>
+	@endif
 
 	<!------------------------------------>
 	<!-- Comments                       -->

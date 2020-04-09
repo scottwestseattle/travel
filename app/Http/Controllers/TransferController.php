@@ -22,6 +22,8 @@ class TransferController extends Controller
 	{
 		$this->prefix = PREFIX;
 		$this->title = TITLE;
+		
+		parent::__construct();		
 	}	
 
     public function index(Request $request)
