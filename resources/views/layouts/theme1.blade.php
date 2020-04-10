@@ -25,13 +25,16 @@
 
     <!-- Styles -->
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-	<!-- link href="{{ asset('css/default.css') }}" rel="stylesheet" -->
-	<link href="{{ asset('css/theme1.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/project.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/default.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/theme1.css') }}" rel="stylesheet">
 	
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
 	<!-- App styles -->
-    <!-- link href="{{ asset('css/custom.css') }}" rel="stylesheet" -->
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	
 	<!-- Fonts -->
 	@if (!isset($localhost))

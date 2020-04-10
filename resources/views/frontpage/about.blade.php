@@ -19,13 +19,13 @@
 	<h3>@LANG('content.Most Recent Visitors')</h3>
 	<div>
 			
-		<div class="drop-box text-center flag-box gray" style="">
+		<div class="text-center flag-box gray" style="">
 			<div class="flag-box-title">@LANG('content.Last Visitor Country')</div>
 			<p><img height="70" src="/img/flags/{{$visitorCountryInfo['lastCountryCode']}}.png" /></p>
 			<div class="flag-box-footer">@LANG('geo.' . $visitorCountryInfo['lastCountry'])</div>
 		</div>	
 
-		<div class="drop-box text-center flag-box gray" style="">
+		<div class="text-center flag-box gray" style="">
 			<div class="flag-box-title">@LANG('content.Newest Visitor Country')</div>
 			<p><a href="/visitors/countries"><img height="70" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" /></a></p>
 			<div class="flag-box-footer">@LANG('geo.' . $visitorCountryInfo['newestCountry'])</div>
@@ -128,7 +128,7 @@
 	@if (isset($record))
 		<div class="entry-div">
 			<div class="entry">
-				<span name="description" style="font-size:1.5em;">{!! nl2br($record->description) !!}</span>				
+				<span name="description" style="">{!! nl2br($record->description) !!}</span>				
 			</div>
 		</div>
 	@endif
