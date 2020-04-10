@@ -243,10 +243,11 @@ class FrontPageController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 			
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ false);		
 		$filter['showBots'] = isset($request->showbots);
 		$filter['showAll'] = isset($request->showall);
-	
+		//dump($filter);
+		
 		$records = Visitor::getVisitors($filter);
 		
 		$records = self::removeRobots($records, $filter['showBots']);
@@ -415,16 +416,22 @@ class FrontPageController extends Controller
 		// get today's visitors
 		//
 		$visitors = self::removeRobots(Visitor::getVisitors());
-		//dd($visitors);
+		$visitorsTotal = 0;
+		foreach($visitors as $record)
+		{
+			$visitorsTotal += $record['count'];
+		}
+		//dump($visitors);
 	        
 		$visitorCountryInfo = Visitor::getCountryInfo();
-		
+
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
 			'records' => $entries, 
 			'users' => $users, 
 			'visitors' => $visitors,
+			'visitorsTotal' => $visitorsTotal,
 			'comments' => $comments, 
 			'geo' => $this->geo(), 
 			'todo' => $todo,

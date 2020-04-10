@@ -136,39 +136,10 @@ class Visitor extends Base
 
     	return $info;
 	}
-	
-    static public function getVisitorsOLDDELETE($filter = null)
-    {
-		if (isset($filter))
-		{
-			if (($rc = Tools::getSafeArrayString($filter, 'showAll', null)))
-				if (!$rc)
-					return self::getUniqueVisitors($filter);
-		}
-		else
-		{
-			$filter = Tools::getDateTimeRange();
-		}
-	
-		$q = '
-			SELECT *
-			FROM visitors 
-			WHERE 1=1 
-			AND deleted_flag = 0 
-			AND robot_flag <> 1
-			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) 
-			ORDER BY id DESC 
-		';
-
-		$records = DB::select($q, [$filter['from_date'], $filter['to_date']]);
-
-		//dump($records);		
-		return $records;
-    }
     
     static public function getVisitors($filter = null)
     {
-		$filter = isset($filter) ? $filter : Tools::getDateTimeRange();
+		$filter = isset($filter) ? $filter : Tools::getDateRange();
 
 		$q = '
 			SELECT * from (
@@ -201,9 +172,8 @@ class Visitor extends Base
 			$q .= '	AND robot_flag <> 1 ';
 
 		// always use the date fields
-		$q .= '
-			AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s"))
-		';
+		//delete $q .= '	AND (created_at >= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s") AND created_at <= STR_TO_DATE(?, "%Y-%m-%d %H:%i:%s")) ';
+		$q .= '	AND (DATE(created_at) >= STR_TO_DATE(?, "%Y-%m-%d") AND DATE(created_at) <= STR_TO_DATE(?, "%Y-%m-%d")) ';
 			
 		// 'show all' means don't group on IP
 		if (!Tools::getSafeArrayString($filter, 'showAll', false))

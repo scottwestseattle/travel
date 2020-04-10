@@ -205,8 +205,8 @@ class Controller extends BaseController
 	private $euNoticeAccepted = false;
 	private $euNotice = "ui.euNotice";
 	
-	private $_ignoreErrors = false; //sbw: turn me off for prod!!
-	public function ignoreErrors()
+	private $_ignoreErrors = false; //WARNING: turn me off for prod!!
+	public function ignoreErrors()  // used on the test server because photos are too big to copy all
 	{
 		return $this->_ignoreErrors;
 	}
@@ -1849,10 +1849,13 @@ class Controller extends BaseController
 			catch (\Exception $e) 
 			{	
 				// log exception
-				if (!$this->_ignoreErrors)
+				if (!$this->geo()->isLocalhost()) // don't log for localhost because photos are too big to copy all
 				{
-					$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
-					Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+					if (!$this->_ignoreErrors) // ignore errors is used on the test server because photos are too big to copy all
+					{
+						$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $record->photo . ' in folder ' . $tnFolder;
+						Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+					}
 				}
 			}				
 		}
@@ -1931,11 +1934,14 @@ dump($e);
 			}
 			catch (\Exception $e) 
 			{	
-				if (!$this->_ignoreErrors)
+				if (!$this->geo()->isLocalhost()) // don't log for localhost because photos are too big to copy all
 				{
-					// log exception
-					$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
-					Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+					if (!$this->_ignoreErrors) // ignore errors is used on the test server because photos are too big to copy all
+					{
+						// log exception
+						$msg = Tools::getDomainName() . ': Error creating TN for photo ' . $photo . ' in folder ' . $tnFolder;
+						Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_RESIZE, $msg, null, $e->getMessage());
+					}	
 				}
 			}				
 		}

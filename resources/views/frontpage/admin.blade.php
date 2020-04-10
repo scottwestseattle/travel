@@ -58,7 +58,7 @@
 	<div>
 		<div class="drop-box text-center number-box blue" style="">
 			<div>Total</div>
-			<p style="">{{count($visitors)}}</p>
+			<p style="">{{$visitorsTotal}}</p>
 		</div>	
 
 		<div class="drop-box text-center number-box orange" style="">
