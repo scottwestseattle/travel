@@ -242,7 +242,8 @@
 	<!-- Comment Form                   -->
 	<!------------------------------------>
 	
-	@if (!$isRobot)
+	@if (isset($isRobot) && $isRobot)
+	@else
 	<div class="text-center" style="margin-top: 50px; background-color: #f1f1f1; border-radius:15px;">
 		<div style="display: inline-block; width: 95%; max-width:500px;">	
 			<div style="" class="sectionHeader main-font">	
