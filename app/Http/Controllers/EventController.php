@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Event;
 
+define('PREFIX', 'events');
+define('LOG_MODEL', 'events');
+define('TITLE', 'Event');
+
 class EventController extends Controller
 {
 	protected $prefix = 'events';
@@ -53,11 +57,83 @@ class EventController extends Controller
 		$totals['exception'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_EXCEPTION)->count();
 		$totals['other'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_OTHER)->count();
 		$totals['all'] = $totals['info'] + $totals['warning'] + $totals['error'] + $totals['exception'] + $totals['other'];
-			
-		
+
 		return view($this->prefix . '.index', $this->getViewData([
 			'records' => $records,
 			'totals' => $totals,
 		]));
+    }	
+
+    public function confirmdelete(Event $event)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$record = $event;
+
+		$vdata = $this->getViewData([
+			'record' => $record,
+		]);				
+		 
+		return view(PREFIX . '.confirmdelete', $vdata);
+    }
+
+    public function deleteAll(Request $request)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$records = Event::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->orderByRaw('id DESC')
+			->get();
+
+		foreach($records as $record)
+		{		
+			try 
+			{
+				$record->deleteSafe();
+			}
+			catch (\Exception $e) 
+			{
+				Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->description, $record->id, $e->getMessage());
+				
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', 'Error deleting all');
+
+				break;
+			}			
+		}
+		
+		
+		
+		return redirect('/' . PREFIX . '/index/');
+	}
+	
+    public function delete(Request $request, Event $event)
+    {	
+		if (!$this->isAdmin())
+             return redirect('/');
+
+		$record = $event;
+
+		try 
+		{
+			$record->deleteSafe();
+			//Event::logDelete(LOG_MODEL, $record->title, $record->id);					
+			
+			$request->session()->flash('message.level', 'success');
+			$request->session()->flash('message.content', 'Event has been deleted');
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_DELETE, $record->description, $record->id, $e->getMessage());
+			
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}	
+			
+		return redirect('/' . PREFIX . '/index/');
     }		
 }

@@ -5,10 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
-//use App\Tools;
 use App\Geo;
 
-class Event extends Model
+class Event extends Base
 {
     static public function get($limit = 0)
 	{

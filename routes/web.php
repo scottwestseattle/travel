@@ -365,7 +365,14 @@ Route::group(['prefix' => 'blogs'], function ()
 // sites
 Route::group(['prefix' => 'events'], function () {
 	
+	// index
 	Route::get('/index/{type_flag?}', 'EventController@index')->middleware('auth');
+	
+	// delete / confirm delete
+	Route::get('/confirmdelete/{event}', 'EventController@confirmdelete')->middleware('auth');
+	Route::get('/delete/{event}', 'EventController@delete')->middleware('auth');		
+	Route::post('/delete/{event}', 'EventController@delete')->middleware('auth');		
+	Route::get('/delete-all', 'EventController@deleteAll')->middleware('auth');		
 });
 
 // sites
