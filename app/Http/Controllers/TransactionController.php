@@ -517,23 +517,48 @@ class TransactionController extends Controller
 			
 		return redirect('/' . PREFIX . '/filter/');
     }	
+
+    public function default(Request $request)
+    {
+		session(['transactionFilter' => null]); // clear the session so default filter will be used
 		
-    public function filter(Request $request, $showAllDates = false)
+		return $this->filter($request);
+	}
+	
+    public function filter(Request $request)
     {	
 		if (!$this->isAdmin())
              return redirect('/');
-		 
-		$showAllDates = strtolower(Controller::trimNullStatic($showAllDates, /* alphanum = */ true));
-		$showAllDates = ($showAllDates == 'all');
-
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-		//dump($filter);
+		
+		// decide which filter to use.  all form filters are saved to a session and only cleared HOW???
+		if ($request->method() == 'POST')
+		{
+			// 1. use form request filter
+			//dump('form request filter');			
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+			
+			session(['transactionFilter' => $filter]); // save to session for next time
+		}
+		else
+		{
+			$sessionFilter = session('transactionFilter');
+			if (!isset($sessionFilter))
+			{
+				// 2. use default filter	
+				//dump('default filter');
+				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+			}
+			else 
+			{
+				// 3. use session filter
+				//dump('session filter');
+				$filter = $sessionFilter;
+			}
+		}
 		
 		$accountId = false;
-		if ($showAllDates || $filter['showalldates_flag'])
-		{
-			$filter['showalldates_flag'] = true; // in case we're using the command line
-			
+		if ($filter['showalldates_flag'])
+		{			
 			// account id is needed to get starting balance to make the totals correct below
 			// it is only used when showing all records for a selected account
 			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
@@ -767,22 +792,6 @@ class TransactionController extends Controller
              return redirect('/');
 
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-
-/*
-		$filter = [
-		  "selected_month" => 12,
-		  "selected_day" => false,
-		  "selected_year" => 2018,
-		  "from_date" => "2018-12-1",
-		  "to_date" => "2018-12-31",
-		  "account_id" => session('account_id', false),
-		  "category_id" => false,
-		  "subcategory_id" => false,
-		  "search" => false,
-		  "unreconciled_flag" => false,
-		  "unmerged_flag" => false,
-		];
-*/
 
 		switch($query)
 		{

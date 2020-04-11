@@ -127,7 +127,7 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.Cash') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										<li><a href="/transactions/summary">@lang('ui.Summary')</a></li>
-										<li><a href="/transactions/filter">@lang('ui.Transactions')</a></li>
+										<li><a href="/transactions">@lang('ui.Transactions')</a></li>
 										<li><a href="/transactions/trades">@lang('ui.Trades')</a></li>
 										<li><a href="/transactions/balances">@lang('ui.Balances')</a></li>
 										<li><a href="/accounts/index">@lang('ui.Accounts')</a></li>
