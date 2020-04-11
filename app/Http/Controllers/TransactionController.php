@@ -533,7 +533,7 @@ class TransactionController extends Controller
 		// decide which filter to use.  all form filters are saved to a session and only cleared HOW???
 		if ($request->method() == 'POST')
 		{
-			// 1. use form request filter
+			// 1. use form request filter and save it to session
 			//dump('form request filter');			
 			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
 			
@@ -811,6 +811,8 @@ class TransactionController extends Controller
 				break;
 		}
 	
+		session(['transactionFilter' => $filter]); // save to session for next time
+
 		//dump($filter);
 		
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
@@ -880,8 +882,8 @@ class TransactionController extends Controller
              return redirect('/');
 			
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
-		$records = null;
-			
+		$expenses = $income = null;
+		
 		try
 		{
 			$expenses = Transaction::getExpenses($filter);

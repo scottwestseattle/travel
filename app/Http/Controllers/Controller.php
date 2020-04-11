@@ -178,6 +178,7 @@ define('BANNERS_FP_COUNT', 11);
 // hard-coded category/subcategory id's
 define('CATEGORY_ID_TRANSFER', 9);
 define('CATEGORY_ID_TRADE', 209);
+define('CATEGORY_ID_INCOME', 11);
 define('SUBCATEGORY_ID_BUY', 210);
 define('SUBCATEGORY_ID_SELL', 211);
 

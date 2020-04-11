@@ -24,52 +24,56 @@
 		
 		<h3 style="margin-bottom:30px;"><strong>Income:</strong> {{$in}}, <strong>Expenses:</strong> {{$out}}, <strong>Net:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{$net}}</span></h3>
 
-		<h4>Income</h4>
+		<h3>Income</h3>
 		
 		<table class="table">
 			<tbody>
-			@if (isset($income))
+			@if (isset($income) && count($income) > 0)
 				@foreach($income as $record)
-				@if ($record->first == 1)
-				<tr><!-- put in the category record -->
-					<td>{{$record->category}}</td>
-					<td></td>
-					<td></td>
-					<td>{{$record->total}}</td>
-				</tr>				
-				@endif
-				<tr><!-- put in the subcategory record -->
-					<td></td>
-					<td>{{$record->subcategory}}</td>
-					<td>{{$record->subtotal}}</td>
-					<td></td>
-				</tr>
+					@if ($record->first == 1)
+					<tr><!-- put in the category record -->
+						<td>{{$record->category}}</td>
+						<td></td>
+						<td></td>
+						<td>{{$record->total}}</td>
+					</tr>				
+					@endif
+					<tr><!-- put in the subcategory record -->
+						<td></td>
+						<td>{{$record->subcategory}}</td>
+						<td>{{$record->subtotal}}</td>
+						<td></td>
+					</tr>
 				@endforeach
+			@else
+				<tr><td>None</td></tr>
 			@endif
 			</tbody>
 		</table>		
 		
-		<h4>Expenses</h4>
+		<h3>Expenses</h3>
 
 		<table class="table">
 			<tbody>
-			@if (isset($expenses))
+			@if (isset($expenses) && count($expenses) > 0)
 				@foreach($expenses as $record)
-				@if ($record->first == 1)
-				<tr><!-- put in the category record -->
-					<td>{{$record->category}}</td>
-					<td></td>
-					<td></td>
-					<td>{{$record->total}}</td>
-				</tr>				
-				@endif
-				<tr><!-- put in the subcategory record -->
-					<td></td>
-					<td>{{$record->subcategory}}</td>
-					<td>{{$record->subtotal}}</td>
-					<td></td>
-				</tr>
+					@if ($record->first == 1)
+					<tr><!-- put in the category record -->
+						<td>{{$record->category}}</td>
+						<td></td>
+						<td></td>
+						<td>{{$record->total}}</td>
+					</tr>				
+					@endif
+					<tr><!-- put in the subcategory record -->
+						<td></td>
+						<td>{{$record->subcategory}}</td>
+						<td>{{$record->subtotal}}</td>
+						<td></td>
+					</tr>
 				@endforeach
+			@else
+				<tr><td>None</td></tr>				
 			@endif
 			</tbody>
 		</table>
