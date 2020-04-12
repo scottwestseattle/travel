@@ -79,6 +79,11 @@ class Event extends Base
 	{
 		Event::add(LOG_TYPE_INFO, $model, $action, $title);
 	}
+
+    static public function logWarning($model, $action, $title, $description = null)
+	{
+		Event::add(LOG_TYPE_WARNING, $model, $action, $title, $description);
+	}
 	
 	// this is the add for all records
     static public function add($type, $model, $action, $title, $description = null, $record_id = null, $error = null, $changes = null, $link = null)

@@ -120,7 +120,7 @@ class CommentController extends Controller
 			if (isset($visitor) && $visitor->robot_flag)
 			{
 				// turn off comments except for admins
-				Event::logError(LOG_MODEL, LOG_ACTION_ADD, 'COMMENT NOT ADDED: ' 
+				Event::logWarning(LOG_MODEL, LOG_ACTION_ADD, 'COMMENT NOT ADDED: ' 
 					. $record->name . ' (' . $this->geo()->referrer() . ')'
 					, $record->comment);
 

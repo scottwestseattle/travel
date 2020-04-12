@@ -478,7 +478,9 @@ class FrontPageController extends Controller
 
     public function booking()
     {
-    	Event::logInfo(LOG_MODEL, LOG_ACTION_REGISTER, "user clicked on register");
+		$visitor = $this->saveVisitor(LOG_MODEL, LOG_PAGE_REGISTER);
+		
+    	Event::logWarning(LOG_MODEL, LOG_ACTION_REGISTER, 'user clicked on register (' . $this->geo()->ip() . ')');
 
     	return redirect('https://www.booking.com/index.html?aid=1535308');
 	}

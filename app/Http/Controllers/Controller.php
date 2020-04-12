@@ -163,6 +163,7 @@ define('LOG_PAGE_ABOUT', 'about');
 define('LOG_PAGE_CONFIRM', 'confirm login');
 define('LOG_PAGE_RECENT_LOCATIONS', 'recent-locations');
 define('LOG_PAGE_CREATE', 'create');
+define('LOG_PAGE_REGISTER', 'register');
 
 // query sorting
 define('ORDERBY_APPROVED', 0);
