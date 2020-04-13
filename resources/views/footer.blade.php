@@ -93,7 +93,7 @@
 								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@LANG('ui.Gallery')</a></li>
 							@endif
 								<li><a href="/login"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@LANG('ui.Login')</a></li>
-								@if (true)
+								@if (false)
 									<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@LANG('ui.Register')</a></li>
 								@endif
 							@if (Auth::user() && intval(Auth::user()->user_type) > 10)

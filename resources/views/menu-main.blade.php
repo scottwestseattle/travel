@@ -56,32 +56,32 @@
 							@if (null !== (session('spy', null)))
 								<li><a href="/spyoff">@LANG('ui.Turn Spy Off')</a></li>
 							@endif
+                           	<li><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user hidden-sm"></span>@lang('ui.About')</a></li>
 							@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
+								<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list hidden-sm"></span>@lang('ui.Articles')</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_HOTELS, $sections))
-								<li><a href="/hotels"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('content.Hotels')</a></li>
+								<li><a href="/hotels"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list hidden-sm"></span>@lang('content.Hotels')</a></li>
 							@endif							
 							@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
+								<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer hidden-sm"></span>@lang('ui.Tours/Hikes')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@lang('ui.Blogs')</a></li>
+							<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain hidden-sm"></span>@lang('ui.Blogs')</a></li>
 							@endif
 							@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
-								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@lang('ui.Galleries')</a></li>
+								<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture hidden-sm"></span>@lang('ui.Galleries')</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker"></span>Locations</a></li>
+								<li><a href="/locations/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-map-marker hidden-sm"></span>Locations</a></li>
 							@endif
 							@if (false && isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe"></span>Maps</a></li>
+								<li><a href="/activities/maps"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-globe hidden-sm"></span>Maps</a></li>
 							@endif	
-							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in"></span>@lang('ui.Login')</a></li>
+							<li><a href="{{ route('login') }}"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-log-in hidden-sm"></span>@lang('ui.Login')</a></li>
 							@if (false)
-                            	<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@lang('ui.Register')</a></li>
+                            	<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user hidden-sm"></span>@lang('ui.Register')</a></li>
 							@endif
-                           	<li><a href="/about"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user"></span>@lang('ui.About')</a></li>
                         @else							
 							@if ($user_type >= 100)
 								<li><a href="/about">@lang('ui.About')</a></li>
