@@ -189,6 +189,10 @@ class TransactionController extends Controller
 				$record->subcategory_id	= SUBCATEGORY_ID_BUY;
 				$action = "Buy";
 				$record->shares_unsold = $record->shares;
+				
+				// compute the trade amount
+				$total = (abs(intval($record->shares)) * floatval($record->buy_price)) + $fees;
+				$total = -$total; // buys are negative
 			}
 			else
 			{
@@ -196,13 +200,14 @@ class TransactionController extends Controller
 				$action = "Sell";
 				$record->shares = -abs($record->shares);
 				$fees = -$fees; // fees come out of the proceeds
+
+				// compute the trade amount
+				$total = (abs(intval($record->shares)) * floatval($record->sell_price)) + $fees;
 			}
 			
-			$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->share_price";
+			$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
 			
-			// compute the trade amount
-			$total = (abs(intval($record->shares)) * floatval($record->share_price)) + $fees;
-			$record->amount = $record->isBuy() ? -$total : $total; // buys are negative		
+			$record->amount = $total;
 		}
 		else
 		{
@@ -217,12 +222,12 @@ class TransactionController extends Controller
 		$v = isset($request->reconciled_flag) ? 1 : 0;
 		$record->reconciled_flag = $v;
 		
+		DB::beginTransaction();
+		
 		try
 		{
 			if (!isset($record->parent_id) || $record->parent_id <= 0)
 				throw new \Exception('Error Adding Trade: Account Not Set');
-
-			//dd($record);
 			
 			$record->save();
 			
@@ -232,24 +237,96 @@ class TransactionController extends Controller
 				$record->lot_id = $record->id;
 				$record->save();
 			}
+			else if ($record->isSell())
+			{
+				//
+				// update the corresponding 'buy' trade
+				//
+				$buy = null;
+				$pl = 0.0;
+				
+				if (isset($record->lot_id))
+				{
+					$buy = Transaction::select()
+						->where('user_id', Auth::id())
+						->where('deleted_flag', 0)
+						->where('lot_id', $record->lot_id)
+						->first();
+						
+					if (isset($buy))
+					{
+						// good calculation based on the buy record info
+						$pl = abs($record->amount) - abs($buy->amount);
+						
+						$buy->shares_unsold += $record->shares;
+						$buy->sell_price = $record->sell_price;
+						$buy->profit = $pl;
+						
+						$buy->save();
+					}
+				}
+
+				//
+				// add the p/l stock transaction
+				//				
+				if (isset($buy))
+				{
+					// already set above
+				}
+				else
+				{
+					// rough calculation (that can be manually updated) based on buy price but doesn't include buy commission or fees
+					$pl = abs($record->amount) - (abs($record->shares) * abs($record->buy_price));
+				}
+				
+				// add the p/l to the sell transaction
+				$record->profit = $pl;
+				$record->save();
+
+				// create it even if $pl isn't exact so it can be manually updated
+				$this->createTransaction(date('Y-m-d'), $pl, $record->description, $record->parent_id, CATEGORY_ID_INCOME, SUBCATEGORY_ID_STOCKS);
+			}			
 			
 			Event::logAdd(LOG_MODEL, $record->description, $record->amount, $record->id);
 			
 			$request->session()->flash('message.level', 'success');
 			$request->session()->flash('message.content', $this->title . ' has been added');
+			
+			DB::commit();
 		}
 		catch (\Exception $e) 
 		{
+			DB::rollBack(); // not working
+			
 			Event::logException(LOG_MODEL, LOG_ACTION_ADD, 'title = ' . $record->description, null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
-		
+			
 		$view = isset($record->symbol) ? '/trades/' : '/filter/';
 
 		return redirect($this->getReferer($request, '/' . PREFIX . $view));
 	}
+	
+    private function createTransaction($date, $amount, $description, $accountId, $catId, $subCatId) 
+	{ 	
+		$record = new Transaction();
+				
+		$record->user_id 			= Auth::id();	
+		$record->transaction_date	= $date;
+		$record->amount				= floatval($amount);
+		$record->reconciled_flag 	= 1;
+		$record->parent_id 			= intval($accountId);		
+		$record->subcategory_id		= intval($subCatId);
+		$record->category_id		= intval($catId);
+		$record->description		= $description;
+		$record->type_flag 			= $amount > 0.0 ? TRANSACTION_TYPE_CREDIT : TRANSACTION_TYPE_DEBIT;
+
+		$record->save();
+
+		return true;
+    }	
 	
 	public function edit(Transaction $transaction)
     {

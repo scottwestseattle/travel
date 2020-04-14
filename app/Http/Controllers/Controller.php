@@ -182,6 +182,7 @@ define('CATEGORY_ID_TRADE', 209);
 define('CATEGORY_ID_INCOME', 11);
 define('SUBCATEGORY_ID_BUY', 210);
 define('SUBCATEGORY_ID_SELL', 211);
+define('SUBCATEGORY_ID_STOCKS', 197);
 
 // Transaction Types
 define('TRANSACTION_TYPE_DEBIT', 1);

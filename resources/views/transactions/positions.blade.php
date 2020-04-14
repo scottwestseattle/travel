@@ -43,9 +43,9 @@
 
 		<div class="clear"></div>
 		
-		<h4>
+		<h3>
 			Positions ({{count($records)}}), Cost: <span style="color:black">${{number_format(round(abs($totals['total']), 2))}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}, Shares: <span style="color:black">{{$totals['shares']}}</span>, Gain: <span style="color:{{$totals['profit'] > 0.0 ? 'black' : 'red'}}">${{number_format($totals['profit'])}}</span>
-		</h4>
+		</h3>
 		
 		<table class="table table-sm">
 			<tbody>
@@ -53,7 +53,7 @@
 				@foreach($records as $record)
 					<?php 
 						$quote = $totals[$record->symbol];
-						$pl = (floatval($quote['quote']) * abs($record->shares)) - abs($record->amount); 
+						$pl = round((floatval($quote['quote']) * abs($record->shares)) - abs($record->amount), 2); 
 						$color = ($pl < 0) ? 'red' : 'black';
 					?>
 					<tr>
