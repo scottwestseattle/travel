@@ -391,6 +391,7 @@ class TransactionController extends Controller
 		$record->symbol = $this->copyDirty($record->symbol, $request->symbol, $isDirty, $changes);
 		$record->shares = $this->copyDirty($record->shares, $request->shares, $isDirty, $changes);
 		$record->buy_price = $this->copyDirty($record->buy_price, $request->buy_price, $isDirty, $changes);		
+		$record->sell_price = $this->copyDirty($record->sell_price, $request->sell_price, $isDirty, $changes);		
 		$record->commission = $this->copyDirty($record->commission, $request->commission, $isDirty, $changes);		
 		$record->fees = $this->copyDirty($record->fees, $request->fees, $isDirty, $changes);		
 		$record->lot_id = $this->copyDirty($record->lot_id, $request->lot_id, $isDirty, $changes);
@@ -411,17 +412,17 @@ class TransactionController extends Controller
 				$record->shares = abs($record->shares);
 				$amount = (intval($record->shares) * floatval($record->buy_price)) + $fees;
 				$request->amount = -$amount;
+				$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";			
 			}
 			else
 			{
 				$record->subcategory_id = SUBCATEGORY_ID_SELL;
 				$action = 'Sell';
-				$request->amount = (intval($record->shares) * floatval($record->buy_price)) - $fees;
+				$request->amount = (intval($record->shares) * floatval($record->sell_price)) - $fees;
 				$record->shares = -abs($record->shares);				
+				$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";			
 			}
 
-			// set the description
-			$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";			
 		}
 
 		$record->amount = $this->copyDirty(abs($record->amount), floatval($request->amount), $isDirty, $changes);
