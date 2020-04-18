@@ -433,7 +433,7 @@ class Tools
 			];
 			
 			$rand = mt_rand(0, count($testIps) - 1);
-			$rand = 2; // china
+			//$rand = 2; // china
 			//$ip = long2ip(3758096383);
 			
 			$ip = $testIps[$rand];
