@@ -7,6 +7,7 @@ use App;
 use App\Entry;
 use App\Translation;
 use App\Event;
+use App\Tools;
 use Lang;
 
 class TranslationController extends Controller
@@ -31,7 +32,7 @@ class TranslationController extends Controller
 		
 		$records = [];
 		$files = [];	
-		$folder = TRANSLATIONS_FOLDER . App::getLocale();
+		$folder = TRANSLATIONS_FOLDER . strtolower(App::getLocale());
 
 		try
 		{
@@ -47,7 +48,7 @@ class TranslationController extends Controller
 	
 		foreach($files as $file)
 		{
-			if ($file != '.' && $file != '..')
+			if ($file != '.' && $file != '..' && !Tools::startsWith($file, '.'))
 			{
 				$records[] = str_replace('.php', '', $file);
 			}
