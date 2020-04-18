@@ -229,6 +229,7 @@ class Photo extends Base
 			AND location IS NOT NULL
 			AND location != ""
 			AND type_flag in (0,1)
+			AND gallery_flag = 1
 			AND deleted_flag = 0
 			GROUP BY `parent_id`, location
 			ORDER BY parent_id DESC
@@ -257,16 +258,20 @@ class Photo extends Base
 		}
 
 		$locations = [];
-		foreach($records as $record)
+		
+		if (isset($records))
 		{
-			//dump($record->location);
-			$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
-			
-			//if ($country == 'Washington')
-			//	dd($record);
-			
-			if (!array_key_exists($country, $locations))
-				$locations[$country] = $country;
+			foreach($records as $record)
+			{
+				//dump($record->location);
+				$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
+				
+				//if ($country == 'Washington')
+				//	dd($record);
+				
+				if (!array_key_exists($country, $locations))
+					$locations[$country] = $country;
+			}
 		}
 		
 		//dd($locations);

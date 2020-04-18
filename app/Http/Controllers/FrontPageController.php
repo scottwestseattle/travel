@@ -788,10 +788,10 @@ priceTaxes=$59.50
 		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
 
 		$locations = Photo::getLocationsFromPhotos($standardCountryNames);
-		//dd($locations);
+		//dump($locations);
 		
 		$locations2 = Entry::getLocationsFromEntries($standardCountryNames);
-		//dd($locations2);
+		//dump($locations2);
 		
 		foreach($locations2 as $record)
 		{			
