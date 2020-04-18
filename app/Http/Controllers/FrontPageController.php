@@ -480,7 +480,14 @@ class FrontPageController extends Controller
     {
 		$visitor = $this->saveVisitor(LOG_MODEL, LOG_PAGE_REGISTER);
 		
-    	Event::logWarning(LOG_MODEL, LOG_ACTION_REGISTER, 'user clicked on register (' . $this->geo()->ip() . ')');
+		if (isset($visitor) && $visitor->robot_flag == 1)
+		{
+			// don't log robots using the 'register' link because it used to be in the site map
+		}
+		else
+		{
+			Event::logWarning(LOG_MODEL, LOG_ACTION_REGISTER, 'user entered register url (' . $this->geo()->ip() . ')');
+		}
 
     	return redirect('https://www.booking.com/index.html?aid=1535308');
 	}
