@@ -113,6 +113,7 @@
 	font-family:verdana;
 	margin: 0 10px 10px 0; 
 	float:left;
+	min-height:90px;	
 }
 
 .number-box p {

@@ -56,17 +56,21 @@
 	</div>
 	
 	<div>
-		<div class="drop-box text-center number-box blue" style="">
+		<?php
+			// if too many visitors then have to scale down the font size
+			$style = $visitorsTotal >= 1000 ? 'font-size:1.8em; margin-top:5px;' : '';
+		?>
+		<div class="drop-box text-center number-box blue">
 			<div>Total</div>
-			<p style="">{{$visitorsTotal}}</p>
+			<p style="{{$style}}">{{$visitorsTotal}}</p>
 		</div>	
 
-		<div class="drop-box text-center number-box orange" style="">
+		<div class="drop-box text-center number-box orange">
 			<div>Unique</div>
-			<p style="">{{count($visitors)}}</p>
+			<p style="{{$style}}">{{count($visitors)}}</p>
 		</div>
 
-		<div class="drop-box text-center number-box green" style="">
+		<div class="drop-box text-center number-box green">
 			<div style="margin-bottom: 5px;">Newest<span style="font-size:8px;"> of {{count($visitorCountryInfo['countries'])}}</span></div>
 			<a href="/visitors/countries"><img height="45" src="/img/flags/{{$visitorCountryInfo['newestCountryCode']}}.png" 
 				title="{{$visitorCountryInfo['newestCountry']}}" 
