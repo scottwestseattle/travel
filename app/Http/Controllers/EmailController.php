@@ -35,8 +35,8 @@ class EmailController extends Controller
 	{
 		$accounts = [
 			'2117' => 35,
-			'0370' => 31,
-			'5043' => 10,
+			'1397' => 31, // Cap Gray formerly '0370'
+			'5043' => 10, // Cap Blue
 			'1712' => 14,
 		];
 		
