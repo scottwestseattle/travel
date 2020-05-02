@@ -494,7 +494,7 @@ class EmailController extends Controller
 						
 			// get the date
 			$date_raw = $this->parseTag($body_raw, 'has been authorized on ', 12, -1); 
-			$date2 = str_replace(',', '', $date_raw);
+			$date2 = str_replace(',', '', trim($date_raw));
 			//echo '|' . $date2 . '|';
 			
 			// try normal date format like: "03/21/2020"
@@ -505,9 +505,14 @@ class EmailController extends Controller
 				$date = DateTime::createFromFormat('M d Y', $date2);
 				if ($date == NULL)
 				{
-					dump($body_raw);
-					dump($date2);
-					die("Date conversion 3 failed, from text: " . $date2);
+					// try date format like: "Mar 21, 2020"
+					$date = DateTime::createFromFormat('M d, Y', $date2);
+					if ($date == NULL)
+					{
+						dump($body_raw);
+						dump('date: ' . $date2);
+						die("Date conversion 3 failed, from text: " . $date2);
+					}					
 				}
 			}
 			//dump($date_raw);
