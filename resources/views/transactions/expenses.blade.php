@@ -22,7 +22,7 @@
 			$net = $in + $out;
 		?>
 		
-		<h3 style="margin-bottom:30px;"><strong>Income:</strong> {{$in}}, <strong>Expenses:</strong> {{$out}}, <strong>Net:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{$net}}</span></h3>
+		<h3 style="margin-bottom:30px;"><strong>Income:</strong> {{number_format($in, 2)}}, <strong>Expenses:</strong> {{number_format($out, 2)}}, <strong>Net:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{number_format($net, 2)}}</span></h3>
 
 		<h3>Income</h3>
 		
@@ -35,13 +35,13 @@
 						<td>{{$record->category}}</td>
 						<td></td>
 						<td></td>
-						<td>{{$record->total}}</td>
+						<td>{{number_format($record->total, 2)}}</td>
 					</tr>				
 					@endif
 					<tr><!-- put in the subcategory record -->
 						<td></td>
 						<td>{{$record->subcategory}}</td>
-						<td>{{$record->subtotal}}</td>
+						<td>{{number_format($record->subtotal, 2)}}</td>
 						<td></td>
 					</tr>
 				@endforeach
@@ -62,13 +62,13 @@
 						<td>{{$record->category}}</td>
 						<td></td>
 						<td></td>
-						<td>{{$record->total}}</td>
+						<td>{{number_format($record->total, 2)}}</td>
 					</tr>				
 					@endif
 					<tr><!-- put in the subcategory record -->
 						<td></td>
 						<td>{{$record->subcategory}}</td>
-						<td>{{$record->subtotal}}</td>
+						<td>{{number_format($record->subtotal, 2)}}</td>
 						<td></td>
 					</tr>
 				@endforeach

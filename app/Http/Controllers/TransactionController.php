@@ -101,12 +101,12 @@ class TransactionController extends Controller
 		// do it like this because it could be a trade with no lot
 		$trade['trade'] = 'buy';
 		$trade['lot'] = $transaction;
-		
-		if (isset($symbol))
+
+		if (isset($transaction) && isset($transaction->symbol))
 		{
 			$records = DB::table('transactions')
 				->where('deleted_flag', 0)
-				->where('symbol', $symbol)
+				->where('symbol', $transaction->symbol)
 				->get();
 
 			// if there is already more than one trade, then the lot has been sold
@@ -193,6 +193,8 @@ class TransactionController extends Controller
 				// compute the trade amount
 				$total = (abs(intval($record->shares)) * floatval($record->buy_price)) + $fees;
 				$total = -$total; // buys are negative
+				
+				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";
 			}
 			else
 			{
@@ -203,9 +205,10 @@ class TransactionController extends Controller
 
 				// compute the trade amount
 				$total = (abs(intval($record->shares)) * floatval($record->sell_price)) + $fees;
+				
+				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
 			}
 			
-			$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
 			
 			$record->amount = $total;
 		}

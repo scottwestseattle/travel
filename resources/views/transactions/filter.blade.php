@@ -128,7 +128,7 @@ function inlineEditSubmit(id)
 		@if ($filter['showphotos_flag'])
 			<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
 		@else
-			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{round($totals['total'], 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . round($totals['reconciled'], 2) . '' : '' }}</h3>
+			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}</h3>
 		@endif
 		
 		<table class="table">

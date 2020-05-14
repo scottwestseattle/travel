@@ -59,7 +59,7 @@
 				<input type="text" name="shares" class="form-control" />
 
 				<label for="buy_price" class="control-label">Buy Price:</label>
-				<input type="text" name="buy_price" class="form-control" value="{{abs($trade->buy_price)}}" />				
+				<input type="text" name="buy_price" class="form-control" />
 			@endif
 			
 			@if ($tradeType == 'buy')
