@@ -44,7 +44,7 @@
 		<div class="clear"></div>
 		
 		<h3>
-			Trades ({{count($records)}}), Total: ${{round($totals['total'], 2)}}{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}{{$totals['shares'] > 0 ? ', Shares Remaining: ' . $totals['shares'] : ''}}
+			Trades ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}}{{ isset($totals['reconciled']) ? ', P/L: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}{{$totals['shares'] > 0 ? ', Shares Remaining: ' . $totals['shares'] : ''}}
 		</h3>
 		
 		<table class="table">
