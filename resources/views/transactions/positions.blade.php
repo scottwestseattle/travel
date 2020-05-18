@@ -44,7 +44,7 @@
 		<div class="clear"></div>
 		
 		<h3>
-			Positions ({{count($records)}}), Cost: <span style="color:black">${{number_format(round(abs($totals['total']), 2))}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}, Shares: <span style="color:black">{{$totals['shares']}}</span>, Gain: <span style="color:{{$totals['profit'] > 0.0 ? 'black' : 'red'}}">${{number_format($totals['profit'])}}</span>
+			Positions ({{count($records)}}), Shares: <span style="color:black">{{$totals['shares']}}</span>, Price: <span style="color:black">${{number_format($totals['dca'], 2)}}</span>, Cost: <span style="color:black">${{number_format(abs($totals['total']), 2)}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}, P/L: <span style="color:{{$totals['profit'] >= 0.0 ? 'black' : 'red'}}">${{number_format($totals['profit'], 2)}}</span>
 		</h3>
 		
 		<table class="table table-sm">
@@ -73,12 +73,12 @@
 						@endif
 						</td>
 					
-						<td>{{abs($record->amount)}}
+						<td>{{number_format(abs($record->amount), 2)}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->amount <= 0) || (App\Transaction::isBuyStatic($record) && $record->amount >= 0) )
 							<span style="color:red;">(wrong)</span>
 						@endif
 							<br/>
-							<span style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{$pl}}</span>
+							<span style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}</span>
 						</td>
 				
 					</tr>

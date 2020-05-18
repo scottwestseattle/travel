@@ -224,6 +224,7 @@ class Transaction extends Base
 		$rc['total'] = $total;
 		$rc['shares'] = $shares;
 		$rc['profit'] = $profit;
+		$rc['dca'] = abs($shares > 0.0 ? ($total / $shares) : 0.0);
 		
 		if ($total != $reconciled)
 		{
