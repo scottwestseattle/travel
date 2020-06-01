@@ -13,6 +13,13 @@ select created_at, id,  ip_address, referrer from `visitors` where referrer is n
 
 Latest DB Changes
 
+2020-05-31
+ALTER TABLE `accounts` ADD `multiple_balances_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'account has multiple balances (such as mutiple CD\'s or currencies)' AFTER `starting_balance`;
+
+ALTER TABLE `accounts` ADD `reconcile_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'is reconciled monthly' AFTER `starting_balance`
+, ADD `reconcile_statement_day` TINYINT NULL COMMENT 'only used if statement date is not end of month and account is reconcileable (1-31)' AFTER `reconcile_flag`;
+
+
 2020-04-01
 ALTER TABLE `transactions` CHANGE `share_price` `buy_price` DECIMAL(10,4) NULL DEFAULT NULL;
 ALTER TABLE `transactions` ADD `sell_price` DECIMAL(10,4) NULL AFTER `buy_price`;

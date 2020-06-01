@@ -759,7 +759,7 @@ class TransactionController extends Controller
 		$total = 0.0;
 		try
 		{
-			$balance = Transaction::getBalanceByDate($filter);
+			$balance = Transaction::getBalanceByDate($filter['account_id'], $filter['to_date']);
 		}
 		catch (\Exception $e) 
 		{

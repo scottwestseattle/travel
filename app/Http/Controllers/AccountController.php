@@ -33,10 +33,11 @@ class AccountController extends Controller
 		$show = strtolower(Controller::trimNullStatic($show, /* alphanum = */ true));
 		$showAll = ($show == 'all');
 		$showNonZero = ($show == 'nonzero');
+		$showReconcile = ($show == 'reconcile');
 		
 		try
 		{
-			$records = Account::getIndex($showAll || $showNonZero);		
+			$records = Account::getIndex($showAll || $showNonZero, $showReconcile);
 		}
 		catch (\Exception $e) 
 		{
@@ -47,7 +48,7 @@ class AccountController extends Controller
 		}	
 		
 		$accounts = [];
-		
+			
 		foreach($records as $record)
 		{
 			if ($showNonZero && $record->balance == 0)
@@ -60,7 +61,7 @@ class AccountController extends Controller
 		}
 		
 		$records = $accounts;
-					
+
 		$vdata = $this->getViewData([
 			'records' => $records,
 			'shownonzero' => $showNonZero,
@@ -117,9 +118,10 @@ class AccountController extends Controller
     {
 		if (!$this->isAdmin())
              return redirect('/');
-			
+						
 		$vdata = $this->getViewData([
 			'record' => $account,
+			'dates' => Controller::getDateControlDates(),
 		]);		
 		 
 		return view(PREFIX . '.edit', $vdata);
@@ -144,6 +146,14 @@ class AccountController extends Controller
 
 		$v = isset($request->hidden_flag) ? 1 : 0;		
 		$record->hidden_flag = $this->copyDirty($record->hidden_flag, $v, $isDirty, $changes);
+
+		$v = isset($request->reconcile_flag) ? 1 : 0;		
+		$record->reconcile_flag = $this->copyDirty($record->reconcile_flag, $v, $isDirty, $changes);
+
+		$v = isset($request->multiple_balances_flag) ? 1 : 0;		
+		$record->multiple_balances_flag = $this->copyDirty($record->multiple_balances_flag, $v, $isDirty, $changes);
+		
+		$record->reconcile_statement_day = $this->copyDirty($record->reconcile_statement_day, $request->day, $isDirty, $changes);
 				
 		if ($isDirty)
 		{						

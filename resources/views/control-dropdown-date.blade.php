@@ -1,4 +1,4 @@
-@if (isset($div))
+@if (isset($div) && $div)
 <div class="form-group">
 @endif
 
@@ -60,7 +60,7 @@
 	<label for="month_flag" class="checkbox-label">Month</label>
 	@endif
 	
-@if (isset($div))	
+@if (isset($div) && $div)	
 </div>	
 @endif
 

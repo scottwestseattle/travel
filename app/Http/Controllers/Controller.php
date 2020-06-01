@@ -1401,8 +1401,21 @@ class Controller extends BaseController
 		];	
 
 		$days = [];
+		$daysOrdinal = [];
 		for ($i = 1; $i <= 31; $i++)
+		{
 			$days[$i] = $i;
+			$daysOrdinal[$i] = $i . 'th';
+		}
+		
+		// set the only ones that are different
+		$daysOrdinal[1] = '1st';
+		$daysOrdinal[2] = '2nd';
+		$daysOrdinal[3] = '3rd';
+		$daysOrdinal[21] = '21st';
+		$daysOrdinal[22] = '22nd';
+		$daysOrdinal[23] = '23rd';
+		$daysOrdinal[31] = '31st';
 
 		$years = [];
 		$startYear = 1997; //
@@ -1416,6 +1429,7 @@ class Controller extends BaseController
 			'months' => $months,
 			'years' => $years,
 			'days' => $days,
+			'days_ordinal' => $daysOrdinal,
 		];
 
 		return $dates;

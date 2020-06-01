@@ -15,12 +15,28 @@
 
 		<label for="starting_balance" class="control-label">Starting Balance:</label>
 		<input type="text" name="starting_balance" class="form-control" value="{{$record->starting_balance}}"></input>	
-		
+
 		<div class="form-group">
 			<input type="checkbox" name="hidden_flag" id="hidden_flag" class="form-control-inline" value="{{$record->hidden_flag }}" {{ ($record->hidden_flag) ? 'checked' : '' }} />
 			<label for="hidden_flag" class="checkbox-label">Hidden</label>
 		</div>
 
+		<div class="form-group">
+			<input type="checkbox" name="reconcile_flag" id="reconcile_flag" class="form-control-inline" value="{{$record->reconcile_flag }}" {{ ($record->reconcile_flag) ? 'checked' : '' }} />
+			<label for="reconcile_flag" class="checkbox-label">Reconciled Monthly</label>
+		</div>
+
+		<div class="form-group">
+			<input type="checkbox" name="multiple_balances_flag" id="multiple_balances_flag" class="form-control-inline" value="{{$record->multiple_balances_flag }}" {{ ($record->multiple_balances_flag) ? 'checked' : '' }} />
+			<label for="multiple_balances_flag" class="checkbox-label">Account Has Multiple Merged Balances</label>
+			<span style="font-size:10pt;"> (such as multiple CDs or currencies)</span>
+		</div>
+
+		<div class="form-group">
+			<label for="reconcile_statement_day" class="control-label">Monthly Statement Day:<br/><span style="font-size:10pt;"> (For reconciled accounts only, default is end of month)</span></label>
+			@component('control-dropdown-day', ['div' => true, 'days' => $dates['days_ordinal'], 'selected_day' => $record->reconcile_statement_day])@endcomponent
+		</div>
+		
 		<div class="form-group">
 			<div class="radio-group-item">
 				<input type="radio" name="account_type_flag" value="1" class="form-control-inline" {{$record->account_type_flag == 1 ? 'checked' : ''}} />

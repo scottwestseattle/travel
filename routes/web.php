@@ -65,6 +65,28 @@ Route::get('/importgeo', 'ToolController@importGeo');
 Route::get('/hash', 'ToolController@hash')->middleware('auth');
 Route::post('/hasher', 'ToolController@hasher')->middleware('auth');
 
+// Reconcile
+Route::group(['prefix' => 'reconciles'], function () {
+	
+	// index
+	Route::get('/', 'ReconcileController@accounts');
+	Route::get('/view/{reconcile}', 'ReconcileController@view');
+	Route::get('/index', 'ReconcileController@index');
+	
+	// add/create
+	Route::get('/account/{account}','ReconcileController@account');
+	Route::post('/account/{account}','ReconcileController@account');
+	Route::post('/create','ReconcileController@create');
+
+	// edit/update
+	Route::get('/edit/{reconcile}','ReconcileController@edit');
+	Route::post('/update/{reconcile}','ReconcileController@update');
+
+	// delete / confirm delete
+	Route::get('/confirmdelete/{reconcile}', 'ReconcileController@confirmdelete');
+	Route::post('/delete/{reconcile}', 'ReconcileController@delete');		
+});
+
 // comments
 Route::group(['prefix' => 'lessons'], function () {
 	

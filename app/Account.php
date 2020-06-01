@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
+use DateTime;
 
 class Account extends Base
 {
@@ -67,26 +68,63 @@ class Account extends Base
 		return $array;
 	}
 
-    static public function getIndex($showAll = false)
+    static public function getReconcilesOverdue()
+    {
+		$records = self::getIndex(false, /* $showReconcile = */ true);
+		
+		$accounts = [];
+		
+		foreach($records as $record)
+		{
+			if (isset($record->reconcile_date))
+			{
+				$date = strtotime($record->reconcile_date);
+				$reconcileYear = date("y", $date);
+				$reconcileMonth = date("m", $date);
+				$reconcileDay = 28; //
+				
+				if ($reconcileYear <= date("y") && $reconcileMonth < date("m") && $reconcileDay <= date('d'))
+				{
+					// out of date
+					$accounts[] = $record;
+				}
+			}
+			else
+			{
+				// never reconcileDate
+				$accounts[] = $record;
+			}
+		}
+		
+		return $accounts;
+	}
+	
+    static public function getIndex($showAll = false, $showReconcile = false)
     {
 		$q = '
-			SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
-				, sum(t.amount) + a.starting_balance as balance 
+			SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day
+				, sum(t.amount) + a.starting_balance as balance
+				, max(r.reconcile_date) as reconcile_date
 			FROM accounts as a
 			LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 AND t.reconciled_flag = 1 
+			LEFT JOIN reconciles as r ON r.account_id = a.id AND r.deleted_flag = 0
 			WHERE 1=1 
 			AND a.user_id = ?
 			AND a.deleted_flag = 0
 			';
 			
-		if (!$showAll)
+		if ($showReconcile)
+			$q .= ' AND a.reconcile_flag = 1 ';
+		else if (!$showAll)
 			$q .= ' AND a.hidden_flag = 0 ';
 
-		$q .= '
-			GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance
-			ORDER BY a.name ASC
-		';
+		$q .= '	GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day ';
+
+		$q .= ($showReconcile ? ' ORDER BY reconcile_date ASC, a.name ASC ' : ' ORDER BY a.name ASC ');
+		
+
 			
+//dd($q);
 		$records = DB::select($q, [Auth::id()]);
 
 		return $records;

@@ -15,6 +15,7 @@ use App\Site;
 use App\Event;
 use App\Comment;
 use App\Tools;
+use App\Account;
 
 define('PREFIX', 'frontpage');
 define('LOG_MODEL', 'frontpage');
@@ -422,6 +423,11 @@ class FrontPageController extends Controller
 			$visitorsTotal += $record['count'];
 		}
 		//dump($visitors);
+		
+		//
+		// get accounts that need to be reconciled
+		//
+		$accounts = Account::getReconcilesOverdue();
 	        
 		$visitorCountryInfo = Visitor::getCountryInfo();
 
@@ -444,6 +450,7 @@ class FrontPageController extends Controller
 			'bannerIndex' => mt_rand(1, BANNERS_FP_COUNT), // random banner index
 			'geoLoadTime' => $this->geo()->loadTime(),
 			'ignoreErrors' => $this->ignoreErrors(),
+			'accountReconcileOverdue' => count($accounts),
 		], 'Admin Page'));
     }
 	

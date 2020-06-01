@@ -22,8 +22,9 @@
 		<div class="clear"></div>
 		
 		<h3>Reconciled Balance:</h3>
-		<h1>${{round($balance, 2)}}</h1>
+		<h1>${{number_format($balance, 2)}}</h1>
 
+		<div style="font-size:10pt; margin-top:30px;"><a href="/transactions/show/account/{{$filter['account_id']}}" target="_blank">Show Transactions</a></div>
 </div>
 
 @endsection

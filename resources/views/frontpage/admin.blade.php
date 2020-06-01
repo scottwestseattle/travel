@@ -166,6 +166,14 @@
 	<hr />
 	@endif
 
+	@if ($accountReconcileOverdue > 0)
+	<div>
+		<h3 style="color:red;">Account Overdue to be Reconciled ({{$accountReconcileOverdue}})</h3>
+		<a href="/reconciles">Reconcile Accounts</a>
+	</div>
+	<hr />		
+	@endif
+
 	@if (isset($shortEntries) and count($shortEntries) > 0)
 	<div>
 		<h3 style="color:red;">Unfinished Entries ({{count($shortEntries)}})</h3>
