@@ -244,6 +244,17 @@ class ReconcileController extends Controller
 		$filter = Controller::getFilter($request);
 		$date = $this->trimNull($filter['from_date']);
 		$record->reconcile_date = $this->copyDirty($record->reconcile_date, $date, $isDirty, $changes);
+
+		$record->subtotal_label1 = $this->copyDirty($record->subtotal_label1, $request->subtotal_label1, $isDirty, $changes);
+		$record->subtotal1 = $this->copyDirty($record->subtotal1, $request->subtotal1, $isDirty, $changes);
+		$record->subtotal_label2 = $this->copyDirty($record->subtotal_label2, $request->subtotal_label2, $isDirty, $changes);
+		$record->subtotal2 = $this->copyDirty($record->subtotal2, $request->subtotal2, $isDirty, $changes);
+		$record->subtotal_label3 = $this->copyDirty($record->subtotal_label3, $request->subtotal_label3, $isDirty, $changes);
+		$record->subtotal3 = $this->copyDirty($record->subtotal3, $request->subtotal3, $isDirty, $changes);
+		$record->subtotal_label4 = $this->copyDirty($record->subtotal_label4, $request->subtotal_label4, $isDirty, $changes);
+		$record->subtotal4 = $this->copyDirty($record->subtotal4, $request->subtotal4, $isDirty, $changes);
+		$record->subtotal_label5 = $this->copyDirty($record->subtotal_label5, $request->subtotal_label5, $isDirty, $changes);
+		$record->subtotal5 = $this->copyDirty($record->subtotal5, $request->subtotal5, $isDirty, $changes);				
 				
 		if ($isDirty)
 		{						
