@@ -20,11 +20,13 @@ class Reconcile extends Base
     	return $this->belongsTo(Account::class, 'account_id', 'id');
     }
 
-    static public function getIndex()
+    static public function getIndex($filter)
     {
 		$records = Reconcile::select()
 			->where('user_id', Auth::id())
 			->where('deleted_flag', 0)
+			->whereRaw('reconcile_date >= STR_TO_DATE("' . $filter['from_date'] . '", "%Y-%m-%d")')
+			->whereRaw('reconcile_date <= STR_TO_DATE("' . $filter['to_date'] . '", "%Y-%m-%d")')
 			->orderByRaw('reconcile_date')
 			->get();
 

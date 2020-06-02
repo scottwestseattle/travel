@@ -58,10 +58,13 @@ class ReconcileController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
+		// show current month only
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+				
 		$records = null;
 		try
 		{
-			$records = Reconcile::getIndex();
+			$records = Reconcile::getIndex($filter);
 		}
 		catch (\Exception $e) 
 		{
@@ -72,6 +75,8 @@ class ReconcileController extends Controller
 					
 		$vdata = $this->getViewData([
 			'records' => $records,
+			'filter' => $filter,
+			'dates' => Controller::getDateControlDates(),
 		]);
 			
 		return view(PREFIX . '.index', $vdata);

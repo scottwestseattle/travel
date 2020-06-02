@@ -6,7 +6,13 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 	
-	<h1>{{$titlePlural}} ({{count($records)}})</h1>
+	<form method="POST" id="form" action="/{{$prefix}}/index">	
+		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'filter' => $filter, 'formId' => 'form'])@endcomponent
+		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Submit</button>
+		{{ csrf_field() }}		
+	</form>
+	
+	<h1>{{$titlePlural}} @if (isset($records))({{count($records)}})@endif</h1>
 
 	<table class="table">
 		<thead>

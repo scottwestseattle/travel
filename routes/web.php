@@ -72,6 +72,7 @@ Route::group(['prefix' => 'reconciles'], function () {
 	Route::get('/', 'ReconcileController@accounts');
 	Route::get('/view/{reconcile}', 'ReconcileController@view');
 	Route::get('/index', 'ReconcileController@index');
+	Route::post('/index', 'ReconcileController@index');
 	
 	// add/create
 	Route::get('/account/{account}','ReconcileController@add');

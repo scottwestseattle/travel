@@ -14,6 +14,8 @@ select created_at, id,  ip_address, referrer from `visitors` where referrer is n
 Latest DB Changes
 
 2020-05-31
+ALTER TABLE `reconciles` CHANGE `subtotal1` `subtotal1` DECIMAL(10,2) NULL DEFAULT NULL COMMENT 'for accounts with multiple balances', CHANGE `subtotal2` `subtotal2` DECIMAL(10,2) NULL DEFAULT NULL, CHANGE `subtotal3` `subtotal3` DECIMAL(10,2) NULL DEFAULT NULL, CHANGE `subtotal4` `subtotal4` DECIMAL(10,2) NULL DEFAULT NULL, CHANGE `subtotal5` `subtotal5` DECIMAL(10,2) NULL DEFAULT NULL;
+
 ALTER TABLE `accounts` ADD `multiple_balances_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'account has multiple balances (such as mutiple CD\'s or currencies)' AFTER `starting_balance`;
 
 ALTER TABLE `accounts` ADD `reconcile_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'is reconciled monthly' AFTER `starting_balance`
@@ -106,11 +108,6 @@ TER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelt`, ADD `map_la
 TER TABLE `photos` ADD `glery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permink` VARCHAR(255) NULL AFTER `glery_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
-My Booking Affiliate Link
-https://www.booking.com/index.html?aid=1535306
-
-////////////////////////////////////////////////////////////////////////////////////////////////
 // Switching lochost projects on MacBook
 
 cd \etc\apache2
@@ -160,11 +157,6 @@ $color = '#4993FD'; // blue header
 
 Footer Green:
 $color = '#5CB85C'; // green
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Windows 7 path:
-C:\app\scott\product\11.2.0\client_1;C:\app\scott\product\11.2.0\client_1\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\TortoiseSVN\bin;C:\Users\scott\AppData\Roaming\npm;C:\Program Files (x86)\nodejs\;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\Microsoft\Web Platform Instler\;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files\Microsoft SQL Server\100\DTS\Binn\;c:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\11;C:\Program Files (x86)\MySQL\MySQL Utilities 1.3.6\;C:\wamp64\bin\php\php7.1.9;C:\Users\scott\AppData\Roaming\Composer\vendor\bin;C:\ProgramData\ComposerSetup\bin;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\Tools\Binn\;c:\Program Files\Microsoft SQL Server\110\DTS\Binn\;c:\Program Files (x86)\Microsoft SQL Server\110\Tools\Binn\ManagementStudio\;c:\Program Files (x86)\Microsoft SQL Server\110\DTS\Binn\
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
