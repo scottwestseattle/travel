@@ -47,6 +47,7 @@ class ReconcileController extends Controller
 		
 		$vdata = $this->getViewData([
 			'records' => $records,
+			'overdueCount' => count(Account::getReconcilesOverdue()),
 		]);
 			
 		return view(PREFIX . '.accounts', $vdata);		
@@ -98,7 +99,8 @@ class ReconcileController extends Controller
 		return view(PREFIX . '.view', $vdata);
     }
 
-    public function account(Request $request, Account $account)
+	// this is add
+    public function add(Request $request, Account $account)
     {		
 		if (!$this->isAdmin())
              return redirect('/');
@@ -146,22 +148,6 @@ class ReconcileController extends Controller
 				
 		return view('reconciles.add', $vdata);
 	}
-		
-    public function add(Request $request)
-    {
-		if (!$this->isAdmin())
-             return redirect('/');
-
-		$accounts = Controller::getAccounts(LOG_ACTION_ADD);
-				
-		$vdata = $this->getViewData([
-			'accounts' => $accounts,
-			'dates' => Controller::getDateControlDates(),
-			'filter' => Controller::getFilter($request, /* today = */ true),
-		]);
-				
-		return view('reconciles.add', $vdata);
-	}
 
 	public function create(Request $request)
     {		
@@ -177,6 +163,17 @@ class ReconcileController extends Controller
 		$record->notes				= $this->trimNull($request->notes);
 		$record->account_id			= $request->account_id;
 		$record->balance			= floatval($request->balance);
+		
+		$record->subtotal_label1 = isset($request->subtotal_label1) ? $request->subtotal_label1 : null;
+		$record->subtotal1 = isset($request->subtotal1) ? $request->subtotal1 : null;
+		$record->subtotal_label2 = isset($request->subtotal_label2) ? $request->subtotal_label2 : null;
+		$record->subtotal2 = isset($request->subtotal2) ? $request->subtotal2 : null;
+		$record->subtotal_label3 = isset($request->subtotal_label3) ? $request->subtotal_label3 : null;
+		$record->subtotal3 = isset($request->subtotal3) ? $request->subtotal3 : null;
+		$record->subtotal_label4 = isset($request->subtotal_label4) ? $request->subtotal_label4 : null;
+		$record->subtotal4 = isset($request->subtotal4) ? $request->subtotal4 : null;
+		$record->subtotal_label5 = isset($request->subtotal_label5) ? $request->subtotal_label5 : null;
+		$record->subtotal5 = isset($request->subtotal5) ? $request->subtotal5 : null;
 
 		try
 		{

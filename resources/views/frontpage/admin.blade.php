@@ -168,7 +168,7 @@
 
 	@if ($accountReconcileOverdue > 0)
 	<div>
-		<h3 style="color:red;">Account Overdue to be Reconciled ({{$accountReconcileOverdue}})</h3>
+		<h3 style="color:red;">Accounts Overdue to be Reconciled ({{$accountReconcileOverdue}})</h3>
 		<a href="/reconciles">Reconcile Accounts</a>
 	</div>
 	<hr />		

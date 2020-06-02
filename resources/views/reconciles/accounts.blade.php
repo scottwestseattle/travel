@@ -6,7 +6,7 @@
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 	
-	<h1>Reconcile Accounts ({{isset($records) ? count($records) : 0}})</h1>
+	<h1>Reconcile Accounts ({{isset($records) ? count($records) : 0}})@if ($overdueCount > 0), Overdue ({{$overdueCount}})@endif</h1>
 
 	<table class="table">
 		<thead>
@@ -29,7 +29,11 @@
 				@endif
 								
 				<td><a href="/reconciles/account/{{$record->id}}">{{$record->name}}</a></td>
-				<td>{{$record->reconcile_date}}</td>
+				@if (App\Account::isReconcileOverdue($record->reconcile_date))
+					<td style="color:red">{{$record->reconcile_date}}</td>
+				@else
+					<td>{{$record->reconcile_date}}</td>
+				@endif
 				<td>{{$record->reconcile_statement_day > 0 ? $record->reconcile_statement_day . 'th' : 'End of Month' }}</td>
 				<td>{{$record->balance}}</td>
 			</tr>

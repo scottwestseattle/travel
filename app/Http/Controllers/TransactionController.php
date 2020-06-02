@@ -988,4 +988,15 @@ class TransactionController extends Controller
 		return view(PREFIX . '.expenses', $vdata);
     }	
 	
+	// this is called by ajax to get the balance for an account during reconcile
+    public function getbalance(Request $request, $account_id)
+    {
+		$balance = Transaction::getBalanceByDate($account_id);
+		
+		$vdata = $this->getViewDataAjax([
+			'balance' => $balance,
+		]);		
+		
+		return view(PREFIX . '.getbalance', $vdata);
+	}	
 }

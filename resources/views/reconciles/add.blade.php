@@ -24,15 +24,16 @@
 			@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent
 		</div>
 			
-		<input type="hidden" name="balance" value="{{$balance}}" />
+		<input type="hidden" name="balance" id="balance" value="{{$balance}}" />
 		<label for="balance" class="control-label">Reconciled Balance: </label>
-		<div style="font-size: 20pt; margin-top:20px;">${{number_format(abs($balance), 2)}}<span style="font-size:10pt; margin-left:20px;"><a href="/transactions/show/account/{{$account->id}}" target="_blank">Show Transactions</a></span></div>
+		<div style="margin-top:20px;"><span id="displayBalance" style="font-size: 20pt; margin-right:20px;">${{number_format(abs($balance), 2)}}</span>
+			<a href='#' onclick="event.preventDefault(); updateBalance({{$account->id}});"><span style="font-size:16pt;" class="glyphCustom glyphicon glyphicon-refresh"></span></a>
+		</div>
+		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account/{{$account->id}}" target="_blank">Show Transactions</a></div>
 							
 		<div class="submit-button" style="margin-top:20px;">
 			<button type="submit" name="update" class="btn btn-primary">Add Reconcile Record</button>
 		</div>
-
-
 
 		<!-- input type="text" name="subtotal_xe1" class="form-control-inline"></input -->	
 
@@ -77,6 +78,32 @@
 @endsection
 
 <script>
+
+function updateBalance(accountId)
+{	
+	url = '/transactions/getbalance/' + accountId;
+	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() 
+	{
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			// alert(this.responseText
+
+			balance = Number(this.responseText);
+			$('#displayBalance').html("$" + balance.toFixed(2)); // the balance displayed (refresh doesn't show the commas)
+			$('#balance').val(balance); // the hidden balance that is saved
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();			
+}
 
 function setTotal()
 {

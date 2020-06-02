@@ -25,7 +25,7 @@ class Reconcile extends Base
 		$records = Reconcile::select()
 			->where('user_id', Auth::id())
 			->where('deleted_flag', 0)
-			->orderByRaw('id DESC')
+			->orderByRaw('reconcile_date')
 			->get();
 
 		return $records;

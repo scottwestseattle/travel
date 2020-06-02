@@ -378,7 +378,7 @@ class Transaction extends Base
 		';
 		
 		if (isset($dateTo))
-			$q .= ' AND transaction_date <= STR_TO_DATE(?, "%Y-%m-%d") ';
+			$q .= ' AND transaction_date <= STR_TO_DATE("' . $dateTo . '", "%Y-%m-%d") ';
 
 		$records = DB::select($q, [Auth::id(), intval($accountId)]);
 		if (count($records) > 0)

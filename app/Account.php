@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use DateTime;
+use DateInterval;
 
 class Account extends Base
 {
@@ -68,6 +69,31 @@ class Account extends Base
 		return $array;
 	}
 
+    static public function isReconcileOverdue($reconcileDate)
+    {
+		$rc = false;
+		
+		if (isset($reconcileDate))
+		{
+			$nextReconcileDate = $lastReconcileDate = new DateTime($reconcileDate);
+			$nextReconcileDate->add(new DateInterval('P1M')); // add 1 month
+			$today = new DateTime();
+			$today->setTime(0, 0, 0); // zero the time so it will match $nextReconcileDate
+			if ($today > $nextReconcileDate)
+			{
+				// out of date
+				$rc = true;
+			}
+		}
+		else
+		{
+			// never reconciled
+			$rc = true;
+		}		
+		
+		return $rc;
+	}
+	
     static public function getReconcilesOverdue()
     {
 		$records = self::getIndex(false, /* $showReconcile = */ true);
@@ -76,22 +102,9 @@ class Account extends Base
 		
 		foreach($records as $record)
 		{
-			if (isset($record->reconcile_date))
+			if (self::isReconcileOverdue($record->reconcile_date))
 			{
-				$date = strtotime($record->reconcile_date);
-				$reconcileYear = date("y", $date);
-				$reconcileMonth = date("m", $date);
-				$reconcileDay = 28; //
-				
-				if ($reconcileYear <= date("y") && $reconcileMonth < date("m") && $reconcileDay <= date('d'))
-				{
-					// out of date
-					$accounts[] = $record;
-				}
-			}
-			else
-			{
-				// never reconcileDate
+				// out of date
 				$accounts[] = $record;
 			}
 		}

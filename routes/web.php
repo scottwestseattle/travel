@@ -74,8 +74,7 @@ Route::group(['prefix' => 'reconciles'], function () {
 	Route::get('/index', 'ReconcileController@index');
 	
 	// add/create
-	Route::get('/account/{account}','ReconcileController@account');
-	Route::post('/account/{account}','ReconcileController@account');
+	Route::get('/account/{account}','ReconcileController@add');
 	Route::post('/create','ReconcileController@create');
 
 	// edit/update
@@ -297,6 +296,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	// balances
 	Route::get('/balances','TransactionController@balances')->middleware('auth');
 	Route::post('/balances','TransactionController@balances')->middleware('auth');
+	Route::get('/getbalance/{account_id}','TransactionController@getbalance')->middleware('auth');
 	
 	// reconcile
 	Route::get('/reconciles/{accountId?}', 'TransactionController@reconciles')->middleware('auth');
