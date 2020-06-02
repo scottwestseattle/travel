@@ -7,6 +7,7 @@ use DB;
 use Auth;
 use DateTime;
 use DateInterval;
+use App\Reconcile;
 
 class Account extends Base
 {
@@ -15,6 +16,62 @@ class Account extends Base
     	return $this->belongsTo(User::class);
     }
 
+	public function reconciles()
+    {
+		return $this->hasMany('App\Reconcile', 'account_id')->where('deleted_flag', 0);
+    }
+
+	public function getSubtotals()
+	{
+		$subtotals = [];
+		$subtotals['label1'] = '';
+		$subtotals['value1'] = '';
+		$subtotals['label2'] = '';
+		$subtotals['value2'] = '';
+		$subtotals['label3'] = '';
+		$subtotals['value3'] = '';
+		$subtotals['label4'] = '';
+		$subtotals['value4'] = '';
+		$subtotals['label5'] = '';
+		$subtotals['value5'] = '';
+		
+		if (isset($this->reconciles))
+		{
+			$r = $this->reconciles->first();
+			if (isset($r))
+			{
+				if (isset($r->subtotal_label1))
+					$subtotals['label1'] = $r->subtotal_label1;
+				if (isset($r->subtotal1))
+					$subtotals['value1'] = $r->subtotal1;
+				
+				if (isset($r->subtotal_label2))
+					$subtotals['label2'] = $r->subtotal_label2;
+				if (isset($r->subtotal2))
+					$subtotals['value2'] = $r->subtotal2;
+				
+				if (isset($r->subtotal_label3))
+					$subtotals['label3'] = $r->subtotal_label3;
+				if (isset($r->subtotal3))
+					$subtotals['value3'] = $r->subtotal3;
+				
+				if (isset($r->subtotal_label4))
+					$subtotals['label4'] = $r->subtotal_label4;
+				if (isset($r->subtotal4))
+					$subtotals['value4'] = $r->subtotal4;
+				
+				if (isset($r->subtotal_label5))
+					$subtotals['label5'] = $r->subtotal_label5;
+				if (isset($r->subtotal5))
+					$subtotals['value5'] = $r->subtotal5;
+
+				$subtotals['total'] = number_format($r->subtotal1 + $r->subtotal2 + $r->subtotal3 + $r->subtotal4 + $r->subtotal5, 2);
+			}
+		}
+		
+		return $subtotals;
+	}
+	
     static public function getStartingBalance($accountId)
     {
     	$accountId = intval($accountId);

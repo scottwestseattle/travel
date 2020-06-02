@@ -38,34 +38,36 @@
 		<!-- input type="text" name="subtotal_xe1" class="form-control-inline"></input -->	
 
 		@if ($account->multiple_balances_flag == 1)
+		<?php $subtotals = $account->getSubtotals(); ?>
 		<h3>Subtotals</h3>
 		<div>
-		<input type="text" name="subtotal_label1" class="form-control-inline"></input>	
-		<input type="text" name="subtotal1" id="subtotal1" onblur="setTotal()" class="form-control-inline"></input>	
+		<input type="text" name="subtotal_label1" class="form-control-inline" value="{{$subtotals['label1']}}" />
+		<input type="text" name="subtotal1" id="subtotal1" onblur="setTotal()" class="form-control-inline" value="{{$subtotals['value1']}}" />
 		</div>
 
 		<div>
-		<input type="text" name="subtotal_label2" class="form-control-inline"></input>	
-		<input type="text" name="subtotal2" id="subtotal2" onblur="setTotal()" class="form-control-inline"></input>	
+		<input type="text" name="subtotal_label2" class="form-control-inline" value="{{$subtotals['label2']}}" />
+		<input type="text" name="subtotal2" id="subtotal2" onblur="setTotal()" class="form-control-inline" value="{{$subtotals['value2']}}" />
 		</div>
 		
 		<div>
-		<input type="text" name="subtotal_label3" class="form-control-inline"></input>	
-		<input type="text" name="subtotal3" id="subtotal3" onblur="setTotal()" class="form-control-inline"></input>	
+		<input type="text" name="subtotal_label3" class="form-control-inline" value="{{$subtotals['label3']}}" />
+		<input type="text" name="subtotal3" id="subtotal3" onblur="setTotal()" class="form-control-inline" value="{{$subtotals['value3']}}" />
 		</div>
 		
 		<div>
-		<input type="text" name="subtotal_label4" class="form-control-inline"></input>	
-		<input type="text" name="subtotal4" id="subtotal4" onblur="setTotal()" class="form-control-inline"></input>	
+		<input type="text" name="subtotal_label4" class="form-control-inline" value="{{$subtotals['label4']}}" />
+		<input type="text" name="subtotal4" id="subtotal4" onblur="setTotal()" class="form-control-inline" value="{{$subtotals['value4']}}" />
 		</div>
 		
 		<div>
-		<input type="text" name="subtotal_label5" class="form-control-inline"></input>	
-		<input type="text" name="subtotal5" id="subtotal5" onblur="setTotal()" class="form-control-inline"></input>	
+		<input type="text" name="subtotal_label5" class="form-control-inline" value="{{$subtotals['label5']}}" />
+		<input type="text" name="subtotal5" id="subtotal5" onblur="setTotal()" class="form-control-inline" value="{{$subtotals['value5']}}" />
 		</div>
+
 		<div>
 		<input type="text" name="total_label" class="form-control-inline" value="TOTAL:" />	
-		<input type="text" name="total" id="total" class="form-control-inline"></input>	
+		<input type="text" name="total" id="total" class="form-control-inline" value="{{$subtotals['total']}}" />
 		</div>
 		@endif
 		

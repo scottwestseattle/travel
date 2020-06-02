@@ -87,11 +87,11 @@ function inlineEditSubmit(id)
 
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
 	
-	<form method="POST" action="/{{$prefix}}/filter">
+	<form method="POST" id="form" action="/{{$prefix}}/filter">
 		
 		{{$filter['from_date']}} - {{$filter['to_date']}}
 		
-		@component('control-dropdown-date', ['div' => true, 'monthCheckbox' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent
+		@component('control-dropdown-date', ['div' => true, 'monthCheckbox' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter, 'formId' => 'form'])@endcomponent
 				
 		<div style="float:left;">
 			@component('control-dropdown-menu', ['field_name' => 'account_id', 'options' => $accounts, 'selected_option' => $filter['account_id'], 'empty' => 'account'])@endcomponent	
@@ -108,7 +108,7 @@ function inlineEditSubmit(id)
 		<input style="font-size:16px; height:24px; width:200px;" type="text" name="search" class="form-control" value="{{$filter['search']}}"></input>		
 		
 		<div>
-			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" onclick="$('#form').submit();" value="1" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
 			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unreconciled_flag" class="checkbox-label">Unreconciled</label>

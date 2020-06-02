@@ -220,7 +220,6 @@ class ReconcileController extends Controller
              return redirect('/');
 
 		$record = $reconcile;
-		
 		$filter = Controller::getDateControlSelectedDate($record->reconcile_date);	
 		
 		$vdata = $this->getViewData([
