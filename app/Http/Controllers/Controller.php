@@ -1095,6 +1095,22 @@ class Controller extends BaseController
 		return $text;
 	}
 	
+	static protected function trimDate($text)
+	{
+		if (isset($text))
+		{
+			$text = trim($text);
+			
+			// remove anything that's not numeric or a dash
+			$text = preg_replace("/[^0-9^-]+/", "", $text);
+			
+			if (strlen($text) === 0)
+				$text = null;
+		}
+		
+		return $text;
+	}	
+	
 	protected function getTextOrShowEmpty($text)
 	{
 		$r = '(empty)';

@@ -196,7 +196,7 @@ class ReconcileController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 			
-		return redirect('/reconciles');
+		return redirect('/reconciles/account/' . $request->account_id);
 	}
 	
     private function createReconcile($date, $balance, $notes, $accountId) 

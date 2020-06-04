@@ -32,7 +32,7 @@
 				<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				
 				<td>{{$record->reconcile_date}}</td>
-				<td><a href="/accounts/index">{{$record->account->name}}</a></td>
+				<td><a href="/reconciles/account/{{$record->account->id}}">{{$record->account->name}}</a></td>
 				<td>{{$record->balance}}</td>
 				<td>{{$record->notes}}</td>
 

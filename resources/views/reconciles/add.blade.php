@@ -26,10 +26,10 @@
 			
 		<input type="hidden" name="balance" id="balance" value="{{$balance}}" />
 		<label for="balance" class="control-label">Reconciled Balance: </label>
-		<div style="margin-top:20px;"><span id="displayBalance" style="font-size: 20pt; margin-right:20px;">${{number_format(abs($balance), 2)}}</span>
+		<div style="margin-top:20px;"><span id="displayBalance" style="font-size: 20pt; margin-right:20px;">${{number_format($balance, 2)}}</span>
 			<a href='#' onclick="event.preventDefault(); updateBalance({{$account->id}});"><span style="font-size:16pt;" class="glyphCustom glyphicon glyphicon-refresh"></span></a>
 		</div>
-		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account/{{$account->id}}" target="_blank">Show Transactions</a></div>
+		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account-all/{{$account->id}}" target="_blank">Show Transactions</a></div>
 							
 		<div class="submit-button" style="margin-top:20px;">
 			<button type="submit" name="update" class="btn btn-primary">Add Reconcile Record</button>
@@ -71,6 +71,35 @@
 		</div>
 		@endif
 		
+	<h3>Reconciliations @if (isset($account->reconciles))({{count($account->reconciles)}})@endif</h3>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Date</th>
+				<th>Balance</th>
+				<th>Notes</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+		@if (isset($account->reconciles))
+			@foreach($account->reconciles as $record)
+			<tr>
+				<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+				
+				<td>{{$record->reconcile_date}}</td>
+				<td>{{$record->balance}}</td>
+				<td>{{$record->notes}}</td>
+
+				<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+			</tr>
+			@endforeach
+		@endif
+		</tbody>
+	</table>
+
 		{{ csrf_field() }}
 
 	</form>
@@ -82,8 +111,9 @@
 <script>
 
 function updateBalance(accountId)
-{	
-	url = '/transactions/getbalance/' + accountId;
+{
+	date = $('#year').val() + '-' + $('#month').val() + '-' + $('#day').val();
+	url = '/transactions/getbalance/' + accountId + '/' + date;
 	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() 

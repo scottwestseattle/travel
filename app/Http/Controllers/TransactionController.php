@@ -878,15 +878,16 @@ class TransactionController extends Controller
 		{
 			case 'account':
 				$filter['account_id'] = $id;
-				//session(['account_id' => $id]);
+				break;
+			case 'account-all':
+				$filter['account_id'] = $id;
+				$filter['showalldates_flag'] = 1;				
 				break;
 			case 'category':
 				$filter['category_id'] = $id;
-				//session(['category_id' => $id]);
 				break;
 			case 'subcategory':
 				$filter['subcategory_id'] = $id;
-				//session(['subcategory_id' => $id]);
 				break;
 			default;
 				break;
@@ -989,9 +990,10 @@ class TransactionController extends Controller
     }	
 	
 	// this is called by ajax to get the balance for an account during reconcile
-    public function getbalance(Request $request, $account_id)
+    public function getbalance(Request $request, $account_id, $date)
     {
-		$balance = Transaction::getBalanceByDate($account_id);
+		$date = Controller::trimDate($date);
+		$balance = Transaction::getBalanceByDate(intval($account_id), $date);
 		
 		$vdata = $this->getViewDataAjax([
 			'balance' => $balance,

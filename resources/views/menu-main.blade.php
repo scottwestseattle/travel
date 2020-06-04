@@ -128,9 +128,10 @@
 									<ul class="dropdown-menu">
 										<li><a href="/transactions/summary">@lang('ui.Summary')</a></li>
 										<li><a href="/transactions">@lang('ui.Transactions')</a></li>
-										<li><a href="/transactions/trades">@lang('ui.Trades')</a></li>
+										<li><a href="/transactions/positions">@lang('ui.Stocks')</a></li>
 										<li><a href="/transactions/balances">@lang('ui.Balances')</a></li>
 										<li><a href="/accounts/index">@lang('ui.Accounts')</a></li>
+										<li><a href="/reconciles">@lang('ui.Reconcile')</a></li>
 										<li><a href="/categories/indexadmin">@lang('ui.Categories')</a></li>
 										<li><a href="/email/check">@lang('ui.Email')</a></li>
 										<li><a href="/transactions/expenses">@lang('ui.Expenses')</a></li>

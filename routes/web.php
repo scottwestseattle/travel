@@ -297,7 +297,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	// balances
 	Route::get('/balances','TransactionController@balances')->middleware('auth');
 	Route::post('/balances','TransactionController@balances')->middleware('auth');
-	Route::get('/getbalance/{account_id}','TransactionController@getbalance')->middleware('auth');
+	Route::get('/getbalance/{account_id}/{date}','TransactionController@getbalance')->middleware('auth');
 	
 	// reconcile
 	Route::get('/reconciles/{accountId?}', 'TransactionController@reconciles')->middleware('auth');
