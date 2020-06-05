@@ -78,7 +78,7 @@ class EntryController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		
-		$entries = $this->getEntriesByType($type_flag, /* approved = */ false);
+		$entries = $this->getEntriesByType($type_flag, false, 0, null, false, ORDERBY_DATE);
 
 		$vdata = $this->getViewData([
 			'records' => $entries,

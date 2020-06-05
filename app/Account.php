@@ -170,29 +170,31 @@ class Account extends Base
 	}
 	
     static public function getIndex($showAll = false, $showReconcile = false)
-    {
+    {		
 		$q = '
-			SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day
-				, sum(t.amount) + a.starting_balance as balance
-				, max(r.reconcile_date) as reconcile_date
-			FROM accounts as a
-			LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 AND t.reconciled_flag = 1 
-			LEFT JOIN reconciles as r ON r.account_id = a.id AND r.deleted_flag = 0
-			WHERE 1=1 
-			AND a.user_id = ?
-			AND a.deleted_flag = 0
-			';
-			
+			SELECT b.id, b.name, b.notes, b.hidden_flag, b.starting_balance, b.reconcile_flag, b.reconcile_statement_day, b.balance, max(r.reconcile_date) as reconcile_date FROM (
+				SELECT a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day
+						, sum(t.amount) + a.starting_balance as balance
+					FROM accounts as a
+					LEFT JOIN transactions as t ON t.parent_id = a.id AND t.deleted_flag = 0 AND t.reconciled_flag = 1 
+					WHERE 1=1 
+					AND a.user_id = ?
+					AND a.deleted_flag = 0
+		';
+		
 		if ($showReconcile)
 			$q .= ' AND a.reconcile_flag = 1 ';
 		else if (!$showAll)
 			$q .= ' AND a.hidden_flag = 0 ';
-
-		$q .= '	GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day ';
-
-		$q .= ($showReconcile ? ' ORDER BY reconcile_date ASC, a.name ASC ' : ' ORDER BY a.name ASC ');
 		
+		$q .= '
+					GROUP BY a.id, a.name, a.notes, a.hidden_flag, a.starting_balance, a.reconcile_flag, a.reconcile_statement_day 
+					) AS b
+				LEFT JOIN reconciles as r ON r.account_id = b.id AND r.deleted_flag = 0
+				GROUP BY b.id, b.name, b.notes, b.starting_balance, b.reconcile_flag, b.reconcile_statement_day, b.hidden_flag, b.balance
+		';
 
+		$q .= ($showReconcile ? ' ORDER BY reconcile_date ASC, name ASC ' : ' ORDER BY name ASC ');	
 			
 //dd($q);
 		$records = DB::select($q, [Auth::id()]);
