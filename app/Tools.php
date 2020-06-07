@@ -584,7 +584,7 @@ class Tools
 		
 		return $date;
 	}
-	
+
     static public function importGeo()
     {		
 		//$records = Ip2location::all();
@@ -668,11 +668,10 @@ class Tools
 							set_time_limit(30);	// add more seconds to keep it from timing out
 							//dump(date('H-i-s') . ' - ' . $cnt);
 						}
-		
 					}
 						
 					// test without limit
-					if (($cnt - $start) >= 200000)
+					if (($cnt - $start) == 100000)
 						break;
 											
 					$cnt++;		

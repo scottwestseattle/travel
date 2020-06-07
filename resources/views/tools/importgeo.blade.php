@@ -4,18 +4,88 @@
 
 <div class="container page-size">
 
-	<h1>Import GEO Data</h1>
+	<h1>Import Geo Data</h1>
 	
 	@if ($status['error'])
 		<h3>Import Error:</h3>
 		<p>{{$status['error']}}</p>
 	@else
-		<h3>Total Records Imported:</h3>
-		<h3><strong>{{number_format($status['endCount'])}}</strong></h3>
+		<h3>Geo Records:</h3>
+		<h3><strong><span id="total">{{number_format($status['startCount'])}}</span></strong></h3>
 	@endif
 	
-	<h3 style="margin-top:20px;"><a type="button" class="btn btn-success" href="/importgeo">Continue Importing</a></h3>
+	<h3 style="margin-top:20px;"><a type="button" id="addButton" class="btn btn-success" href="/importgeo" onclick="event.preventDefault(); importGeo();">Import</a></h3>
 	
 </div>
 
 @endsection
+
+<script>
+
+var timerUpdateTotals = null;
+var timerImportGeo = null;
+
+function importGeo()
+{
+	url = '/importgeoajax/';
+
+	$('#addButton').text('Importing...');	
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() 
+	{
+		if (this.status == 200)
+		{
+			//alert(this.responseText);
+		}
+					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			clearTimeout(timerImportGeo);
+			
+			// alert(this.responseText			
+			var counts = this.responseText.split("|");
+			if (Number(counts[1]) > 0)
+			{
+				timerImportGeo = setTimeout(importGeo, 100)
+			}
+			else
+			{
+				$('#addButton').text('Done');
+				clearTimeout(timerUpdateTotals);
+			}
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();
+
+	if (timerUpdateTotals == null)
+		timerUpdateTotals = setTimeout(updateTotals, 1000);
+}
+
+function updateTotals()
+{
+	url = '/getgeocount/';
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() 
+	{					
+		if (this.readyState == 4 && this.status == 200) 
+		{	
+			var total = this.responseText;
+			$('#total').html(Number(total));
+			
+			clearTimeout(timerUpdateTotals);
+			timerUpdateTotals = setTimeout(updateTotals, 1000);
+		}
+	};
+	
+	xhttp.open("GET", url, true);
+	xhttp.send();		
+}
+
+
+
+
+
+</script>

@@ -13,6 +13,7 @@ use App\Event;
 use App\Photo;
 use App\Location;
 use App\Tools;
+use App\Ip2location;
 
 class ToolController extends Controller
 {
@@ -47,7 +48,7 @@ class ToolController extends Controller
 		['Hostal', '/entries/hostal-europa-barcelona-spain-2019-11-10', ''],
 		['Myanmar', '/entries/recent-locations', ''],
 		];
-	
+		
 	// The CSS sandbox	
 	public function style()
 	{
@@ -794,10 +795,35 @@ LEFT JOIN photos
 	
 	public function importGeo()
     {
-		$status = Tools::importGeo();
-
+		//$status = Tools::importGeo();
+		
+		$status['endCount'] = false;
+		$status['startCount'] = Ip2location::select()->count();
+		$status['error'] = false;
+	
     	return view('tools.importgeo', $this->getViewData([
 			'status' => $status,
 		]));
 	}
+	
+	public function importGeoAjax()
+    {
+		$status = Tools::importGeo();
+		
+		$total = intval($status['endCount']);
+		$new = intval($status['endCount']) - intval($status['startCount']);
+		
+		$vdata = $this->getViewDataAjax([
+			'importCount' => $total . '|' . $new,
+		]);		
+		
+		return view('tools.importgeoajax', $vdata);		
+	}	
+	
+	public function getGeoCount()
+    {
+    	return view('tools.getgeocount', $this->getViewData([
+			'count' => Ip2location::select()->count(),
+		]));
+	}	
 }

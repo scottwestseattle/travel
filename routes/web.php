@@ -60,6 +60,8 @@ Route::get('/style', 'ToolController@style');
 Route::get('/wp-admin', 'ToolController@wpAdmin');
 Route::get('/wp-admin.php', 'ToolController@wpAdmin');
 Route::get('/importgeo', 'ToolController@importGeo');
+Route::get('/importgeoajax', 'ToolController@importGeoAjax');
+Route::get('/getgeocount', 'ToolController@getGeoCount');
 
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');

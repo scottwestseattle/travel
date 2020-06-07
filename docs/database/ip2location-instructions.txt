@@ -1,0 +1,7 @@
+download:
+
+[DB3.LITE] IP-COUNTRY-REGION-CITY Database / DB3LITE / ~ 30MB
+
+filename:
+
+IP2LOCATION-LITE-DB3.CSV
