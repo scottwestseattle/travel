@@ -1,7 +1,27 @@
-download:
+1. download the new database:
 
-[DB3.LITE] IP-COUNTRY-REGION-CITY Database / DB3LITE / ~ 30MB
+[DB3.LITE] IP-COUNTRY-REGION-CITY Database / DB3LITE / ~ 30MB (zipped)
 
 filename:
 
 IP2LOCATION-LITE-DB3.CSV
+
+2. unzip and upload it to:
+
+/public/import/
+
+3. import the new database
+
+a. Rename the old db 
+
+b. Copy the db back to the prod name, structure only
+
+c. Go to Admin/Geo to import the uploaded file
+
+
+4. Check results
+
+open upload file with notepad++ to get a recond count
+
+compare the count with the prod db table
+

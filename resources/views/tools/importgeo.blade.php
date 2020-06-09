@@ -12,6 +12,7 @@
 	@else
 		<h3>Geo Records:</h3>
 		<h3><strong><span id="total">{{number_format($status['startCount'])}}</span></strong></h3>
+		<p><span id="error"></span></p>
 	@endif
 	
 	<h3 style="margin-top:20px;"><a type="button" id="addButton" class="btn btn-success" href="/importgeo" onclick="event.preventDefault(); importGeo();">Import</a></h3>
@@ -30,6 +31,8 @@ function importGeo()
 	url = '/importgeoajax/';
 
 	$('#addButton').text('Importing...');	
+	$('#error').text('');
+	
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() 
 	{
@@ -50,8 +53,17 @@ function importGeo()
 			}
 			else
 			{
-				$('#addButton').text('Done');
 				clearTimeout(timerUpdateTotals);
+				
+				if (counts.length > 2)
+				{
+					$('#error').text(counts[2]);
+					$('#addButton').text('Retry');
+				}
+				else
+				{
+					$('#addButton').text('Done');
+				}
 			}
 		}
 	};

@@ -459,6 +459,13 @@ class Tools
 
 		return $v;
 	}
+	
+	static public function isLocalhost()
+	{
+		$ip = self::getIp();
+
+		return ($ip == '::1');
+	}	
 
 	static public function trunc($string, $length)
 	{
@@ -585,7 +592,7 @@ class Tools
 		return $date;
 	}
 
-    static public function importGeo()
+    static public function importGeo($maxLines)
     {		
 		//$records = Ip2location::all();
 		//$records->truncate();
@@ -596,11 +603,10 @@ class Tools
 		$rc['endCount'] = false;
 		$rc['startCount'] = false;
 		$rc['error'] = false;
-		
+	
 		if (!file_exists($file))
 		{
 			$rc['error'] = 'Import file not found: ' . $importFile;
-			
 			return $rc;
 		}
 		
@@ -662,16 +668,10 @@ class Tools
 							dump($ip);
 							dd($e);
 						}
-					
-						if (false && $cnt % 100000 == 0)
-						{
-							set_time_limit(30);	// add more seconds to keep it from timing out
-							//dump(date('H-i-s') . ' - ' . $cnt);
-						}
 					}
 						
-					// test without limit
-					if (($cnt - $start) == 100000)
+					// limit number of lines so request won't time out
+					if (($cnt - $start) >= $maxLines)
 						break;
 											
 					$cnt++;		

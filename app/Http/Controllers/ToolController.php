@@ -795,8 +795,6 @@ LEFT JOIN photos
 	
 	public function importGeo()
     {
-		//$status = Tools::importGeo();
-		
 		$status['endCount'] = false;
 		$status['startCount'] = Ip2location::select()->count();
 		$status['error'] = false;
@@ -808,13 +806,20 @@ LEFT JOIN photos
 	
 	public function importGeoAjax()
     {
-		$status = Tools::importGeo();
+		$maxLines = (Tools::isLocalHost()) ? 100 : 100000;
+		
+		$status = Tools::importGeo($maxLines);
 		
 		$total = intval($status['endCount']);
 		$new = intval($status['endCount']) - intval($status['startCount']);
+		$error = $status['error'];
+
+		$results = $total . '|' . $new;
+		if (isset($error))
+			$results .= '|' . $error;
 		
 		$vdata = $this->getViewDataAjax([
-			'importCount' => $total . '|' . $new,
+			'importCount' => $results,
 		]);		
 		
 		return view('tools.importgeoajax', $vdata);		
