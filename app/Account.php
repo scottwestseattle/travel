@@ -18,7 +18,7 @@ class Account extends Base
 
 	public function reconciles()
     {
-		return $this->hasMany('App\Reconcile', 'account_id')->where('deleted_flag', 0);
+		return $this->hasMany('App\Reconcile', 'account_id')->where('deleted_flag', 0)->orderByRaw('reconcile_date DESC');
     }
 
 	public function getSubtotals()
@@ -136,7 +136,7 @@ class Account extends Base
 			$nextReconcileDate->add(new DateInterval('P1M')); // add 1 month
 			$today = new DateTime();
 			$today->setTime(0, 0, 0); // zero the time so it will match $nextReconcileDate
-			if ($today > $nextReconcileDate)
+			if ($today >= $nextReconcileDate)
 			{
 				// out of date
 				$rc = true;

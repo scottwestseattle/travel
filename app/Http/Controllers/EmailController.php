@@ -11,22 +11,6 @@ use App\Transaction;
 define('LOG_MODEL', 'email');
 define('TITLE', 'Email');
 
-// chase
-define("EMAIL_CHASE_ID", 35);
-define("EMAIL_CHASE_ACCOUNT", '2117');
-
-// cap gray
-define("EMAIL_CAPGRAY_ID", 31);
-define("EMAIL_CAPGRAY_ACCOUNT", '6403');
-
-// cap blue
-define("EMAIL_CAPBLUE_ID", 10);  
-define("EMAIL_CAPBLUE_ACCOUNT", '5043');
-
-// pacific
-define("EMAIL_PACIFIC_ID", 14);  
-define("EMAIL_PACIFIC_ACCOUNT", '1712');
-
 define("EMAIL_DEFAULT_ACCOUNT_ID", 31);  
 
 class EmailController extends Controller
@@ -34,10 +18,11 @@ class EmailController extends Controller
 	private function getAccountId($account)
 	{
 		$accounts = [
-			'2117' => 35,
+			'2117' => 35, // Chase
 			'1397' => 31, // Cap Gray new
 			'0370' => 31, // Cap Gray old card '0370', still needed because it's used as an account name
-			'5043' => 10, // Cap Blue
+			'5043' => 10, // Cap Blue, old number
+			'4427' => 10, // Cap Blue, new number
 			'1712' => 14,
 		];
 		

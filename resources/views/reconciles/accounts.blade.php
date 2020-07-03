@@ -15,7 +15,6 @@
 				<th>Name</th>
 				<th>Reconciled</th>
 				<th>Statement</th>
-				<th>Balance</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,7 +34,6 @@
 					<td>{{$record->reconcile_date}}</td>
 				@endif
 				<td>{{$record->reconcile_statement_day > 0 ? $record->reconcile_statement_day . 'th' : 'End of Month' }}</td>
-				<td>{{$record->balance}}</td>
 			</tr>
 			@endforeach
 		@endif
