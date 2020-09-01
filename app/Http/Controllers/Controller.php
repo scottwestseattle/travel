@@ -315,7 +315,8 @@ class Controller extends BaseController
 	
 	protected function getVisitorInfoDebug()
 	{
-		return $this->geo()->visitorInfoDebug();		
+		return 'geo::visitorInfoDebug not implemented';
+		//return $this->geo()->visitorInfoDebug();		
 	}
 
 	protected function saveVisitor($model, $page, $record_id = null)
