@@ -6,6 +6,14 @@
 
 	<h1>Import Geo Data</h1>
 	
+	<p>1. Download DB3LITE as csv</p>
+	<p>2. move the csv file to travel\public\import and upload it to the server</p>
+	<p>3. cPanel: copy the live table 'ip2locations', 'structure only', to 'ip2locationsimport'</p>
+	<p>4. open the upload file in notepad to get the number of records</p>
+	<p>5. import the new records</p>
+	<p>6. cPanel: rename ip2locations to ip2locationsOld</p>
+	<p>7. cPanel: rename ip2locationsimport to ip2locations</p>
+	
 	@if ($status['error'])
 		<h3>Import Error:</h3>
 		<p>{{$status['error']}}</p>
@@ -15,7 +23,7 @@
 		<p><span id="error"></span></p>
 	@endif
 	
-	<h3 style="margin-top:20px;"><a type="button" id="addButton" class="btn btn-success" href="/importgeo" onclick="event.preventDefault(); importGeo();">Import</a></h3>
+	<h3 style="margin-top:20px;"><a type="button" id="addButton" class="btn btn-success" href="/importgeo" onclick="event.preventDefault(); importGeo();" {{($status['error']) ? 'disabled' : ''}}>Import</a></h3>
 	
 </div>
 
@@ -38,32 +46,48 @@ function importGeo()
 	{
 		if (this.status == 200)
 		{
-			//alert(this.responseText);
+			//console.log('ajax status: ' + this.status + ', ' + this.responseText);
 		}
 					
-		if (this.readyState == 4 && this.status == 200) 
+		if (this.readyState == 4)
 		{	
-			clearTimeout(timerImportGeo);
-			
-			// alert(this.responseText			
-			var counts = this.responseText.split("|");
-			if (Number(counts[1]) > 0)
+			if (this.status == 200) 
 			{
-				timerImportGeo = setTimeout(importGeo, 100)
-			}
-			else
-			{
-				clearTimeout(timerUpdateTotals);
+				clearTimeout(timerImportGeo);
 				
-				if (counts.length > 2)
+				// alert(this.responseText			
+				var counts = this.responseText.split("|");
+				if (counts.length > 2 && counts[2].length > 0) // get error message
 				{
 					$('#error').text(counts[2]);
 					$('#addButton').text('Retry');
+					clearTimeout(timerUpdateTotals);
+					//console.log(counts);
+				}
+				else if (Number(counts[1]) > 0)
+				{
+					// continue
+					timerImportGeo = setTimeout(importGeo, 100)
 				}
 				else
 				{
-					$('#addButton').text('Done');
+					clearTimeout(timerUpdateTotals);
+					
+					if (counts.length > 2)
+					{
+						$('#error').text('error parsing or saving record - check event log');
+						$('#error').text(this.responseText);
+						$('#addButton').text('Retry');
+					}
+					else
+					{
+						$('#addButton').text('Done');
+					}
 				}
+			}
+			else
+			{
+				console.log('ajax status: ' + this.status + ', ' + this.responseText);
 			}
 		}
 	};

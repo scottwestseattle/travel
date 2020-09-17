@@ -7,8 +7,10 @@ use App;
 use Auth;
 use Lang;
 use DateTime;
+
+use App\Event;
+use App\Ip2locationImport;
 use App\User;
-use App\Ip2location;
 
 class Tools
 {
@@ -619,20 +621,20 @@ class Tools
 				$cnt = 0;
 
 				set_time_limit(0);	// sets it to run as long as needed
-				
-				$start = Ip2location::select()->count();
-				$rc['startCount'] = $start;
-				
+
+				$done = false;
+				$start = Ip2locationImport::select()->count();
+						
 				//dump($start);
 				//dump(date('H-i-s') . ' - ' . $cnt);
 	
 				// Convert each line into the local $data variable
-				while (($line = fgetcsv($h, 1000, ",")) !== FALSE) 
+				while (!$done && ($line = fgetcsv($h, 1000, ",")) !== FALSE) 
 				{
 					if ($cnt >= $start)
 					{
 						// Read the data from a single line
-						$ip = new Ip2location();
+						$ip = new Ip2locationImport();
 			
 						$ip->iplongStart = $line[0];			
 						$ip->iplongEnd = $line[1];
@@ -665,15 +667,16 @@ class Tools
 						}
 						catch (\Exception $e)
 						{
-							dump($ip);
-							dd($e);
+							$rc['error'] = 'Error saving import record - check event log';
+							Event::logException(LOG_MODEL_GEO, LOG_ACTION_ADD, 'error saving record', 0, substr($e->getMessage(), 200));
+							$done = true;
 						}
 					}
 						
 					// limit number of lines so request won't time out
 					if (($cnt - $start) >= $maxLines)
 						break;
-											
+
 					$cnt++;		
 				}
 				
@@ -681,7 +684,7 @@ class Tools
 				fclose($h);
 
 				// get the record count
-				$rc['endCount'] = Ip2location::select()->count();
+				$rc['endCount'] = Ip2locationImport::select()->count();
 				
 				//dump('count = ' . $cnt);
 				//dump($maxName . ': ' . $max);

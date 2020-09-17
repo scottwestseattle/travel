@@ -13,7 +13,7 @@ use App\Event;
 use App\Photo;
 use App\Location;
 use App\Tools;
-use App\Ip2location;
+use App\Ip2locationImport;
 
 class ToolController extends Controller
 {
@@ -796,8 +796,18 @@ LEFT JOIN photos
 	public function importGeo()
     {
 		$status['endCount'] = false;
-		$status['startCount'] = Ip2location::select()->count();
 		$status['error'] = false;
+		$status['startCount'] = false;
+		
+		try
+		{
+			$status['startCount'] = Ip2locationImport::select()->count();
+		}
+		catch (\Exception $e)
+		{
+			$status['error'] = 'Error counting current records in table ip2locationimport, does it exist?';
+			Event::logException(LOG_MODEL_GEO, LOG_ACTION_ADD, 'error getting record count from ip2locationimport', 0, substr($e->getMessage(), 200));
+		}	
 	
     	return view('tools.importgeo', $this->getViewData([
 			'status' => $status,
@@ -828,7 +838,7 @@ LEFT JOIN photos
 	public function getGeoCount()
     {
     	return view('tools.getgeocount', $this->getViewData([
-			'count' => Ip2location::select()->count(),
+			'count' => Ip2locationImport::select()->count(),
 		]));
 	}	
 }
