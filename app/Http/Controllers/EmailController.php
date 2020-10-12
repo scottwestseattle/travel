@@ -42,7 +42,7 @@ class EmailController extends Controller
 
     public function check(Request $request, $debug = false) 
 	{	
-		//$debug = true;
+		$debug = boolval($debug);
 		
 		// this happens sometimes and the transactions are added with no user id
 		if (Auth::id() == null)
@@ -367,7 +367,7 @@ class EmailController extends Controller
 		if ($debug)
 			dump('pos=' . $pos);
 									
-		$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on SEP 30, 2016, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
+		$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on 9/29/2020, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
 				
 		if ($pos !== false && $pos >= 44) 
 		{
@@ -394,21 +394,25 @@ class EmailController extends Controller
 			$amount = $this->parseTag($body_raw, 'purchase in the amount of ', 10, 0); 
 			$amount = floatval(trim($amount, '$'));
 			$amount = -$amount;
-						
-			// date looks like: SEP 30, 2016
-			$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 12, -1); 
+
+			// try this date format: 11/08/2018
+			$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 10, -1); 
 			$date2 = str_replace(',', '', $date_raw);
-			$date = DateTime::createFromFormat('M d Y', $date2);
+			$date = DateTime::createFromFormat('m/d/Y', $date2);
+						
 			if ($date == NULL)
 			{
-				// try this format: 11/08/2018
-				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 10, -1); 
-				$date = DateTime::createFromFormat('m/d/Y', $date_raw);
+				// date may look like: SEP 30, 2016
+				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 12, -1); 
+				$date2 = str_replace(',', '', $date_raw);
+				$date = DateTime::createFromFormat('M d Y', $date2);
+
 				if ($date == NULL)
 				{
-					die("Date conversion 2 failed, from text: " . $date_raw);
+					die("Date conversion 2 failed, from text: " . $date2);
 				}
 			}
+			$date_raw = $date2;
 									
 			// get the account number, last four digits, it will be within the text in $account
 
@@ -427,9 +431,8 @@ class EmailController extends Controller
 			// get the description
 			$desc = $this->parseTag($body_raw, $date_raw . ', at ', 30, -1); 
 			$pieces = explode(',', $desc);
-
+			
 			$desc = $pieces[0];
-						
 			if ($debug)
 			{
 				echo 'date=' . $date_raw . '<br/>';
