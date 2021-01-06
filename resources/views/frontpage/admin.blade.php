@@ -136,7 +136,7 @@
 								<br/>({{$record->visitor->ip_address}} / {{$record->visitor->country}})
 							@endif						
 						</td>
-						<td><a href='/comments/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
+						<td><a href='/comments/delete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 					</tr>
 				@endforeach
 			</tbody>

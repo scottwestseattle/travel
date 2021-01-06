@@ -11,8 +11,22 @@
 |
 */
 
-//sbw, call a view directly
-//Route::get('/', function () { return view('welcome'); });
+// Handle the available languages with prefixed url's
+// the locale gets set to the session in the Controller and then they get redirected to the regular URL
+//Route::get('/en/{one?}/{two?}/{three?}/{four?}/{five?}', 'Controller@en');
+//Route::get('/es/{one?}/{two?}/{three?}/{four?}/{five?}', 'Controller@es');
+//Route::get('/zh/{one?}/{two?}/{three?}/{four?}/{five?}', 'Controller@zh');
+
+//Route::group([
+//	'prefix' => '{locale}'
+//	'where' => ['locale' => '[a-zA-Z]{2}']
+//  	], function() 
+//{
+
+Route::get('/', 'FrontPageController@index');
+Route::get('/language/{locale?}', 'ToolController@language');
+
+//Route::group(['prefix' => '{locale}'], function() {
 
 Route::get('/clear-cache', function() {
     Artisan::call('cache:clear');
@@ -50,7 +64,6 @@ Route::post('/search', 'ToolController@search');
 Route::get('/sitemap', 'ToolController@sitemap')->middleware('auth');
 Route::get('/test', 'ToolController@test')->middleware('auth');
 Route::post('/test', 'ToolController@test')->middleware('auth');
-Route::get('/language/{locale?}', 'ToolController@language');
 Route::get('/phpinfo', 'ToolController@phpinfo')->middleware('auth');
 Route::get('/eunoticeaccept/', 'ToolController@eunoticeaccept');
 Route::get('/eunoticereset/', 'ToolController@eunoticereset');
@@ -135,6 +148,7 @@ Route::group(['prefix' => 'comments'], function () {
 
 	// delete / confirm delete
 	Route::get('/confirmdelete/{comment}', 'CommentController@confirmdelete');
+	Route::get('/delete/{comment}', 'CommentController@delete');
 	Route::post('/delete/{comment}', 'CommentController@delete');
 	
 	// publish
@@ -669,4 +683,6 @@ Route::group(['prefix' => 'users'], function () {
 	Route::post('/delete/{user}','UsersController@delete')->middleware('auth');
 });
 
-Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');;
+Route::get('/visitors/{sort?}', 'FrontPageController@visitors')->middleware('auth');
+
+//});

@@ -49,7 +49,7 @@ class EventController extends Controller
 				->limit(100)
 				->get();
 		}
-		
+
 		// get total stats
 		$totals['info'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_INFO)->count();
 		$totals['warning'] = Event::select()->where('site_id', SITE_ID)->where('deleted_flag', 0)->where('type_flag', LOG_TYPE_WARNING)->count();

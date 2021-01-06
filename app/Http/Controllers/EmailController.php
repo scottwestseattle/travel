@@ -397,9 +397,10 @@ class EmailController extends Controller
 
 			// try this date format: 11/08/2018
 			$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 10, -1); 
-			$date2 = str_replace(',', '', $date_raw);
+			$date2 = str_replace(',', '', trim($date_raw));
 			$date = DateTime::createFromFormat('m/d/Y', $date2);
-						
+			// dump('|' . $date2 . '|');	
+					
 			if ($date == NULL)
 			{
 				// date may look like: SEP 30, 2016
@@ -412,6 +413,7 @@ class EmailController extends Controller
 					die("Date conversion 2 failed, from text: " . $date2);
 				}
 			}
+
 			$date_raw = $date2;
 									
 			// get the account number, last four digits, it will be within the text in $account
