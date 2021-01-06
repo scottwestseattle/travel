@@ -268,7 +268,7 @@ class CommentController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}	
 			
-		return redirect('/' . PREFIX . '/indexadmin');
+		return redirect('/admin');
     }	
 
     public function publish(Request $request, Comment $comment)
