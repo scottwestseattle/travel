@@ -34,7 +34,7 @@
 	
 	<!-- Fonts -->
 	@if (!isset($localhost))
-		<link href="https://fonts.googleapis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
+		<link href="https://fonts.apis.com/css?family=Volkhov:700|Oswald|Raleway|Ubuntu|Handlee" rel="stylesheet">
 	@endif
 		
 	<!-- google fonts
@@ -45,14 +45,15 @@
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 
 	@if (defined('SITE_ID') && SITE_ID == 1)
-	<!-- Google AdSense Activator -------------------------------->
-	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-	  (adsbygoogle = window.adsbygoogle || []).push({
-		google_ad_client: "ca-pub-3301644572924270",
-		enable_page_level_ads: true
-	  });
-	</script>	
+		@if (!Auth::check())
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<script>
+			  (adsbygoogle = window.adsbygoogle || []).push({
+				google_ad_client: "ca-pub-3301644572924270",
+				enable_page_level_ads: true
+			  });
+			</script>
+		@endif
 	@endif
 	
 </head>

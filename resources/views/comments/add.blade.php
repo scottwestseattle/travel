@@ -10,11 +10,12 @@
                
 	<form method="POST" action="/{{$prefix}}/create">
 							
-		<label for="title" class="control-label">@LANG('ui.Name'):</label>
-		<input type="text" name="title" class="form-control" />
+		<label for="name" class="control-label">@LANG('ui.Name'):</label>
+		<input type="text" name="name" class="form-control" />
+		<input type="hidden" name="parent_id" value="0" />
 
-		<label for="description" class="control-label">@LANG('ui.Comment'):</label>
-		<textarea name="description" class="form-control"></textarea>
+		<label for="comment" class="control-label">@LANG('ui.Comment'):</label>
+		<textarea name="comment" class="form-control"></textarea>
 
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Add')</button>

@@ -748,5 +748,25 @@ class Tools
 		$dates['to_date'] = '' . $year . '-' . $month . '-' . $day;	
 			
 		return $dates;
+	}
+	
+	static public function hasLink($text)
+	{
+		$rc = false;
+		
+		if (strstr($text, 'http'))
+		{
+			$rc = true;
+		}
+		if (strstr($text, '.com'))
+		{
+			$rc = true;
+		}
+		if (strstr($text, '.co'))
+		{
+			$rc = true;
+		}
+							
+		return $rc;
 	}		
 }

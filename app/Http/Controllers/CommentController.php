@@ -8,6 +8,7 @@ use App\Event;
 use DB;
 use Auth;
 use App\Comment;
+use App\Tools;
 
 define('PREFIX', 'comments');
 define('LOG_MODEL', 'comments');
@@ -108,9 +109,46 @@ class CommentController extends Controller
 		
 		$record->site_id = SITE_ID;
 		$record->parent_id = $request->parent_id;
+
+		$request->name = trim($request->name);
+		$request->comment = trim($request->comment);
 				
-		$record->name = $this->trimNull($request->name, /* alphanum = */ true);
-		$record->comment = $this->trimNull($request->comment, /* alphanum = */ true);
+		$name = $this->trimNull($request->name, /* alphanum = */ true);
+		$comment = $this->trimNull($request->comment, /* alphanum = */ true);
+		
+		//dump($name);
+		//dd($request);
+		try
+		{
+			if (Tools::hasLink($name))
+			{
+				throw new \Exception('Name: has link');
+			}
+			else if (strlen($request->name) != strlen($name) )
+			{
+				throw new \Exception('Name: invalid characters trimmed');
+			}
+			else if (Tools::hasLink($comment))
+			{
+				throw new \Exception('Comment: has link');
+			}
+			else if (strlen($request->comment) != strlen($comment))
+			{
+				throw new \Exception('Comment: invalid characters trimmed');
+			}
+		}
+		catch (\Exception $e) 
+		{
+			Event::logException(LOG_MODEL, LOG_ACTION_ADD, $name, null, $e->getMessage());
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', 'Invalid Comment - Please try again');
+			
+			return back();	
+		}	
+
+		$record->name = $name;
+		$record->comment = $comment;
 
 		if (isset($record->name) && isset($record->comment))
 		{
@@ -162,7 +200,9 @@ class CommentController extends Controller
 			return redirect('https://www.booking.com/index.html?aid=1535308');
 		}	
 			
-		return redirect($this->getReferer($request, '/' . PREFIX . '/')); 
+		$redirect = $this->getReferer($request, '/' . PREFIX . '/');
+
+		return redirect($redirect); 
     }
 
 	public function edit(Comment $comment)
