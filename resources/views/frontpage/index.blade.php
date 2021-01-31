@@ -526,7 +526,13 @@ $sectionCount = 0;
 		@endforeach			
 	</div>
 	
-@if (!$showFullGallery)
+@if ($showFullGallery)
+	<div class='text-center' style="margin: 15px 0;">
+		<a href="/galleries">
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>
+		</a>
+	</div>
+@else
 	<div class='text-center'>
 		<a href="/galleries">
 			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>

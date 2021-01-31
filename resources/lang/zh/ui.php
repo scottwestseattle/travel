@@ -103,6 +103,7 @@ return [
 'Tours' => '旅游',
 'Tours, Hikes, Things To Do' => '旅游 远足 要做的事情',
 'Tours/Hikes' => '旅游/远足',
+'Trades' => '股票交易',
 'Transactions' => 'Transactions',
 'Translations' => '翻译',
 'Turn Spy Off' => '关闭间谍',
@@ -121,5 +122,6 @@ return [
 'year' => '年',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Trades' => '股票交易',
+'Stocks' => '股份数量',
+'Reconcile' => '对帐帐户',
 ];

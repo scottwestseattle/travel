@@ -148,7 +148,7 @@
 							<li><a href="#">Privacy</a></li>
 						</ul -->
 						<div class="text-center">
-							&copy; {{ date("Y") }} - @LANG('ui.All Rights Reserved')
+							@LANG('ui.All Rights Reserved') &copy; 2018 &ndash; {{date("Y")}}
 						</div>
 						<div class="text-center">
 							<a href="https://info.flagcounter.com/ASyl" target="_blank"><img style="width:100px;" src="https://s01.flagcounter.com/mini/ASyl/bg_252525/txt_FFFFFF/border_252525/flags_0/" alt="Flag Counter" border="0"></a>			

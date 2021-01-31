@@ -103,6 +103,7 @@ return [
 'Tours' => 'Tours',
 'Tours, Hikes, Things To Do' => 'Tours, Hikes, Things To Do',
 'Tours/Hikes' => 'Tours/Hikes',
+'Trades' => 'Trades',
 'Transactions' => 'Transactions',
 'Translations' => 'Translations',
 'Turn Spy Off' => 'Turn Spy Off',
@@ -121,5 +122,6 @@ return [
 'year' => 'year',
 'Chinese' => '简体中文',
 'zh' => '简体中文',
-'Trades' => 'Trades',
+'Stocks' => 'Stocks',
+'Reconcile' => 'Reconcile',
 ];

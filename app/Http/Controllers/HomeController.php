@@ -111,13 +111,25 @@ class HomeController extends Controller
 		// get the sliders
 		//
 		$sliders = Photo::select()
-		->where('parent_id', '=', 0)
-		//->whereNull('parent_id')
-		->where('deleted_flag', '=', 0)
-		->orderByRaw('id ASC')
-		->get();
+			->where('parent_id', '=', 0)
+			//->whereNull('parent_id')
+			->where('deleted_flag', '=', 0)
+			->orderByRaw('id ASC')
+			->get();
 		
-    	return view('home', ['posts' => $posts, 'tours' => $tours, 'sliders' => $sliders, 'locations' => $locations, 'page_title' => 'Self-guided Tours, Hikes, and Things to do']);
+		$vdata = 
+		$this->getViewData(
+		[
+    		'posts' => $posts, 
+    		'tours' => $tours, 
+    		'sliders' => $sliders, 
+    		'locations' => $locations, 
+    		'page_title' => 'Self-guided Tours, Hikes, and Things to do',
+    	]
+    	)
+    	;
+		
+    	return view('home', $vdata);
     }
 
     public function visits()

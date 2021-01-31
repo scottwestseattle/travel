@@ -106,7 +106,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ ($showFullGallery) ? PHP_INT_MAX : 10);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ $showFullGallery ? 20 : 10);
 		
 		//
 		// get latest comments
@@ -403,7 +403,7 @@ class FrontPageController extends Controller
 		//
 		// get tours which need more info
 		//
-		$entries = $this->getTourIndexAdmin(/* $pending = */ true);
+		$entries = []; //$this->getTourIndexAdmin(/* $pending = */ true);
 			
 		//
 		// get latest users
