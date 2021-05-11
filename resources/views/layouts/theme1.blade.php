@@ -1,3 +1,36 @@
+@php 
+	$showGoogleAds = true;
+	if (defined('SITE_ID') && SITE_ID == 1)
+	{
+		// show ads
+		if (isset(request()->route()->getAction()['prefix']))
+		{
+			$action = request()->route()->getAction()['prefix'];
+			//dump($action);
+			switch($action)
+			{
+				case '/transactions':
+				case '/accounts':
+				case '/categories':
+				case '/subcategories':
+				case '/reconciles':
+				case '/translations':
+					$showGoogleAds = false;
+					break;
+				default:
+					$showGoogleAds = true;
+					break;
+			}
+		}
+	}
+	else
+	{
+		$showGoogleAds = false;
+	}
+	
+	//if ($showGoogleAds)
+		//dump('showing Google Ads: ' . $showGoogleAds);
+@endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
@@ -48,7 +81,7 @@
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 
-	@if (defined('SITE_ID') && SITE_ID == 1)
+	@if ($showGoogleAds)
 	<!-- Google AdSense Activator -------------------------------->
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>

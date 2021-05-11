@@ -3,7 +3,7 @@
 
 @section('content')
 
-<?php
+@php
 
 // THIS IS THE FRONT PAGE
 
@@ -53,11 +53,11 @@ else
 
 $sectionCount = 0;
 
-?>
+@endphp
+
 <!--------------------------------------------------------------------------------------->
 <!-- Title Logo Bar -->
 <!--------------------------------------------------------------------------------------->
-
 
 @if (count($sections) == 0)
 
@@ -461,6 +461,7 @@ $sectionCount = 0;
 
 @if (($section = getSection(SECTION_GALLERY, $sections)) != null)
 
+<div id="content" style="display:none;">
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)
@@ -543,6 +544,7 @@ $sectionCount = 0;
 	<span id="debug"></span>
 		
 </div><!-- container -->
+</div><!-- content -->
 
 @endif
 
