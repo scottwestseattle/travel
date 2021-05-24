@@ -29,8 +29,9 @@ return [
     |
     */
 
-    //sbw 'lifetime' => env('SESSION_LIFETIME', 120),
-	'lifetime' => 1440,
+    //sbw: orig: 'lifetime' => env('SESSION_LIFETIME', 120),
+    //sbw: set it to 90 days
+	'lifetime' => 1 * (60 * 24 * 90),
     'expire_on_close' => false,
 	
 

@@ -48,8 +48,9 @@
 			<div style="margin-bottom:20px; font-size:12px;">
 				<a style="color:white;" href="/expedia">Expedia</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU Notice</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/importgeo">Geo</a>
+				&nbsp;&nbsp;<a style="color:white;" href="/first">Sliders</a>
 				&nbsp;&nbsp;<a style="color:white;" href="/hash">Hasher</a>
 			</div>
 		</div>
