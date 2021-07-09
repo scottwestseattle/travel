@@ -14,18 +14,18 @@ define('TITLE', 'Email');
 define("EMAIL_DEFAULT_ACCOUNT_ID", 31);  
 
 class EmailController extends Controller
-{	
+{		
 	private function getAccountId($account)
 	{
 		$accounts = [
-			'2117' => 35, // Chase
+			'2602' => 35, // Chase, old card 2117
 			'1397' => 31, // Cap Gray new
 			'0370' => 31, // Cap Gray old card '0370', still needed because it's used as an account name
 			'5043' => 10, // Cap Blue, old number
 			'4427' => 10, // Cap Blue, new number
 			'1712' => 14,
 		];
-		
+			
 		$accountId = false;
 
 		if (array_key_exists($account, $accounts))
@@ -457,7 +457,7 @@ class EmailController extends Controller
 					
 		$pos = strpos($val, $subject);
 					
-		$sample = "This is an Alert to help you manage your credit card account ending in 2117.  As you requested, we are notifying you of any charges over the amount of (\$USD) 0.01, as specified in your Alert settings. A charge of (\$USD) 80.20 at WAL-MART #2516 has been authorized on 04/03/2017 11:02:20 PM EDT.";
+		$sample = "This is an Alert to help you manage your credit card account ending in 2602.  As you requested, we are notifying you of any charges over the amount of (\$USD) 0.01, as specified in your Alert settings. A charge of (\$USD) 80.20 at WAL-MART #2516 has been authorized on 04/03/2017 11:02:20 PM EDT.";
 
 		//echo '<br/>' . $val . '<br/>pos=' . $pos; die;
 		if ($pos !== false && $pos == 44) 
