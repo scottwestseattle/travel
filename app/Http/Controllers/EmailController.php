@@ -147,11 +147,7 @@ class EmailController extends Controller
 					$add = false;
 					$accountId = 0;
 					
-					if ($this->checkPacific($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
-					{
-						$add = true;
-					}					
-					else if ($this->checkCapital($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
+					if ($this->checkCapital($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
 					{
 						$add = true;
 					}
@@ -159,6 +155,10 @@ class EmailController extends Controller
 					{
 						$add = true;
 					}
+					else if ($this->checkPacific($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
+					{
+						$add = true;
+					}					
 					else if ($this->checkManual($mbox, $count, $val, $date, $amount, $desc, $accountId, $debug))
 					{
 						$add = true;
@@ -360,8 +360,21 @@ class EmailController extends Controller
 		}
 		
 		$rc = false; 
+
+		//
+		// check to see who it's from
+		//
+		$from = 'Capital';
+		$pos = strpos($val, $from);
+		if ($pos === false) 
+		{
+			return $rc; // not a cap account
+		}
+		
+		//
+		// now check the message body
+		//					
 		$subject = 'A new transaction was';
-					
 		$pos = strpos($val, $subject);
 		
 		if ($debug)
@@ -453,11 +466,24 @@ class EmailController extends Controller
 	private function checkChase($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug) 
 	{
 		$rc = false; 
-		$subject = 'Your Single Transaction';
-					
-		$pos = strpos($val, $subject);
-					
-		$sample = "This is an Alert to help you manage your credit card account ending in 2602.  As you requested, we are notifying you of any charges over the amount of (\$USD) 0.01, as specified in your Alert settings. A charge of (\$USD) 80.20 at WAL-MART #2516 has been authorized on 04/03/2017 11:02:20 PM EDT.";
+		$sample = "Amazon Rewards Visa";	// Email body - to find the details we need
+		//$debug = true;
+		
+		//
+		// check to see who it's from
+		//
+		$from = 'Chase';
+		$pos = strpos($val, $from);
+		if ($pos === false) 
+		{
+			return $rc; // not a cap account
+		}
+
+		//
+		// check the body for key text
+		//						
+		$subject = 'Your $';				// Email subject / to find the beginning
+		$pos = strpos($val, $subject);					
 
 		//echo '<br/>' . $val . '<br/>pos=' . $pos; die;
 		if ($pos !== false && $pos == 44) 
@@ -468,7 +494,7 @@ class EmailController extends Controller
 			// get the body
 			$body_raw = imap_body($mbox, $count);
 						
-			$pos = strpos($body_raw, substr($sample, 0, 76));
+			$pos = strpos($body_raw, $sample);
 			if ($pos === false)
 			{
 				echo $body_raw . '<br/>';
@@ -476,24 +502,56 @@ class EmailController extends Controller
 			}
 			//echo 'pos=' . $pos . '<br/>';die;
 						
-			$body_raw = substr($body_raw, $pos, strlen($sample));
-												
-			// get the amount
-			$amount = $this->parseTag($body_raw, 'A charge of ($USD) ', 10, 0); 
-			$amount = floatval(trim($amount, '$'));
-			$amount = -$amount;
-						
-			// get the date
-			$date_raw = $this->parseTag($body_raw, 'has been authorized on ', 12, -1); 
-			$date2 = str_replace(',', '', trim($date_raw));
-			//echo '|' . $date2 . '|';
+			$body_raw = substr($body_raw, $pos, 200 /* all the content we need is within 200 chars */);
+
+			$parts = explode(" | ", str_replace("\r\n", "", $body_raw));
 			
-			// try normal date format like: "03/21/2020"
-			$date = DateTime::createFromFormat('m/d/Y', $date2);
+			/* parts looks like:
+			
+				  0 => "Amazon Rewards Visa (...2602)"
+				  1 => "||=20| Date"
+				  2 => "Jul 29, 2021 at 4:17 PM ET"
+				  3 => "||=20| Merchant"
+				  4 => "AMZN Mktp US"
+				  5 => "||=20| Amount"
+				  6 => "$35.27"
+				  7 => "| || You are receiving this alert"
+
+			*/			
+			
+			if (count($parts) != 8)
+			{
+				die('parse: unexpected format found in body');			
+			}
+				
+			//								
+			// get the amount
+			//
+			$amount = floatval(trim($parts[6], '$'));
+			$amount = -$amount;
+		
+			// get the account number, last four digits
+			$account = $this->parseTag($parts[0], 'Amazon Rewards Visa (...', 4, -1); 
+			$accountId = $this->getAccountId($account);
+			if (!$accountId)
+			{
+				dump($account);
+				dump($body_full);
+				dd($accountId);
+			}
+			
+			//			
+			// get the date
+			//
+			$date_raw = substr($parts[2], 0, 12); 
+			$date2 = str_replace(',', '', trim($date_raw));
+			
+			// try date format like: "Mar 21 2020"
+			$date = DateTime::createFromFormat('M d Y', $date2);
 			if ($date == NULL)
 			{
-				// try date format like: "Mar 21 2020"
-				$date = DateTime::createFromFormat('M d Y', $date2);
+				// try normal date format like: "03/21/2020"
+				$date = DateTime::createFromFormat('m/d/Y', $date2);
 				if ($date == NULL)
 				{
 					// try date format like: "Mar 21, 2020"
@@ -508,32 +566,20 @@ class EmailController extends Controller
 			}
 			//dump($date_raw);
 			//dd($date2);
-									
-			// get the account number, last four digits
-			$account = $this->parseTag($body_raw, 'account ending in ', 4, -1); 
-			$accountId = $this->getAccountId($account);
-			if (!$accountId)
-			{
-				dump($account);
-				dump($body_full);
-				dd($accountId);
-			}
-			
+				
+			//						
 			// get the description
-			$desc = $this->parseTag($body_raw, 'A charge of ($USD) ', 30, -1); 
-			$pieces = explode(' ', $desc);
-			//debug($pieces);
-			$desc = $pieces[2];
-			if ($pieces[3] !== 'has')
-				$desc .= ' ' . $pieces[3];
+			//
+			$desc = $parts[4];
 						
 			if ($debug)
 			{
-				echo 'pos=' . $pos . ', val=' . $val . '<br/>';
-				echo 'body=' . $body_raw . '<br/>';
-				echo 'account=' . $account . '<br/>'; 
-				echo 'accountId=' . $account . '<br/>'; 
-				//die('*** end of debug ***');
+				echo 'Date: |' . $date->format('Y-m-d') . '|<br/>';
+				echo 'Account: |' . $account . '|<br/>'; 
+				echo 'AccountId: |' . $accountId . '|<br/>'; 
+				echo 'Desc: |' . $desc . '|<br/>'; 
+				echo 'Amount: |' . $amount . '|<br/>'; 
+				die('*** end of debug ***');
 			}
 
 			//echo 'Record::' . $account . '::' . $amount . '::' . $date->format('Y-m-d') . '::' . $desc . '<BR/>';

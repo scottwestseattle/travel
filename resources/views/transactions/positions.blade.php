@@ -1,6 +1,8 @@
 @extends('layouts.theme1')
 @section('content')
-
+@php
+$fmt = new NumberFormatter( 'us_US', NumberFormatter::CURRENCY );
+@endphp
 <div class="container">
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
@@ -71,6 +73,7 @@
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
 							<span style="color:red;">({{$record->shares}})</span>
 						@endif
+							<div>{{$fmt->formatCurrency($record->shares * $record->buy_price, "USD")}}</div>
 						</td>
 					
 						<td>{{number_format(abs($record->amount), 2)}}
