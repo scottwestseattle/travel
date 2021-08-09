@@ -1,8 +1,5 @@
 @extends('layouts.theme1')
 @section('content')
-@php
-$fmt = new NumberFormatter( 'us_US', NumberFormatter::CURRENCY );
-@endphp
 <div class="container">
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
@@ -45,19 +42,38 @@ $fmt = new NumberFormatter( 'us_US', NumberFormatter::CURRENCY );
 
 		<div class="clear"></div>
 		
+		@php
+			// get the totals
+			$dca = number_format($totals['dca'], 2);
+			$cost = number_format(abs($totals['total']), 2);
+			$profit = number_format($totals['profit'], 2);
+			
+			$profitPercent = 0;
+			if ($totals['profit'] != 0.0 && $totals['total'] != 0.0)
+				$profitPercent = number_format( ($totals['profit'] / abs($totals['total'])) * 100.0, 2);
+
+			// reconciled, untested
+			$profitReconciled = isset($totals['reconciled']) ? $totals['reconciled'] : 0;
+			$profitPercentReconciled = 0;
+			if ($profitReconciled != 0.0 && $totals['total'] != 0.0)
+				$profitPercentReconciled = number_format(($profitReconciled / abs($totals['total']) * 100.0), 2);
+				
+		@endphp
 		<h3>
-			Positions ({{count($records)}}), Shares: <span style="color:black">{{$totals['shares']}}</span>, Price: <span style="color:black">${{number_format($totals['dca'], 2)}}</span>, Cost: <span style="color:black">${{number_format(abs($totals['total']), 2)}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . '' : '' }}, P/L: <span style="color:{{$totals['profit'] >= 0.0 ? 'black' : 'red'}}">${{number_format($totals['profit'], 2)}}</span>
+			Positions ({{count($records)}}), Shares: <span style="color:black">{{$totals['shares']}}</span>, Price: <span style="color:black">${{$dca}}</span>, Cost: <span style="color:black">${{$cost}}</span>{{ isset($totals['reconciled']) ? ', P/L: ' . round($totals['reconciled'], 2) . ', ' . $profitPercentReconciled : '' }}, P/L: <span style="color:{{$totals['profit'] >= 0.0 ? 'black' : 'red'}}">${{$profit}}, {{$profitPercent}}%</span>
 		</h3>
 		
 		<table class="table table-sm">
 			<tbody>
 			@if (isset($records))
 				@foreach($records as $record)
-					<?php 
+					@php
 						$quote = $totals[$record->symbol];
 						$pl = round((floatval($quote['quote']) * abs($record->shares)) - abs($record->amount), 2); 
+						$cost = $record->shares * $record->buy_price;
+						$plPercent = number_format(($pl / $cost) * 100.0, 2);
 						$color = ($pl < 0) ? 'red' : 'black';
-					?>
+					@endphp
 					<tr>
 						<td class="glyphCol"><a href='/{{$prefix}}/sell/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 						
@@ -73,7 +89,7 @@ $fmt = new NumberFormatter( 'us_US', NumberFormatter::CURRENCY );
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
 							<span style="color:red;">({{$record->shares}})</span>
 						@endif
-							<div>{{$fmt->formatCurrency($record->shares * $record->buy_price, "USD")}}</div>
+							<div>${{number_format($cost, 2)}}</div>
 						</td>
 					
 						<td>{{number_format(abs($record->amount), 2)}}
@@ -81,7 +97,7 @@ $fmt = new NumberFormatter( 'us_US', NumberFormatter::CURRENCY );
 							<span style="color:red;">(wrong)</span>
 						@endif
 							<br/>
-							<span style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}</span>
+							<span style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}, {{$plPercent}}%</span>
 						</td>
 				
 					</tr>
