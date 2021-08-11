@@ -1,6 +1,7 @@
 <?php 
 	$user_type = (null !== Auth::user()) ? intval(Auth::user()->user_type) : 0; 
 	$user_type_name = 'not set';
+
 	if ($user_type >= 1000)
 		$user_type_name = "super admin";
 	else if ($user_type >= 100)
@@ -8,7 +9,9 @@
 	else if ($user_type >= 10)
 		$user_type_name = "confirmed";
 	else
-		$user_type_name = "unconfirmed";	
+		$user_type_name = "unconfirmed";
+		
+	$isAdmin = ($user_type >= 100);	
 ?>
 						
            <div class="xcontainer">
@@ -83,7 +86,7 @@
                             	<li><a href="/register"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-user hidden-sm"></span>@lang('ui.Register')</a></li>
 							@endif
                         @else							
-							@if ($user_type >= 100)
+							@if ($isAdmin)
 								<li><a href="/about">@lang('ui.About')</a></li>
 								@if (isset($sections) && array_key_exists(SECTION_LESSONS, $sections))
 									<li><a href="/lessons">@lang('ui.Lessons')</a></li>
@@ -94,20 +97,12 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">@lang('ui.More') <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										<li><a href="/admin">@lang('ui.Admin')</a></li>
-										@if (isset($sections) && array_key_exists(SECTION_ARTICLES, $sections))
-											<li><a href="/articles">@lang('ui.Articles')</a></li>
-										@endif
-										@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-											<li><a href="/blogs/indexadmin">@lang('ui.Blogs')</a></li>
-										@endif
+										<li><a href="/articles">@lang('ui.Articles')</a></li>
+										<li><a href="/blogs/index">@lang('ui.Blogs')</a></li>
 										<li><a href="/comments">@lang('ui.Comments')</a></li>
 										<li><a href="/events/index">@lang('ui.Events')</a></li>
-										@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
-											<li><a href="/galleries">@lang('ui.Galleries')</a></li>
-										@endif
-										@if (isset($sections) && array_key_exists(SECTION_HOTELS, $sections))
-											<li><a href="/hotels">@lang('content.Hotels')</a></li>
-										@endif
+										<li><a href="/galleries">@lang('ui.Galleries')</a></li>
+										<li><a href="/hotels">@lang('content.Hotels')</a></li>
 										<li><a href="/locations/indexadmin">@lang('ui.Locations')</a></li>
 										<li><a href="/photos/indexadmin">@lang('ui.Photos')</a></li>
 										<li><a href="/sections">@lang('ui.Sections')</a></li>
@@ -115,9 +110,7 @@
 										<li><a href="/sitemap/">@lang('ui.Site Map')</a></li>
 										<li><a href="/photos/sliders">@lang('ui.Sliders')</a></li>
 										<li><a href="/test/">@lang('ui.Tests')</a></li>
-										@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-											<li><a href="/tours/indexadmin">@lang('ui.Tours')</a></li>
-										@endif
+										<li><a href="/tours/indexadmin">@lang('ui.Tours')</a></li>
 										<li><a href="/translations/">@lang('ui.Translations')</a></li>
 									</ul>
 								</li>
