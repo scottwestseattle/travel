@@ -431,14 +431,14 @@ class EmailController extends Controller
 									
 			// get the account number, last four digits, it will be within the text in $account
 
-			$account = $this->parseTag($body_full, 'Account ending in', 20, -1); 
+			$account = $this->parseTag($body_full, 'card ending in', 20, -1); 
 			$matches = [];			
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
 			$account = (count($matches) > 0) ? $matches[0][0] : '';
 			$accountId = $this->getAccountId($account);
 			if (!$accountId)
 			{
-				dump($account);
+				dump($from . ": " . $account);
 				dump($body_full);
 				dd($accountId);
 			}
@@ -535,7 +535,7 @@ class EmailController extends Controller
 			$accountId = $this->getAccountId($account);
 			if (!$accountId)
 			{
-				dump($account);
+				dump($from . ": " . $account);
 				dump($body_full);
 				dd($accountId);
 			}
@@ -635,7 +635,7 @@ class EmailController extends Controller
 			if ($debug) dump($accountId);
 			if (!$accountId)
 			{
-				dump($account);
+				dump("Pacific: " . $account);
 				dump($body_raw);
 				dd($accountId);
 			}
@@ -684,7 +684,7 @@ class EmailController extends Controller
 		
 	private function parseTag($text, $tag, $length, $wordIndex) 
 	{
-		$pos = strpos($text, $tag);
+		$pos = stripos($text, $tag);
 		$target = substr($text, $pos + strlen($tag), $length);
 		//debug($target);
 		if ($wordIndex >= 0)
