@@ -590,7 +590,7 @@ LEFT JOIN locations AS city
 LEFT JOIN locations as country
 	ON country.id = city.parent_id AND country.deleted_flag = 0
 WHERE 1=1
-AND e.type_flag = 4
+AND e.type_flag in (4, 8)
 AND e.deleted_flag = 0
 AND e.approved_flag = 1
 AND e.published_flag = 1
