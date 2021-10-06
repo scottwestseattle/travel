@@ -119,7 +119,7 @@ TER TABLE `photos` ADD `glery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_fla
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Switching lochost projects on MacBook
 
-cd \etc\apache2
+cd /etc/apache2
 sudo vi httpd.conf
 # look for DocumentRoot and <Directory ...>
 

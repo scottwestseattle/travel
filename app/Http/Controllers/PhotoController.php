@@ -372,11 +372,11 @@ class PhotoController extends Controller
 				->get();
 			
 			// get the location from the first photo
-			$loc = null;	
-			if (count($photos) > 0)
-			{
-				$loc = $photos[0]->location;
-			}
+			//$loc = null;	
+			//if (count($photos) > 0)
+			//{
+			//	$loc = $photos[0]->location;
+			//}
 		}
 		
 		if (isset($loc) && $loc != '')
@@ -397,7 +397,7 @@ class PhotoController extends Controller
 			'path' => $info['path'],
 			'location' => $location,
 		]);
-		
+
 		return view('photos.add', $vdata);      
 	}
 	
@@ -412,7 +412,7 @@ class PhotoController extends Controller
 			'parent_id' => $request->parent_id,
 			'type_flag' => $request->type_flag,
 			'type' => $type,
-			'location' => session('location', ''),
+			'location' => $request->location,
 		]);	
 		
  		//

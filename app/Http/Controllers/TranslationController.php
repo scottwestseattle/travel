@@ -138,15 +138,16 @@ class TranslationController extends Controller
 				{
 					if (isset($request->records[$j][$i]))
 					{
-						if (isset($request->records[$j+1][$i]))
+						$key = str_replace("'", "\'", $request->records[0][$i]);
+						$value = $key; // put key here in case translation isn't set
+						
+						// is translation there
+						if (isset($request->records[$j + 1][$i]))
 						{
-							$line = "'" . $request->records[0][$i] . "' => '" . $request->records[$j + 1][$i] . "'";
+							$value = str_replace("'", "\'", $request->records[$j + 1][$i]);
 						}
-						else
-						{
-							// key exists but not translation, put key in for the value
-							$line = "'" . $request->records[0][$i] . "' => '" . $request->records[0][$i] ."'";
-						}
+						
+						$line = "'" . $key . "' => '" . $value . "'";
 						
 						$array[$j][$i] = $line;
 					}
