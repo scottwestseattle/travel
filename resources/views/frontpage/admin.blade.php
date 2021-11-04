@@ -118,6 +118,26 @@
 @endif
 
 	<div style="clear: both;"></div>
+
+	@if (isset($trx) && count($trx) > 0)
+	<div>	
+		<h3 style="color:red;">Unfinished Transactions ({{count($trx)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th>Date</th><th>Transaction</th></tr>
+				@foreach($trx as $record)
+					<tr>
+						<td style="width:10px;"><a href='/transactions/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+						<td style="width:150px;">{{date("M d, Y", strtotime($record->created_at))}}</td>
+						<td><a href="/transactions/edit/{{ $record->id }}">{{$record->description}}</a></td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+		<a href="/transactions">Show All Transactions</a>
+	</div>
+	<hr />
+	@endif
 	
 	@if (isset($comments))
 	<div>	

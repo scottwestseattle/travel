@@ -7,12 +7,14 @@
 	<h1>Import Geo Data</h1>
 	
 	<p>1. Download DB3LITE as csv</p>
-	<p>2. move the csv file to travel\public\import and upload it to the server</p>
-	<p>3. cPanel: copy the live table 'ip2locations', 'structure only', to 'ip2locationsimport'</p>
-	<p>4. open the upload file in notepad to get the number of records</p>
-	<p>5. import the new records</p>
+	<p>2. Move the csv file IP2LOCATION-LITE-DB3.CSV to travel\public\import and upload it to the server</p>
+	<p>3. cPanel: make sure 'ip2locationsimport' is empty so new records can be loaded</p>
+	<p>4. Open the upload file in notepad to get the number of records</p>
+	<p>5. Click the 'Import' button to start the import</p>
 	<p>6. cPanel: rename ip2locations to ip2locationsOld</p>
 	<p>7. cPanel: rename ip2locationsimport to ip2locations</p>
+	<p>8. cPanel: rename ip2locationsOld to ip2locationsimport</p>
+	<p>9. Test and when everything is working, cPanel: truncate ip2locationsimport</p>
 	
 	@if ($status['error'])
 		<h3>Import Error:</h3>

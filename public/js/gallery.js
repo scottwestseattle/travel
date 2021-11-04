@@ -10,6 +10,8 @@ var interval_header = null;
 
 function onResize()
 {
+	console.log('onResize...');
+	
 	var dc = { width: 0, height: 0, ppl: 0, margin: 0, readonly: false };
 
 	resize(dc);
@@ -21,14 +23,62 @@ function onResize()
 	loader.style.display = 'none';
 }
 
+// The wake lock sentinel.
+let wakeLock = null;
+
+// Function that attempts to request a screen wake lock.
+const requestWakeLock = async () => {
+  try {
+    wakeLock = await navigator.wakeLock.request();
+    wakeLock.addEventListener('release', () => {
+      console.log('Screen Wake Lock released:', wakeLock.released);
+    });
+    console.log('Screen Wake Lock released:', wakeLock.released);
+  } catch (err) {
+    console.error(`${err.name}, ${err.message}`);
+  }
+};
+
+
 function resize(dc)
 {
+	if ('wakeLock' in navigator) {
+		console.log('wakeLock supported');
+	  
+		// Request a screen wake lock…
+		//orig: await requestWakeLock();
+		requestWakeLock();
+
+		// …and release it again after 5s.
+		window.setTimeout(() => {
+		  wakeLock.release();
+		  wakeLock = null;
+		}, 5000);
+
+
+	}
+	else {
+	  console.log('wakeLock NOT supported');
+	}
+	
 	//return;
 	
-	var browserWidth = $(document).width();
+	var browserWidth = window.innerWidth;
 	var w = 0;
 		
 	// get margin value from photo box
+	var box = $('.frontpage-box');
+	console.log("box = " + box);
+	if (typeof box === 'object')
+	{
+		console.log('box is object');
+	}
+	else
+	{
+		console.log('box is NOT object');
+	}
+	
+		
 	var sMargin = $('.frontpage-box').css('margin-left'); 
 	var margin = (typeof sMargin !== 'undefined') ? Number(sMargin.substring(0, 1)) : 5;
 	//alert(sMargin);
@@ -48,7 +98,7 @@ function resize(dc)
 	var deviceHeight = screen.height;
 	var isPortrait = (deviceWidth < deviceHeight);
 	//orig: var isMicro = (deviceWidth <= 380);
-	var isMicro = ($(document).width() <= 380);
+	var isMicro = (window.innerWidth <= 380);
 	
 	var fontSet = false;
 	if (isMicro) // micro screen
@@ -88,7 +138,7 @@ function resize(dc)
 	var widthTotal = ((w + margin) * photosPerLine);	// only for info
 	var h = Math.floor(w * ratio);
 
-	if ((widthTotal + 10) > $(document).width())
+	if ((widthTotal + 10) > window.innerWidth)
 	{
 		w -= 4;
 		widthTotal = ((w + margin) * photosPerLine);	// only for info
@@ -116,7 +166,7 @@ function resize(dc)
 		// sbw new: $('.frontpage-box').css({width:w+'px', height:h+'px'});
 	
 	if (false)
-		flash("doc-width: " + $(document).width() 
+		flash("doc-width: " + window.innerWidth 
 		+ ", screen.width: " + screen.width 
 		+ ", screen.height: " + screen.height 
 		+ ", deviceWidth: " + deviceWidth 

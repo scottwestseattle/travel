@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
-use App\Entry;
+use App\Account;
 use App\Activity;
+use App\Entry;
 use App\User;
 use App\Photo;
 use App\Location;
@@ -15,7 +16,7 @@ use App\Site;
 use App\Event;
 use App\Comment;
 use App\Tools;
-use App\Account;
+use App\Transaction;
 
 define('PREFIX', 'frontpage');
 define('LOG_MODEL', 'frontpage');
@@ -43,7 +44,7 @@ class FrontPageController extends Controller
 	}
 	
     public function index(Request $request, $firstslider = null)
-    {					
+    {		
 		if (Auth::user() && Auth::user()->blocked_flag != 0)
 		{
 			Auth::logout();
@@ -106,7 +107,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ $showFullGallery ? 20 : 10);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ $showFullGallery ? 10 : 10);
 		
 		//
 		// get latest comments
@@ -431,6 +432,15 @@ class FrontPageController extends Controller
 	        
 		$visitorCountryInfo = Visitor::getCountryInfo();
 
+		//
+		// get unfinished transactions
+		//
+		$trx = Transaction::select()
+			->where('deleted_flag', 0)
+			->where('category_id', CATEGORY_ID_FOOD)
+			->where('subcategory_id', SUBCATEGORY_ID_UNKNOWN)
+			->get();		
+
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
@@ -451,6 +461,7 @@ class FrontPageController extends Controller
 			'geoLoadTime' => $this->geo()->loadTime(),
 			'ignoreErrors' => $this->ignoreErrors(),
 			'accountReconcileOverdue' => count($accounts),
+			'trx' => $trx,
 		], 'Admin Page'));
     }
 	

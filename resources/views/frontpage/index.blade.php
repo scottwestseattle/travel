@@ -461,7 +461,11 @@ $sectionCount = 0;
 
 @if (($section = getSection(SECTION_GALLERY, $sections)) != null)
 
-<div id="content" style="display:none;">
+<div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:none;">
+	<img src="/img/theme1/load-loop.gif" />
+</div>
+
+<div id="content" style="display:default;">
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)
@@ -526,20 +530,12 @@ $sectionCount = 0;
 			</div>													
 		@endforeach			
 	</div>
-	
-@if ($showFullGallery)
+
 	<div class='text-center' style="margin: 15px 0;">
 		<a href="/galleries">
 			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>
 		</a>
 	</div>
-@else
-	<div class='text-center'>
-		<a href="/galleries">
-			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>
-		</a>
-	</div>
-@endif
 	
 	<span id="debug"></span>
 		
