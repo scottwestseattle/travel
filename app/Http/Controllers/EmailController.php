@@ -354,6 +354,7 @@ class EmailController extends Controller
 	
 	private function checkCapital($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug)
 	{
+		//$debug = true;
 		if ($debug)
 		{
 			echo '<br/>' . '*** DEBUG, checkCapital() ***' . '<br/>';
@@ -419,15 +420,30 @@ class EmailController extends Controller
 				// date may look like: SEP 30, 2016
 				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 12, -1); 
 				$date2 = str_replace(',', '', $date_raw);
+				$date_raw = $date2;
 				$date = DateTime::createFromFormat('M d Y', $date2);
 
 				if ($date == NULL)
 				{
-					die("Date conversion 2 failed, from text: " . $date2);
+					// date may look like: NOVEMBER 04, 2021
+					$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 21, -1);
+					//dump('date_raw: ' . $date_raw);
+					$date2 = str_replace(',', '', $date_raw);
+					$pieces = explode(' ', $date2);
+					if (count($pieces) > 2)
+					{
+						$date2 = $pieces[0] . ' ' . $pieces[1] . ' ' . $pieces[2];
+						$date_raw = $pieces[0] . ' ' . $pieces[1] . ', ' . $pieces[2];
+					}
+					//dump('date2: ' . $date2);
+					$date = DateTime::createFromFormat('F d Y', $date2);
+
+					if ($date == NULL)
+					{
+						die("Date conversion 2 failed, from text: " . $date2);
+					}
 				}
 			}
-
-			$date_raw = $date2;
 									
 			// get the account number, last four digits, it will be within the text in $account
 
@@ -445,8 +461,7 @@ class EmailController extends Controller
 
 			// get the description
 			$desc = $this->parseTag($body_raw, $date_raw . ', at ', 30, -1); 
-			$pieces = explode(',', $desc);
-			
+			$pieces = explode(',', $desc);			
 			$desc = $pieces[0];
 			if ($debug)
 			{
