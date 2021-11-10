@@ -1,4 +1,3 @@
-
 @extends('layouts.frontpage')
 
 @section('content')
@@ -385,14 +384,11 @@ $sectionCount = 0;
 		document.getElementById("slider").title = decodeHtml(alt + ', ' + loc);
 	}
 
-
 </script>	
-
 
 @endif
 
 @endif	
-
 
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
@@ -461,11 +457,11 @@ $sectionCount = 0;
 
 @if (($section = getSection(SECTION_GALLERY, $sections)) != null)
 
-<div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:none;">
+<div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:default;">
 	<img src="/img/theme1/load-loop.gif" />
 </div>
 
-<div id="content" style="display:default;">
+<div id="content" style="display:none;">
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)
@@ -1025,3 +1021,4 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 @endif
 
 @endsection
+

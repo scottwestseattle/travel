@@ -9,11 +9,8 @@ var interval_header = null;
 //alert($(document).width());
 
 function onResize()
-{
-	console.log('onResize...');
-	
+{	
 	var dc = { width: 0, height: 0, ppl: 0, margin: 0, readonly: false };
-
 	resize(dc);
 	
 	var content = document.getElementById("content");
@@ -23,62 +20,31 @@ function onResize()
 	loader.style.display = 'none';
 }
 
-// The wake lock sentinel.
-let wakeLock = null;
-
-// Function that attempts to request a screen wake lock.
-const requestWakeLock = async () => {
-  try {
-    wakeLock = await navigator.wakeLock.request();
-    wakeLock.addEventListener('release', () => {
-      console.log('Screen Wake Lock released:', wakeLock.released);
-    });
-    console.log('Screen Wake Lock released:', wakeLock.released);
-  } catch (err) {
-    console.error(`${err.name}, ${err.message}`);
-  }
-};
-
-
 function resize(dc)
-{
-	if ('wakeLock' in navigator) {
-		console.log('wakeLock supported');
-	  
-		// Request a screen wake lock…
-		//orig: await requestWakeLock();
-		requestWakeLock();
+{	
+	var log = false;
+	if (log)
+		console.log('resizing...');
 
-		// …and release it again after 5s.
-		window.setTimeout(() => {
-		  wakeLock.release();
-		  wakeLock = null;
-		}, 5000);
-
-
-	}
-	else {
-	  console.log('wakeLock NOT supported');
-	}
-	
-	//return;
-	
 	var browserWidth = window.innerWidth;
 	var w = 0;
 		
 	// get margin value from photo box
 	var box = $('.frontpage-box');
-	console.log("box = " + box);
-	if (typeof box === 'object')
+	
+	if (log)
 	{
-		console.log('box is object');
-	}
-	else
-	{
-		console.log('box is NOT object');
+		console.log("box = " + box);
+		if (typeof box === 'object')
+		{
+			console.log('box is object');
+		}
+		else
+		{
+			console.log('box is NOT object');
+		}
 	}
 	
-		
 	var sMargin = $('.frontpage-box').css('margin-left'); 
 	var margin = (typeof sMargin !== 'undefined') ? Number(sMargin.substring(0, 1)) : 5;
 	//alert(sMargin);
@@ -109,7 +75,7 @@ function resize(dc)
 			
 			// crank up the font size
 			if (!dc.readonly)
-				$('.frontpage-box-text a').css({fontSize:'300%'});
+				$('.frontpage-box-text a').css({fontSize:'300%'});				
 		}
 		else // landscape
 		{
@@ -138,9 +104,13 @@ function resize(dc)
 	var widthTotal = ((w + margin) * photosPerLine);	// only for info
 	var h = Math.floor(w * ratio);
 
-	if ((widthTotal + 10) > window.innerWidth)
+	var fudgeFactor = 5;
+	if ((widthTotal + (fudgeFactor * photosPerLine)) >= window.innerWidth)
 	{
-		w -= 4;
+		if (log)
+			console.log('too big - widthTotal: ' + (widthTotal + fudgeFactor) + ', innerWidth: ' + window.innerWidth);
+			
+		w -= fudgeFactor;
 		widthTotal = ((w + margin) * photosPerLine);	// only for info
 	}
 	
@@ -162,11 +132,12 @@ function resize(dc)
 	
 	// set the new photo box size	
 	if (!dc.readonly)
+	{	
 		$('.frontpage-box-link').css({width:w+'px', height:h+'px'});
-		// sbw new: $('.frontpage-box').css({width:w+'px', height:h+'px'});
+	}
 	
-	if (false)
-		flash("doc-width: " + window.innerWidth 
+	if (log)
+		console.log("window.innerWidth: " + window.innerWidth 
 		+ ", screen.width: " + screen.width 
 		+ ", screen.height: " + screen.height 
 		+ ", deviceWidth: " + deviceWidth 
@@ -174,8 +145,8 @@ function resize(dc)
 		+ ", w=" + w 
 		+ ", h=" + h 
 		+ ", wt=" + widthTotal
-		+ ", micro=" + isMicro
-		+ ", vert=" + isPortrait
+		+ ", isMicro=" + isMicro
+		+ ", isPortrait=" + isPortrait
 		+ ", margin=" + margin
 		);
 	
@@ -189,4 +160,7 @@ function flash(text)
 {
 	$('#debug').text(text);	
 }
+
+// sbw: need this??  onResize() is getting called when .js is loaded
+onResize();
 

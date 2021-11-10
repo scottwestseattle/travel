@@ -62,7 +62,7 @@
 	@endif
 	
 </head>
-<body onresize="onResize()" onload="onResize()">
+<body onresize="onResize()" onload="">
     <div id="app" style="min-height: 500px;">
 	
         <nav class="navbar navbar-default navbar-static-top {{(SITE_ID == 3) ? 'purple' : 'powerBlue'}}" style="margin-bottom:0px; border-width: 0 0 0px;"> 
@@ -90,6 +90,6 @@
 		
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/gallery.js') }}"></script>
+    <script src="{{ asset('js/gallery.js') }}" onload="onResize()"></script>
 </body>
 </html>
