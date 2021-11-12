@@ -457,11 +457,11 @@ $sectionCount = 0;
 
 @if (($section = getSection(SECTION_GALLERY, $sections)) != null)
 
-<div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:default;">
+<div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:none;">
 	<img src="/img/theme1/load-loop.gif" />
 </div>
 
-<div id="content" style="display:none;">
+<div id="content" style="display:default;">
 <div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)

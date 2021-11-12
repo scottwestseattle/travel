@@ -28,6 +28,8 @@ function onResize()
 function resize(dc)
 {	
 	var log = false;
+	var show = false;
+	
 	if (log)
 		console.log('resizing...');
 
@@ -89,8 +91,7 @@ function resize(dc)
 	// compute new photo width and height
 	//
 	var widthTotal = 0;
-	var rightMargin = isMicro ? 5 : 14; // estimated, don't know where the space comes from
-	var windowWidth = window.innerWidth - rightMargin;
+	var windowWidth = document.body.clientWidth; // clientWidth removes scrollbar width
 		
 	// calculate width of each photo box
 	w = (windowWidth / photosPerLine) - (margin);
@@ -159,12 +160,17 @@ function resize(dc)
 		+ ", micro: " + isMicro
 		+ ", portrait: " + isPortrait
 		+ ", margin: " + margin
-		+ ", rightMargin: " + rightMargin
-		+ ", boxWidth: " + boxWidth + " (" + box.clientWidth + ")";
+		+ ", boxWidth: " + boxWidth + " (" + box.clientWidth + ")"
+		+ ", bodyWidth: " + document.body.clientWidth
 		;
 		
 		console.log(debugInfo);
-		$("#debug").html(debugInfo);
+		
+		if (show)
+		{
+			if ($("#debug"))
+				$("#debug").html(debugInfo);
+		}
 	}
 	
 	dc.width = w;
