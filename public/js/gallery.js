@@ -8,6 +8,11 @@ var interval_header = null;
 //   android: 800
 //alert($(document).width());
 
+function isMobile()
+{
+	return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+}
+
 function onResize()
 {	
 	var dc = { width: 0, height: 0, ppl: 0, margin: 0, readonly: false };
@@ -22,7 +27,7 @@ function onResize()
 
 function resize(dc)
 {	
-	var log = true;
+	var log = false;
 	if (log)
 		console.log('resizing...');
 
@@ -33,7 +38,6 @@ function resize(dc)
 	var box = $('.frontpage-box');
 	
 	var sMargin = $('.frontpage-box').css('margin-left'); 
-	console.log('sMargin: ' + sMargin);
 	var margin = (typeof sMargin !== 'undefined') ? Number(sMargin.substring(0, 1)) : 5;
 	
 	var pheight = 220;						// default photo height
@@ -50,7 +54,7 @@ function resize(dc)
 	var deviceWidth = (browserWidth > screen.width) ? browserWidth : screen.width;
 	var deviceHeight = screen.height;
 	var isPortrait = (deviceWidth < deviceHeight);
-	var isMicro = (window.innerWidth <= 380);
+	var isMicro = isMobile();
 	
 	// adjust font size, if needed
 	var fontSet = false;
@@ -84,18 +88,16 @@ function resize(dc)
 	//	
 	// compute new photo width and height
 	//
-	
 	var widthTotal = 0;
-	var rightMargin = 17; // estimated, don't know where the space comes from
+	var rightMargin = isMicro ? 5 : 14; // estimated, don't know where the space comes from
 	var windowWidth = window.innerWidth - rightMargin;
-
+		
 	// calculate width of each photo box
 	w = (windowWidth / photosPerLine) - (margin);
 	w = Math.floor(w);
 
 	widthTotal = (((w + margin) * photosPerLine));
-	console.log('widthTotal: ' + widthTotal + ', innerWidth: ' + windowWidth);
-
+	
 	// make a slight adjustment for more right margin when they get a little too big
 	var loopLimit = 5;
 	while (widthTotal >= windowWidth && loopLimit > 0)
@@ -141,20 +143,29 @@ function resize(dc)
 	}
 	
 	if (log)
-		console.log(
-		  "window.innerWidth: " + window.innerWidth 
+	{
+		var boxWidth = 0;
+	    var box = document.getElementById("box0");
+	    if (box)
+	    	boxWidth = box.clientWidth;
+	
+		var debugInfo = 
+		  "ppl: " + photosPerLine 
+		+ ", w: " + w 
+		+ ", h: " + h 
+		+ ", innerWidth: " + window.innerWidth 
 		+ ", windowWidth: " + windowWidth 
-		+ ", screen.width: " + screen.width 
-		+ ", screen.height: " + screen.height 
-		+ ", deviceWidth: " + deviceWidth 
-		+ ", ppl: " + photosPerLine 
-		+ ", w=" + w 
-		+ ", h=" + h 
-		+ ", wt=" + widthTotal
-		+ ", isMicro=" + isMicro
-		+ ", isPortrait=" + isPortrait
-		+ ", margin=" + margin
-		);
+		+ ", widthTotal: " + widthTotal
+		+ ", micro: " + isMicro
+		+ ", portrait: " + isPortrait
+		+ ", margin: " + margin
+		+ ", rightMargin: " + rightMargin
+		+ ", boxWidth: " + boxWidth + " (" + box.clientWidth + ")";
+		;
+		
+		console.log(debugInfo);
+		$("#debug").html(debugInfo);
+	}
 	
 	dc.width = w;
 	dc.height = h;

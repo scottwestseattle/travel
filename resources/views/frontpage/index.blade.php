@@ -510,9 +510,13 @@ $sectionCount = 0;
 	<!-- Content -------------------------------------------------------------------------------------------------->
 	<!------------------------------------------------------------------------------------------------------------->
 	
+	@if (\App\Tools::isSuperAdmin())
+	<div id="debug" style="margin-left: 5px; color: black;"></div>
+	@endif
+	
 	<div id="content" style='margin:0; padding: 0 0 {{$showFullGallery ? '5px' : '30px'}} 0; min-height: 200px; text-align: center;'>
 		@foreach($gallery as $record)
-			<div class='frontpage-box' style="" >
+			<div id="box{{$loop->index}}" class='frontpage-box' style="" >
 			
 				<!-- BACKGROUND PHOTO LINK -->
 				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; 
@@ -532,8 +536,6 @@ $sectionCount = 0;
 			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@lang('ui.Show All Galleries')</button>
 		</a>
 	</div>
-	
-	<span id="debug"></span>
 		
 </div><!-- container -->
 </div><!-- content -->
