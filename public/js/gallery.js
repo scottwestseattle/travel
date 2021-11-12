@@ -22,7 +22,7 @@ function onResize()
 
 function resize(dc)
 {	
-	var log = false;
+	var log = true;
 	if (log)
 		console.log('resizing...');
 
@@ -32,22 +32,9 @@ function resize(dc)
 	// get margin value from photo box
 	var box = $('.frontpage-box');
 	
-	if (log)
-	{
-		console.log("box = " + box);
-		if (typeof box === 'object')
-		{
-			console.log('box is object');
-		}
-		else
-		{
-			console.log('box is NOT object');
-		}
-	}
-	
 	var sMargin = $('.frontpage-box').css('margin-left'); 
+	console.log('sMargin: ' + sMargin);
 	var margin = (typeof sMargin !== 'undefined') ? Number(sMargin.substring(0, 1)) : 5;
-	//alert(sMargin);
 	
 	var pheight = 220;						// default photo height
 	var pwidth = 320;						// calc's all based on the default width
@@ -63,9 +50,9 @@ function resize(dc)
 	var deviceWidth = (browserWidth > screen.width) ? browserWidth : screen.width;
 	var deviceHeight = screen.height;
 	var isPortrait = (deviceWidth < deviceHeight);
-	//orig: var isMicro = (deviceWidth <= 380);
 	var isMicro = (window.innerWidth <= 380);
 	
+	// adjust font size, if needed
 	var fontSet = false;
 	if (isMicro) // micro screen
 	{
@@ -89,31 +76,48 @@ function resize(dc)
 	else
 	{
 		if (isPortrait) // portrait
-			photosPerLine = Math.floor(browserWidth / photoBaseWidth); // +1 so they'll always be smaller than base width
+			photosPerLine = Math.floor(browserWidth / photoBaseWidth);
 		else // landscape
 			photosPerLine = Math.floor(browserWidth / photoBaseWidth) + 1; // +1 so they'll always be smaller than base width
 	}
-		
-	//alert(browserWidth);
-
+	
+	//	
 	// compute new photo width and height
-	browserWidth -= (margin * photosPerLine);
-	w = (browserWidth / photosPerLine) - (margin / photosPerLine);
+	//
+	
+	var widthTotal = 0;
+	var rightMargin = 17; // estimated, don't know where the space comes from
+	var windowWidth = window.innerWidth - rightMargin;
+
+	// calculate width of each photo box
+	w = (windowWidth / photosPerLine) - (margin);
 	w = Math.floor(w);
 
-	var widthTotal = ((w + margin) * photosPerLine);	// only for info
-	var h = Math.floor(w * ratio);
+	widthTotal = (((w + margin) * photosPerLine));
+	console.log('widthTotal: ' + widthTotal + ', innerWidth: ' + windowWidth);
 
-	var fudgeFactor = 5;
-	if ((widthTotal + (fudgeFactor * photosPerLine)) >= window.innerWidth)
+	// make a slight adjustment for more right margin when they get a little too big
+	var loopLimit = 5;
+	while (widthTotal >= windowWidth && loopLimit > 0)
 	{
 		if (log)
-			console.log('too big - widthTotal: ' + (widthTotal + fudgeFactor) + ', innerWidth: ' + window.innerWidth);
+			console.log('too big - widthTotal: ' + widthTotal + ', innerWidth: ' + windowWidth);
 			
-		w -= fudgeFactor;
-		widthTotal = ((w + margin) * photosPerLine);	// only for info
+		w--;
+		widthTotal = (((w + margin) * photosPerLine));
+
+		if (log)
+			console.log('adjusted widthTotal: ' + widthTotal + ', innerWidth: ' + windowWidth);
+		
+		loopLimit--;
 	}
+
+	// set height according to width
+	var h = Math.floor(w * ratio);	
 	
+	//
+	// adjust font size
+	//
 	if (!dc.readonly && !fontSet)
 	{
 		// check if text needs to shrink
@@ -137,7 +141,9 @@ function resize(dc)
 	}
 	
 	if (log)
-		console.log("window.innerWidth: " + window.innerWidth 
+		console.log(
+		  "window.innerWidth: " + window.innerWidth 
+		+ ", windowWidth: " + windowWidth 
 		+ ", screen.width: " + screen.width 
 		+ ", screen.height: " + screen.height 
 		+ ", deviceWidth: " + deviceWidth 
@@ -162,5 +168,5 @@ function flash(text)
 }
 
 // sbw: need this??  onResize() is getting called when .js is loaded
-onResize();
+//onResize();
 

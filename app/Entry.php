@@ -333,11 +333,23 @@ class Entry extends Base
 			
 		return $records;
 	}
+
+	static public function getPublicBlogCount()
+	{
+		$count = Entry::select()
+			->where('site_id', SITE_ID)
+			->where('deleted_flag', 0)
+			->where('type_flag', ENTRY_TYPE_BLOG)
+			->where('published_flag', 1)
+			->count();
+				
+		return intval($count);
+	}
 	
 	static public function getBlogIndex()
 	{
 		$q = '
-			SELECT entries.id, entries.title, entries.description, entries.description_short, entries.permalink
+			SELECT entries.id, entries.title, entries.description, entries.description_short, entries.permalink, entries.published_flag
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", entries.id, "/") as photo_path
@@ -351,10 +363,11 @@ class Entry extends Base
 				AND entries.site_id = ?
 				AND entries.type_flag = ?
 				AND entries.deleted_flag = 0
-				AND entries.published_flag = 1 
-				AND entries.approved_flag = 1
+				AND entries.published_flag >= 0 
+				AND entries.approved_flag >= 0
 			GROUP BY 
-				entries.id, entries.title, entries.description, entries.description_short, entries.permalink, photo, photo_title, photo_path
+				entries.id, entries.title, entries.description, entries.description_short, entries.permalink, entries.published_flag,
+				photo, photo_title, photo_path
 			ORDER BY entries.id DESC
 		';
 		

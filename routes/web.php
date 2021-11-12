@@ -389,10 +389,11 @@ Route::group(['prefix' => 'templates'], function () {
 // blogs
 Route::group(['prefix' => 'blogs'], function () 
 {	
-	Route::get('/show/{id}/{all?}', 'BlogController@show');
-	Route::get('/view/{id}', 'BlogController@view');
+	Route::get('/', 'BlogController@index');
 	Route::get('/index', 'BlogController@index');
 	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');
+	Route::get('/show/{id}/{all?}', 'BlogController@show');
+	Route::get('/view/{id}', 'BlogController@view');
 	
 	// add post /create post
 	Route::get('/addpost/{id}', 'BlogController@addpost')->middleware('auth');

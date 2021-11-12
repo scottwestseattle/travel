@@ -232,17 +232,18 @@ class Tools
 		return $final;
 	}
 
-	// shortcut
-    static public function isAdmin()
-    {
-		return (Auth::user() && Auth::user()->isAdmin());
-	}
-
-	// shortcut
-    static public function isSuperAdmin()
-    {
-		return (Auth::user() && Auth::user()->isSuperAdmin());
-	}
+	//
+	// shortcuts to check admin status
+	//
+	static public function isAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SITE_ADMIN);
+	}	
+	
+	static public function isSuperAdmin()
+	{
+		return (Auth::check() && Auth::user()->user_type >= USER_SUPER_ADMIN);
+	}	
 
     static public function makeNumberArray($start = 1, $end = 10)
     {
