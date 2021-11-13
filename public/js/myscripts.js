@@ -96,16 +96,41 @@ function urlEncodeWithDate(fromId, fromYearId, fromMonthId, fromDayId, toId)
 	if (fromElem && toElem && fromDay && fromMonth && fromYear)
 	{
 		toElem.value = encodeURI(fromElem.value.replace(/[\W_]+/g, "-").toLowerCase());
-		
+	
 		if (fromYear.value > 0 && fromMonth.value > 0 && fromDay.value > 0)
 		{			
-			toElem.value += '-' + fromYear.value + '-' + pad(fromMonth.value, 2) + '-' + pad(fromDay.value, 2);
+			if (!isDayDate(fromElem.value)) // if it's not a date string already, like: Saturday, November 13, 2021
+				toElem.value += '-' + fromYear.value + '-' + pad(fromMonth.value, 2) + '-' + pad(fromDay.value, 2);
 		}
 	}
 	else
 	{
 		alert('Error creating permalink');
 	}
+}
+
+function isDayDate(text)
+{
+	var rc = false;
+	var dow = [
+		'Monday',
+		'Tuesday', 
+		'Wednesday', 
+		'Thursday', 
+		'Friday', 
+		'Saturday', 
+		'Sunday'
+	];
+	
+	dow.forEach(function (day, index, arr) {
+		if (text.startsWith(day))
+		{
+			rc = true;
+			arr.length = index + 1; // this breaks out of foreach
+		}
+	});
+		
+	return rc;
 }
 
 function createPhotoName(fromId, fromLocationId, toId)
