@@ -146,7 +146,7 @@ class Visitor extends Base
 		';
 		
 		// 'show all' means don't group on IP
-		if (Tools::getSafeArrayString($filter, 'showAll', false))
+		if (Tools::getSafeArray($filter, 'showAll', false))
 		{
 			$q .= '
 				SELECT * 
@@ -168,7 +168,7 @@ class Visitor extends Base
 			AND deleted_flag = 0 
 		';
 		
-		if (!Tools::getSafeArrayString($filter, 'showBots', false))
+		if (!Tools::getSafeArray($filter, 'showBots', false))
 			$q .= '	AND robot_flag <> 1 ';
 
 		// always use the date fields
@@ -176,7 +176,7 @@ class Visitor extends Base
 		$q .= '	AND (DATE(created_at) >= STR_TO_DATE(?, "%Y-%m-%d") AND DATE(created_at) <= STR_TO_DATE(?, "%Y-%m-%d")) ';
 			
 		// 'show all' means don't group on IP
-		if (!Tools::getSafeArrayString($filter, 'showAll', false))
+		if (!Tools::getSafeArray($filter, 'showAll', false))
 		{
 			$q .= '
 				GROUP BY ip_address

@@ -27,8 +27,6 @@ class SectionController extends Controller
 			->where('deleted_flag', 0)
 			->orderByRaw('entries.id DESC')
 			->get();
-//dump(SITE_ID);
-//dd($this->getSiteId());
 			
 		$vdata = $this->getViewData([
 			'records' => $entries,

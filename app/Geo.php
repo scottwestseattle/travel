@@ -267,7 +267,7 @@ class Geo extends Base
 				$this->_flagSize = 30;
 					
 				// get locale, language, currency overrides from array
-				if (($overrides = Tools::getSafeArrayString(self::$_languages, $cc, null)))
+				if (($overrides = Tools::getSafeArray(self::$_languages, $cc, null)))
 				{
 					$this->_locale = $overrides['locale'];
 					$this->_language = $overrides['language'];

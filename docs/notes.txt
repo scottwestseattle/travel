@@ -13,108 +13,14 @@ select created_at, id,  ip_address, referrer from `visitors` where referrer is n
 
 Latest DB Changes
 
-2020-05-31
+ALTER TABLE `sites` CHANGE `sections-show-blogs` `parameters` VARCHAR(256) NULL DEFAULT NULL;
+ALTER TABLE `sites` DROP `sections-show-tours`, DROP `sections-show-articles`;
+UPDATE `sites` SET parameters = null WHERE 1 
 
+2020-05-31
 ALTER TABLE `accounts` ADD `reconcile_statement_day` DATE NULL AFTER `reconcile_flag`;
 ALTER TABLE `reconciles` ADD `reconcile_date` DATETIME NULL AFTER `statement_date`;
 ALTER TABLE `reconciles` ADD `account_id` INT NULL AFTER `user_id`;
-
-ALTER TABLE `reconciles` ADD `subtotal1` DECIMAL(10,2) NULL COMMENT 'for accounts with multiple balances' AFTER `balance`
-, ADD `subtotal2` DECIMAL(10,2) NULL AFTER `subtotal1`
-, ADD `subtotal3` DECIMAL(10,2) NULL AFTER `subtotal2`
-, ADD `subtotal4` DECIMAL(10,2) NULL AFTER `subtotal3`
-, ADD `subtotal5` DECIMAL(10,2) NULL AFTER `subtotal4`;
-
-ALTER TABLE `accounts` ADD `multiple_balances_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'account has multiple balances (such as mutiple CD\'s or currencies)' AFTER `starting_balance`;
-
-ALTER TABLE `accounts` ADD `reconcile_flag` TINYINT NOT NULL DEFAULT '0' COMMENT 'is reconciled monthly' AFTER `starting_balance`
-, ADD `reconcile_statement_day` TINYINT NULL COMMENT 'only used if statement date is not end of month and account is reconcileable (1-31)' AFTER `reconcile_flag`;
-
-
-2020-04-01
-ALTER TABLE `transactions` CHANGE `share_price` `buy_price` DECIMAL(10,4) NULL DEFAULT NULL;
-ALTER TABLE `transactions` ADD `sell_price` DECIMAL(10,4) NULL AFTER `buy_price`;
-ALTER TABLE `transactions` ADD `profit` DECIMAL(10,2) NULL AFTER `sell_price`;
-
-2020-03-29
-ALTER TABLE `transactions` ADD `shares_unsold` MEDIUMINT NULL AFTER `shares`;
-
-2020-03-25
-ALTER TABLE `transactions` ADD `symbol` VARCHAR(10) NULL COMMENT 'stock symbol' AFTER `deleted_flag`;
-ALTER TABLE `transactions` ADD `shares` MEDIUMINT NULL COMMENT 'number of shares' AFTER `symbol`;
-ALTER TABLE `transactions` ADD `share_price` DECIMAL(10,4) NULL AFTER `shares`;
-ALTER TABLE `transactions` ADD `lot_id` INT NULL COMMENT 'lot to match buy and sell transactions' AFTER `share_price`;
-ALTER TABLE `transactions` ADD `commission` DECIMAL(10,2) NULL COMMENT 'buy/sell commission' AFTER `lot_id`;
-ALTER TABLE `transactions` ADD `fees` DECIMAL(10,2) NULL COMMENT 'buy/sell fees' AFTER `commission`;
-
-2020-03-24
-ALTER TABLE `comments` ADD `visitor_id` INT NULL AFTER `parent_id`;
-
-2020-03-05
-ALTER TABLE `ip2locations` CHANGE `country` `country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
-ALTER TABLE `ip2locations` CHANGE `city` `city` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
-
-2020-01-02
-update `ip2locations` set country = 'Czechia' WHERE 1 AND countryCode = 'cz';
-
-2019-11-26
-ALTER TABLE `visitors` ADD `countryCode` VARCHAR(3) NULL COMMENT '2 or 3 letter country code, upper case' AFTER `country`;
-ALTER TABLE `visitors` ADD `page_url` VARCHAR(30) NULL COMMENT 'where the visitor landed' AFTER `page`;
-UPDATE `visitors` SET `countryCode` = `continent` WHERE 1 AND countryCode IS NULL AND continent IS NOT NULL 
-SELECT * FROM `visitors`  WHERE 1AND countryCode IS NULLAND continent IS NOT NULL ORDER BY `visitors`.`id`  DESC
-
-2019-11-25
-ALTER TABLE `visitors` CHANGE `organization` `robot_flag` SMLINT NULL DEFAULT '0' COMMENT 'crawler, spider, robot';
-
-2019-11-13
-UPDATE `entries` set type_flag = 10 WHERE 1 AND type_flag = 5 
-
-ALTER TABLE `entries` 
-CHANGE `type_flag` `type_flag` 
-TINYINT(4) 
-NOT NULL 
-DEFAULT '-1' 
-COMMENT '-1=Not Set, 1=Entry, 2=Tour/Hike, 3=Blog, 4=Blog Post, 5=Hotel, 6=Note, 7=Section, 8=Glery, 9=Lesson, 10=Article, 99=Other';
-
-2019-05-10
-ALTER TABLE `entries` ADD `finished_flag` TINYINT NULL DEFAULT '0' AFTER `approved_flag`;
-update `entries` set finished_flag = 1
-
-2019-04-20
-ALTER TABLE `entries` ADD `major_number` SMLINT NULL DEFAULT NULL AFTER `color_background`, ADD `minor_number` SMLINT NULL DEFAULT NULL AFTER `major_number`;
-
-2019-01-23
-ALTER TABLE `photos`  ADD `display_date` DATE NULL AFTER `main_flag`;
-
-2018
-
-7/10
-ALTER TABLE `users` CHANGE `search_title_only_flag` `blocked_flag` TINYINT(4) NULL DEFAULT '0';
-ALTER TABLE `visitors` ADD `model` VARCHAR(20) NULL AFTER `visit_count`, ADD `page` VARCHAR(20) NULL AFTER `model`, ADD `record_id` INT NULL AFTER `page`;
-
-7/11
-update `visitors` set deleted_flag = 1 WHERE 1=1
-
-7/13
-TER TABLE `sites` CHANGE `telephone` `telephone` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
-
-7/20
-TER TABLE `photos` CHANGE `type_flag` `type_flag` TINYINT(4) NOT NULL DEFAULT '-1' COMMENT '-1=not set, 0=slider, 1=entry, 2=receipt, 99=other';
-update photos set type_flag = 0 where parent_id = 0; 
-UPDATE photos SET type_flag = 1 WHERE parent_id <> 0;
-UPDATE photos SET type_flag = 2 WHERE parent_id > 1000; 
-
-7/28
-TER TABLE `events` CHANGE `title` `title` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-TER TABLE `entries` ADD `photo_id` INT NULL AFTER `parent_id`;
-
-09/28
-TER TABLE `entries` ADD `color_foreground` VARCHAR(20) NULL DEFAULT NULL AFTER `display_date`, ADD `color_background` VARCHAR(20) NULL DEFAULT NULL AFTER `color_foreground`;
-TER TABLE `activities` ADD `map_label` VARCHAR(100) NULL AFTER `map_link`, ADD `map_labelt` VARCHAR(100) NULL AFTER `map_label`;
-TER TABLE `activities` ADD `map_link2` TEXT NULL AFTER `map_labelt`, ADD `map_label2` VARCHAR(100) NULL AFTER `map_link2`, ADD `map_labelt2` VARCHAR(100) NULL AFTER `map_label2`;
-
-09/29
-TER TABLE `photos` ADD `glery_flag` TINYINT NOT NULL DEFAULT '1' AFTER `type_flag`, ADD `permink` VARCHAR(255) NULL AFTER `glery_flag`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // Switching lochost projects on MacBook

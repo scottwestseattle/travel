@@ -28,7 +28,7 @@
 
 						<div style="margin:15px 0px 25px 0px" class="col-md-3">
 
-@if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
+@if (true || (isset($showBooking) && $showBooking))
 					
 <ins class="bookingaff" 
 	data-aid="1535308" 
@@ -37,12 +37,11 @@
 	data-width="200" 
 	data-height="200" 
 	data-banner_id="67896" 
-	data-lang="{{$geo->isValid() ? $geo->language() : 'es-US'}}">
+	data-lang="{{isset($geo) && $geo->isValid() ? $geo->language() : 'es-US'}}">
 	
     <!-- Anything inside here will go away once widget is loaded. -->
     <a href="//www.booking.com?aid=1535308">Booking.com</a>
     <!-- end -->
-	
 </ins>
 
 <script type="text/javascript">
@@ -112,20 +111,10 @@
 
 						<div style="margin-top:15px;" class="col-md-4">
 
-						@if (isset($sections) && array_key_exists(SECTION_AFFILIATES, $sections))
-
-							@if (false)
-							<div style="margin-bottom: 20px;">
-								<iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=9&l=ur1&category=amazonhomepage&f=ifr&linkID=4627171e16328e646bff9ccbaff6ae18&t=travelwebs024-20&tracking_id=travelwebs024-20" width="180" height="150" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
-							</div>
-						
-							<a href="https://www.agoda.com/partners/partnersearch.aspx?cid=1729782&pcs=8" target="_blank"><img src="//sherpa.agoda.com/Badge/GetBadge?badgetype=1&refkey=eQRoFwsbQxjYbmldH%2B6nvQ%3D%3D" /></a>
-							@endif
-						
-						<a href="https://getyourguide.com?partner_id=RTJHCDQ&utm_medium=online_publisher&placement=banner" target="_blank">
-							<img src="/img/theme1/gyg.svg" width="100" />
-						</a>
-
+						@if (true || (isset($showGyg) && $showGyg))
+							<a href="https://getyourguide.com?partner_id=RTJHCDQ&utm_medium=online_publisher&placement=banner" target="_blank">
+								<img src="/img/theme1/gyg.svg" width="100" />
+							</a>
 						@endif
 
 						@if (isset($site) && isset($site->instagram_link))

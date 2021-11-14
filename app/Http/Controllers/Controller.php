@@ -6,6 +6,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+
 use DateTime;
 use DateInterval;
 
@@ -101,15 +103,16 @@ define('ENTRY_TYPE_OTHER',		99);
 define('SECTION_AFFILIATES', 'section-affiliates');
 define('SECTION_ARTICLES', 'section-articles');
 define('SECTION_BLOGS', 'section-blogs');
+define('SECTION_CASH', 'section-cash');
+define('SECTION_COMMENTS', 'section-comments');
+define('SECTION_COUNTRIES', 'section-countries');
 define('SECTION_CURRENT_LOCATION', 'section-current-location');
 define('SECTION_GALLERY', 'section-gallery');
+define('SECTION_HOTELS', 'section-hotels');
+define('SECTION_LESSONS', 'section-lessons');
 define('SECTION_SLIDERS', 'section-sliders');
 define('SECTION_TOURS', 'section-tours');
 define('SECTION_WELCOME', 'section-welcome');
-define('SECTION_CASH', 'section-cash');
-define('SECTION_COMMENTS', 'section-comments');
-define('SECTION_LESSONS', 'section-lessons');
-define('SECTION_HOTELS', 'section-hotels');
 
 // event logger info
 define('LOG_TYPE_INFO', 1);
@@ -181,6 +184,8 @@ define('BANNERS_FP_COUNT', 11);
 define('CATEGORY_ID_TRANSFER', 9);
 define('CATEGORY_ID_TRADE', 209);
 define('CATEGORY_ID_INCOME', 11);
+define('CATEGORY_ID_FOOD', 2);
+define('SUBCATEGORY_ID_UNKNOWN', 208);
 define('SUBCATEGORY_ID_BUY', 210);
 define('SUBCATEGORY_ID_SELL', 211);
 define('SUBCATEGORY_ID_STOCKS', 197);
@@ -282,6 +287,60 @@ class Controller extends BaseController
 			
 			return $next($request);
 		});
+	}
+
+	public function language($locale)
+	{
+		//dump($locale);
+		if (ctype_alpha($locale))
+		{
+			session(['locale' => $locale]);
+			App::setLocale($locale);
+		}
+		
+		return back();
+	}	
+
+	public function en(Request $request) {
+		return self::handleLocalePrefix($request, 'en');
+	}
+	public function es(Request $request) {
+		return self::handleLocalePrefix($request, 'es');
+	}
+	public function zh(Request $request) {
+		return self::handleLocalePrefix($request, 'zh');
+	}
+
+	static private function handleLocalePrefix($request, $locale)
+	{
+		self::setLocale($locale);
+		return redirect(self::getUrl($request, $locale));
+	}
+	
+	static private function setLocale($locale)
+	{
+		session(['locale' => $locale]);
+		App::setLocale($locale);
+	}
+
+	static private function getUrl(Request $request, $locale)
+	{
+		$url = '';
+		$segments = $request->segments();
+		$i = 0;
+		
+		// remove the locale prefix from the url
+		// for example, change '/es/about' to '/about'
+		foreach($segments as $segment)
+		{
+			// skip the first segment which is the locale prefix
+			if ($i++ >= 1)
+			{
+				$url .= '/' . $segment;
+			}
+		}
+		
+		return $url;
 	}
 
 	static public function getEntryTypes()
@@ -462,7 +521,6 @@ class Controller extends BaseController
 	protected function getViewData($vdata = null, $page_title = null)
 	{			
 		$this->viewData = isset($vdata) ? $vdata : [];
-		
 		// add-on the mandatory parts
 		$this->viewData['sections'] = Controller::getSections();
 		$this->viewData['site'] = Controller::getSite();
@@ -487,7 +545,7 @@ class Controller extends BaseController
 		{
 			$this->viewData['page_title'] = $this->makePageTitle($this->viewData['page_title']);			
 		}
-		
+
 		return $this->viewData;
 	}
 	
@@ -1210,10 +1268,10 @@ class Controller extends BaseController
 				Event::logError(LOG_MODEL_SITES, LOG_ACTION_SELECT, $msg);
 				
 				// stop it here because there's no graceful way to shut it down
-				die;
+				die('site not found');
 			}
 		}
-		
+				
 		return $this->site;
 	}
 
@@ -1275,7 +1333,7 @@ class Controller extends BaseController
 		{
 			$section = $array[$id];
 		}
-		
+
 		return $section;
 	}
 	

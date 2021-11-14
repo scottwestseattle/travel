@@ -54,7 +54,15 @@ class FrontPageController extends Controller
 		$posts = null;
 		
 		$site = Controller::getSite();		
-		$showFullGallery = (strtolower($site->site_url) == 'scotthub.com') ? true : false;
+
+		//
+		// set the template according to the site parameters
+		//
+		$template = Tools::getOption($site->parameters, 'template');
+		//$sectionColors = Tools::getOption($this->site->parameters, 'sectionColors');
+		//$color = Tools::getCsv($sectionColors, 0);
+		
+		$showFullGallery = ($template == "gallery");
 				
 		//
 		// Set up the sections
@@ -549,18 +557,18 @@ class FrontPageController extends Controller
 
 		$sections = Controller::getSections();
 		
-		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
+		if (Tools::getSection(SECTION_SLIDERS, $sections) != null)
 		{
 			$stats['sliders'] = Photo::getCountSliders();
 		}
 		
-		if (Controller::getSection(SECTION_ARTICLES, $sections) != null)
+		if (Tools::getSection(SECTION_ARTICLES, $sections) != null)
 		{
 			$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
 			$stats['photos_article'] = Photo::getCount(ENTRY_TYPE_ARTICLE);
 		}
 		
-		if (Controller::getSection(SECTION_BLOGS, $sections) != null)
+		if (Tools::getSection(SECTION_BLOGS, $sections) != null)
 		{
 			$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
 			$stats['blog_entries'] = Entry::getEntryCount(ENTRY_TYPE_BLOG_ENTRY, /* allSites = */ false);
@@ -568,19 +576,19 @@ class FrontPageController extends Controller
 			$stats['photos_post'] = Photo::getCount(ENTRY_TYPE_BLOG_ENTRY);
 		}
 		
-		if (Controller::getSection(SECTION_TOURS, $sections) != null)
+		if (Tools::getSection(SECTION_TOURS, $sections) != null)
 		{
 			$stats['tours'] = Entry::getEntryCount(ENTRY_TYPE_TOUR, /* allSites = */ false);
 			$stats['photos_tour'] = Photo::getCount(ENTRY_TYPE_TOUR);
 		}
 		
-		if (Controller::getSection(SECTION_GALLERY, $sections) != null)
+		if (Tools::getSection(SECTION_GALLERY, $sections) != null)
 		{
 			$stats['galleries'] = Entry::getEntryCount(ENTRY_TYPE_GALLERY, /* allSites = */ false);
 			$stats['photos_gallery'] = Photo::getCount(ENTRY_TYPE_GALLERY);		
 		}
 
-		if (Controller::getSection(SECTION_HOTELS, $sections) != null)
+		if (Tools::getSection(SECTION_HOTELS, $sections) != null)
 		{
 			$stats['hotels'] = Entry::getEntryCount(ENTRY_TYPE_HOTEL, /* allSites = */ false);
 		}

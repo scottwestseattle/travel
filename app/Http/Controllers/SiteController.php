@@ -103,7 +103,7 @@ class SiteController extends Controller
 		$record->site_title = $this->copyDirty($record->site_title, $request->site_title, $isDirty, $changes);
 		$record->email = $this->copyDirty($record->email, $request->email, $isDirty, $changes);
 		$record->telephone = $this->copyDirty($record->telephone, $request->telephone, $isDirty, $changes);
-		$record->instagram_link = $this->copyDirty($record->instagram_link, $request->instagram_link, $isDirty, $changes);
+		$record->parameters = $this->copyDirty($record->parameters, $request->parameters, $isDirty, $changes);
 		$record->current_location_map_link = $this->copyDirty($record->current_location_map_link, $request->current_location_map_link, $isDirty, $changes);
 		$record->previous_location_title = $this->copyDirty($record->previous_location_title, $request->previous_location_title, $isDirty, $changes);
 		$record->previous_location_list = $this->copyDirty($record->previous_location_list, $request->previous_location_list, $isDirty, $changes);

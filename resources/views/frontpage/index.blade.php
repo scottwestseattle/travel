@@ -4,22 +4,11 @@
 
 @php
 
+//
 // THIS IS THE FRONT PAGE
+//
 
-function getSection($id, $array)
-{
-	$section = null;
-	
-	if (array_key_exists($id, $array))
-	{
-		$section = $array[$id];
-	}
-	
-	return $section;
-}
-
-//echo '<p>site: ' . $site->site_url . '</p>';
-if (strtolower($site->site_url) == 'scotthub.com')
+if ($showFullGallery)
 {
 	$colors = [
 		'sectionGray',
@@ -91,7 +80,7 @@ $sectionCount = 0;
 	<!-- Sliders -->
 	<!--------------------------------------------------------------------------------------->
 
-@if (getSection(SECTION_SLIDERS, $sections) != null)
+@if (\App\Tools::getSection(SECTION_SLIDERS, $sections) != null)
 	
 @if (count($sliders_h) > 0 && count($sliders_v) > 0)
 <?php $sectionCount++; ?>
@@ -393,8 +382,8 @@ $sectionCount = 0;
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION 1: Welcome -->
 <!--------------------------------------------------------------------------------------->	
-@if (($section = getSection(SECTION_WELCOME, $sections)) != null)
-<section id="" class="{{$colors[$sectionCount++]}}" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
+@if (($section = \App\Tools::getSection(SECTION_WELCOME, $sections)) != null)
+<section id="" class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'sectionRed')}}" style="padding: 30px 0 40px 0; xposition: relative; xtop: -30px; ">
 <div class="container" style="max-width:1400px;">	
 	<div class="sectionHeader text-center">	
 		
@@ -455,14 +444,14 @@ $sectionCount = 0;
 <!-- SECTION: Photo Gallery -->
 <!--------------------------------------------------------------------------------------->
 
-@if (($section = getSection(SECTION_GALLERY, $sections)) != null)
+@if (($section = \App\Tools::getSection(SECTION_GALLERY, $sections)) != null)
 
 <div id="load-loop" class="" style="width:100%; text-align: center; padding-top:100px; display:none;">
 	<img src="/img/theme1/load-loop.gif" />
 </div>
 
 <div id="content" style="display:default;">
-<div id="container" class="{{$colors[$sectionCount++]}}" style="min-height:200px;" >
+<div id="container" class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'sectionGray')}}" style="min-height:200px;" >
 
 @if (!$showFullGallery)
 
@@ -542,13 +531,13 @@ $sectionCount = 0;
 
 @endif
 
-
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: GYG Widget -->
 <!--------------------------------------------------------------------------------------->
 
-@if ($geo->isLocalhost())
+@if (($section = \App\Tools::getSection(SECTION_AFFILIATES, $sections)) != null)
 
+@if ($geo->isLocalhost())
 	<!-- skip these for localhost in case we're working with no internet connection -->
 	<div class="text-center" style="margin-top:40px;" >
 		<h3>GYG Widget goes here in production</h3>
@@ -558,10 +547,7 @@ $sectionCount = 0;
 	<div class="text-center" style="margin:20px; border: 1px black solid; background-color:#054589;">
 		<a target="_blank" href="https://www.getyourguide.com/?partner_id=RTJHCDQ"><img width="300" src="/img/banners/gyg-block.png" /></a>
 	</div>		
-	
-	
 @else
-
 	<div style="margin-top:20px;" >
 		<div data-gyg-href="https://widget.getyourguide.com/default/activites.frame" 
 		data-gyg-locale-code="{{$geo->language()}}" 
@@ -574,7 +560,6 @@ $sectionCount = 0;
 	</div>
 
 	<script async defer src="https://widget.getyourguide.com/v2/widget.js"></script>
-
 @endif
 
 @if ($geo->isValid()))
@@ -591,12 +576,14 @@ $sectionCount = 0;
 </div>
 @endif
 
+@endif
+
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Articles -->
 <!--------------------------------------------------------------------------------------->
 @if (isset($articles) && count($articles) > 0)
-@if (($section = getSection(SECTION_ARTICLES, $sections)) != null)
-<section class="{{$colors[$sectionCount++]}}">
+@if (($section = \App\Tools::getSection(SECTION_ARTICLES, $sections)) != null)
+<section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'sectionGray')}}">
 	<div class="container main-font" style="max-width:95%;">	
 		<div class="sectionHeader text-center">			
 						
@@ -670,8 +657,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!--------------------------------------------------------------------------------------->
 <!-- SECTION: Blogs -->
 <!--------------------------------------------------------------------------------------->
-@if (($section = getSection(SECTION_BLOGS, $sections)) != null && isset($posts))
-<section class="{{$colors[$sectionCount++]}}">
+@if (($section = \App\Tools::getSection(SECTION_BLOGS, $sections)) != null && isset($posts))
+<section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'sectionRed')}}">
 	<div class="container main-font" style="max-width:1440px;">	
 	
 		<!-- section header text -->
@@ -762,8 +749,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!-- SECTION: Current Location -->
 <!--------------------------------------------------------------------------------------->
 		
-@if (($section = getSection(SECTION_CURRENT_LOCATION, $sections)) != null)
-<section class="{{$colors[$sectionCount++]}}">
+@if (($section = \App\Tools::getSection(SECTION_CURRENT_LOCATION, $sections)) != null)
+<section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'sectionRed')}}">
 <div class="container">	
 
 	<div class="sectionHeader text-center main-font">	
@@ -818,9 +805,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!-- SECTION: Tours, Hikes, Things To Do -->
 <!--------------------------------------------------------------------------------------->
 
-@if (($section = getSection(SECTION_TOURS, $sections)) != null)
-
-<section id="" class="{{$colors[$sectionCount++]}}" style="padding-bottom: 50px;" >
+@if (($section = \App\Tools::getSection(SECTION_TOURS, $sections)) != null)
+<section id="" class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'colorWhite')}}" style="padding-bottom: 50px;" >
 	<div class="container">	
 		<div class="text-center">			
 			
@@ -902,8 +888,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!-- SECTION: Affiliates -->
 <!--------------------------------------------------------------------------------------->
 
-@if (($section = getSection(SECTION_AFFILIATES, $sections)) != null)
-<section class="{{$colors[$sectionCount++]}}">
+@if (($section = \App\Tools::getSection(SECTION_AFFILIATES, $sections)) != null)
+<section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'colorWhite')}}">
 <div class="container">	
 	<div style="margin-top: 0px;" class="sectionHeader text-center main-font">	
 	
@@ -951,8 +937,8 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 <!-- SECTION: Affiliates -->
 <!--------------------------------------------------------------------------------------->
 
-@if (($section = getSection(SECTION_COMMENTS, $sections)) != null)
-<section class="{{$colors[$sectionCount++]}}">
+@if (($section = \App\Tools::getSection(SECTION_COMMENTS, $sections)) != null)
+<section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'colorWhite')}}">
 
 <div class="container text-center" style="max-width: 500px;">	
 	

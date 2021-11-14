@@ -135,7 +135,12 @@ a.blog-post-text:hover  {
 		background-color: #1C5290;
 		color: white;
 	}
-		
+
+	.sectionRed {
+		background-color: red;
+		color: white;
+	}
+			
 	.sectionOrange {
 		background-color: #FF6900;
 		color: white;

@@ -112,6 +112,20 @@ class Tools
 
         return $r;
     }
+    
+    static public function getCsv($options, $index)
+	{
+		$rc = null;
+		
+		$parts = explode(',', $options);
+		if (count($parts) > $index)
+		{
+			$rc = trim($parts[$index]);
+		}
+
+		return $rc;
+	}
+
 
     static public function itoa($n)
     {
@@ -122,10 +136,15 @@ class Tools
 		return $rc;
 	}
 	
+    static public function getSection($key, $array)
+    {
+		return self::safeArrayGet($array, $key, null);
+	}
+
     static public function getSafeArrayInt($array, $key, $default)
     {
 		$rc = $default;
-		$s = self::getSafeArrayString($array, $key, null);
+		$s = self::getSafeArray($array, $key, null);
 		if (isset($s))
 		{
 			$rc = intval($s);
@@ -134,15 +153,10 @@ class Tools
 		return $rc;
 	}
 	
-    static public function getSafeArrayString($array, $key, $default)
-    {
-		return self::safeArrayGetString($array, $key, $default);
-	}
-
     static public function getSafeArrayBool($array, $key, $default)
     {
 		$rc = $default;
-		$s = self::getSafeArrayString($array, $key, null);
+		$s = self::getSafeArray($array, $key, null);
 		if (isset($s))
 		{
 			$rc = $s;
@@ -151,7 +165,12 @@ class Tools
 		return $rc;
 	}
 	
-    static public function safeArrayGetString($array, $key, $default)
+    static public function getSafeArray($array, $key, $default = null)
+    {
+		return self::safeArrayGet($array, $key, $default);
+	}
+
+    static private function safeArrayGet($array, $key, $default)
     {
         $v = $default;
 
@@ -162,7 +181,7 @@ class Tools
 
         return $v;
     }
-	
+
     static public function cleanHtml($text)
 	{
 		$v = preg_replace('#style="(.*?)"#is', "", $text); // remove styles

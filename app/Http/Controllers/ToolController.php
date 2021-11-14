@@ -410,26 +410,26 @@ LEFT JOIN photos
 			
 		$sections = Controller::getSections($site->id);
 		
-		if (Controller::getSection(SECTION_SLIDERS, $sections) != null)
+		if (Tools::getSection(SECTION_SLIDERS, $sections) != null)
 		{
 			$urls[] = '/photos/sliders';
 			$urls = array_merge($urls, ToolController::getSiteMapSliders());
 		}
 		
-		if (Controller::getSection(SECTION_ARTICLES, $sections) != null)
+		if (Tools::getSection(SECTION_ARTICLES, $sections) != null)
 		{
 			$urls[] = '/articles';
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_ARTICLE));
 		}
 		
-		if (Controller::getSection(SECTION_BLOGS, $sections) != null)
+		if (Tools::getSection(SECTION_BLOGS, $sections) != null)
 		{
 			$urls[] = '/blogs/index';
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_BLOG));
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_BLOG_ENTRY));
 		}
 		
-		if (Controller::getSection(SECTION_TOURS, $sections) != null)
+		if (Tools::getSection(SECTION_TOURS, $sections) != null)
 		{
 			$urls[] = '/tours/location/2';
 			$urls[] = '/tours/location/9';
@@ -439,7 +439,7 @@ LEFT JOIN photos
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_TOUR));
 		}
 		
-		if (Controller::getSection(SECTION_GALLERY, $sections) != null)
+		if (Tools::getSection(SECTION_GALLERY, $sections) != null)
 		{
 			$urls[] = '/galleries';
 			$urls = array_merge($urls, ToolController::getSiteMapEntries(ENTRY_TYPE_GALLERY));
@@ -447,7 +447,7 @@ LEFT JOIN photos
 			$urls = array_merge($urls, ToolController::getSiteMapPhotos());
 		}
 		
-		if (Controller::getSection(SECTION_COMMENTS, $sections) != null)
+		if (Tools::getSection(SECTION_COMMENTS, $sections) != null)
 		{
 			$urls[] = '/comments';
 		}

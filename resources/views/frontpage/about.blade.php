@@ -143,6 +143,7 @@
 		</div>	
 	@endif
 		
+	@if (($section = \App\Tools::getSection(SECTION_COUNTRIES, $sections)) != null)
 	<h3>@LANG('content.Countries') ({{count($countries)}})</h3>
 	<div>
 		<p>
@@ -152,6 +153,7 @@
 		@endforeach
 		</p>
 	</div>
+	@endif
 		
 </div>
 
