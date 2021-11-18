@@ -7,16 +7,16 @@ use DB;
 use Auth;
 use App\Account;
 use App\Activity;
-use App\Entry;
-use App\User;
-use App\Photo;
-use App\Location;
-use App\Visitor;
-use App\Site;
-use App\Event;
 use App\Comment;
+use App\Event;
+use App\Entry;
+use App\Location;
+use App\Photo;
+use App\Site;
 use App\Tools;
 use App\Transaction;
+use App\User;
+use App\Visitor;
 
 define('PREFIX', 'frontpage');
 define('LOG_MODEL', 'frontpage');
@@ -466,6 +466,13 @@ class FrontPageController extends Controller
 			->where('subcategory_id', SUBCATEGORY_ID_UNKNOWN)
 			->get();		
 
+		//
+		// get stock quotes
+		//
+		$quotes[] = Transaction::getQuote('VOO', 'S&P 500 ETF');
+		$quotes[] = Transaction::getQuote('XLY', 'Consumer Desc');
+		$quotes[] = Transaction::getQuote('XLK', 'Tech');
+
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
@@ -487,6 +494,7 @@ class FrontPageController extends Controller
 			'ignoreErrors' => $this->ignoreErrors(),
 			'accountReconcileOverdue' => count($accounts),
 			'trx' => $trx,
+			'quotes' => $quotes,
 		], 'Admin Page'));
     }
 	

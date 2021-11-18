@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+$debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
+@endphp
+
 <div class="page-size container">
 	<!-- h2 style="">Admin Dashboard</h2 -->
 
@@ -11,33 +15,14 @@
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
 			<div style="margin-bottom:10px;">{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</div>
-			<div style="margin-bottom:10px; font-size:.8em;">{{$site->site_name}} (SITE_ID={{$site->id}} {{DATABASE}})</div>
-			<div style="margin-bottom:10px; font-size:.8em;">{{base_path()}}</div>
-			<div style="margin-bottom:10px; font-size:.8em;">Geo Load Time: {{$geoLoadTime}}</div>
-			@if ($ignoreErrors)
-				<div style="margin-bottom:10px;"><strong>IGNORING ERRORS FOR TESTING!</strong></div>
+			
+			@if ($debug)
+				<div style="margin-bottom:10px; font-size:.8em;">{{$site->site_name}} (SITE_ID={{$site->id}} {{DATABASE}})</div>
+				<div style="margin-bottom:10px; font-size:.8em;">{{base_path()}}</div>
+				<div style="margin-bottom:10px; font-size:.8em;">Geo Load Time: {{$geoLoadTime}}</div>
 			@endif
 			
-			@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
-				<div style=" margin: 20px 0;">
-					<a class="btn btn-danger" href="/d-e-b-u-g">TURN DEBUG OFF</a>&nbsp;&nbsp;
-					<a class="btn btn-primary" href="/debugtest" role="button">Test</a>&nbsp;&nbsp;
-					<a class="btn btn-primary" href="/about" role="button">About</a>
-				</div>
-			@else
-				<div style=" margin: 20px 0;">
-					<a class="btn btn-primary" href="/d-e-b-u-g" role="button">Debug</a>&nbsp;&nbsp;
-					<a class="btn btn-primary" href="/debugtest" role="button">Test</a>&nbsp;&nbsp;
-					<a class="btn btn-primary" href="/about" role="button">About</a>
-				</div>
-			@endif
-		</div>
-	</div>
-
-	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
-		<div class="drop-box darkBlue" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
-			<h3>Client</h3>
-			<?php //dump($geo); ?>
+			<h4>Client</h4>
 			@if ($geo->isValid())
 				<div style="font-size:12px; margin-bottom:10px;">{{$geo->ip() . ' (' . $geo->location() . ' ' . $geo->locale() . ' ' . $geo->language() . ')'}}</div>
 			@else
@@ -45,18 +30,48 @@
 				<div style="font-size:12px; margin-bottom:10px;">INVALID IP / NO GEO</div>
 			@endif
 			<div style="margin-bottom:20px;"><img height="40" src="{{$geo->flag()}}" title="{{$geo->location()}}" alt="{{$geo->location()}}" /></div>
-			<div style="margin-bottom:20px; font-size:12px;">
-				<a style="color:white;" href="/expedia">Expedia</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/travelocity">Travelocity</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/eunoticereset">EU</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/importgeo">Geo</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/first">Sliders</a>
-				&nbsp;&nbsp;<a style="color:white;" href="/hash">Hasher</a>
+			
+			
+			@if ($ignoreErrors)
+				<div style="margin-bottom:10px;"><strong>IGNORING ERRORS FOR TESTING!</strong></div>
+			@endif
+			
+			<div style=" margin: 20px 0;">
+				@if ($debug)
+					<a class="btn-sm btn-danger" href="/d-e-b-u-g">DEBUG OFF</a>
+				@else
+					<a class="btn-sm btn-primary" href="/d-e-b-u-g" role="button">Debug</a>
+				@endif
+				<a class="btn-sm btn-primary" href="/debugtest" role="button">Test</a>
+				<a class="btn-sm btn-primary" href="/importgeo" role="button">Geo</a>
+				<a class="btn-sm btn-primary" href="/first" role="button">Sliders</a>
+				<a class="btn-sm btn-primary" href="/hash" role="button">Hash</a>
 			</div>
 		</div>
 	</div>
+
+	@if (isset($quotes) && count($quotes) > 0)
+	<div style="clear:both;"></div>
+	<div class="text-center">
+		<h3>Quotes</h3>
+
+		@foreach($quotes as $quote)	
+		@php
+			$color = $quote['up'] ? 'blue' : 'red';
+		@endphp
+		<div class="drop-box text-center number-box {{$color}}">
+			<div><span style="font-size:1.2em;">{{($quote['symbol'])}}</span></div>
+			<div style="font-size:10px; margin-top:5px;">{{$quote['nickname']}}</div>
+			<p style="font-size:1.5em; margin-top:10px;">{{$quote['quote']}}</p>
+			<p style="font-size:11px; margin-top:10px; color:{{'default'}};">{{$quote['change']}}</p>
+		</div>			
+		@endforeach		
+	</div>
+	@endif
 	
-	<div>
+	<div style="clear:both;"></div>
+	<div style="margin-top:15px;">
+		<h3>Visitors</h3>
 		<?php
 			// if too many visitors then have to scale down the font size
 			$style = $visitorsTotal >= 1000 ? 'font-size:1.8em; margin-top:5px;' : '';

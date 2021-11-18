@@ -584,7 +584,7 @@ class Transaction extends Base
 		return $array;
 	}
 
-    static public function getQuote($symbol)
+    static public function getQuote($symbol, $nickname = null)
     {
 		$quote = null;
 		$url = "https://finance.yahoo.com/quote/$symbol?p=$symbol";
@@ -619,6 +619,8 @@ class Transaction extends Base
 		$change = trim($change, ')');
 		$up = ($change[0] == '-') ? false : true;
 		
+		$rc['nickname'] = $nickname;
+		$rc['symbol'] = $symbol;
 		$rc['quote'] = floatval($quote);
 		$rc['change'] = $change;
 		$rc['up'] = $up;
