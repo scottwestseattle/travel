@@ -1,13 +1,14 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-SELECT * FROM `ip2locations` WHERE iplongStart <= 3649032129 AND iplongEnd >= 3649032129
+To free up inodes, use cPanel file manager to: 
 
-update visitors set continent = "US" WHERE 1 AND continent IS NULL AND country = 'United States';
+1. rename the folder to 'sessionsDEL'
+2. create a new 'sessions'
+3. test it, all users will be logged out
+4. delete the old one
 
-SELECT ip_address, country, continent FROM `visitors` where 1 and continent is null and country is not null;
-
-select * from `visitors` where (referrer like '%anti-crisis-seo%' OR referrer like '%fikirandray%') and robot_flag = 0 ORDER by id desc
-
-select created_at, id,  ip_address, referrer from `visitors` where referrer is not null and (robot_flag = 0 OR robot_flag is null) limit 500
+/home/codespace/public_html/storage/framework/sessions
+/home/codespace/public_html/_subdomains/travel/storage/framework/sessions
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

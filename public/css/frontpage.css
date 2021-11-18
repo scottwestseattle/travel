@@ -136,6 +136,16 @@ a.blog-post-text:hover  {
 		color: white;
 	}
 
+	.minty {
+		background-color: #249e66 !important;
+		color: white;
+	}
+
+	.mintyDark {
+		background-color: #2a7854 !important;
+		color: white;
+	}
+
 	.sectionRed {
 		background-color: red;
 		color: white;

@@ -19,8 +19,6 @@ if ($showFullGallery)
 		'sectionGray',
 		'sectionWhite',
 	];
-	
-	$colorAlt = 'DarkBlue';
 }
 else
 {
@@ -35,8 +33,6 @@ else
 		'sectionWhite',
 		'sectionGreen',
 	];
-	
-	$colorAlt = 'DarkBlue';
 }
 
 $sectionCount = 0;
@@ -505,7 +501,7 @@ $sectionCount = 0;
 	
 	<div id="content" style='margin:0; padding: 0 0 {{$showFullGallery ? '5px' : '30px'}} 0; min-height: 200px; text-align: center;'>
 		@foreach($gallery as $record)
-			<div id="box{{$loop->index}}" class='frontpage-box' style="" >
+			<div id="box{{$loop->index}}" class='frontpage-box {{$colorBox}}' style="" >
 			
 				<!-- BACKGROUND PHOTO LINK -->
 				<a href="{{route('gallery.permalink', [$record->permalink])}}" class="frontpage-box-link" style="width: 200px; 

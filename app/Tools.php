@@ -117,6 +117,9 @@ class Tools
 	{
 		$rc = null;
 		
+		if ($index > 0)
+			$index--;
+			
 		$parts = explode(',', $options);
 		if (count($parts) > $index)
 		{

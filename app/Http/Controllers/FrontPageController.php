@@ -59,10 +59,24 @@ class FrontPageController extends Controller
 		// set the template according to the site parameters
 		//
 		$template = Tools::getOption($site->parameters, 'template');
-		//$sectionColors = Tools::getOption($this->site->parameters, 'sectionColors');
-		//$color = Tools::getCsv($sectionColors, 0);
-		
 		$showFullGallery = ($template == "gallery");
+		
+		$colorMain = 'powerBlue';
+		$colorAlt = 'DarkBlue';
+		$colorBox = $colorMain;
+		$fpColors = Tools::getOption($site->parameters, 'fpColors');
+
+		if (isset($fpColors))
+		{
+			$v = Tools::getCsv($fpColors, 1);
+			$colorMain = (isset($v)) ? $v : $colorMain;
+				
+			$v = Tools::getCsv($fpColors, 2);
+			$colorAlt = (isset($v)) ? $v : $colorAlt;
+
+			$v = Tools::getCsv($fpColors, 3);
+			$colorBox = (isset($v)) ? $v : $colorBox;
+		}
 				
 		//
 		// Set up the sections
@@ -163,6 +177,9 @@ class FrontPageController extends Controller
 			'gallery' => $gallery,
 			'firstslider' => $firstslider,
 			'showFullGallery' => $showFullGallery,
+			'colorMain' => $colorMain,
+			'colorAlt' => $colorAlt,
+			'colorBox' => $colorBox,
 			'latestLocations' => $latestLocations['recentLocations'],
 			'currentLocation' => $latestLocations['currentLocation'],
 			'currentLocationPhoto' => $latestLocations['currentLocationPhoto'],
