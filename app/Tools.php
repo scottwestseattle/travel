@@ -129,7 +129,6 @@ class Tools
 		return $rc;
 	}
 
-
     static public function itoa($n)
     {
 		$rc = '';
@@ -792,4 +791,37 @@ class Tools
 							
 		return $rc;
 	}		
+
+	static public function getWord($string, $index = 1, $delim = ' ')
+	{
+	    $string = trim($string);
+	    $rc = null;
+
+        if (isset($string))
+        {
+            $s = null;
+            if (is_array($delim))
+            {
+                foreach($delim as $d)
+                {
+                    if (strpos($string, $d) != FALSE)
+                    {
+                        $s = explode($d, $string);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                $s = explode($delim, $string);
+            }
+
+            if (isset($s) && count($s) >= $index)
+            {
+                $rc = $s[$index - 1];
+            }
+        }
+
+        return $rc;
+    }
 }

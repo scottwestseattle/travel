@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use DateTime;
 use Illuminate\Http\Request;
+
 use App\Event;
-use Auth;
+use App\Tools;
 use App\Transaction;
 
 define('LOG_MODEL', 'email');
@@ -481,8 +483,9 @@ class EmailController extends Controller
 	private function checkChase($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug) 
 	{
 		$rc = false; 
-		$sample = "Amazon Rewards Visa";	// Email body - to find the details we need
 		//$debug = true;
+
+		$sample = "Transaction alert";	// Email body - to find the details we need
 		
 		//
 		// check to see who it's from
@@ -491,74 +494,72 @@ class EmailController extends Controller
 		$pos = strpos($val, $from);
 		if ($pos === false) 
 		{
-			return $rc; // not a cap account
+			return $rc; // not a Chase account
 		}
 
 		//
 		// check the body for key text
 		//						
 		$subject = 'Your $';				// Email subject / to find the beginning
-		$pos = strpos($val, $subject);					
-
-		//echo '<br/>' . $val . '<br/>pos=' . $pos; die;
+		$pos = strpos($val, $subject);							
 		if ($pos !== false && $pos == 44) 
 		{
 			$rc = true; // transaction found
-			//echo 'pos = ' . $pos . '<br/>';
-						
+					
 			// get the body
 			$body_raw = imap_body($mbox, $count);
+			$body_raw = strip_tags($body_raw);
 						
 			$pos = strpos($body_raw, $sample);
 			if ($pos === false)
 			{
-				echo $body_raw . '<br/>';
+				//dump($body_raw);
 				die('parse: info text not found in body raw');
 			}
-			//echo 'pos=' . $pos . '<br/>';die;
-						
-			$body_raw = substr($body_raw, $pos, 200 /* all the content we need is within 200 chars */);
+			
+			//
+			// format the body so the details can be extracted
+			//
+			$body_raw = substr($body_raw, $pos);
+			$body_raw = preg_replace('! +!', ' ', $body_raw);		// replace one or more with 1
+			$body_raw = preg_replace('!\r\n !', '|', $body_raw);	// replace one or more with 1
+			$body_raw = preg_replace('!\|+!', '|', $body_raw);		// replace one or more with 1
 
-			$parts = explode(" | ", str_replace("\r\n", "", $body_raw));
-			
-			/* parts looks like:
-			
-				  0 => "Amazon Rewards Visa (...2602)"
-				  1 => "||=20| Date"
-				  2 => "Jul 29, 2021 at 4:17 PM ET"
-				  3 => "||=20| Merchant"
-				  4 => "AMZN Mktp US"
-				  5 => "||=20| Amount"
-				  6 => "$35.27"
-				  7 => "| || You are receiving this alert"
+			// split it into lines
+			$lines = explode("\r\n", $body_raw);
+			//dump($lines);
 
-			*/			
-			
-			if (count($parts) != 8)
+			if (count($lines) < 4)
 			{
-				die('parse: unexpected format found in body');			
+				die('parse: not enough lines');
 			}
-				
+
 			//								
 			// get the amount
 			//
-			$amount = floatval(trim($parts[6], '$'));
+			$amount = $lines[1];	
+			$amount = Tools::getWord($amount, 4, ' ');
+			$amount = trim($amount, '$');
 			$amount = -$amount;
+			//dump($amount);
 		
+			//
 			// get the account number, last four digits
-			$account = $this->parseTag($parts[0], 'Amazon Rewards Visa (...', 4, -1); 
+			//
+			$account = $this->parseTag($lines[2], 'ewards Visa (...', 4, -1); 
 			$accountId = $this->getAccountId($account);
 			if (!$accountId)
 			{
 				dump($from . ": " . $account);
-				dump($body_full);
+				dump($body_raw);
 				dd($accountId);
 			}
+			//dump($account);
 			
 			//			
 			// get the date
 			//
-			$date_raw = substr($parts[2], 0, 12); 
+			$date_raw = substr($lines[3], 0, 12); 
 			$date2 = str_replace(',', '', trim($date_raw));
 			
 			// try date format like: "Mar 21 2020"
@@ -579,13 +580,13 @@ class EmailController extends Controller
 					}					
 				}
 			}
-			//dump($date_raw);
-			//dd($date2);
 				
 			//						
 			// get the description
 			//
-			$desc = $parts[4];
+			$desc = $lines[3];
+			$desc = Tools::getWord($desc, 3, '|');
+			$desc = trim($desc, '=');
 						
 			if ($debug)
 			{
@@ -596,8 +597,6 @@ class EmailController extends Controller
 				echo 'Amount: |' . $amount . '|<br/>'; 
 				die('*** end of debug ***');
 			}
-
-			//echo 'Record::' . $account . '::' . $amount . '::' . $date->format('Y-m-d') . '::' . $desc . '<BR/>';
 		}
 		
 		return $rc;
