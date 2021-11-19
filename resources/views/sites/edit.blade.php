@@ -27,8 +27,8 @@
 		<label for="telephone">Telephone:</label>
 		<input type="text" name="telephone" class="form-control" value="{{$record->telephone}}" />
 		
-		<label for="instagram_link">Parameters:</label>
-		<input type="text" name="parameters" class="form-control" value="{{$record->parameters}}" />
+		<label for="parameters">Parameters:</label>
+		<textarea name="parameters" class="form-control">{{$record->parameters}}</textarea>	
 		
 		<label for="current_location_map_link">Current Location Map Link (without the iframe):</label>
 		<input type="text" name="current_location_map_link" class="form-control" value="{{$record->current_location_map_link}}" />

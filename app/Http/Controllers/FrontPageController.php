@@ -469,9 +469,44 @@ class FrontPageController extends Controller
 		//
 		// get stock quotes
 		//
-		$quotes[] = Transaction::getQuote('VOO', 'S&P 500 ETF');
-		$quotes[] = Transaction::getQuote('XLY', 'Consumer Desc');
-		$quotes[] = Transaction::getQuote('XLK', 'Tech');
+		//
+
+		$quotes = [];
+		$site = Controller::getSite();		
+		if (isset($site))
+		{
+			// format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
+			$desc = null;
+			$parm = Tools::getOption($site->parameters, 'quotes');
+			if (isset($parm) && strlen($parm) > 0)
+			{
+				for ($i = 0; $i < 5; $i++)
+				{
+					$v = Tools::getCsv($parm, $i + 1);
+					if (isset($v))
+					{
+						$symbol = null;
+						$v = explode('|', $v);
+						if (count($v) > 1)
+						{
+							$symbol = $v[0];
+							$desc = $v[1];
+						}
+						else if (count($v) > 0)
+						{
+							$symbol = $v[0];					
+						}
+			
+						if (isset($symbol))
+							$quotes[] = Transaction::getQuote($symbol, $desc);
+					}
+				}
+			}
+		}
+				
+		//$quotes[] = Transaction::getQuote('VOO', 'S&P 500 ETF');
+		//$quotes[] = Transaction::getQuote('XLY', 'Consumer Desc');
+		//$quotes[] = Transaction::getQuote('XLK', 'Tech');
 
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,

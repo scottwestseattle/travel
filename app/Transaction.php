@@ -611,6 +611,7 @@ class Transaction extends Base
 		$quote = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
 		$quote = trim($quote, '><');
 		$quote = str_replace(',', '', $quote);
+		$quote = floatval($quote);
 		
 		// fix up the change
 		$change = (count($matches) > 0 && count($matches[0]) > 1) ? $matches[0][1] : '';
@@ -621,9 +622,10 @@ class Transaction extends Base
 		
 		$rc['nickname'] = $nickname;
 		$rc['symbol'] = $symbol;
-		$rc['quote'] = floatval($quote);
-		$rc['change'] = $change;
+		$rc['quote'] = $quote;
+		$rc['change'] = str_replace(',', '', $change);
 		$rc['up'] = $up;
+		$rc['font-size'] = $quote < 1000.0 ? '1.3em' : '1.25em';
 		
 		return $rc;
 	}	
