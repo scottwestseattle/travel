@@ -559,6 +559,7 @@ class FrontPageController extends Controller
 			'trx' => $trx,
 			'quotes' => $quotes,
 			'usingCookie' => $usingCookie,
+			'cookieMinutes' => $cookieMinutes,
 		], 'Admin Page'));
     }
 	
