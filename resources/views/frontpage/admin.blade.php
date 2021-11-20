@@ -53,7 +53,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	@if (isset($quotes) && count($quotes) > 0)
 	<div style="clear:both;"></div>
 	<div class="">
-		<h3>Quotes</h3>
+		<h3>Quotes ({{$usingCookie ? 'stale' : 'fresh'}})</h3>
 
 		@foreach($quotes as $quote)	
 		@php
@@ -62,7 +62,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		<div class="drop-box text-center number-box {{$color}}">
 			<div><span style="font-size:1.2em;">{{($quote['symbol'])}}</span></div>
 			<div style="font-size:10px; margin-top:5px;">{{$quote['nickname']}}</div>
-			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{$quote['quote']}}</p>
+			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{$quote['price']}}</p>
 			<p style="font-size:11px; margin-top:10px; color:{{'default'}};">{{$quote['change']}}</p>
 		</div>			
 		@endforeach		

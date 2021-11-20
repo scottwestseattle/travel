@@ -469,28 +469,33 @@ class FrontPageController extends Controller
 		//
 		// get stock quotes
 		//
-		//
-
+		//	
 		$quotes = [];
-		$site = Controller::getSite();		
+		$site = Controller::getSite();
+		$usingCookie = false;		
 		if (isset($site))
 		{
-			// format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
-			$desc = null;
+			// get quote list from site parameters.  format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
 			$parm = Tools::getOption($site->parameters, 'quotes');
+						
 			if (isset($parm) && strlen($parm) > 0)
 			{
+				// get cookie minutes
+				$cookieMinutes = Tools::getOption($site->parameters, 'quoteCookieMinutes');
+				$cookieMinutes = isset($cookieMinutes) && strlen($cookieMinutes) > 0 ? intval($cookieMinutes) : 5; // default to 5 minutes
+
 				for ($i = 0; $i < 5; $i++)
 				{
 					$v = Tools::getCsv($parm, $i + 1);
 					if (isset($v))
 					{
 						$symbol = null;
+						$nickname = null;
 						$v = explode('|', $v);
 						if (count($v) > 1)
 						{
 							$symbol = $v[0];
-							$desc = $v[1];
+							$nickname = $v[1];
 						}
 						else if (count($v) > 0)
 						{
@@ -498,7 +503,30 @@ class FrontPageController extends Controller
 						}
 			
 						if (isset($symbol))
-							$quotes[] = Transaction::getQuote($symbol, $desc);
+						{
+							$quote = null;
+							if (isset($_COOKIE[$symbol]))
+							{
+								// get the quote from the cookie
+								$cookie = $_COOKIE[$symbol];
+								$price = Tools::getWord($cookie, 1, '|');
+								$change = Tools::getWord($cookie, 2, '|'); 
+								$quote = Transaction::makeQuote($symbol, $nickname, $price, $change);
+								$usingCookie = true;
+							}
+							else
+							{
+								// update the quote
+								$quote = Transaction::getQuote($symbol, $nickname);
+
+								// make a cookie for the quote to expire in $cookieMinutes
+								$cookie = $quote['price'] . '|' . $quote['change'];
+								setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
+								//dump('set cookie: ' . $symbol . ' / minutes: ' . $cookieMinutes);	
+							}
+
+							$quotes[] = $quote;
+						}
 					}
 				}
 			}
@@ -530,6 +558,7 @@ class FrontPageController extends Controller
 			'accountReconcileOverdue' => count($accounts),
 			'trx' => $trx,
 			'quotes' => $quotes,
+			'usingCookie' => $usingCookie,
 		], 'Admin Page'));
     }
 	

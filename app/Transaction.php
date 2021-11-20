@@ -608,25 +608,32 @@ class Transaction extends Base
 		//dump($matches);
 		
 		// fix up the quote
-		$quote = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
-		$quote = trim($quote, '><');
-		$quote = str_replace(',', '', $quote);
-		$quote = floatval($quote);
+		$price = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
+		$price = trim($price, '><');
+		$price = str_replace(',', '', $price);
+		$price = floatval($price);
 		
 		// fix up the change
 		$change = (count($matches) > 0 && count($matches[0]) > 1) ? $matches[0][1] : '';
 		$change = trim($change, '><');
 		$change = str_replace(' (', ', ', $change);
 		$change = trim($change, ')');
-		$up = ($change[0] == '-') ? false : true;
 		
-		$rc['nickname'] = $nickname;
-		$rc['symbol'] = $symbol;
-		$rc['quote'] = $quote;
-		$rc['change'] = str_replace(',', '', $change);
-		$rc['up'] = $up;
-		$rc['font-size'] = $quote < 1000.0 ? '1.3em' : '1.25em';
+		// make the quote
+		$rc = self::makeQuote($symbol, $nickname, $price, $change);
 		
 		return $rc;
 	}	
+	
+	static public function makeQuote($symbol, $nickname, $price, $change)
+	{
+		$rc['symbol'] = $symbol;
+		$rc['nickname'] = $nickname;
+		$rc['price'] = floatval($price);
+		$rc['change'] = str_replace(',', '', $change);
+		$rc['font-size'] = $price < 1000.0 ? '1.3em' : '1.25em';
+		$rc['up'] = ($change[0] == '-') ? false : true;
+		
+		return $rc;
+	}
 }

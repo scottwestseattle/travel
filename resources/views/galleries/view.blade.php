@@ -72,11 +72,8 @@ foreach($photos as $photo)
 	
 	<div class="text-center" style="display:default; margin-top:5px;">	
 		<h1 name="title" class="">{{$record->title}} ({{count($photos)}})</h1>
-		<!--
-		<p><a href="/photos/slideshow/{{$record->id}}">Slide Show</a></p>
-		-->
 		@foreach($photos as $photo)		
-			<?php 
+			@php
 				$title = $photo->filename;  // just in case the others are empty
 				
 				if (isset($photo->alt_text) && strlen($photo->alt_text) > 0)
@@ -84,12 +81,12 @@ foreach($photos as $photo)
 				
 				if (isset($photo->location) && strlen($photo->location) > 0)
 					$title .= ', ' . $photo->location;
-			?>
+			@endphp
 			
 			<span style="">
 				<a href="/photos/{{$photo->permalink}}/{{$photo->id}}">
-				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
-				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:180px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
+				<img class="{{SHOW_XS_ONLY}}" id="{{$photo->id}}" style="height:130px; max-width:100%; margin:2px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
+				<img class="{{SHOW_NON_XS}} popupPhotos" style="height:165px; max-width:100%; margin-bottom:5px;" title="{{$title}}" src="{{$photo_path}}/tn/{{$photo->filename}}" />
 				</a>
 			</span>
 				
