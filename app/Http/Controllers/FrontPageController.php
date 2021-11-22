@@ -470,72 +470,8 @@ class FrontPageController extends Controller
 		// get stock quotes
 		//
 		//	
-		$quotes = [];
-		$site = Controller::getSite();
-		$usingCookie = false;		
-		if (isset($site))
-		{
-			// get quote list from site parameters.  format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
-			$parm = Tools::getOption($site->parameters, 'quotes');
-						
-			if (isset($parm) && strlen($parm) > 0)
-			{
-				// get cookie minutes
-				$cookieMinutes = Tools::getOption($site->parameters, 'quoteCookieMinutes');
-				$cookieMinutes = isset($cookieMinutes) && strlen($cookieMinutes) > 0 ? intval($cookieMinutes) : 5; // default to 5 minutes
-
-				for ($i = 0; $i < 5; $i++)
-				{
-					$v = Tools::getCsv($parm, $i + 1);
-					if (isset($v))
-					{
-						$symbol = null;
-						$nickname = null;
-						$v = explode('|', $v);
-						if (count($v) > 1)
-						{
-							$symbol = $v[0];
-							$nickname = $v[1];
-						}
-						else if (count($v) > 0)
-						{
-							$symbol = $v[0];					
-						}
-			
-						if (isset($symbol))
-						{
-							$quote = null;
-							if (isset($_COOKIE[$symbol]))
-							{
-								// get the quote from the cookie
-								$cookie = $_COOKIE[$symbol];
-								$price = Tools::getWord($cookie, 1, '|');
-								$change = Tools::getWord($cookie, 2, '|'); 
-								$quote = Transaction::makeQuote($symbol, $nickname, $price, $change);
-								$usingCookie = true;
-							}
-							else
-							{
-								// update the quote
-								$quote = Transaction::getQuote($symbol, $nickname);
-
-								// make a cookie for the quote to expire in $cookieMinutes
-								$cookie = $quote['price'] . '|' . $quote['change'];
-								setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
-								//dump('set cookie: ' . $symbol . ' / minutes: ' . $cookieMinutes);	
-							}
-
-							$quotes[] = $quote;
-						}
-					}
-				}
-			}
-		}
-				
-		//$quotes[] = Transaction::getQuote('VOO', 'S&P 500 ETF');
-		//$quotes[] = Transaction::getQuote('XLY', 'Consumer Desc');
-		//$quotes[] = Transaction::getQuote('XLK', 'Tech');
-
+		$rc = self::getQuotes();
+	
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
 			'events' => $events,
@@ -557,9 +493,9 @@ class FrontPageController extends Controller
 			'ignoreErrors' => $this->ignoreErrors(),
 			'accountReconcileOverdue' => count($accounts),
 			'trx' => $trx,
-			'quotes' => $quotes,
-			'usingCookie' => $usingCookie,
-			'cookieMinutes' => $cookieMinutes,
+			'quotes' => $rc['quotes'],
+			'quoteMsg' => $rc['quoteMsg'],
+			'cookieMinutes' => $rc['cookieMinutes'],
 		], 'Admin Page'));
     }
 	
@@ -939,5 +875,124 @@ priceTaxes=$59.50
 		sort($countries);
 
 		return $countries;
+	}
+	
+	protected function getQuotes()
+	{
+		// VOO, S&P 500 ETF
+		// XLY, Consumer Desc
+		// XLK, Tech
+		// GOOG, Alphabet
+		
+		$quotes = [];
+		$quoteMsg = 'quotes not found';		
+		$cookieMinutes = 0;
+		$usingCookie = false;
+
+		$site = Controller::getSite();
+		if (isset($site))
+		{
+			// get quote list from site parameters.  format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
+			$parm = Tools::getOption($site->parameters, 'quotes');
+
+						
+			if (isset($parm) && strlen($parm) > 0)
+			{
+				// is the exchange open
+				$isOpen = false;
+				
+				// get cookie minutes
+				$cookieMinutes = Tools::getOption($site->parameters, 'quoteCookieMinutes');
+				$cookieMinutes = isset($cookieMinutes) ? intval($cookieMinutes) : 5; // default to 5 minutes
+
+				// check if fresh quotes are available
+				$status = Tools::getExchangeStatus();
+				$isOpen = $status['open'];
+
+				for ($i = 0; $i < 5; $i++)
+				{
+					$v = Tools::getCsv($parm, $i + 1);
+					if (isset($v))
+					{
+						$symbol = null;
+						$nickname = null;
+						$v = explode('|', $v);
+						if (count($v) > 1)
+						{
+							$symbol = $v[0];
+							$nickname = $v[1];
+						}
+						else if (count($v) > 0)
+						{
+							$symbol = $v[0];					
+						}
+			
+						if (isset($symbol))
+						{						
+							$quote = null;
+							
+							if ($cookieMinutes == 0) // remove cookies and don't use cookies
+							{
+								// delete cookie by setting it to expire immediately
+								setcookie($symbol, '', time() - 60, "/"); 
+								
+								if (isset($_COOKIE[$symbol]))
+									dd($_COOKIE[$symbol]);					
+							}
+							
+							if (isset($_COOKIE[$symbol]))
+							{
+								// get the quote from the cookie
+								$cookie = $_COOKIE[$symbol];
+								$price = Tools::getWord($cookie, 1, '|');
+								$change = Tools::getWord($cookie, 2, '|'); 
+								$quote = Transaction::makeQuote($symbol, $nickname, $price, $change);
+								$usingCookie = true;
+								$cookieMinutes = intval($status['minutes']);
+							}
+							else
+							{
+								// update the quote
+								$quote = Transaction::getQuote($symbol, $nickname);
+								
+								if ($isOpen)
+								{
+									// exchange is open, use default cookie minutes
+								}
+								else
+								{
+									// exchange is closed, use minutes until it opens
+									$cookieMinutes = intval($status['minutes']);
+								}
+								
+								// make a cookie for the quote to expire in $cookieMinutes
+								$cookie = $quote['price'] . '|' . $quote['change'];
+								setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
+							}
+
+							$quotes[] = $quote;
+						}
+					}
+				}
+			
+				if ($usingCookie)
+				{
+					if (isset($status['msg']))
+						$quoteMsg = $status['msg'];
+					else
+						$quoteMsg = 'stale, next update within ' . $cookieMinutes . ' mins';					
+				}
+				else
+				{
+					$quoteMsg = 'fresh';
+				}	
+			}
+		}
+		
+		return [
+			'quotes' => $quotes,
+			'quoteMsg' => $quoteMsg,
+			'cookieMinutes' => $cookieMinutes,
+		];
 	}
 }

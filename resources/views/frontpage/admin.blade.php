@@ -53,7 +53,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	@if (isset($quotes) && count($quotes) > 0)
 	<div style="clear:both;"></div>
 	<div class="">
-		<h3>Quotes <span style="font-size:.7em">({{$usingCookie ? 'stale, updated every ' . $cookieMinutes . ' mins' : 'fresh'}})</span></h3>
+		<h3>Quotes <span style="font-size:.7em">({{$quoteMsg}})</span></h3>
 
 		@foreach($quotes as $quote)	
 		@php

@@ -6,7 +6,9 @@ use DB;
 use App;
 use Auth;
 use Lang;
+use DateInterval;
 use DateTime;
+use DateTimeZone;
 
 use App\Event;
 use App\Ip2locationImport;
@@ -823,5 +825,91 @@ class Tools
         }
 
         return $rc;
+    }
+    
+	static public function getExchangeStatus()
+	{
+		$sDate = '';
+		$msg = null;
+		$minutes = 0;
+		$isOpen = false;
+		
+		if (isset($sDate))
+		{
+			try
+			{
+				// get the current time for the right timezone
+				$now = new DateTime("now", new DateTimeZone('America/New_York') );
+				$dayOfWeek = intval($now->format('N'));
+
+				// set the start time 9:00 am
+				$startTime = new DateTime("now", new DateTimeZone('America/New_York') );
+				$startTime->setTime(9, 0, 0, 0);
+													
+				if ($dayOfWeek >= 1 && $dayOfWeek <= 5)
+				{
+					// set the closing time to 4:00 pm
+					$endTime = new DateTime("now", new DateTimeZone('America/New_York') );
+					$endTime->setTime(16, 30, 0, 0);
+								
+					if ($now >= $startTime && $now <= $endTime)
+					{
+						$isOpen = true;
+					}
+				}
+				else
+				{
+					//
+					// it's not open today so set next start day
+					//
+					$sunday = 7;
+					$daysUntilStart = ($sunday - $dayOfWeek) + 1;
+					if ($daysUntilStart >= 0) // not open today
+					{
+						// set the start day
+						$startTime->add(new DateInterval('P' . $daysUntilStart . 'D')); // add days until start day
+					}
+				}
+				
+				if (!$isOpen)
+				{				
+					$seconds = ($startTime->getTimeStamp() - $now->getTimeStamp());
+					$minutes = $seconds / 60;
+					$hours = ($minutes > 60) ? intval($minutes / 60) : 0;
+					
+					if ($hours >= 24)
+						$msg = 'opens in ' . intval($hours / 24) . ' day(s)';
+					else
+						$msg = 'opens in ' . self::secondsToTime($seconds);
+				}
+			}
+			catch(\Exception $e)
+			{
+				$msg = 'exc: ' . $e->getMessage();
+			}
+		}
+
+		return [
+			'open' => $isOpen,
+			'msg' => $msg,
+			'minutes' => $minutes,
+		];
+	}
+	
+	static public function secondsToTime($seconds)
+	{
+	    $seconds = intval($seconds);
+	    $time = '';
+
+        $hours = floor($seconds / 3600);
+        $mins = floor($seconds / 60 % 60);
+        $secs = floor($seconds % 60);
+
+        if ($hours > 0)
+            $time = sprintf('%02d:%02d:%02d', $hours, $mins, $secs);
+        else
+            $time = sprintf('%02d:%02d', $mins, $secs);
+
+        return $time;
     }
 }
