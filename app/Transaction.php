@@ -202,7 +202,7 @@ class Transaction extends Base
 			$shares += intval($record->shares);
 			
 			// only get quotes when requested
-			if ($filter['quotes'])
+			if (isset($filter['quotes']) && $filter['quotes'])
 			{
 				// only get quotes once per symbol
 				if (!array_key_exists($record->symbol, $rc))
@@ -211,7 +211,7 @@ class Transaction extends Base
 					$rc[$record->symbol] = $quote;
 				}
 				
-				$quote = floatval($rc[$record->symbol]['quote']);
+				$quote = floatval($rc[$record->symbol]['price']);
 				$profit += ($quote * abs($record->shares)) - abs($record->amount);
 				//dump($quote . ': ' . $profit);
 			}

@@ -33,7 +33,7 @@
 			<label for="unsold_flag" class="checkbox-label">Unsold</label>
 		</div>				
 		
-		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Filter</button>
+		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Refresh</button>
 		
 		<a style="font-size:12px; padding:1px 4px; margin:5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
 		
@@ -69,7 +69,7 @@
 				@foreach($records as $record)
 					@php
 						$quote = $totals[$record->symbol];
-						$pl = round((floatval($quote['quote']) * abs($record->shares)) - abs($record->amount), 2); 
+						$pl = round((floatval($quote['price']) * abs($record->shares)) - abs($record->amount), 2); 
 						$cost = $record->shares * $record->buy_price;
 						$plPercent = number_format(($pl / $cost) * 100.0, 2);
 						$color = ($pl < 0) ? 'red' : 'black';
@@ -80,7 +80,7 @@
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						
 						<td>						
-							<a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a> <span style="font-size:11px; color:{{$quote['up'] ? 'black' : 'red'}};">({{$quote['quote']}}, {{$quote['change']}})</span>
+							<a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a> <span style="font-size:11px; color:{{$quote['up'] ? 'black' : 'red'}};">({{$quote['price']}}, {{$quote['change']}})</span>
 							<br/>
 							<span style="font-size:11px;">{{$record->account}}</span>
 						</td>

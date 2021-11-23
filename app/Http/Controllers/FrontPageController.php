@@ -470,7 +470,7 @@ class FrontPageController extends Controller
 		// get stock quotes
 		//
 		//	
-		$rc = self::getQuotes();
+		$stockQuotes = self::getQuotes();
 	
 		return view('frontpage.admin', $this->getViewData([
 			'posts' => $posts,
@@ -493,9 +493,7 @@ class FrontPageController extends Controller
 			'ignoreErrors' => $this->ignoreErrors(),
 			'accountReconcileOverdue' => count($accounts),
 			'trx' => $trx,
-			'quotes' => $rc['quotes'],
-			'quoteMsg' => $rc['quoteMsg'],
-			'cookieMinutes' => $rc['cookieMinutes'],
+			'stockQuotes' => $stockQuotes,
 		], 'Admin Page'));
     }
 	
@@ -888,14 +886,14 @@ priceTaxes=$59.50
 		$quoteMsg = 'quotes not found';		
 		$cookieMinutes = 0;
 		$usingCookie = false;
-
+		$isOpen = false;
+		
 		$site = Controller::getSite();
 		if (isset($site))
 		{
 			// get quote list from site parameters.  format: quotes="VOO|S&P 500 ETF, XLY|Consumer Desc";
 			$parm = Tools::getOption($site->parameters, 'quotes');
-
-						
+			
 			if (isset($parm) && strlen($parm) > 0)
 			{
 				// is the exchange open
@@ -904,6 +902,7 @@ priceTaxes=$59.50
 				// get cookie minutes
 				$cookieMinutes = Tools::getOption($site->parameters, 'quoteCookieMinutes');
 				$cookieMinutes = isset($cookieMinutes) ? intval($cookieMinutes) : 5; // default to 5 minutes
+				$cookieMinutesParm = $cookieMinutes;
 
 				// check if fresh quotes are available
 				$status = Tools::getExchangeStatus();
@@ -937,10 +936,14 @@ priceTaxes=$59.50
 								setcookie($symbol, '', time() - 60, "/"); 
 								
 								if (isset($_COOKIE[$symbol]))
-									dd($_COOKIE[$symbol]);					
+								{
+									// clear cookie doesn't happen immediately
+									//dump('cookie still set');
+									//dd($_COOKIE[$symbol]);
+								}
 							}
 							
-							if (isset($_COOKIE[$symbol]))
+							if ($cookieMinutes > 0 && isset($_COOKIE[$symbol]))
 							{
 								// get the quote from the cookie
 								$cookie = $_COOKIE[$symbol];
@@ -964,10 +967,13 @@ priceTaxes=$59.50
 									// exchange is closed, use minutes until it opens
 									$cookieMinutes = intval($status['minutes']);
 								}
-								
+
 								// make a cookie for the quote to expire in $cookieMinutes
-								$cookie = $quote['price'] . '|' . $quote['change'];
-								setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
+								if ($cookieMinutes > 0)
+								{
+									$cookie = $quote['price'] . '|' . $quote['change'];
+									setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
+								}
 							}
 
 							$quotes[] = $quote;
@@ -980,11 +986,11 @@ priceTaxes=$59.50
 					if (isset($status['msg']))
 						$quoteMsg = $status['msg'];
 					else
-						$quoteMsg = 'stale, next update within ' . $cookieMinutes . ' mins';					
+						$quoteMsg = 'stale, next update within ' . $cookieMinutesParm . ' mins';					
 				}
 				else
 				{
-					$quoteMsg = 'fresh';
+					$quoteMsg = ($cookieMinutesParm > 0) ? 'market' : 'forced market';
 				}	
 			}
 		}
@@ -993,6 +999,7 @@ priceTaxes=$59.50
 			'quotes' => $quotes,
 			'quoteMsg' => $quoteMsg,
 			'cookieMinutes' => $cookieMinutes,
+			'isOpen' => $isOpen,
 		];
 	}
 }

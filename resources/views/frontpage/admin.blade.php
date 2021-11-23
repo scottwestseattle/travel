@@ -50,19 +50,22 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		</div>
 	</div>
 
-	@if (isset($quotes) && count($quotes) > 0)
+	@if (isset($stockQuotes) && count($stockQuotes) > 0)
 	<div style="clear:both;"></div>
 	<div class="">
-		<h3>Quotes <span style="font-size:.7em">({{$quoteMsg}})</span></h3>
+		<h3>Quotes <span style="font-size:.7em">({{$stockQuotes['quoteMsg']}})</span></h3>
 
-		@foreach($quotes as $quote)	
+		@foreach($stockQuotes['quotes'] as $quote)	
 		@php
-			$color = $quote['up'] ? 'blue' : 'red';
+			if ($stockQuotes['isOpen'])
+				$color = $quote['up'] ? 'blue' : 'red';
+			else
+				$color = 'darkGray';
 		@endphp
 		<div class="drop-box text-center number-box {{$color}}">
 			<div><span style="font-size:1.2em;">{{($quote['symbol'])}}</span></div>
 			<div style="font-size:10px; margin-top:5px;">{{$quote['nickname']}}</div>
-			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{$quote['price']}}</p>
+			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{number_format($quote['price'], 2)}}</p>
 			<p style="font-size:11px; margin-top:10px; color:{{'default'}};">{{$quote['change']}}</p>
 		</div>			
 		@endforeach		

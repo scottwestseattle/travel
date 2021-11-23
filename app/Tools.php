@@ -833,6 +833,7 @@ class Tools
 		$msg = null;
 		$minutes = 0;
 		$isOpen = false;
+		$nextDay = false;
 		
 		if (isset($sDate))
 		{
@@ -842,33 +843,64 @@ class Tools
 				$now = new DateTime("now", new DateTimeZone('America/New_York') );
 				$dayOfWeek = intval($now->format('N'));
 
-				// set the start time 9:00 am
+				// set the start time 9:30 am
 				$startTime = new DateTime("now", new DateTimeZone('America/New_York') );
-				$startTime->setTime(9, 0, 0, 0);
+				$startTime->setTime(9, 30, 0, 0);
 													
 				if ($dayOfWeek >= 1 && $dayOfWeek <= 5)
 				{
 					// set the closing time to 4:00 pm
 					$endTime = new DateTime("now", new DateTimeZone('America/New_York') );
-					$endTime->setTime(16, 30, 0, 0);
+					$endTime->setTime(16, 0, 0, 0);
 								
 					if ($now >= $startTime && $now <= $endTime)
 					{
 						$isOpen = true;
 					}
+					else
+					{
+						// it's open today but not right now
+						if ($now < $startTime)
+						{
+							// it's before start time
+						}
+						else 
+						{
+							$nextDay = true;						
+						}
+					}
 				}
 				else
+				{
+					$nextDay = true;
+				}
+				
+				if ($nextDay)
 				{
 					//
 					// it's not open today so set next start day
 					//
-					$sunday = 7;
-					$daysUntilStart = ($sunday - $dayOfWeek) + 1;
-					if ($daysUntilStart >= 0) // not open today
+					switch($dayOfWeek)
 					{
-						// set the start day
-						$startTime->add(new DateInterval('P' . $daysUntilStart . 'D')); // add days until start day
+						case 1: // Monday
+						case 2: // Tuesday
+						case 3: // Wednesday
+						case 4: // Thursday
+						case 7: // Sunday
+							$daysUntilStart = 1;
+							break;
+						case 5: // Friday
+							$daysUntilStart = 3;
+							break;
+						case 6: // Saturday
+							$daysUntilStart = 2;
+							break;
+						default:
+							break;
 					}
+
+					// set the start day
+					$startTime->add(new DateInterval('P' . $daysUntilStart . 'D')); // add days until start day
 				}
 				
 				if (!$isOpen)
