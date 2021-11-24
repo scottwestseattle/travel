@@ -930,7 +930,7 @@ priceTaxes=$59.50
 						{						
 							$quote = null;
 							
-							if ($cookieMinutes == 0) // remove cookies and don't use cookies
+							if ($cookieMinutesParm == 0) // remove cookies and don't use cookies
 							{
 								// delete cookie by setting it to expire immediately
 								setcookie($symbol, '', time() - 60, "/"); 
@@ -938,12 +938,12 @@ priceTaxes=$59.50
 								if (isset($_COOKIE[$symbol]))
 								{
 									// clear cookie doesn't happen immediately
-									//dump('cookie still set');
-									//dd($_COOKIE[$symbol]);
+									// dump('cookie still set');
+									// dd($_COOKIE[$symbol]);
 								}
 							}
 							
-							if ($cookieMinutes > 0 && isset($_COOKIE[$symbol]))
+							if ($cookieMinutesParm > 0 && isset($_COOKIE[$symbol]))
 							{
 								// get the quote from the cookie
 								$cookie = $_COOKIE[$symbol];
@@ -986,7 +986,7 @@ priceTaxes=$59.50
 					if (isset($status['msg']))
 						$quoteMsg = $status['msg'];
 					else
-						$quoteMsg = 'stale, next update within ' . $cookieMinutesParm . ' mins';					
+						$quoteMsg = 'stale, next update in ' . $cookieMinutesParm . ' mins';					
 				}
 				else
 				{
