@@ -688,10 +688,10 @@ class TransactionController extends Controller
 
     public function positions(Request $request)
     {
-		$filter = Controller::getFilter($request);
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
 		$filter['unsold_flag'] = true;
 		$filter['view'] = 'positions';
-		$filter['quotes'] = true;	
+		$filter['quotes'] = true;
 		
 		return $this->showTrades($request, $filter, 'positions');
 	}
