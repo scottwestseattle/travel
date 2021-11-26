@@ -121,7 +121,7 @@ else // not logged in
 
 <body style="margin:0; padding:0;">
     <div id="app" style="min-height:500px; margin-bottom: 30px">
-        <nav class="navbar navbar-default navbar-static-top" style="background-color: {{$color}};  margin:0;">
+        <nav class="navbar navbar-default" style="background-color: {{$color}};  margin:0;">
 			@if (isset($sections) && isset($site))
 				@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
 			@else

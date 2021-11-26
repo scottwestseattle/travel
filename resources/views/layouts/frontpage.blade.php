@@ -65,7 +65,7 @@
 <body onresize="onResize()" onload="">
     <div id="app" style="min-height: 500px;">
 	
-        <nav class="navbar navbar-default navbar-static-top {{$colorMain}}" style="margin-bottom:0px; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default {{$colorMain}}" style="margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main', ['sections' => $sections, 'site' => $site])@endcomponent
         </nav>
 

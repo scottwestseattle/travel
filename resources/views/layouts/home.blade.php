@@ -48,7 +48,7 @@
 </head>
 <body>
     <div id="app" style="min-height: 500px;">
-        <nav class="navbar navbar-default navbar-static-top purple" style="margin-bottom:0px; border-width: 0 0 0px;"> 
+        <nav class="navbar navbar-default purple" style="margin-bottom:0px; border-width: 0 0 0px;"> 
 			@component('menu-main')
 			@endcomponent
         </nav>

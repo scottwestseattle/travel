@@ -17,7 +17,9 @@
 <div class="">
 	<div class="navbar-header">
 
+		<!-- ------------------- -->
 		<!-- Collapsed Hamburger -->
+		<!-- ------------------- -->
 		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
 			<span class="sr-only">Toggle Navigation</span>
 			<span class="icon-bar" style="background-color: white;"></span>
@@ -25,19 +27,25 @@
 			<span class="icon-bar" style="background-color: white;"></span>
 		</button>
 
+		<!-- ------------------- -->
 		<!-- Branding Image -->
+		<!-- ------------------- -->
 		<a class="navbar-brand" href="{{ url('/') }}">
 			<span class="glyphCustom glyphicon glyphicon-home"></span>
 		</a>
 		
+		<!-- ------------------- -->
+		<!-- Logged-in User Icon -->
+		<!-- ------------------- -->
 		@if ($user_type >= 100)
-			<a class="navbar-brand" href="{{ url('/admin') }}">
-				<span class="glyphCustom glyphicon glyphicon-user"></span>
-			</a>
-
-			<a class="navbar-brand" href="{{url('/search')}}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+			<a class="navbar-brand" href="{{ url('/admin') }}"><span class="glyphCustom glyphicon glyphicon-user"></span></a>
+			<a class="navbar-brand" href="{{ url('/search') }}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
 		@endif
 
+
+		<!-- ------------------- -->
+		<!-- Language Menu Flags -->
+		<!-- ------------------- -->
 		<div style="float:left;" class="dropdown" >
 			<a href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><img width="25" src="/img/theme1/language-{{strtolower(App::getLocale())}}.png" /></a>
 			<ul class="dropdown-menu">
@@ -49,6 +57,9 @@
 		
 	</div>
 
+	<!-- ------------------- -->
+	<!-- The Main Menu       -->
+	<!-- ------------------- -->
 	<div class="collapse navbar-collapse" id="app-navbar-collapse">
 		<!-- Left Side Of Navbar -->
 

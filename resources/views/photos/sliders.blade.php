@@ -1,10 +1,8 @@
 @extends('layouts.app')
-
 @section('content')
-
-<?php
+@php
 	$add_link = '/photos/add/' . PHOTO_TYPE_SLIDER;
-?>
+@endphp
 
 <div class="container page-size">
 
