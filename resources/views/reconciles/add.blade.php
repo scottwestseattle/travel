@@ -29,6 +29,12 @@
 		<div style="margin-top:20px;"><span id="displayBalance" style="font-size: 20pt; margin-right:20px;">${{number_format($balance, 2)}}</span>
 			<a href='#' onclick="event.preventDefault(); updateBalance({{$account->id}});"><span style="font-size:16pt;" class="glyphCustom glyphicon glyphicon-refresh"></span></a>
 		</div>
+
+		<div style="font-size: 12px;">
+			<label for="balance_override" class="control-label">Override Balance:</label>
+			<input type="float" name="balance_override" class="form-control" style="height:25px; width:200px; "></input>	
+		</div>
+		
 		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account-all/{{$account->id}}" target="_blank">Show Transactions</a></div>
 							
 		<div class="submit-button" style="margin-top:20px;">

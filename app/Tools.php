@@ -908,11 +908,20 @@ class Tools
 					$seconds = ($startTime->getTimeStamp() - $now->getTimeStamp());
 					$minutes = $seconds / 60;
 					$hours = ($minutes > 60) ? intval($minutes / 60) : 0;
+					$days = intval($hours / 24);
 					
-					if ($hours >= 24)
-						$msg = 'opens in ' . intval($hours / 24) . ' day(s)';
+					if ($days > 0)
+					{
+						$daysLabel = 'day';
+						if ($days > 1)
+							$daysLabel .= 's';
+							
+						$msg = 'opens in ' . $days . ' ' . $daysLabel;
+					}
 					else
+					{
 						$msg = 'opens in ' . self::secondsToTime($seconds);
+					}
 				}
 			}
 			catch(\Exception $e)

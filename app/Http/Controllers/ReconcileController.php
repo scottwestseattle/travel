@@ -169,6 +169,11 @@ class ReconcileController extends Controller
 		$record->account_id			= $request->account_id;
 		$record->balance			= floatval($request->balance);
 		
+		// see if calculated balance was overriden
+		$balance = floatval($request->balance_override);
+		if ($balance > 0.0)
+			$record->balance = $balance;
+		
 		$record->subtotal_label1 = isset($request->subtotal_label1) ? $request->subtotal_label1 : null;
 		$record->subtotal1 = isset($request->subtotal1) ? $request->subtotal1 : null;
 		$record->subtotal_label2 = isset($request->subtotal_label2) ? $request->subtotal_label2 : null;
