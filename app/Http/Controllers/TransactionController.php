@@ -398,6 +398,7 @@ class TransactionController extends Controller
 		$record->commission = $this->copyDirty($record->commission, $request->commission, $isDirty, $changes);		
 		$record->fees = $this->copyDirty($record->fees, $request->fees, $isDirty, $changes);		
 		$record->lot_id = $this->copyDirty($record->lot_id, $request->lot_id, $isDirty, $changes);
+		$record->shares_unsold = $this->copyDirty($record->shares_unsold, $request->shares_unsold, $isDirty, $changes);
 				
 		if ($record->isTrade())
 		{
@@ -729,8 +730,6 @@ class TransactionController extends Controller
 
 			$request->session()->flash('message.level', 'danger');
 			$request->session()->flash('message.content', $e->getMessage());
-		
-			return redirect('/error');
 		}
 
 		$vdata = $this->getViewData([

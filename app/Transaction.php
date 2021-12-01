@@ -193,13 +193,13 @@ class Transaction extends Base
 
 		foreach($records as $record)
 		{
-			$amount = round(floatval($record->amount), 2);
+			$shares += intval($record->shares_unsold);
+			$amount = round(floatval($record->buy_price) * floatval($record->shares_unsold), 2);
 
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
 			
 			$total += $amount;
-			$shares += intval($record->shares);
 			
 			// only get quotes when requested
 			if (isset($filter['quotes']) && $filter['quotes'])
@@ -212,7 +212,7 @@ class Transaction extends Base
 				}
 				
 				$quote = floatval($rc[$record->symbol]['price']);
-				$profit += ($quote * abs($record->shares)) - abs($record->amount);
+				$profit += ($quote * abs($record->shares_unsold)) - abs($amount);
 				//dump($quote . ': ' . $profit);
 			}
 		}
@@ -512,6 +512,28 @@ class Transaction extends Base
 		';
 	
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
+		
+		/*
+		
+SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
+, trx.symbol, trx.shares, trx.buy_price, trx.lot_id, trx.shares_unsold 
+, accounts.name as account
+, categories.name as category
+, subcategories.name as subcategory, subcategories.id as subcategory_id 
+FROM transactions as trx
+JOIN accounts ON accounts.id = trx.parent_id
+JOIN categories ON categories.id = trx.category_id
+JOIN categories as subcategories ON subcategories.id = trx.subcategory_id
+WHERE 1=1 
+AND trx.user_id = 1
+AND trx.deleted_flag = 0
+AND trx.type_flag in (3,4)
+AND (trx.transaction_date >= STR_TO_DATE("2021-01-01", "%Y-%m-%d") 
+AND  trx.transaction_date <= STR_TO_DATE("2021-12-31", "%Y-%m-%d"))  
+AND trx.shares_unsold > 0 
+ORDER BY trx.transaction_date DESC, trx.id DESC 		
+	
+		*/
 
 		return $records;
     }
@@ -593,35 +615,60 @@ class Transaction extends Base
 			$page = file_get_contents($url);		
 			$pos = strpos($page, 'quote-market-notice');
 			$text = substr($page, $pos - 175, 200);
-			//dump($text);
+			//dump($page);
 		}
 		else
 		{
 			//test
 			$text = "start>1,900.25<end";
 			$text = "start>265.0125<end";
-			dump($text);
+			//dump($text);
 		}
 		
+		$pos = strpos($page, '"symbol":"' . $symbol . '"');
+		//dump($pos);
+		
+		$text = substr($page, $pos);
+
 		// match one or more numbers (with optional ',.+-%() ') between '>' and '<', for example: ">1,920.50<" or ">-1.38 (-0.57%)<"
 		preg_match_all('/\>[0-9,.\+\-\%\(\) ]+</', $text, $matches); 
 		//dump($matches);
+
+		// "symbol":"^TNX"
+		preg_match_all('/\"symbol\"\:\"' . $symbol . '\"/', $text, $matches); 
 		
-		// fix up the quote
-		$price = (count($matches) > 0 && count($matches[0]) > 0) ? $matches[0][0] : '';
-		$price = trim($price, '><');
-		$price = str_replace(',', '', $price);
-		$price = floatval($price);
-		
+		// "regularMarketPrice":{"raw":170.14,"fmt":"170.14"},
+		//"XLK":{"sourceInterval":15
+		preg_match_all('/\"' . $symbol . '\"\:\{.*\}/', $text, $matches); 
+		$results = isset($matches[0][0]);
+		$quote = [];
+		if ($results)
+		{
+			$text = substr($matches[0][0], 5, 2000);
+			preg_match_all('/\"[a-zA-Z]*\"\:\{[a-zA-Z0-9\"\.\,\:\-\%]*\}/', $text, $matches);
+			foreach($matches[0] as $match)
+			{
+				$parts = explode('":{"', $match);
+				if (count($parts) > 1)
+				{
+					$label = trim($parts[0], '"');
+					preg_match_all('/[0-9\-\.]+/', $parts[1], $values);
+					$value = (isset($values[0]) && count($values[0]) > 0) ? floatval($values[0][0]) : 0.0;
+					if (!array_key_exists($label, $quote))
+						$quote[$label] = $value;
+				}
+			}
+		}
+	
+		// get the price from the quote
+		$price = $quote['regularMarketPrice'];
+
 		// fix up the change
-		$change = (count($matches) > 0 && count($matches[0]) > 1) ? $matches[0][1] : '';
-		$change = trim($change, '><');
-		$change = str_replace(' (', ', ', $change);
-		$change = trim($change, ')');
+		$change = number_format($quote['regularMarketChange'], 2) . ' ' . number_format($quote['regularMarketChangePercent'], 2) . '%';
 		
 		// make the quote
 		$rc = self::makeQuote($symbol, $nickname, $price, $change);
-		
+
 		return $rc;
 	}	
 	
@@ -632,7 +679,7 @@ class Transaction extends Base
 		$rc['price'] = floatval($price);
 		$rc['change'] = str_replace(',', '', $change);
 		$rc['font-size'] = $price < 1000.0 ? '1.3em' : '1.25em';
-		$rc['up'] = ($change[0] == '-') ? false : true;
+		$rc['up'] = Tools::startsWith($change, '-') ? false : true;
 		
 		return $rc;
 	}

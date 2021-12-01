@@ -50,7 +50,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		</div>
 	</div>
 
-	@if (isset($stockQuotes) && count($stockQuotes) > 0)
+	@if (isset($stockQuotes['quotes']) && count($stockQuotes['quotes']) > 0)
 	<div style="clear:both;"></div>
 	<div class="">
 		<h3>Quotes <span style="font-size:.7em">({{$stockQuotes['quoteMsg']}})</span></h3>
@@ -68,12 +68,14 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{number_format($quote['price'], 2)}}</p>
 			<p style="font-size:11px; margin-top:10px; color:{{'default'}};">{{$quote['change']}}</p>
 		</div>			
-		@endforeach		
+		@endforeach	
+		<div style="clear:both;"></div>
+		<div class="" style="font-size:.9em;"><a href="/transactions/positions">Show Positions</a></div>	
 	</div>
 	@endif
 	
 	<div style="clear:both;"></div>
-	<div style="margin-top:15px;">
+	<div style="margin-top:10px;">
 		<h3>Visitors</h3>
 		<?php
 			// if too many visitors then have to scale down the font size

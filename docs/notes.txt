@@ -24,6 +24,15 @@ ALTER TABLE `reconciles` ADD `reconcile_date` DATETIME NULL AFTER `statement_dat
 ALTER TABLE `reconciles` ADD `account_id` INT NULL AFTER `user_id`;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
+// Linux Commands
+
+# find PHP version:
+php -i | grep -i "php version"
+
+# find php.ini (-iname is for case-insensitive)
+find / -iname "php.ini" 2>/dev/null
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 // Switching lochost projects on MacBook
 
 cd /etc/apache2

@@ -96,7 +96,25 @@ class Tools
 
         return $arr;
     }
-	
+
+    static public function getOptionInt($options, $key, $default = -1)
+    {
+    	$rc = self::getOption($options, $key);
+    	
+    	if (strlen($rc) > 0)
+    	{
+    		// set to int
+    		$rc = intval($rc);
+    	}
+    	else
+    	{
+    		// use default value
+    		$rc = intval($default);
+    	}
+    	
+    	return $rc;
+	}	
+ 
     static public function getOption($options, $key)
     {
 		$r = '';

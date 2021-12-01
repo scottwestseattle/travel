@@ -76,6 +76,11 @@
 			<input type="checkbox" name="reconciled_flag" id="reconciled_flag" class="form-control-inline" value="{{$record->reconciled_flag }}" {{ ($record->reconciled_flag) ? 'checked' : '' }} />
 			<label for="reconciled_flag" class="checkbox-label">Reconciled</label>
 		</div>		
+		
+		<div class="form-group">
+			<label for="shares_unsold" class="control-label">Unsold Shares:</label>
+			<input type="text" name="shares_unsold" class="form-control" value="{{$record->shares_unsold}}"></input>
+		</div>
 			
 		<div class="submit-button">
 			<button type="submit" name="update" class="btn btn-primary">Update</button>

@@ -58,9 +58,9 @@ class FrontPageController extends Controller
 		//
 		// set the template according to the site parameters
 		//
+		$fpGalleryPhotos = Tools::getOptionInt($site->parameters, 'fpGalleryPhotos', 10);
 		$template = Tools::getOption($site->parameters, 'template');
 		$showFullGallery = ($template == "gallery");
-		
 		$colorMain = 'powerBlue';
 		$colorAlt = 'DarkBlue';
 		$colorBox = $colorMain;
@@ -129,7 +129,7 @@ class FrontPageController extends Controller
 		//
 		// get the gallery
 		//
-		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ $showFullGallery ? 10 : 10);
+		$gallery = $this->getEntriesByType(ENTRY_TYPE_GALLERY, /* approved = */ true, /* limit = */ $fpGalleryPhotos);
 		
 		//
 		// get latest comments
