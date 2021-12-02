@@ -9,8 +9,6 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 <div class="page-size container">
 	<!-- h2 style="">Admin Dashboard</h2 -->
 
-@if (true)
-	
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
 			<h3>Server</h3>
@@ -30,7 +28,6 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				<div style="font-size:12px; margin-bottom:10px;">INVALID IP / NO GEO</div>
 			@endif
 			<div style="margin-bottom:20px;"><img height="40" src="{{$geo->flag()}}" title="{{$geo->location()}}" alt="{{$geo->location()}}" /></div>
-			
 			
 			@if ($ignoreErrors)
 				<div style="margin-bottom:10px;"><strong>IGNORING ERRORS FOR TESTING!</strong></div>
@@ -52,7 +49,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 
 	@if (isset($stockQuotes['quotes']) && count($stockQuotes['quotes']) > 0)
 	<div style="clear:both;"></div>
-	<div class="">
+	<div class="" style="margin-bottom: 20px;" >
 		<h3>Quotes <span style="font-size:.7em">({{$stockQuotes['quoteMsg']}})</span></h3>
 
 		@foreach($stockQuotes['quotes'] as $quote)	
@@ -74,8 +71,15 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	</div>
 	@endif
 	
-	<div style="clear:both;"></div>
-	<div style="margin-top:10px;">
+	@if ($accountReconcileOverdue > 0)	
+		<div class="alert alert-danger text-center" style="max-width:350px; font-size:1.1em;" role="alert">
+		  <div style="margin-bottom:10px;"><b>{{$accountReconcileOverdue}} account(s)</b> are due to be reconciled</div>
+		  <div><a class="btn btn-danger btn-sm" href="/reconciles" role="button">Reconcile</a></div> 
+		</div>
+	@endif
+
+	<div style="clear:both;"></div>	
+	<div style="">
 		<h3>Visitors</h3>
 		<?php
 			// if too many visitors then have to scale down the font size
@@ -98,46 +102,30 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				alt="{{$visitorCountryInfo['newestCountry']}}" /></a>
 		</div>
 	</div>
-	
-@else
-	
-	<div class="text-center drop-box stats-box blue" style="min-width:450px;">
-		<h2>Server</h2>
-		<p>{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</p>
-		<p>{{$site->site_name}} (id={{$site->id}})</p>
-		<p class="font-10">{{base_path()}}</p>
-		<div class="">
-		@if (isset($_COOKIE['debug']) && $_COOKIE['debug'])
-			<ul>
-				<li><a class="btn btn-danger" href="/d-e-b-u-g" role="button">TURN DEBUG OFF</a></li>
-				<li><a class="btn btn-primary" href="/debugtest" role="button">Test</a></li>
-				<li><a class="btn btn-primary" href="/about" role="button">About</a></li>
-			</ul>
-		@else
-			<ul>
-				<li><a class="btn btn-primary" href="/d-e-b-u-g" role="button">Debug</a></li>
-				<li><a class="btn btn-primary" href="/debugtest" role="button">Test</a></li>
-				<li><a class="btn btn-primary" href="/about" role="button">About</a></li>
-			</ul>
-		@endif
-		</div>
-	</div>	
 
-	<div class="text-center drop-box stats-box green" style="min-width: 450px;">
-		<h2>Client</h2>
-		<p>{{$ip}} ({{$ipLocation['location']}})</p>
-		<img height="35" src="{{$ipLocation['flag']}}" title="{{$ipLocation['location']}}" alt="{{$ipLocation['location']}}" />
-		<ul>
-			<li><a href="/expedia">Expedia</a></li>
-			<li><a href="/travelocity">Travelocity</a></li>
-			<li><a href="/eunoticereset">EU Notice</a></li>
-			<li><a href="/hash">Hasher</a></li>
-		</ul>
-	</div>	
-
-@endif
 
 	<div style="clear: both;"></div>
+
+	@if (isset($shortEntries) and count($shortEntries) > 0)
+	<div>
+		<h3 style="color:red;">Unfinished Entries ({{count($shortEntries)}})</h3>
+		<table class="table table-striped">
+			<tbody>
+				<tr><th></th><th></th><th>Entry</th><th>Type</th>
+			@foreach($shortEntries as $record)
+				<tr>				
+					<td style="width:10px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+					<td style="width:10px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+					<td><a href='/entries/{{$record->permalink}}'>{{$record->title}}</a></td>
+					<td>{{$entryTypes[$record->type_flag]}}</td>
+				</tr>
+			@endforeach
+			</tbody>
+		</table>
+	</div>
+	<hr />
+	@endif
+	
 
 	@if (isset($trx) && count($trx) > 0)
 	<div>	
@@ -199,34 +187,6 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 					<td><a href='/entries/{{$record->permalink}}'>{{$record->title}}</a></td>
 					<td>{{$record->created_at}}</td>
 					<td>{{$record->type_flag}}</td>
-				</tr>
-			@endforeach
-			</tbody>
-		</table>
-	</div>
-	<hr />
-	@endif
-
-	@if ($accountReconcileOverdue > 0)
-	<div>
-		<h3 style="color:red;">Accounts Overdue to be Reconciled ({{$accountReconcileOverdue}})</h3>
-		<a href="/reconciles">Reconcile Accounts</a>
-	</div>
-	<hr />		
-	@endif
-
-	@if (isset($shortEntries) and count($shortEntries) > 0)
-	<div>
-		<h3 style="color:red;">Unfinished Entries ({{count($shortEntries)}})</h3>
-		<table class="table table-striped">
-			<tbody>
-				<tr><th></th><th></th><th>Entry</th><th>Type</th>
-			@foreach($shortEntries as $record)
-				<tr>				
-					<td style="width:10px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
-					<td style="width:10px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
-					<td><a href='/entries/{{$record->permalink}}'>{{$record->title}}</a></td>
-					<td>{{$entryTypes[$record->type_flag]}}</td>
 				</tr>
 			@endforeach
 			</tbody>
