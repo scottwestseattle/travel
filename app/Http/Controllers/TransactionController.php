@@ -689,10 +689,54 @@ class TransactionController extends Controller
 
     public function positions(Request $request)
     {
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-		$filter['unsold_flag'] = true;
+    	$filterSessionKey = 'positionsFilter';
+		
+		if (!$request->isMethod('post'))
+		{
+			// default to ON
+			$filter['showalldates_flag'] = true;			
+		}
+		
+		//
+		// decide which filter to use.  all form filters are saved to a session
+		//
+		if ($request->isMethod('post'))
+		{
+			// 1. use form request filter and save it to session
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+			
+			session([$filterSessionKey => $filter]); // save to session for next time
+		}
+		else
+		{
+			$sessionFilter = session($filterSessionKey);
+			if (!isset($sessionFilter))
+			{
+				// 2. use default filter	
+				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+
+				// default to ON
+				$filter['showalldates_flag'] = true;			
+			}
+			else 
+			{
+				// 3. use session filter
+				//dump('session filter');
+				$filter = $sessionFilter;
+			}			
+		}
+				
+		if (isset($filter['symbol']))
+		{
+			if (strlen($filter['symbol']) > 1) // all symbols = "0"
+			{
+				$filter['singleSymbol'] = true;
+			}
+		}
+		
 		$filter['view'] = 'positions';
 		$filter['quotes'] = true;
+		$filter['unsold_flag'] = true;
 		
 		return $this->showTrades($request, $filter, 'positions');
 	}

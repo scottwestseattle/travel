@@ -48,27 +48,27 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	</div>
 
 	@if (isset($stockQuotes['quotes']) && count($stockQuotes['quotes']) > 0)
-	<div style="clear:both;"></div>
-	<div class="" style="margin-bottom: 20px;" >
-		<h3>Quotes <span style="font-size:.7em">({{$stockQuotes['quoteMsg']}})</span></h3>
-
-		@foreach($stockQuotes['quotes'] as $quote)	
-		@php
-			if ($stockQuotes['isOpen'])
-				$color = $quote['up'] ? 'blue' : 'red';
-			else
-				$color = 'darkGray';
-		@endphp
-		<div class="drop-box text-center number-box {{$color}}">
-			<div><span style="font-size:1.2em;">{{($quote['symbol'])}}</span></div>
-			<div style="font-size:10px; margin-top:5px;">{{$quote['nickname']}}</div>
-			<p style="font-size:{{$quote['font-size']}}; margin-top:10px;">{{number_format($quote['price'], 2)}}</p>
-			<p style="font-size:11px; margin-top:10px; color:{{'default'}};">{{$quote['change']}}</p>
-		</div>			
-		@endforeach	
 		<div style="clear:both;"></div>
-		<div class="" style="font-size:.9em;"><a href="/transactions/positions">Show Positions</a></div>	
-	</div>
+		<div class="" style="margin-bottom: 0px;" >
+			<h3>Quotes <span style="font-size:.7em">({{$stockQuotes['quoteMsg']}})</span></h3>
+
+			@foreach($stockQuotes['quotes'] as $quote)	
+			@php
+				if ($stockQuotes['isOpen'])
+					$color = $quote['up'] ? 'blue' : 'red';
+				else
+					$color = 'darkGray';
+			@endphp
+			<div class="drop-box text-center number-box {{$color}}">
+				<div><span style="font-size:1.2em; font-weight:bold;">{{($quote['symbol'])}}</span></div>
+				<div style="font-size:10px; margin-top:0px;">{{$quote['nickname']}}</div>
+				<p style="font-size:{{$quote['font-size']}}; margin-top:5px;">{{number_format($quote['price'], 2)}}</p>
+				<p style="font-size:11px; font-weight:normal; color:{{'default'}};">{{$quote['change']}}</p>
+			</div>			
+			@endforeach	
+			<div style="clear:both;"></div>
+			<div class="" style="font-size:.9em;"><a href="/transactions/positions">Show Positions</a></div>	
+		</div>
 	@endif
 	
 	@if ($accountReconcileOverdue > 0)	
@@ -78,9 +78,8 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		</div>
 	@endif
 
-	<div style="clear:both;"></div>	
 	<div style="">
-		<h3>Visitors</h3>
+		<h3 style="margin-top: 15px;">Visitors</h3>
 		<?php
 			// if too many visitors then have to scale down the font size
 			$style = $visitorsTotal >= 1000 ? 'font-size:1.8em; margin-top:5px;' : '';
@@ -109,9 +108,8 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	@if (isset($shortEntries) and count($shortEntries) > 0)
 	<div>
 		<h3 style="color:red;">Unfinished Entries ({{count($shortEntries)}})</h3>
-		<table class="table table-striped">
+		<table class="table">
 			<tbody>
-				<tr><th></th><th></th><th>Entry</th><th>Type</th>
 			@foreach($shortEntries as $record)
 				<tr>				
 					<td style="width:10px;"><a href='/entries/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
