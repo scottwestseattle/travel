@@ -766,7 +766,7 @@ class TransactionController extends Controller
 		{
 			$records = Transaction::getTrades($filter);
 			$totals = Transaction::getTradesTotal($records, $filter);
-			//dump($totals);
+			//dd($totals);
 		}
 		catch (\Exception $e) 
 		{

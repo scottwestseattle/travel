@@ -4,13 +4,13 @@
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
 	
-	<div>		
-		<button type="submit" name="update" class="btn btn-success" style="font-size:12px; padding:1px 4px; margin: 5px 5px 0 5px;">Refresh</button>
-		<a style="font-size:12px; padding:1px 4px; margin-top: 5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
-	</div>
-
 	<form method="POST" id="form" action="/{{$prefix}}/positions">
-				
+	
+		<div>		
+			<button type="submit" name="update" class="btn btn-success" style="font-size:12px; padding:1px 4px; margin: 5px 5px 0 5px;">Refresh</button>
+			<a style="font-size:12px; padding:1px 4px; margin-top: 5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
+		</div>
+			
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter, 'formId' => 'form'])@endcomponent
 		
 		<div class="float-left" style="background-color:xyellow; font-size:12px; margin: 0 10px 0 0; padding:0;">
@@ -78,7 +78,7 @@
 			<p style="font-size:.8em;">{{$profitPercent}}%</p>
 		</div>
 		
-		@if (isset($filter['singleSymbol']))
+		@if (isset($filter['singleSymbol']) && isset($totals[$filter['symbol']]))
 			@php
 				$quote = $totals[$filter['symbol']];
 			@endphp

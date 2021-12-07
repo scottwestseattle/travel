@@ -925,8 +925,8 @@ class Tools
 				{				
 					$seconds = ($startTime->getTimeStamp() - $now->getTimeStamp());
 					$minutes = $seconds / 60;
-					$hours = ($minutes > 60) ? intval($minutes / 60) : 0;
-					$days = intval($hours / 24);
+					$hours = ($minutes > 60) ? intval($minutes / 60) : 0;					
+					$days = round($hours / 24);
 					
 					if ($days > 0)
 					{
