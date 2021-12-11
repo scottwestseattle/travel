@@ -39,10 +39,11 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				@else
 					<a class="btn-sm btn-primary" href="/d-e-b-u-g" role="button">Debug</a>
 				@endif
-				<a class="btn-sm btn-primary" href="/debugtest" role="button">Test</a>
 				<a class="btn-sm btn-primary" href="/importgeo" role="button">Geo</a>
 				<a class="btn-sm btn-primary" href="/first" role="button">Sliders</a>
 				<a class="btn-sm btn-primary" href="/hash" role="button">Hash</a>
+				<a class="btn-sm btn-primary" target="_blank" href="https://drive.google.com/drive/folders/1NVBE6-ijWCdZq8vrBUrnCpZ39dlHmaK_?usp=sharing" role="button">Files</a>
+				
 			</div>
 		</div>
 	</div>
@@ -72,7 +73,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	@endif
 	
 	@if ($accountReconcileOverdue > 0)	
-		<div class="alert alert-danger text-center" style="max-width:350px; font-size:1.1em;" role="alert">
+		<div class="alert alert-danger text-center" style="max-width:350px; font-size:1.1em; margin-top:15px;" role="alert">
 		  <div style="margin-bottom:10px;"><b>{{$accountReconcileOverdue}} account(s)</b> are due to be reconciled</div>
 		  <div><a class="btn btn-danger btn-sm" href="/reconciles" role="button">Reconcile</a></div> 
 		</div>

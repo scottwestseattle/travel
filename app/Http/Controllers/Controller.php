@@ -1537,7 +1537,7 @@ class Controller extends BaseController
 		$filter['symbol'] = false;
 		$filter['view'] = false;
 		$filter['quotes'] = false;
-		
+
 		if (isset($request))
 		{
 			if (isset($request->account_id))
@@ -1600,7 +1600,10 @@ class Controller extends BaseController
 			if (isset($request->symbol))
 			{
 				$filter['symbol'] = $request->symbol;
-			}	
+			}
+			
+			//dump($filter);	
+	
 		}
 		
 		return $filter;

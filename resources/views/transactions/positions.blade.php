@@ -119,7 +119,7 @@
 						<td>						
 							<a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a> <span style="font-size:11px; color:{{$quote['up'] ? 'black' : 'red'}};">({{$quote['price']}}, {{$quote['change']}})</span>
 							<br/>
-							<span style="font-size:11px;">{{$record->account}}</span>
+							<span style="font-size:10px;">{{$record->account}}, {{$record->transaction_date}}</span>
 						</td>
 						
 						<td>{{abs($record->shares_unsold)}} @ {{$record->buy_price}}

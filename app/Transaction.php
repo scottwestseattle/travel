@@ -130,8 +130,8 @@ class Transaction extends Base
 		$startingBalance = 0.0;
 		$noPhotos = 0;
 		$rc = [];
-		$monthFlag = isset($filter) && $filter['month_flag'];
 		$allDates = isset($filter) && $filter['showalldates_flag'];
+		$monthFlag = !$allDates && isset($filter) && $filter['month_flag'];
 		$search = isset($filter) && $filter['search'];
 
 		foreach($records as $record)
@@ -294,9 +294,9 @@ class Transaction extends Base
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
-							
-		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
 
+		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
+	
 		return $records;
     }	
 	
