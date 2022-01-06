@@ -307,7 +307,7 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 			
-		$view = isset($record->symbol) ? '/trades/' : '/filter/';
+		$view = isset($record->symbol) ? '/positions/' : '/filter/';
 
 		return redirect($this->getReferer($request, '/' . PREFIX . $view));
 	}

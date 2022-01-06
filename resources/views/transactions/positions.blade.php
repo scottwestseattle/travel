@@ -52,32 +52,35 @@
 		
 		<div class="hidden">{{ isset($totals['reconciled']) ? 'P/L: ' . round($totals['reconciled'], 2) . ', ' . $profitPercentReconciled : '' }}P/L: <span style="color:{{$totals['profit'] >= 0.0 ? 'black' : 'red'}}">${{$profit}}, {{$profitPercent}}%</span></div>
 		
-		<div class="drop-box text-center number-box number-box-sm orange">
-			<div>Positions</div>
-			<p style="">{{count($records)}}</p>
-		</div>	
-		
-		<div class="drop-box text-center number-box number-box-sm green">
-			<div>Shares</div>
-			<p style="">{{$totals['shares']}}</p>
-		</div>	
-		
 		<div class="drop-box text-center number-box number-box-sm purple">
-			<div>DCA</div>
-			<p style="">{{round($totals['dca'], 3)}}</p>
-		</div>
-		
-		<div class="drop-box text-center number-box number-box-sm darkBlue">
 			<div>Cost</div>
 			<p style="">{{$cost}}</p>
+			<p style="font-size:.9em;">{{$totals['shares']}} shrs</p>
 		</div>	
-
-		<div class="drop-box text-center number-box number-box-sm {{$profitColor}}">
-			<div>P/L</div>
-			<p style="">{{ $profit }}</p>
-			<p style="font-size:.8em;">{{$profitPercent}}%</p>
-		</div>
 		
+		<div class="drop-box text-center number-box number-box-sm pineForest">
+			<div>DCA</div>
+			<p style="">{{round($totals['dca'], 3)}}</p>
+			<p style="font-size:.9em;">({{count($records)}} lots)</p>
+		</div>	
+		
+		@if (false)
+			<div class="drop-box text-center number-box number-box-sm orange">
+				<div>Positions</div>
+				<p style="">{{count($records)}}</p>
+			</div>	
+		
+			<div class="drop-box text-center number-box number-box-sm purple">
+				<div>DCA</div>
+				<p style="">{{round($totals['dca'], 3)}}</p>
+			</div>
+		
+			<div class="drop-box text-center number-box number-box-sm darkBlue">
+				<div>Cost</div>
+				<p style="">{{$cost}}</p>
+			</div>	
+		@endif
+				
 		@if (isset($filter['singleSymbol']) && isset($totals[$filter['symbol']]))
 			@php
 				$quote = $totals[$filter['symbol']];
@@ -89,7 +92,13 @@
 				<p style="font-size:.8em;">{{$quote['change']}}</p>
 			</div>
 		@endif
-			
+		
+		<div class="drop-box text-center number-box number-box-sm {{$profitColor}}">
+			<div>P/L</div>
+			<p style="">{{ $profit }}</p>
+			<p style="font-size:.8em;">{{$profitPercent}}%</p>
+		</div>
+	
 		<table class="table table-sm">
 			<tbody>
 			@if (isset($records))

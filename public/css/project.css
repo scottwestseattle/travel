@@ -28,6 +28,11 @@
 	color: white;
 }
 
+.pineForest {
+	background-color: ForestGreen;
+	color: white;
+}
+
 .darkGray {
 	background-color: DarkGray;
 	color: white;	
@@ -129,7 +134,7 @@
 
 .number-box-sm {
 	min-width:50px; 
-	min-height:60px;
+	min-height:67px;
 	font-size:.8em;
 	padding: 5px 10px;	
 }
