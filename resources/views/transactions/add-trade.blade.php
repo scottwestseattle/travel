@@ -27,7 +27,10 @@
 		</div>		
 
 		<div class="form-group clear">
-		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'empty' => 'Select', 'selected_option' => isset($trade) ? $trade->parent_id : null])@endcomponent	
+		@php
+			$accountId = isset($trade) ? $trade->parent_id : $accountId;
+		@endphp
+		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'empty' => 'Select', 'selected_option' => $accountId])@endcomponent	
 		</div>
 		
 		<div class="clear">

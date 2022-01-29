@@ -75,12 +75,7 @@ class EmailController extends Controller
 		$email_port = env('EMAIL_PORT');
 		$email_driver = env('EMAIL_DRIVER');
 		$email_encryption = env('EMAIL_ENCRYPTION');
-
-		if ($email_account == 'spam@scotthub.com')
-		{
-			//$debug = true;
-		}
-		
+	
 		$flash = '';
 		$errors = '';
 		$count_trx = 0;
@@ -88,7 +83,7 @@ class EmailController extends Controller
 		// To connect to imap server on port 993
 		$address = '{' . $email_server . ':' . $email_port . '/' . $email_driver . '/' . $email_encryption . '}INBOX';
 		
-		//$mbox = imap_open("{imap.gmail.com:993/imap/ssl}INBOX", $email_account, $email_password);	
+		// address looks like: "{chi118.greengeeks.net:993/imap/ssl}INBOX"	
 		$mbox = null;
 		try 
 		{
@@ -96,6 +91,9 @@ class EmailController extends Controller
 		}
 		catch (\Exception $e) 
 		{
+			//$msg = $e->getMessage();
+			//dd($msg);
+			
 			$msg = 'Could not open imap stream';
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'imap', null, $msg);
 			

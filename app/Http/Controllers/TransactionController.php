@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use App\Event;
-use DB;
+
+use Illuminate\Support\Str;
+
 use Auth;
+use Cookie;
+use DB;
+
+use App\Event;
 use App\Transaction;
 use App\Account;
 use App\Category;
@@ -102,6 +107,9 @@ class TransactionController extends Controller
 		$trade['trade'] = 'buy';
 		$trade['lot'] = $transaction;
 
+		// get last account id that was used
+        $accountId = Cookie::get('accountId');
+
 		if (isset($transaction) && isset($transaction->symbol))
 		{
 			$records = DB::table('transactions')
@@ -114,6 +122,11 @@ class TransactionController extends Controller
 			{
 				$trade['lot'] = $records->first();
 			}
+		}
+		else
+		{
+			// set default account id from cookie
+			$trade['accountId'] = $accountId;
 		}
 
 		// trade transaction
@@ -147,6 +160,7 @@ class TransactionController extends Controller
 			'filter' => Controller::getFilter($request, /* today = */ true),
 			'trade' => $trade['lot'],
 			'tradeType' => $trade['trade'],
+			'accountId' => isset($trade['accountId']) ? $trade['accountId'] : null,
 		]);
 		
 		$view = isset($trade) ? 'add-trade' : 'add';
@@ -195,6 +209,12 @@ class TransactionController extends Controller
 				$total = -$total; // buys are negative
 				
 				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";
+
+				if (isset($record->parent_id) && $record->parent_id > 0)
+				{
+					// save the latest account
+					Cookie::queue('accountId', intval($record->parent_id), (30 * 60 * 24)); // 30 days
+				}
 			}
 			else
 			{
@@ -208,8 +228,7 @@ class TransactionController extends Controller
 				
 				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
 			}
-			
-			
+					
 			$record->amount = $total;
 		}
 		else
