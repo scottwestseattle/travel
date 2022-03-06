@@ -132,10 +132,15 @@ class Account extends Base
 		
 		if (isset($reconcileDate))
 		{
-			$nextReconcileDate = $lastReconcileDate = new DateTime($reconcileDate);
+			$nextReconcileDate = new DateTime($reconcileDate);
+			//new: $nextReconcileDate = DateTimeEx::getLocalDateTime($nextReconcileDate);
+			$nextReconcileDate->setTime(0, 0, 0);
 			$nextReconcileDate->add(new DateInterval('P1M')); // add 1 month
+			
+			//new: $today = DateTimeEx::getLocalDateTime();
 			$today = new DateTime();
 			$today->setTime(0, 0, 0); // zero the time so it will match $nextReconcileDate
+
 			if ($today >= $nextReconcileDate)
 			{
 				// out of date
@@ -154,7 +159,7 @@ class Account extends Base
     static public function getReconcilesOverdue()
     {
 		$records = self::getIndex(false, /* $showReconcile = */ true);
-		
+	
 		$accounts = [];
 		
 		foreach($records as $record)

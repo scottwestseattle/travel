@@ -112,6 +112,7 @@
 							<li><a href="/comments">@lang('ui.Comments')</a></li>
 							<li><a href="/events/index">@lang('ui.Events')</a></li>
 							<li><a href="/galleries">@lang('ui.Galleries')</a></li>
+							<li><a href="/gfx">@lang('Gfx')</a></li>
 							<li><a href="/hotels">@lang('content.Hotels')</a></li>
 							<li><a href="/locations/indexadmin">@lang('ui.Locations')</a></li>
 							<li><a href="/photos/indexadmin">@lang('ui.Photos')</a></li>

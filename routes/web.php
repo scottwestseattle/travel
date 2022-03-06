@@ -76,6 +76,10 @@ Route::get('/importgeo', 'ToolController@importGeo');
 Route::get('/importgeoajax', 'ToolController@importGeoAjax');
 Route::get('/getgeocount', 'ToolController@getGeoCount');
 
+Route::get('/gfx', function () {
+    return redirect('/galleries/graphic-design');
+});
+
 // crypt / encrypt
 Route::get('/hash', 'ToolController@hash')->middleware('auth');
 Route::post('/hasher', 'ToolController@hasher')->middleware('auth');

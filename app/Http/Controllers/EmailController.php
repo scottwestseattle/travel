@@ -45,6 +45,7 @@ class EmailController extends Controller
     public function check(Request $request, $debug = false) 
 	{	
 		$debug = boolval($debug);
+		//$debug = true;
 		
 		// this happens sometimes and the transactions are added with no user id
 		if (Auth::id() == null)
@@ -359,7 +360,7 @@ class EmailController extends Controller
 		{
 			echo '<br/>' . '*** DEBUG, checkCapital() ***' . '<br/>';
 		}
-		
+	
 		$rc = false; 
 
 		//
@@ -403,7 +404,7 @@ class EmailController extends Controller
 				
 			$body_full = $body_raw; // the account number is getting filtered for some reason but it is still deep in the body, so use the full body to search for it later
 			$body_raw = substr($body_raw, $pos, strlen($sample));
-												
+											
 			// get the amount
 			$amount = $this->parseTag($body_raw, 'purchase in the amount of ', 10, 0); 
 			$amount = floatval(trim($amount, '$'));
@@ -418,16 +419,17 @@ class EmailController extends Controller
 			if ($date == NULL)
 			{
 				// date may look like: SEP 30, 2016
-				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 12, -1); 
+				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 14, -1); 
+				//dump('date_raw parse: ' . $date_raw);
 				$date2 = str_replace(',', '', $date_raw);
-				$date_raw = $date2;
+				//$date_raw = $date2;
 				$date = DateTime::createFromFormat('M d Y', $date2);
 
 				if ($date == NULL)
 				{
 					// date may look like: NOVEMBER 04, 2021
 					$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 21, -1);
-					//dump('date_raw: ' . $date_raw);
+					//dump('date_raw parse: ' . $date_raw);
 					$date2 = str_replace(',', '', $date_raw);
 					$pieces = explode(' ', $date2);
 					if (count($pieces) > 2)
@@ -444,9 +446,10 @@ class EmailController extends Controller
 					}
 				}
 			}
-									
+				
+			//					
 			// get the account number, last four digits, it will be within the text in $account
-
+			//
 			$account = $this->parseTag($body_full, 'card ending in', 20, -1); 
 			$matches = [];			
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
@@ -459,20 +462,29 @@ class EmailController extends Controller
 				dd($accountId);
 			}
 
+			//
 			// get the description
+			//
 			$desc = $this->parseTag($body_raw, $date_raw . ', at ', 30, -1); 
-			$pieces = explode(',', $desc);			
+			$pieces = explode(',', $desc);	
+			if ($debug)
+			{
+				dump($date_raw);		
+				dump($desc);
+				dump($pieces);
+			}
+
 			$desc = $pieces[0];
 			if ($debug)
 			{
-				echo 'date=' . $date_raw . '<br/>';
+				echo 'dateRaw=' . $date_raw . '<br/>';
+				echo 'date=' . $date->format('Y-m-d') . '<br/>';
+				
 				echo 'amount=' . $amount . '<br/>';
 				echo 'desc=' . $desc . '<br/>'; 
 				echo 'accountId=' . $account . '<br/>'; 
 				die('*** end of debug ***');
 			}
-			
-			//echo 'Record:' . $account_raw . '::' . $amount . '::' . $date->format('Y-m-d') . '::' . $desc;
 		}
 		
 		return $rc;
