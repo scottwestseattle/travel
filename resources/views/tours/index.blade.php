@@ -3,11 +3,13 @@
 @section('content')
 
 <div class="page-size container text-center">
+
+	@component('tours.menu-submenu', [])@endcomponent
 			
 			<!-------------------- Section header image --------->
 			<div class="sectionHeader hidden-xs">
 				<!-- div><img src="/img/theme1/bootprint.jpg" /></div -->
-				<h1 style="margin-bottom:0;padding-bottom:0" class="main-font sectionImageBlue">@LANG('ui.Tours, Hikes, Things To Do')</h1>
+				<h1 style="margin-bottom:0;padding-bottom:0 margin:0;" class="main-font sectionImageBlue">@LANG('ui.Tours, Hikes, Things To Do')</h1>
 			</div>	
 			
 			<div class="sectionHeader hidden-xl hidden-lg hidden-md hidden-sm">

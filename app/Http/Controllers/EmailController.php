@@ -355,7 +355,7 @@ class EmailController extends Controller
 	
 	private function checkCapital($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug)
 	{
-		//$debug = true;
+		$debug = false;
 		if ($debug)
 		{
 			echo '<br/>' . '*** DEBUG, checkCapital() ***' . '<br/>';
@@ -421,7 +421,8 @@ class EmailController extends Controller
 				// date may look like: SEP 30, 2016
 				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 14, -1); 
 				//dump('date_raw parse: ' . $date_raw);
-				$date2 = str_replace(',', '', $date_raw);
+				$date_raw = trim($date_raw, ','); // remove a trailing ','
+				$date2 = str_replace(',', '', $date_raw); // remove the embedded comma
 				//$date_raw = $date2;
 				$date = DateTime::createFromFormat('M d Y', $date2);
 
@@ -710,7 +711,6 @@ class EmailController extends Controller
 	{
 		$pos = stripos($text, $tag);
 		$target = substr($text, $pos + strlen($tag), $length);
-		//debug($target);
 		if ($wordIndex >= 0)
 		{
 			$words = explode(" ", $target);	

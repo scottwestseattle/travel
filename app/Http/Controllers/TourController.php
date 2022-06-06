@@ -211,7 +211,7 @@ class TourController extends Controller
 		{
 			//$request->session()->flash('message.level', 'danger');
 			//$request->session()->flash('message.content', 'Entry Not Found');
-            return redirect('/tours/index');
+            return redirect('/');
 		}
 		
 		$gallery = isset($entry) ? $entry->photos : null;
@@ -354,16 +354,20 @@ class TourController extends Controller
 		{
 			if (isset($entry->language))
 			{
-				$entry2->title = $entry->medium_col1;
-				$entry2->permalink = $entry->medium_col2;
-				$entry2->description = $entry->large_col1;
-				$entry2->description_short = $entry->large_col2;
+				if (isset($entry->medium_col1))
+					$entry2->title = $entry->medium_col1;			
+				if (isset($entry->medium_col2))
+					$entry2->permalink = $entry->medium_col2;
+				if (isset($entry->large_col1))
+					$entry2->description = $entry->large_col1;
+				if (isset($entry->large_col2))
+					$entry2->description_short = $entry->large_col2;
 			}
 			
 			$entry2->description = nl2br($entry2->description);
 			$entry2->description = $this->formatLinks($entry2->description);		
 		}
-		
+
 		$vdata = $this->getViewData([
 			'record' => $entry2, 
 			'activity' => $activity, 

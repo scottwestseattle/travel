@@ -146,7 +146,7 @@ class GalleryController extends Controller
 			->where('deleted_flag', 0)
 			->where('gallery_flag', 1)
 			->where('parent_id', '=', $entry->id)
-			->orderByRaw('created_at ASC')
+			->orderByRaw('created_at DESC')
 			->get();
 
 		$photo_path = '/img/entries/';

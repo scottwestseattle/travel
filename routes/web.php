@@ -412,6 +412,7 @@ Route::group(['prefix' => 'blogs'], function ()
 Route::group(['prefix' => 'events'], function () {
 	
 	// index
+	Route::get('/', 'EventController@index')->middleware('auth');
 	Route::get('/index/{type_flag?}', 'EventController@index')->middleware('auth');
 	
 	// delete / confirm delete
@@ -459,11 +460,6 @@ Route::group(['prefix' => 'visitors'], function () {
 
 // tours is a superclass of entries, uses entries for basic functions
 Route::group(['prefix' => 'tours'], function () {
-
-	// list
-	Route::get('/index', 'TourController@index');
-	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
-	Route::get('/location/{location_id}', 'TourController@location');
 	
 	// publish
 	Route::get('/publish/{entry}', 'EntryController@publish')->middleware('auth');
@@ -481,11 +477,18 @@ Route::group(['prefix' => 'tours'], function () {
 	Route::get('/confirmdelete/{entry}', 'TourController@confirmdelete')->middleware('auth');
 	Route::post('/delete/{entry}', 'TourController@delete')->middleware('auth');
 
-	// view
+	// list
+	Route::get('/indexadmin', 'TourController@indexadmin')->middleware('auth');
+	Route::get('/location/{location_id}', 'TourController@location');
+	Route::get('/index', 'TourController@index');
+	Route::get('/', 'TourController@index');
+	
+	// view << has to go last
 	Route::get('/view/{title}/{id}', ['as' => 'tour.view', 'uses' => 'TourController@view']);
 	Route::resource('tour', 'TourController');		
 	Route::get('/{permalink}', ['as' => 'tour.permalink', 'uses' => 'TourController@permalink']);
 	Route::get('/{location}/{permalink}', ['as' => 'tour.permalocation', 'uses' => 'TourController@permalocation']);
+
 });
 
 Route::group(['prefix' => 'entries'], function () {

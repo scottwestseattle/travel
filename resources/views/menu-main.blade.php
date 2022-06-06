@@ -77,10 +77,10 @@
 					<li><a href="/hotels"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list hidden-sm"></span>@lang('content.Hotels')</a></li>
 				@endif							
 				@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-					<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer hidden-sm"></span>@lang('ui.Tours/Hikes')</a></li>
+					<li><a href="/tours"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer hidden-sm"></span>@lang('ui.Tours/Hikes')</a></li>
 				@endif
 				@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-				<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain hidden-sm"></span>@lang('ui.Blogs')</a></li>
+				<li><a href="/blogs"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain hidden-sm"></span>@lang('ui.Blogs')</a></li>
 				@endif
 				@if (isset($sections) && array_key_exists(SECTION_GALLERY, $sections))
 					<li><a href="/galleries"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture hidden-sm"></span>@lang('ui.Galleries')</a></li>
@@ -121,7 +121,7 @@
 							<li><a href="/sitemap/">@lang('ui.Site Map')</a></li>
 							<li><a href="/photos/sliders">@lang('ui.Sliders')</a></li>
 							<li><a href="/test/">@lang('ui.Tests')</a></li>
-							<li><a href="/tours/indexadmin">@lang('ui.Tours')</a></li>
+							<li><a href="/tours/">@lang('ui.Tours')</a></li>
 							<li><a href="/translations/">@lang('ui.Translations')</a></li>
 						</ul>
 					</li>
@@ -151,10 +151,10 @@
 						<li><a href="/articles"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-list"></span>@lang('ui.Articles')</a></li>
 					@endif
 					@if (isset($sections) && array_key_exists(SECTION_TOURS, $sections))
-						<li><a href="/tours/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
+						<li><a href="/tours"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-tree-conifer"></span>@lang('ui.Tours/Hikes')</a></li>
 					@endif
 					@if (isset($sections) && array_key_exists(SECTION_BLOGS, $sections))
-					<li><a href="/blogs/index"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@lang('ui.Blogs')</a></li>
+					<li><a href="/blogs"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-grain"></span>@lang('ui.Blogs')</a></li>
 					@endif
 					@if (isset($sections) && array_key_exists(SECTION_SLIDERS, $sections))
 						<li><a href="/photos/sliders"><span class="glyphSiteMap glyphCustom glyphicon glyphicon-picture"></span>@lang('ui.Photos')</a></li>

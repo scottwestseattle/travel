@@ -13,10 +13,12 @@ $header = 'Tours';
 	@guest
 	@else
 		@if (Auth::user()->user_type >= 100)
-		<table><tr>			
-			<td style="width:40px; font-size:20px;"><a href='/tours/indexadmin/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
-			<td style="width:40px; font-size:20px;"><a href='/tours/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
-		</tr></table>
+		<div style="margin:5px 0 0 0;">
+			<table><tr>			
+				<td style="width:40px; font-size:20px;"><a href='/tours/'><span class="glyphCustom glyphicon glyphicon-list"></span></a></td>
+				<td style="width:40px; font-size:20px;"><a href='/tours/add/'><span class="glyphCustom glyphicon glyphicon-plus-sign"></span></a></td>
+			</tr></table>
+		</div>
 		@endif
 	@endguest
 	
