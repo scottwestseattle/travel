@@ -418,7 +418,7 @@ class TransactionController extends Controller
 		$record->fees = $this->copyDirty($record->fees, $request->fees, $isDirty, $changes);		
 		$record->lot_id = $this->copyDirty($record->lot_id, $request->lot_id, $isDirty, $changes);
 		$record->shares_unsold = $this->copyDirty($record->shares_unsold, $request->shares_unsold, $isDirty, $changes);
-				
+			
 		if ($record->isTrade())
 		{
 			$fees = floatval($record->commission) + floatval($record->fees);
@@ -427,7 +427,6 @@ class TransactionController extends Controller
 			{
 				$record->subcategory_id = SUBCATEGORY_ID_BUY;
 				$action = 'Buy';
-				$record->shares_unsold = $this->copyDirty($record->shares_unsold, $request->shares_unsold, $isDirty, $changes);
 				
 				if (!isset($record->lot_id))
 					$record->lot_id = $record->id;
