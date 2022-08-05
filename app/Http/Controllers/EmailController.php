@@ -44,6 +44,7 @@ class EmailController extends Controller
 
     public function check(Request $request, $debug = false) 
 	{	
+		// OJO: DON'T NEED TO OVERRIDE DEBUG HERE, CALL THE DEBUG VERSION FROM ADMIN PAGE BUTTON
 		$debug = boolval($debug);
 		
 		// this happens sometimes and the transactions are added with no user id
