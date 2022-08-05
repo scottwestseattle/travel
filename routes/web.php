@@ -51,7 +51,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/error', 'FrontPageController@error');
 Route::get('/travelocity', 'FrontPageController@travelocity');
 Route::get('/expedia', 'FrontPageController@expedia');
-Route::get('/email/check', 'EmailController@check');
+Route::get('/email/check/{debug?}', 'EmailController@check');
 Route::get('/articles', 'EntryController@articles');
 Route::get('/hotels', 'EntryController@hotels');
 Route::get('/confirm', 'FrontPageController@confirm');

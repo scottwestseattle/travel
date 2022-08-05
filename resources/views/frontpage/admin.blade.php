@@ -42,6 +42,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				<a class="btn-sm btn-primary" href="/importgeo" role="button">Geo</a>
 				<a class="btn-sm btn-primary" href="/first" role="button">Sliders</a>
 				<a class="btn-sm btn-primary" href="/hash" role="button">Hash</a>
+				<a class="btn-sm btn-primary" href="/email/check/1" role="button">Email</a>
 				<a class="btn-sm btn-primary" target="_blank" href="https://drive.google.com/drive/folders/1NVBE6-ijWCdZq8vrBUrnCpZ39dlHmaK_?usp=sharing" role="button">Files</a>
 				
 			</div>

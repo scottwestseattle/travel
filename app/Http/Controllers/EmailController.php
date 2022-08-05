@@ -45,7 +45,6 @@ class EmailController extends Controller
     public function check(Request $request, $debug = false) 
 	{	
 		$debug = boolval($debug);
-		//$debug = true;
 		
 		// this happens sometimes and the transactions are added with no user id
 		if (Auth::id() == null)
@@ -355,7 +354,7 @@ class EmailController extends Controller
 	
 	private function checkCapital($mbox, $count, $val, &$date, &$amount, &$desc, &$accountId, $debug)
 	{
-		$debug = false;
+		// override $debug in check(), not here 
 		if ($debug)
 		{
 			echo '<br/>' . '*** DEBUG, checkCapital() ***' . '<br/>';
@@ -367,9 +366,15 @@ class EmailController extends Controller
 		// check to see who it's from
 		//
 		$from = 'Capital';
+		$from = 'Scott Wilkinson';
 		$pos = strpos($val, $from);
 		if ($pos === false) 
 		{
+			if ($debug)
+			{
+				echo "From: " . $val . ": " . "not a cap account";
+			}
+				
 			return $rc; // not a cap account
 		}
 		
@@ -378,21 +383,16 @@ class EmailController extends Controller
 		//					
 		$subject = 'A new transaction was';
 		$pos = strpos($val, $subject);
-		
-		if ($debug)
-			dump('pos=' . $pos);
-									
-		$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on 9/29/2020, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
-				
+															
 		if ($pos !== false && $pos >= 44) 
 		{
 			$rc = true; // transaction found
-			//echo 'pos = ' . $pos . '<br/>';
 						
 			// get the body
 			$body_raw = imap_body($mbox, $count);
 			$body_raw = preg_replace("/[^A-Za-z0-9\/\.\'\, ]/", '', $body_raw); // remove all of the trash
 			
+			$sample = "A purchase was charged to your account. RE: Account ending in 6789 As requested, we're notifying you that on 9/29/2020, at USA*CANTEEN VENDING, a pending authorization or purchase in the amount of $1.00 was placed or charged on your Capital One VISA SIGNATURE account.";
 			$pos = strpos($body_raw, substr($sample, 0, 30));
 			//echo 'pos=' . $pos . '<br/>';
 			if ($pos === false)
@@ -415,36 +415,34 @@ class EmailController extends Controller
 			$date2 = str_replace(',', '', trim($date_raw));
 			$date = DateTime::createFromFormat('m/d/Y', $date2);
 			// dump('|' . $date2 . '|');	
+
+			if ($debug)
+				dump('date_raw format 1: ' . $date_raw);
 					
 			if ($date == NULL)
 			{
 				// date may look like: SEP 30, 2016
-				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 14, -1); 
-				//dump('date_raw parse: ' . $date_raw);
-				$date_raw = trim($date_raw, ','); // remove a trailing ','
-				$date2 = str_replace(',', '', $date_raw); // remove the embedded comma
-				//$date_raw = $date2;
-				$date = DateTime::createFromFormat('M d Y', $date2);
+				$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 21, -1); 
+				
+				if ($debug)
+					dump('date_raw format 2: ' . $date_raw);
+				
+				$date2 = str_replace(',', '', $date_raw);
+				$pieces = explode(' ', $date2);
+				if (count($pieces) > 2)
+				{
+					$date2 = $pieces[0] . ' ' . $pieces[1] . ' ' . $pieces[2];
+					$date_raw = $pieces[0] . ' ' . $pieces[1] . ', ' . $pieces[2];
+				}
+
+				if (strlen($date2) <= 11)	// 3 letter month: Jan, Feb, etc.
+					$date = DateTime::createFromFormat('M d Y', $date2);
+				else						// full month: January, Februrary, etc.
+					$date = DateTime::createFromFormat('F d Y', $date2);
 
 				if ($date == NULL)
 				{
-					// date may look like: NOVEMBER 04, 2021
-					$date_raw = $this->parseTag($body_raw, 'notifying you that on ', 21, -1);
-					//dump('date_raw parse: ' . $date_raw);
-					$date2 = str_replace(',', '', $date_raw);
-					$pieces = explode(' ', $date2);
-					if (count($pieces) > 2)
-					{
-						$date2 = $pieces[0] . ' ' . $pieces[1] . ' ' . $pieces[2];
-						$date_raw = $pieces[0] . ' ' . $pieces[1] . ', ' . $pieces[2];
-					}
-					//dump('date2: ' . $date2);
-					$date = DateTime::createFromFormat('F d Y', $date2);
-
-					if ($date == NULL)
-					{
-						die("Date conversion 2 failed, from text: " . $date2);
-					}
+					die("Date conversion 2 failed, from text: " . $date2);
 				}
 			}
 				
@@ -486,6 +484,11 @@ class EmailController extends Controller
 				echo 'accountId=' . $account . '<br/>'; 
 				die('*** end of debug ***');
 			}
+		}
+		else
+		{
+			if ($debug)
+				die('pos=' . $pos);
 		}
 		
 		return $rc;
