@@ -367,16 +367,18 @@ class EmailController extends Controller
 		// check to see who it's from
 		//
 		$from = 'Capital';
-		$from = 'Scott Wilkinson';
+		//$from = 'Scott Wilkinson';
 		$pos = strpos($val, $from);
 		if ($pos === false) 
 		{
-			if ($debug)
+			if ($debug) // for debug, it might be a test email from another sender, so don't abort
 			{
 				echo "From: " . $val . ": " . "not a cap account";
 			}
-				
-			return $rc; // not a cap account
+			else
+			{
+				return $rc; // not from a cap account AND not debugging
+			}		
 		}
 		
 		//
