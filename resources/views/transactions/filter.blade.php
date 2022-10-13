@@ -1,6 +1,9 @@
 @extends('layouts.theme1')
-
 @section('content')
+@php
+	$showIds = false;
+	$truncate = (isset($filter['showalldates_flag']) && $filter['showalldates_flag']);
+@endphp
 
 <script>
 
@@ -128,7 +131,11 @@ function inlineEditSubmit(id)
 		@if ($filter['showphotos_flag'])
 			<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
 		@else
-			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}</h3>
+			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}
+				@if (isset($totals['balance']))
+					<div style="margin-top: 3px; font-size:.65em; font-weight:300;">Account Balance: {{$totals['balance']}} ({{$totals['balance_count']}} transactions)</div>
+				@endif
+			</h3>
 		@endif
 		
 		<table class="table">
@@ -189,13 +196,13 @@ function inlineEditSubmit(id)
 						
 						@if (isset($record->transfer_id))
 							@if ($record->amount > 0)
-								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->transfer_account}} to {{$record->account}}</a></td>
+								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->transfer_account}} to {{$record->account}}</a>@if ($showIds)<div>({{$record->id}})</div>@endif</td>
 							@else
-								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->account}} to {{$record->transfer_account}}</a></td>
+								<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->account}} to {{$record->transfer_account}}</a>@if ($showIds)<div>({{$record->id}})</div>@endif</td>
 							@endif
 							<?php $skip_id = ($filter['unmerged_flag'] == 0) ? $record->transfer_id : 0; ?>
 						@else
-							<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
+							<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a>@if ($showIds)<div>({{$record->id}})</div>@endif</td>
 						@endif
 						
 						<td>{{$record->notes}}</td>
@@ -220,6 +227,10 @@ function inlineEditSubmit(id)
 						</td>
 						<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>
 					</tr>
+					@if ($truncate && $loop->index >= 100)
+						<tr><td colspan="12"><b>Showing {{$loop->index}} rows of {{count($records)}}</b></td></tr>
+						@break
+					@endif
 				@endforeach
 			@endif
 			</tbody>

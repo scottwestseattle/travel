@@ -469,7 +469,10 @@ $LAB
 
 
                                                         <span style="color: ">
-														{{$record['outDate']}} - {{$record['returnDate']}}
+														{{$record['outDate']}}
+														@if (isset($record['returnDate']))
+														 - {{$record['returnDate']}}
+														@endif
                                                         </span>
                                                         <span style="font-size: 16px; line-height: .5; color: ">&nbsp; | &nbsp;</span>
                                                     <span style="color: ">
@@ -589,9 +592,11 @@ Important Information        </td>
                     <td style="color:#FFFFFF;font-size:12px;line-height:1.1em;" width="100%">
                             <span style="color: ">
 
-                                {{$record['outDate']}} - {{$record['returnDate']}}
-
-                                        , 1 round trip ticket
+                                {{$record['outDate']}}
+                                
+                                @if (isset($record['returnDate']))
+                                 - {{$record['returnDate']}}
+                                @endif
                             </span>
 
                         </td>
@@ -750,6 +755,7 @@ Departure
 <!------ Return Flight ----------------------------------------------------->
 <!---------------------------------------------------------------------------->
 
+@if (isset($record['returnDate']))
 
 <tr id="automation-label-flight-leg-1" bgcolor="#D6EEF2">
     <td id="departure-date-1" align="left"  valign="top" width="50%" style="padding:10px 5px 10px 10px;font-family:arial;font-size:12px; ">
@@ -814,6 +820,8 @@ Total travel time:&nbsp;{{$record['returnTimeDuration1']}}
                    </span>
         </td>
     </tr>
+
+@endif
 
 <!-- rest of flight details ends here -->
     </table>

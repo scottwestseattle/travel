@@ -141,7 +141,7 @@ class ReconcileController extends Controller
 		$dates = Controller::getDateControlDates();
 
 		// get the balance
-		$balance = Transaction::getBalanceByDate($filter['account_id'], $dateBalance);
+		$balance = Transaction::getBalanceByDate($filter['account_id'], $dateBalance)['balance'];
 		$balance += $account->starting_balance;
 						
 		$vdata = $this->getViewData([

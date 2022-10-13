@@ -172,6 +172,11 @@ class Transaction extends Base
 			}
 		}
 
+		// if it's just one account, get the balance
+		$balance = ($accountId) ? Transaction::getBalanceByDate($accountId) : null;
+		$rc['balance'] = $balance['balance'];
+		$rc['balance_count'] = $balance['balance_count'];
+
 		$rc['total'] = $total + $startingBalance;
 		$rc['no_photos'] = $noPhotos;
 		
@@ -253,7 +258,7 @@ class Transaction extends Base
 			LEFT JOIN photos ON photos.parent_id = trx.id AND photos.deleted_flag = 0
 			WHERE 1=1 
 			AND trx.user_id = ?
-			AND trx.deleted_flag = 0
+			AND COALESCE(trx.deleted_flag, 0) = 0
 			AND trx.type_flag in (1,2)
 		';
 		
@@ -364,26 +369,46 @@ class Transaction extends Base
 
     static public function getBalanceByDate($accountId, $dateTo = null)
     {
-		$balance = 0.0;
+		$balance['balance'] = 0.0;
+		$balance['balance_count'] = 0;
+		$startingBalance = 0.0;
 		
-		$q = '
-			SELECT sum(amount) AS balance
-			FROM transactions 
+		//$q = 'SELECT id, transaction_date, (amount) AS balance ';
+		$q = 'SELECT sum(amount) AS balance, count(amount) AS balance_count ';
+			
+		$q .= ' FROM transactions 
 			WHERE 1=1  
-			AND user_id = ? 
-			AND deleted_flag = 0
-			AND reconciled_flag = 1
+			AND user_id = ?
+			AND COALESCE(deleted_flag, 0) = 0
 			AND parent_id = ?
 			AND type_flag in (1,2)
 		';
 		
+		//$q .= ' AND id in (6399, 6372) ';
+		
 		if (isset($dateTo))
+		{
+			// not showing ALL DATES
 			$q .= ' AND transaction_date <= STR_TO_DATE("' . $dateTo . '", "%Y-%m-%d") ';
+		}
+		else
+		{
+			// only add starting balance if we're looking at one account and showing all dates
+			$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
+		}
+
+		//$q .= ' ORDER BY transaction_date DESC, id DESC ';
 
 		$records = DB::select($q, [Auth::id(), intval($accountId)]);
-		if (count($records) > 0)
-			$balance = floatval($records[0]->balance);
-		
+		//dump($records);
+			
+		$count = count($records);
+		if ($count > 0)
+		{
+			$balance['balance'] = floatval($records[0]->balance) + $startingBalance;
+			$balance['balance_count'] = $records[0]->balance_count;
+		}
+
 		return $balance;
     }
 

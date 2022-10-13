@@ -71,7 +71,17 @@ class Account extends Base
 		
 		return $subtotals;
 	}
-	
+
+    static public function getAccount($accountId)
+    {    	
+		$record = Account::select()
+			->where('deleted_flag', 0)
+			->where('id', intval($accountId))
+			->first();
+
+		return $record;
+	}
+		
     static public function getStartingBalance($accountId)
     {
     	$accountId = intval($accountId);
@@ -107,7 +117,7 @@ class Account extends Base
 				//->where('hidden_flag', 0)
 				->orderByRaw('name')
 				->get();
-//dd($records);
+
 			if (isset($records) && count($records) > 0)
 			{
 				foreach($records as $record)

@@ -18,6 +18,7 @@
 				<th>Balance</th>
 				<th>Notes</th>
 				<th>Last Reconcile Date</th>
+				<th>Starting Balance</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -43,6 +44,7 @@
 				<td>{{$record->balance}}</td>
 				<td>{{$record->notes}}</td>
 				<td>{{$record->reconcile_date}}</td>
+				<td>{{intval($record->starting_balance) > 0 ? $record->starting_balance : ''}}</td>
 
 				<td class="glyphCol"><a href='/{{$prefix}}/edit/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 				<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>

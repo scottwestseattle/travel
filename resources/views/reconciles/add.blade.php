@@ -35,7 +35,7 @@
 			<input type="float" name="balance_override" class="form-control" style="height:25px; width:200px; "></input>	
 		</div>
 		
-		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account-all/{{$account->id}}" target="_blank">Show Transactions</a></div>
+		<div style="font-size:10pt; margin-top:20px;"><a href="/transactions/show/account/{{$account->id}}" target="_blank">Show Transactions</a></div>
 							
 		<div class="submit-button" style="margin-top:20px;">
 			<button type="submit" name="update" class="btn btn-primary">Add Reconcile Record</button>

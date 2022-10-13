@@ -386,7 +386,7 @@ class EmailController extends Controller
 		//					
 		$subject = 'A new transaction was';
 		$pos = strpos($val, $subject);
-															
+													
 		if ($pos !== false && $pos >= 44) 
 		{
 			$rc = true; // transaction found
@@ -452,9 +452,14 @@ class EmailController extends Controller
 			//					
 			// get the account number, last four digits, it will be within the text in $account
 			//
-			$account = $this->parseTag($body_full, 'card ending in', 20, -1); 
-			$matches = [];			
+			$account = $this->parseTag($body_full, 'Card ending in', 20, -1); 
+			//dump('Card ending in: ' . $account);		
+
+			$matches = [];	
+			
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
+			//dump('Account Number: ' . $account);
+
 			$account = (count($matches) > 0) ? $matches[0][0] : '';
 			$accountId = $this->getAccountId($account);
 			if (!$accountId)
@@ -491,7 +496,7 @@ class EmailController extends Controller
 		else
 		{
 			if ($debug)
-				die('pos=' . $pos);
+				die('Invalid pos=' . $pos);
 		}
 		
 		return $rc;

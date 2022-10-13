@@ -655,15 +655,8 @@ class TransactionController extends Controller
 				$filter = $sessionFilter;
 			}
 		}
-		
-		$accountId = false;
-		if ($filter['showalldates_flag'])
-		{			
-			// account id is needed to get starting balance to make the totals correct below
-			// it is only used when showing all records for a selected account
-			$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
-		}
 
+		$accountId = array_key_exists('account_id', $filter) ? $filter['account_id'] : false;
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, $filter['category_id']);
@@ -671,8 +664,15 @@ class TransactionController extends Controller
 		$total = 0.0;
 		try
 		{
+			dump($filter);
+			
+			// get the records for the filter
 			$records = Transaction::getFilter($filter);
+		
+			// get the total
 			$totals = Transaction::getTotal($records, $filter, $accountId);
+
+			//dump($totals);
 		}
 		catch (\Exception $e) 
 		{
@@ -820,7 +820,7 @@ class TransactionController extends Controller
 		$total = 0.0;
 		try
 		{
-			$balance = Transaction::getBalanceByDate($filter['account_id'], $filter['to_date']);
+			$balance = Transaction::getBalanceByDate($filter['account_id'], $filter['to_date'])['balance'];
 		}
 		catch (\Exception $e) 
 		{
@@ -930,6 +930,8 @@ class TransactionController extends Controller
 	
     public function show(Request $request, $query, $id)
     {	
+    	$id = intval($id);
+    	
 		if (!$this->isAdmin())
              return redirect('/');
 
@@ -967,7 +969,7 @@ class TransactionController extends Controller
 		try
 		{
 			$records = Transaction::getFilter($filter);
-			$totals = Transaction::getTotal($records, $filter);
+			$totals = Transaction::getTotal($records, $filter, $id);
 		}
 		catch (\Exception $e) 
 		{
@@ -1054,7 +1056,7 @@ class TransactionController extends Controller
     public function getbalance(Request $request, $account_id, $date)
     {
 		$date = Controller::trimDate($date);
-		$balance = Transaction::getBalanceByDate(intval($account_id), $date);
+		$balance = Transaction::getBalanceByDate(intval($account_id), $date)['balance'];
 		
 		$vdata = $this->getViewDataAjax([
 			'balance' => $balance,
