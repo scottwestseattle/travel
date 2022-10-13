@@ -664,7 +664,7 @@ class TransactionController extends Controller
 		$total = 0.0;
 		try
 		{
-			dump($filter);
+			//dump($filter);
 			
 			// get the records for the filter
 			$records = Transaction::getFilter($filter);
