@@ -3,6 +3,7 @@
 @php
 	$showIds = false;
 	$truncate = (isset($filter['showalldates_flag']) && $filter['showalldates_flag']);
+	$balance = number_format(round($totals['balance'], 2), 2);
 @endphp
 
 <script>
@@ -131,9 +132,9 @@ function inlineEditSubmit(id)
 		@if ($filter['showphotos_flag'])
 			<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
 		@else
-			<h3>{{$titlePlural}} ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}
+			<h3>{{$titlePlural}}: {{count($records)}}, Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}
 				@if (isset($totals['balance']))
-					<div style="margin-top: 3px; font-size:.65em; font-weight:300;">Account Balance: {{$totals['balance']}} ({{$totals['balance_count']}} transactions)</div>
+					<div style="margin-top: 5px; font-size:.75em; font-weight:300;">Total Transactions: <span style="font-weight:300;">{{$totals['balance_count']}}</span>, Account Balance: <span style="font-weight:300;">${{$balance}}</span></div>
 				@endif
 			</h3>
 		@endif

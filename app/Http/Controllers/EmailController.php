@@ -452,11 +452,13 @@ class EmailController extends Controller
 			//					
 			// get the account number, last four digits, it will be within the text in $account
 			//
-			$account = $this->parseTag($body_full, 'Card ending in', 20, -1); 
+			$account = $this->parseTag($body_full, ' ending in', 20, -1); // says either Account ending in" or "Card ending in"
+			
 			//dump('Card ending in: ' . $account);		
 
 			$matches = [];	
 			
+			// grab a four digit number from where the account number should be
 			preg_match('/\d{4}/', $account, $matches, PREG_OFFSET_CAPTURE);
 			//dump('Account Number: ' . $account);
 
@@ -721,20 +723,29 @@ class EmailController extends Controller
 	private function parseTag($text, $tag, $length, $wordIndex) 
 	{
 		$pos = stripos($text, $tag);
-		$target = substr($text, $pos + strlen($tag), $length);
-		if ($wordIndex >= 0)
+		if ($pos !== false)
 		{
-			$words = explode(" ", $target);	
-			if (count($words) > $wordIndex)
+			$target = substr($text, $pos + strlen($tag), $length);
+			if ($wordIndex >= 0)
 			{
-				$target = $words[$wordIndex];
-			}
-			else
-			{
-				dump($words);
-				dd('parseTag() word index out of range: ' . $wordIndex . ', max index is: ' . (count($words) - 1));
+				$words = explode(" ", $target);	
+				if (count($words) > $wordIndex)
+				{
+					$target = $words[$wordIndex];
+				}
+				else
+				{
+					dump($words);
+					dd('parseTag() word index out of range: ' . $wordIndex . ', max index is: ' . (count($words) - 1));
+				}
 			}
 		}
+		else
+		{
+			// new added: 12/08/2022 << test more
+			dump('parseTag(): parse text not found: ' . $tag);
+			dd($text);
+		}			
 		
 		return $target;
 	}

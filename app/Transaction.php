@@ -634,13 +634,25 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
     static public function getQuote($symbol, $nickname = null)
     {
 		$quote = null;
-		$url = "https://finance.yahoo.com/quote/$symbol?p=$symbol";
+		//olf $url = "https://finance.yahoo.com/quote/$symbol";
+		$url = "https://finance.yahoo.com/quote/$symbol/history";
+
 		if (true)
 		{
 			$page = file_get_contents($url);		
-			$pos = strpos($page, 'quote-market-notice');
-			$text = substr($page, $pos - 175, 200);
-			//dump($page);
+			$pos = strpos($page, 'qsp-price');
+			$text = substr($page, $pos, 750);
+			//dd($text);
+			
+			/*
+			"qsp-price" data-field="regularMarketPrice" data-trend="none" data-pricehint="2" 
+			value="352.371" active="">352.37</fin-streamer><fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" 
+			data-symbol="VOO" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" 
+			data-pricehint="2" value="-1.4889832" active=""><span class="C($negativeColor)">-1.49</span>
+			</fin-streamer> <fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="VOO" 
+			data-field="regularMarketChangePercent" data-trend="txt" data-pricehint="2" data-template="({fmt})" 
+			value="-0.0042078313" active=""><span class="C($negativeColor)">(-0.42%)</span>			
+			*/
 		}
 		else
 		{
@@ -650,46 +662,65 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 			//dump($text);
 		}
 		
-		$pos = strpos($page, '"symbol":"' . $symbol . '"');
+		//$pos = strpos($page, '"symbol":"' . $symbol . '"');
 		//dump($pos);
 		
-		$text = substr($page, $pos);
+		//$text = substr($page, $pos);
 
 		// match one or more numbers (with optional ',.+-%() ') between '>' and '<', for example: ">1,920.50<" or ">-1.38 (-0.57%)<"
 		preg_match_all('/\>[0-9,.\+\-\%\(\) ]+</', $text, $matches); 
-		//dump($matches);
+		//dd($matches);
 
 		// "symbol":"^TNX"
-		preg_match_all('/\"symbol\"\:\"' . $symbol . '\"/', $text, $matches); 
+		//preg_match_all('/\"symbol\"\:\"' . $symbol . '\"/', $text, $matches); 
 		
 		// "regularMarketPrice":{"raw":170.14,"fmt":"170.14"},
 		//"XLK":{"sourceInterval":15
-		preg_match_all('/\"' . $symbol . '\"\:\{.*\}/', $text, $matches); 
-		$results = isset($matches[0][0]);
+		//preg_match_all('/\"' . $symbol . '\"\:\{.*\}/', $text, $matches); 
+		$results = isset($matches[0][0]) && isset($matches[0][1]);
 		$quote = [];
+		//dump($matches);
 		if ($results)
 		{
-			$text = substr($matches[0][0], 5, 2000);
-			preg_match_all('/\"[a-zA-Z]*\"\:\{[a-zA-Z0-9\"\.\,\:\-\%]*\}/', $text, $matches);
-			foreach($matches[0] as $match)
+			$quote['regularMarketPrice'] = trim(trim($matches[0][0], '>'), '<');
+			$quote['regularMarketChangeAmount'] = trim(trim($matches[0][1], '>'), '<');
+			
+			if (isset($matches[0][3]))
 			{
-				$parts = explode('":{"', $match);
-				if (count($parts) > 1)
+				// fix up the percentage
+				$temp = trim(trim($matches[0][3], '>'), '<');
+				$temp = trim(trim($temp, '('), ')');
+				$temp = trim($temp, '%');
+				$quote['regularMarketChangePercent'] = $temp;
+			}
+		
+			//dd($quote);
+			if (false) // old way
+			{
+				$text = substr($matches[0][0], 5, 2000);
+				preg_match_all('/\"[a-zA-Z]*\"\:\{[a-zA-Z0-9\"\.\,\:\-\%]*\}/', $text, $matches);
+				foreach($matches[0] as $match)
 				{
-					$label = trim($parts[0], '"');
-					preg_match_all('/[0-9\-\.]+/', $parts[1], $values);
-					$value = (isset($values[0]) && count($values[0]) > 0) ? floatval($values[0][0]) : 0.0;
-					if (!array_key_exists($label, $quote))
-						$quote[$label] = $value;
+					$parts = explode('":{"', $match);
+					if (count($parts) > 1)
+					{
+						$label = trim($parts[0], '"');
+						preg_match_all('/[0-9\-\.]+/', $parts[1], $values);
+						$value = (isset($values[0]) && count($values[0]) > 0) ? floatval($values[0][0]) : 0.0;
+						if (!array_key_exists($label, $quote))
+							$quote[$label] = $value;
+					}
 				}
 			}
 		}
-	
+		
 		// get the price from the quote
-		$price = $quote['regularMarketPrice'];
+		$price = isset($quote['regularMarketPrice']) ? floatval($quote['regularMarketPrice']) : 0.0;
+		$change = isset($quote['regularMarketChangeAmount']) ? floatval($quote['regularMarketChangeAmount']) : 0.0;
+		$percent = isset($quote['regularMarketChangePercent']) ? floatval($quote['regularMarketChangePercent']) : 0.0;
 
 		// fix up the change
-		$change = number_format($quote['regularMarketChange'], 2) . ' ' . number_format($quote['regularMarketChangePercent'], 2) . '%';
+		$change = (($change > 0.0) ? '+' : '') . number_format($change, 2) . ' ' . number_format($percent, 2) . '%';
 		
 		// make the quote
 		$rc = self::makeQuote($symbol, $nickname, $price, $change);

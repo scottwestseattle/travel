@@ -27,7 +27,15 @@
 
 			@if (isset($type_flag) && $type_flag == ENTRY_TYPE_LESSON)
 			@else
-				@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent		
+				@component('control-dropdown-date', [
+					'div' => true, 
+					'months' => $dates['months'], 
+					'years' => $dates['years'], 
+					'days' => $dates['days'], 
+					'filter' => $filter,
+					'onChange' => 'makeTitleFromDate();',
+				])
+				@endcomponent		
 			@endif
 			
 			<div class="entry-title-div">
@@ -50,7 +58,7 @@
 			</div>	
 			
 			<div class="entry-description-div">
-				<textarea rows="12" name="description" class="form-control" placeholder="Description"></textarea>	
+				<textarea rows="12" id="description" name="description" class="form-control" placeholder="Description" autofocus></textarea>	
 			</div>
 			
 			<div style="margin:20px 0;">
@@ -73,12 +81,29 @@ window.onload = function(){
 	if (!input)
 		return;
 		
-	// for blog entries, put the date in the title field as a starting title
-	var d = new Date().getDay();
-	var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	
-	input.value = days[d] + ', ' + $("#month option:selected").text() + ' ' + $("#day option:selected").text() + ', ' + $("#year option:selected").text();
+	makeTitleFromDate();
 };
+
+function makeTitleFromDate()
+{
+	dateString = $("#year option:selected").val() + '/' + $("#month option:selected").val() + '/' + $("#day option:selected").val();
+	dt = new Date(dateString);
+	
+	const date = dt.toLocaleString("en-US", {
+	  weekday: "long",
+	  month: "long",
+	  day: "numeric",
+	  year: "numeric",
+	});
+	
+	// set the title
+	$('#title').val(date);
+
+	// set the permalink
+	javascript:urlEncodeWithDate('title', 'year', 'month', 'day', 'permalink');
+	
+	$('#description').focus();
+}
 
 </script>
 @endif

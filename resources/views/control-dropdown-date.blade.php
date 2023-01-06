@@ -1,3 +1,7 @@
+@php
+	$onChange = isset($onChange) ? $onChange : '';
+@endphp
+
 @if (isset($div) && $div)
 <div class="form-group">
 @endif
@@ -6,7 +10,7 @@
 	<label for="{{$field_name}}">{{$prompt}}</label>
 	@endif
 		
-	<a href='#' onclick="event.preventDefault(); javascript:changeDate(-1, 'year', 'month', 'day'); @if(isset($formId))$('#{{$formId}}').submit();@endif";>
+	<a href='#' onclick="event.preventDefault(); javascript:changeDate(-1, 'year', 'month', 'day'); {{$onChange}} @if(isset($formId))$('#{{$formId}}').submit();@endif";>
 		<span id="" class="glyphCustom glyphicon glyphicon-minus-sign" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
 
@@ -45,13 +49,13 @@
 		@endforeach
 	</select>
 
-	<a href='#' onclick="event.preventDefault(); javascript:changeDate(1, 'year', 'month', 'day'); @if(isset($formId))$('#{{$formId}}').submit();@endif";>
+	<a href='#' onclick="event.preventDefault(); javascript:changeDate(1, 'year', 'month', 'day'); {{$onChange}} @if(isset($formId))$('#{{$formId}}').submit();@endif";>
 		<span id="" class="glyphCustom glyphicon glyphicon-plus-sign" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
 	<a href='#' onclick="event.preventDefault(); javascript:changeDate(0, 'year', 'month', 'day')";>
 		<span id="" class="glyphCustom glyphicon glyphicon-remove" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>						
-	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day', true); @if(isset($formId))$('#{{$formId}}').submit();@endif";>
+	<a href='#' onclick="event.preventDefault(); javascript:changeDate(99, 'year', 'month', 'day', true); {{$onChange}} @if(isset($formId))$('#{{$formId}}').submit();@endif";>
 		<span id="" class="glyphCustom glyphicon glyphicon-calendar" style="font-size:1.3em; margin-left:5px;"></span>
 	</a>
 
