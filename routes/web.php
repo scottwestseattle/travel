@@ -398,6 +398,7 @@ Route::group(['prefix' => 'blogs'], function ()
 	Route::get('/indexadmin', 'BlogController@indexadmin')->middleware('auth');
 	Route::get('/show/{id}/{all?}', 'BlogController@show');
 	Route::get('/view/{id}', 'BlogController@view');
+	Route::get('/export/{id}', 'BlogController@export');
 	
 	// add post /create post
 	Route::get('/addpost/{id}', 'BlogController@addpost')->middleware('auth');

@@ -165,7 +165,63 @@ class BlogController extends Controller
 			return redirect('/error');			
 		}								
 	}
-	
+
+    public function export(Request $request, $id)
+    {
+		$id = intval($id);
+		
+		try
+		{
+			// get the blog
+			$record = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG)
+				->first();
+				
+			if (!isset($record))
+			{
+				$msg = "Error Viewing Blog ID: $id, record not found";
+			
+				Event::logError(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg);
+					
+				$request->session()->flash('message.level', 'danger');
+				$request->session()->flash('message.content', $msg);
+				
+				return redirect('/error');
+			}				
+
+			// get the blog posts
+			$records = Entry::select()
+				->where('site_id', SITE_ID)
+				->where('deleted_flag', 0)
+				->where('parent_id', $id)
+				->where('type_flag', ENTRY_TYPE_BLOG_ENTRY)
+				->orderByRaw('display_date')
+				->get();
+					
+			$vdata = $this->getViewData([
+				'parms' => [
+					'record' => $record, 
+					'records' => $records,
+				]
+			]);
+				
+			return view($this->prefix . '.export', $vdata);				
+		}
+		catch (\Exception $e) 
+		{
+			$msg = 'Error Viewing Blog ID ' . $id;
+			Event::logException(LOG_MODEL_BLOGS, LOG_ACTION_VIEW, $msg, null, $e->getMessage());
+				
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $msg . ': ' . $e->getMessage());		
+			
+			return redirect('/error');			
+		}
+	}
+		
     public function view(Request $request, $id)
     {
 		$id = intval($id);
