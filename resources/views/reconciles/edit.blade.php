@@ -79,6 +79,6 @@ function setTotal()
 			  + Number($('#subtotal5').val())
 	;
 		
-	$('#total').val(total);
+	$('#total').val(total.toFixed(2));
 }
 </script>

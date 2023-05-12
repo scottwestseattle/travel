@@ -28,8 +28,8 @@
 		$showGoogleAds = false;
 	}
 	
-	//if ($showGoogleAds)
-		//dump('showing Google Ads: ' . $showGoogleAds);
+	if ($showGoogleAds)
+		;//dump('showing Google Ads: ' . $showGoogleAds);
 @endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">

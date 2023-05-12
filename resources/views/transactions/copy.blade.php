@@ -37,8 +37,7 @@
 			
 		<div class="clear">		
 			<label for="amount" class="control-label">Amount:</label>
-
-			<input type="text" name="amount" class="form-control" value="{{$record->amount}}" />
+			<input type="number" step="any" name="amount" class="form-control" value="{{$record->amount}}" />
 			
 			<label for="notes" class="control-label">Notes:</label>
 			<input type="text" name="notes" class="form-control" value="{{$record->notes}}" />

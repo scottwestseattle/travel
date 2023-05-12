@@ -505,7 +505,7 @@ LEFT JOIN photos
     {
 		$sites = [
 			['https://', 'grittytravel.com'],
-			['https://', 'scotthub.com'],
+//			['https://', 'scotthub.com'],
 //			['http://', 'travel.codespace.us'],
 //			['http://', 'codespace.us'],
 //			['http://', 'spanish50.com'],

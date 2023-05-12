@@ -187,7 +187,7 @@ function inlineEditSubmit(id)
 								</span>
 							</a>
 							<span id="inlineEditButtons{{$record->id}}" style="display:none;">
-								<input style="font-size:12px; height:16px; width:100px;" type="text" id="update{{$record->id}}" class="form-control" value="{{$record->amount}}"></input>
+								<input style="font-size:12px; height:16px; width:100px;" type="number" step="any" id="update{{$record->id}}" class="form-control" value="{{$record->amount}}"></input>
 								
 								<button type="submit" onclick="event.preventDefault(); inlineEditSubmit({{$record->id}});" name="inlineOk" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">OK</button>
 								<button type="cancel" onclick="inlineEditCancel({{$record->id}});" name="inlineCancel" class="btn btn-primary" style="font-size:8px; padding:1px 4px; margin:5px;">Cancel</button>
