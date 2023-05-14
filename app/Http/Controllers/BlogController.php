@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
 use Auth;
 use App\Entry;
 use App\Photo;
 use App\Event;
+use DB;
+use Cookie;
 
 define('PREFIX', 'blogs');
 define('LOG_MODEL', 'blogs');
@@ -49,6 +50,7 @@ class BlogController extends Controller
 			'parent_id' => $record->id,
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
+			'location' => Cookie::get('blogEntryLocation'),
 		]);
 		
 		return view('entries.add', $vdata);							

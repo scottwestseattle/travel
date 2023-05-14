@@ -2,10 +2,10 @@
 
 @section('content')
 
-<?php 
+@php 
 	$gallery = isset($gallery) ? $gallery : null; 
 	$directLink = false;
-?>
+@endphp
 
 <div class="page-size container">
                
@@ -15,11 +15,17 @@
 		@component('entries.menu-submenu', ['record' => $record])@endcomponent
 		
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
+			<div>
 			@if ($record->published_flag == 0)
-				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a></div>
+				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
 			@elseif ($record->approved_flag == 0)
-				<div><a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a></div>
+				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 			@endif
+			
+			@if ($record->finished_flag == 0)
+				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Not Finished')</button></a>
+			@endif
+			</div>
 		@endif
 				
 	@endguest
@@ -120,7 +126,9 @@
 	
 	@if (strlen(trim($record->description_short)) > 0)
 	<div class="entry" style="margin-bottom:20px;">
-		<h3>@LANG('ui.Highlights')</h3>
+		@if ($record->type_flag != ENTRY_TYPE_BLOG_ENTRY)
+			<h3>@LANG('ui.Highlights')</h3>
+		@endif
 		<div>{{$record->description_short}}</div>
 	</div>
 	@endif

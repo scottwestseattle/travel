@@ -12,6 +12,7 @@ use App\Photo;
 use App\Location;
 use App\Translation;
 use App\Comment;
+use Cookie;
 
 define('BODYSTYLE', '<span style="color:green;">');
 define('ENDBODYSTYLE', '</span>');
@@ -156,7 +157,7 @@ class EntryController extends Controller
              return redirect('/');
 
 		$locations = Location::getPlaces();
-		
+				
 		$vdata = $this->getViewData([
 			'entryTypes' => $this->getEntryTypes(),
 			'dates' => Controller::getDateControlDates(),
@@ -191,6 +192,15 @@ class EntryController extends Controller
 		$entry->permalink			= $this->trimNull($request->permalink);
 		if (!isset($entry->permalink))
 			$entry->permalink = $this->createPermalink($entry->title, $entry->display_date);
+		
+		// for blog entries, save the location
+		if ($entry->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+		{
+			if (!empty($entry->description_short))
+			{
+				Cookie::queue('blogEntryLocation', $entry->description_short);
+			}
+		}
 		
 		try
 		{
@@ -489,11 +499,10 @@ class EntryController extends Controller
 			->where('parent_table', 'entries')
 			->get();
 
-//dd($translations);			
 		$languages = [];
 		$languages[] = 'es';
 		$languages[] = 'zh';
-//dd($entry);		
+
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
@@ -526,6 +535,12 @@ class EntryController extends Controller
 			$record->description_short	= $this->trimNull($request->description_short);
 			$record->description		= $this->trimNull($request->description);
 			$record->display_date 		= Controller::getSelectedDate($request);
+			
+			// for blog entries, save the location
+			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+			{
+				Cookie::queue('blogEntryLocation', $record->description_short);
+			}
 			
 			//todo: finish the colors
 			if (false && isset($request->color_foreground) && isset($request->colors))

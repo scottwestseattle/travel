@@ -176,7 +176,8 @@ class Entry extends Base
 		
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description
-				, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date
+				, entries.description_short, entries.published_flag, entries.approved_flag, entries.finished_flag
+				, entries.updated_at, entries.display_date
 				, entries.photo_id, entries.parent_id, entries.site_id 
 				, photo_main.filename as photo
 				, CONCAT(photo_main.alt_text, " - ", photo_main.location) as photo_title
@@ -212,7 +213,8 @@ class Entry extends Base
 		
 		$q .= '
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description
-				, entries.description_short, entries.published_flag, entries.approved_flag, entries.updated_at, entries.display_date
+				, entries.description_short, entries.published_flag, entries.approved_flag, entries.finished_flag
+				, entries.updated_at, entries.display_date
 				, entries.photo_id, entries.parent_id, entries.site_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_gallery_title, photo_gallery_path

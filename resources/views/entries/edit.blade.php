@@ -50,7 +50,8 @@ function xshow(event, id)
 					<a href='#' onclick="javascript:clipboardCopyText(event, 'copy1', 'title')";>
 						<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
 					</a>		
-				</div>				
+				</div>			
+					
 				<input type="text" id="title" name="title" class="form-control" value="{{ $record->title }}"  placeholder="Title" />
 
 				<div class="entry-title-div">
@@ -59,26 +60,34 @@ function xshow(event, id)
 					</a>						
 					<input type="text" id="permalink" name="permalink" class="form-control" value="{{ $record->permalink }}"  placeholder="Permalink" />
 				</div>
-						
+
+				@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+					<input type="text" id="description_short" name="description_short" class="form-control" value="{{ $record->description_short }}"  placeholder="Location" />
+				@else
+				@endif
+								
 				<div id="copy2" class="form-group" style="margin-top:10px;">
 					<a href='#' onclick="javascript:clipboardCopyText(event, 'copy2', 'description')";>
 						<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
 					</a>		
 				</div>				
-						
+				
 				<div class="entry-description-div">
 					<textarea id="description" name="description" rows="12" class="form-control" placeholder="Description" >{{ $record->description }}</textarea>
 				</div>
 
-				<div id="copy3" class="form-group" style="margin-top:10px;">
-					<a href='#' onclick="javascript:clipboardCopyText(event, 'copy3', 'description_short')";>
-						<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
-					</a>		
-				</div>				
+				@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
+				@else
+					<div id="copy3" class="form-group" style="margin-top:10px;">
+						<a href='#' onclick="javascript:clipboardCopyText(event, 'copy3', 'description_short')";>
+							<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px;"></span>
+						</a>		
+					</div>				
 				
-				<div class="entry-description-div">
-					<textarea id="description_short" name="description_short" class="form-control entry-description-text" placeholder="Highlights" >{{ $record->description_short }}</textarea>
-				</div>
+					<div class="entry-description-div">
+						<textarea id="description_short" name="description_short" class="form-control entry-description-text" placeholder="Highlights" >{{ $record->description_short }}</textarea>
+					</div>
+				@endif
 			</div>
 			
 			<?php $i = 0; ?>

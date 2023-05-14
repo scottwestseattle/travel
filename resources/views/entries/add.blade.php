@@ -1,6 +1,9 @@
 @extends('layouts.app')
-
 @section('content')
+@php
+	$location = (isset($location)) ? $location : '';
+	$blog_entry = (isset($type_flag) && $type_flag == ENTRY_TYPE_BLOG_ENTRY);
+@endphp
 
 <div class="container page-size">
 
@@ -57,8 +60,13 @@
 				<button type="submit" name="update" class="btn btn-primary">Add</button>
 			</div>	
 			
+			@if ($blog_entry)
+				<input type="text" id="description_short" name="description_short" class="form-control" value="{{$location}}"  placeholder="Location" />
+			@else
+			@endif
+	
 			<div class="entry-description-div">
-				<textarea rows="12" id="description" name="description" class="form-control" placeholder="Description" autofocus></textarea>	
+				<textarea rows="12" id="description" name="description" class="form-control" placeholder="Description"></textarea>	
 			</div>
 			
 			<div style="margin:20px 0;">
@@ -101,7 +109,7 @@ function makeTitleFromDate()
 
 	// set the permalink
 	javascript:urlEncodeWithDate('title', 'year', 'month', 'day', 'permalink');
-	
+
 	$('#description').focus();
 }
 
