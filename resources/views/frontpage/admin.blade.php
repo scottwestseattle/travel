@@ -142,7 +142,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				@endforeach
 			</tbody>
 		</table>
-		<a href="/transactions">Show All Transactions</a>
+		<a href="/transactions/show/subcategory/208">Show All Unfinished Transactions</a>
 	</div>
 	<hr />
 	@endif

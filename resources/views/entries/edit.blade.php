@@ -12,7 +12,6 @@ function xshow(event, id)
 }
 
 </script>
-
 @extends('layouts.app')
 
 @section('content')
@@ -62,7 +61,7 @@ function xshow(event, id)
 				</div>
 
 				@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
-					<input type="text" id="description_short" name="description_short" class="form-control" value="{{ $record->description_short }}"  placeholder="Location" />
+					<input type="text" id="description_short" name="description_short" class="form-control" value="{{$location}}"  placeholder="Location" />
 				@else
 				@endif
 								

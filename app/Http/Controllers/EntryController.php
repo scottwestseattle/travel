@@ -503,6 +503,8 @@ class EntryController extends Controller
 		$languages[] = 'es';
 		$languages[] = 'zh';
 
+		$location = isset($entry->description_short) ? $entry->description_short : Cookie::get('blogEntryLocation');
+
 		$vdata = $this->getViewData([
 			'record' => $entry,
 			'entryTypes' => Controller::getEntryTypes(),
@@ -510,6 +512,7 @@ class EntryController extends Controller
 			'filter' => $dates,
 			'translations' => $translations,
 			'languages' => $languages,
+			'location' => $location,
 		]);
 		
 		return view('entries.edit', $vdata);

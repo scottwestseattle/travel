@@ -294,8 +294,11 @@ class BlogController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 		 
+		$location = isset($entry->description_short) ? $entry->description_short : Cookie::get('blogEntryLocation');
+		 
 		$vdata = $this->getViewData([
 			'record' => $entry,
+			'location' => $location,
 		]);
 		
 		return view('entries.edit', $vdata);
