@@ -1008,14 +1008,42 @@ class TransactionController extends Controller
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD, $record->category_id);
 		$transaction->amount = abs($transaction->amount);
+
+		//
+		// set up the new date
+		//
+		$filter = Controller::getFilter($request, /* today = */ true);
+		//$filter['from_date'] = $record->transaction_date;
+		//$filter['to_date'] = $record->transaction_date;
 		
+		// move the date up one month
+		$date = self::getDateControlSelectedDate($record->transaction_date);
+		$date['selected_month'] += 1;
+		if ($date['selected_month'] > 12)
+		{
+			// if it wraps to the next year
+			$date['selected_month'] = 1;
+			$date['selected_year'] += 1;
+		}
+
+		// make sure the day is valid: ex, going from Jan 31st to Feb 28th
+		// Note: "strtotime($date . "+ 1 month" doesn't work because it adds 31 days
+		$monthDays = cal_days_in_month(CAL_GREGORIAN, $date['selected_month'], $date['selected_year']);
+		if ($date['selected_day'] > $monthDays)
+			$date['selected_day'] = $monthDays; // set it to last day of the month
+
+		// copy calculated date into the filter
+		$filter['selected_day'] = $date['selected_day'];
+		$filter['selected_month'] = $date['selected_month'];
+		$filter['selected_year'] = $date['selected_year'];
+
 		$vdata = $this->getViewData([
 			'record' => $record,
 			'accounts' => $accounts,
 			'categories' => $categories,
 			'subcategories' => $subcategories,
 			'dates' => Controller::getDateControlDates(),
-			'filter' => Controller::getFilter($request, /* today = */ true),
+			'filter' => $filter,
 		]);
 		 
 		return view(PREFIX . '.copy', $vdata);
