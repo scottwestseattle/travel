@@ -23,9 +23,10 @@ class EmailController extends Controller
 			'2602' => 35, // Chase, old card 2117
 			'1397' => 31, // Cap Gray new
 			'0370' => 31, // Cap Gray old card '0370', still needed because it's used as an account name
+			'0809' => 31, // Cap Gray CSR
 			'5043' => 10, // Cap Blue, old number
 			'4427' => 10, // Cap Blue, new number
-			'1712' => 14,
+			'1712' => 14, // what is this card?
 		];
 			
 		$accountId = false;
@@ -175,6 +176,7 @@ class EmailController extends Controller
 							echo 'date=' . $date->format('Y-m-d'). '<br/>'; 
 							echo 'amount=' . $amount . '<br/>'; 
 							echo 'desc=' . $desc . '<br/>'; 
+							die('about to add transaction');
 						}
 						
 						$added = false;
@@ -208,23 +210,12 @@ class EmailController extends Controller
 							}
 							else
 							{
-								// delete the transaction email
-								//die('delete');
-								
-								if ($debug)
+								// delete the email	
+								if (!$debug)
 								{
-									// don't delete emails during dev
-								}
-								else
-								{
-									//die('do not do: imap_delete');
 									imap_delete($mbox, $count);
+									//break; // delete one at a time, for bug fix testing
 								}
-							}
-
-							if ($debug) // only do one at a time
-							{
-								//break;
 							}
 						}
 					}
@@ -492,13 +483,16 @@ class EmailController extends Controller
 				echo 'amount=' . $amount . '<br/>';
 				echo 'desc=' . $desc . '<br/>'; 
 				echo 'accountId=' . $account . '<br/>'; 
-				die('*** end of debug ***');
+				//sbw die('*** Capital: end of debug ***');
 			}
 		}
 		else
 		{
 			if ($debug)
-				die('Invalid pos=' . $pos);
+			{
+				//echo 'val=' . $val;
+				//die('Invalid pos=' . $pos);
+			}
 		}
 		
 		return $rc;
@@ -570,12 +564,13 @@ class EmailController extends Controller
 			//
 			// get the account number, last four digits
 			//
-			$account = $this->parseTag($lines[2], 'ewards Visa (...', 4, -1); 
+			// look for the last part of "Rewards Visa (...2602)" to get the account number 2602
+			$account = $this->parseTag($lines[2], ' (...', 4, -1); 
 			$accountId = $this->getAccountId($account);
 			if (!$accountId)
 			{
 				dump($from . ": " . $account);
-				dump($body_raw);
+				dump($lines[2]);
 				dd($accountId);
 			}
 			//dump($account);
@@ -619,7 +614,7 @@ class EmailController extends Controller
 				echo 'AccountId: |' . $accountId . '|<br/>'; 
 				echo 'Desc: |' . $desc . '|<br/>'; 
 				echo 'Amount: |' . $amount . '|<br/>'; 
-				die('*** end of debug ***');
+				die('*** Chase: end of debug ***');
 			}
 		}
 		
@@ -722,6 +717,7 @@ class EmailController extends Controller
 		
 	private function parseTag($text, $tag, $length, $wordIndex) 
 	{
+		$target = null;
 		$pos = stripos($text, $tag);
 		if ($pos !== false)
 		{

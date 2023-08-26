@@ -139,7 +139,7 @@
 		</div>
 	@elseif (isset($image))
 		<div class="text-center" style="margin-top:50px;">
-			<img style="max-width:500px; width:95%" src="{{$image}}" title="@LANG('content.About Page Image')" />
+			<img style="max-width:500px; width:300px" src="{{$image}}" title="@LANG('content.About Page Image')" />
 		</div>	
 	@endif
 		

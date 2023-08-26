@@ -504,8 +504,8 @@ LEFT JOIN photos
     public function sitemap(Request $request)
     {
 		$sites = [
-			['https://', 'grittytravel.com'],
-//			['https://', 'scotthub.com'],
+//			['https://', 'grittytravel.com'],
+			['https://', 'scottmundo.com'],
 //			['http://', 'travel.codespace.us'],
 //			['http://', 'codespace.us'],
 //			['http://', 'spanish50.com'],

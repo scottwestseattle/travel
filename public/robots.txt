@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
-Sitemap: https://grittytravel.com/sitemap-grittytravel.com.txt
-Sitemap: https://scotthub.com/sitemap-scotthub.com.txt
+Disallow: /img/
+
+Sitemap: https://scottmundo.com/sitemap-scottmundo.com.txt

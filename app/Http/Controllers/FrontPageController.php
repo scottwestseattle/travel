@@ -58,6 +58,7 @@ class FrontPageController extends Controller
 		//
 		// set the template according to the site parameters
 		//
+		// example: template="gallery"; fpColors="minty, mintyDark, minty"; fpGalleryPhotos="20"; quotes=""; quoteCookieMinutes="10";
 		$fpGalleryPhotos = Tools::getOptionInt($site->parameters, 'fpGalleryPhotos', 10);
 		$template = Tools::getOption($site->parameters, 'template');
 		$showFullGallery = ($template == "gallery");
