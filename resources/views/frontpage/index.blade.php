@@ -936,33 +936,7 @@ box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.1);
 @if (($section = \App\Tools::getSection(SECTION_COMMENTS, $sections)) != null)
 <section class="{{\App\Tools::getSafeArray($colors, $sectionCount++, 'colorWhite')}}">
 
-<div class="container text-center" style="max-width: 500px;">	
-	
-	<div style="margin-top: 0px; font-size: 1.5em;" class="sectionHeader main-font">	
-		<h1>@LANG('content.Leave a Comment')</h1>
-	</div>
-	
-	<div class="text-left" style="font-size: 1.2em;">
-		<form method="POST" action="/comments/create">
-				
-			<input type="hidden" name="parent_id" value="0" />	
-					
-			<label for="name" class="control-label">@LANG('ui.Name'):</label>
-			<input type="text" name="name" class="form-control" maxlength="50" />
-
-			<label for="comment" class="control-label" style="margin-top:20px;">@LANG('content.Comment'):</label>
-			<textarea name="comment" class="form-control" maxlength="500"></textarea>
-			
-			<div class="submit-button text-center" style="margin: 20px 0;">
-				<button type="submit" name="update" class="btn btn-primary">@LANG('ui.Submit')</button>
-			</div>
-						
-			{{ csrf_field() }}
-
-		</form>
-	</div>
-	
-</div>
+@component('comments.comp-add-form', ['marginTop' => 0])@endcomponent
 
 <div class="container text-center" style="max-width:800px;">	
 	<div class="text-center" style="margin-top: 50px;">

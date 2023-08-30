@@ -295,6 +295,8 @@
 		@endforeach
 	</div>
 	
+	@component('comments.comp-add-form', ['record' => $activity, 'marginTop' => 30])@endcomponent
+	
 	<!-------------------------------------------------->
 	<!-- Show the Affiliates                          -->
 	<!-------------------------------------------------->

@@ -5,7 +5,9 @@
 <div class="page-size container">
 	
 	@component($prefix . '.menu-submenu', ['prefix' => $prefix])@endcomponent
-	
+
+	@component('comments.comp-add-form')@endcomponent
+
 	<h1>@LANG('content.Comments') ({{count($records)}})</h1>
 
 	<div class="text-center" style="margin-top: 50px;">
