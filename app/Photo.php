@@ -267,10 +267,14 @@ class Photo extends Base
 				$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
 				
 				if ($country == 'Washington')
-					dump($record);
-				
-				if (!array_key_exists($country, $locations))
+				{
+					// don't show it as a country
+					//	dump($record);
+				}
+				else if (!array_key_exists($country, $locations))
+				{
 					$locations[$country] = $country;
+				}
 			}
 		}
 		

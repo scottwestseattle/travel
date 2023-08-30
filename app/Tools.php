@@ -796,19 +796,26 @@ class Tools
 	{
 		$rc = false;
 		
-		if (strstr($text, 'http'))
+		if (!filter_var($text, FILTER_VALIDATE_URL))
 		{
-			$rc = true;
+			if (strstr($text, 'http'))
+			{
+				$rc = true;
+			}
+			else if (strstr($text, '.com'))
+			{
+				$rc = true;
+			}
+			else if (strstr($text, '.co'))
+			{
+				$rc = true;
+			}
+			else if (strstr($text, '.ru'))
+			{
+				$rc = true;
+			}
 		}
-		if (strstr($text, '.com'))
-		{
-			$rc = true;
-		}
-		if (strstr($text, '.co'))
-		{
-			$rc = true;
-		}
-							
+									
 		return $rc;
 	}		
 

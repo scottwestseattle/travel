@@ -1145,7 +1145,8 @@ class Controller extends BaseController
 			
 			if ($alphanum)
 			{
-				$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?!' \r\n]+/", "", $text);
+				//$text = preg_replace("/[^0-9!@.,()-+=?!;:' \"\r\n]+/", "#", $text);
+				$text = preg_replace ('/[^\p{L}\p{N}@.,()-+=;:¿¡»« \r\n\"\'\!\?]/u', '#', $text);
 			}
 			
 			if (strlen($text) === 0)
@@ -1153,7 +1154,8 @@ class Controller extends BaseController
 		}
 		
 		return $text;
-	}
+	}	
+	
 	
 	static protected function trimDate($text)
 	{
@@ -2003,7 +2005,6 @@ class Controller extends BaseController
 			}
 			catch (\Exception $e) 
 			{	
-dump($e);
 				// log exception
 				Event::logException(LOG_MODEL_PHOTOS, LOG_ACTION_MKDIR, 'Error creating TN folder: ' . $tnFolder, null, $e->getMessage());
 			}			

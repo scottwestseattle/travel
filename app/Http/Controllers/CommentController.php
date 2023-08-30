@@ -113,6 +113,7 @@ class CommentController extends Controller
 		$request->name = trim($request->name);
 		$request->comment = trim($request->comment);
 				
+		// trim and check for illegal chars
 		$name = $this->trimNull($request->name, /* alphanum = */ true);
 		$comment = $this->trimNull($request->comment, /* alphanum = */ true);
 		
@@ -124,17 +125,9 @@ class CommentController extends Controller
 			{
 				throw new \Exception('Name: has link');
 			}
-			else if (strlen($request->name) != strlen($name) )
-			{
-				throw new \Exception('Name: invalid characters trimmed');
-			}
 			else if (Tools::hasLink($comment))
 			{
 				throw new \Exception('Comment: has link');
-			}
-			else if (strlen($request->comment) != strlen($comment))
-			{
-				throw new \Exception('Comment: invalid characters trimmed');
 			}
 		}
 		catch (\Exception $e) 

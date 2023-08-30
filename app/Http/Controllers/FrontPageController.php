@@ -549,11 +549,11 @@ class FrontPageController extends Controller
     public function about()
     {
 		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ABOUT);
-		
+				
 		$site_id = $this->getSiteId();
 
 		$entry = Entry::get('page-about');
-
+		
 		if (isset($entry) && isset($entry->description))
 		{
 			$entry->description = Controller::fixSiteInfo($entry->description, Controller::getSite());
@@ -592,7 +592,7 @@ class FrontPageController extends Controller
 			$stats['articles'] = Entry::getEntryCount(ENTRY_TYPE_ARTICLE, /* allSites = */ false);
 			$stats['photos_article'] = Photo::getCount(ENTRY_TYPE_ARTICLE);
 		}
-		
+	
 		if (Tools::getSection(SECTION_BLOGS, $sections) != null)
 		{
 			$stats['blogs'] = Entry::getEntryCount(ENTRY_TYPE_BLOG, /* allSites = */ false);
@@ -651,7 +651,7 @@ class FrontPageController extends Controller
 		}
 
 		$visitorCountryInfo = Visitor::getCountryInfo();
-		
+
         return view('frontpage.about', $this->getViewData([
 			'record' => $entry,
 			'stats' => $stats,
@@ -846,10 +846,8 @@ priceTaxes=$59.50
 		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
 
 		$locations = Photo::getLocationsFromPhotos($standardCountryNames);
-		//dump($locations);
 		
 		$locations2 = Entry::getLocationsFromEntries($standardCountryNames);
-		//dump($locations2);
 		
 		foreach($locations2 as $record)
 		{			
