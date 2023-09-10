@@ -49,6 +49,16 @@ class ToolController extends Controller
 		['Myanmar', '/entries/recent-locations', ''],
 		];
 		
+		
+    public function __construct()
+    {
+        //$this->middleware('admin')->except([
+		//	'sitemap', 
+		//]);
+		
+		parent::__construct();
+    }
+    
 	// The CSS sandbox	
 	public function style()
 	{
@@ -568,16 +578,15 @@ LEFT JOIN photos
 	
     public function hash()
     {		
-		return view('tools.hash', $this->getViewData([
-			'hash' => '',
-			'hashed' => '',
-		]));	
+		return view('tools.hash', $this->getViewData([]));	
 	}
 	
 	public function hasher(Request $request)
 	{
 		$hash = trim($request->get('hash'));
-		$hashed = ToolController::getHash($hash);
+		$year = trim($request->get('year'));
+		
+		$hashed = ToolController::getHash($hash . $year);
 
 		if (Tools::startsWith($hash, 'Fir') 
 			|| Tools::startsWith($hash, 'Go') 
@@ -591,6 +600,7 @@ LEFT JOIN photos
 		return view('tools.hash', $this->getViewData([
 			'hash' => $hash,
 			'hashed' => $hashed,
+			'year' => $year,
 		]));	
 	}
 	

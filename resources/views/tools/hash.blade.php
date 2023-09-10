@@ -1,4 +1,15 @@
-
+@php
+	if (isset($hashed))
+	{
+		$year = isset($year) ? $year : '';
+	}
+	else
+	{
+		$hash = '';
+		$hashed = '';
+		$year = date("Y");
+	}
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -10,6 +21,7 @@
 	<div class="form-group">
 		<label name="" class="">Enter Text:</label>	
 		<input type="text" name="hash" class="form-control" style="width: 90%; max-width:200px;" value="{{ $hash }}" autofocus />
+		<input type="number" name="year" size="4" class="form-control" style="width: 90%; max-width:200px;" value="{{ $year }}" autofocus />
 	</div>
 	
 	<div id="flash" class="form-group">
