@@ -1,8 +1,9 @@
 @php
 	$id = isset($record) ? $record->id : 0;
 	$marginTop = isset($marginTop) ? $marginTop : 10;
+	$backgroundColor = isset($backgroundColor) ? $backgroundColor : 'sectionGray';
 @endphp
-<div class="text-center" style="margin-top: {{$marginTop}}px; background-color: #f1f1f1; border-radius:15px;">
+<div class="text-center {{$backgroundColor}}" style="margin-top: {{$marginTop}}px; border-radius:15px;">
 	<div style="display: inline-block; width: 95%; max-width:500px;">	
 		<div style="" class="sectionHeader main-font">	
 			<h3>@LANG('content.Leave a Comment')</h3>
