@@ -70,7 +70,9 @@
 							<tr><td>{{ $photo->location }}</td></tr>
 							<tr><td>{{ $photo->filename }}</td></tr>
 							@if (isset($photo->display_date))
-								<tr><td>{{ $photo->display_date }}</td></tr>
+								<tr><td>Display: {{ $photo->display_date }}</td></tr>
+							@else
+								<tr><td>Created: {{ $photo->created_at }}</td></tr>							
 							@endif
 							<tr><td>&nbsp;</td></tr>
 							<tr><td style="padding-top:15px;">

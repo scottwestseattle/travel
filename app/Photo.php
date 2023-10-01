@@ -223,7 +223,7 @@ class Photo extends Base
 
 	static protected function getLocationsFromPhotos($standardCountryNames)
 	{		
-		$q = '
+		$q0 = '
 			SELECT location FROM `photos` 
 			WHERE 1=1
 			AND location IS NOT NULL
@@ -236,36 +236,49 @@ class Photo extends Base
 			;
 		';
 
-		$qTEST = '
-			SELECT * FROM `photos` 
+		$q = '
+			SELECT location, YEAR(display_date) as year_display, YEAR(created_at) as year FROM `photos` 
 			WHERE 1=1
 			AND location IS NOT NULL
 			AND location != ""
 			AND type_flag in (0,1)
 			AND deleted_flag = 0
+			GROUP BY `parent_id`, YEAR(display_date), YEAR(created_at), location
 			ORDER BY parent_id DESC
 			;
 		';
 		
+		$qTEST = '
+			SELECT location, YEAR(created_at) as year FROM `photos` 
+			WHERE 1=1
+			AND location IS NOT NULL
+			AND location != ""
+			AND type_flag in (0,1) 
+			AND deleted_flag = 0
+			GROUP BY `parent_id`, YEAR(created_at), location
+			ORDER BY YEAR(created_at) DESC
+			;
+		';
+		
 		$records = null;
-		try {		
+		try 
+		{		
 			$records = DB::select($q);
 		}
 		catch(\Exception $e)
 		{
 			// todo: log me
 			//dump($e);
+			dump("error getting country list from photos");
 		}
 
 		$locations = [];
-		
 		if (isset($records))
 		{
 			foreach($records as $record)
 			{
 				//dump($record->location);
 				$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
-				
 				if ($country == 'Washington')
 				{
 					// don't show it as a country
@@ -273,14 +286,26 @@ class Photo extends Base
 				}
 				else if (!array_key_exists($country, $locations))
 				{
-					$locations[$country] = $country;
+					$year = isset($record->year_display) ? $record->year_display : $record->year;
+					$year = ($year >= 2010 ? $year : 1999); // put everything older than 2010 together in 1999
+					$locations[$country] = [$country, $year];
 				}
 			}
+
+			$locationsByYear = [];
+			foreach($locations as $record)
+			{
+				//dump($record);
+				$locationsByYear[$record[1]][] = $record[0];
+			}
+	
+			krsort($locationsByYear);
 		}
 		
-		//dd($locations);
+		//dump($locations);
+		//dump($locationsByYear);
 		
-		return $locations;
+		return ['countries' => $locations, 'countriesByYear' => $locationsByYear];
 	}
 		
 }

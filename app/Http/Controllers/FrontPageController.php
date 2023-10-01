@@ -846,32 +846,43 @@ priceTaxes=$59.50
 		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
 
 		$locations = Photo::getLocationsFromPhotos($standardCountryNames);
-		
-		$locations2 = Entry::getLocationsFromEntries($standardCountryNames);
-		
+		$countriesByYear = $locations['countriesByYear'];
+		$locations = $locations['countries'];
+	
+		$locations2 = Entry::getLocationsFromEntries($standardCountryNames);		
 		foreach($locations2 as $record)
 		{			
 			if (!array_key_exists($record->name, $locations))
-				$locations[$record->name] = $record->name;
+			{
+				// NO RECORDS ADDED FRM HERE SO FAR
+				dump($record);
+				$locations[$record->name] = [$record->name, 'entry'];
+			}
 		}
 		
 		// Get additional country names from settings record
 		$locations3 = Entry::getLocationsFromSettings($standardCountryNames);
-
 		foreach($locations3 as $record)
 		{			
 			if (!array_key_exists($record, $locations))
-				$locations[$record] = $record;
+			{
+				//dump($record);
+				$country = [$record, 1999];
+				$locations[$record] = $country;
+				$countriesByYear[1999][] = $record; // put all under 1999 with the other old records
+			}
 		}
 		
+		//dd($locations);
 		$countries = [];
 		foreach($locations as $key => $value)
 		{
-			$countries[] = $value;
+			$countries[] = $value[0];
 		}
 		sort($countries);
-
-		return $countries;
+		//dump($countries);
+		
+		return ['countries' => $countries, 'countriesByYear' => $countriesByYear];
 	}
 	
 	protected function getQuotes()

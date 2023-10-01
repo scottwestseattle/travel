@@ -1,5 +1,8 @@
+@php
+	$countriesByYear = $countries['countriesByYear'];
+	$countries = $countries['countries'];
+@endphp
 @extends('layouts.theme1')
-
 @section('content')
 
 <!--------------------------------------------------------------------------------------->
@@ -16,6 +19,7 @@
 		</a>
 	</div>
 
+	@if (Auth::check())
 	<h3>@LANG('content.Most Recent Visitors')</h3>
 	<div>
 			
@@ -62,6 +66,7 @@
 		</p>
 		<a href="/visitors/countries">@LANG('content.show all')</a>
 	</div>
+	@endif
 	
 	<h3>@LANG('content.Content Stats')</h3>
 	
@@ -143,7 +148,10 @@
 		</div>	
 	@endif
 		
-	@if (($section = \App\Tools::getSection(SECTION_COUNTRIES, $sections)) != null)
+<!--------------------------------------------------------------------------------------->
+<!-- Countries Visited -->
+<!--------------------------------------------------------------------------------------->
+@if (($section = \App\Tools::getSection(SECTION_COUNTRIES, $sections)) != null)
 	<h3>@LANG('content.Countries') ({{count($countries)}})</h3>
 	<div>
 		<p>
@@ -153,7 +161,26 @@
 		@endforeach
 		</p>
 	</div>
-	@endif
+	
+<!--------------------------------------------------------------------------------------->
+<!-- Countries Visited By Year -->
+<!--------------------------------------------------------------------------------------->
+	@foreach($countriesByYear as $key => $record)
+	<h3>{{$key >= 2010 ? $key : __('content.Earlier')}}<span style="margin-left: 5px; font-size:.8em;">({{count($record)}})</span></h3>
+	<div>
+		<p>
+		@php
+			if ($key < 2010)
+				asort($record);
+		@endphp
+		@foreach($record as $country)
+		<?php $last = end($countries); ?>
+			<button style="margin-bottom:10px;" type="button" class="btn btn-info">@LANG('geo.' . $country)</button>
+		@endforeach
+		</p>
+	</div>
+	@endforeach
+@endif
 		
 </div>
 

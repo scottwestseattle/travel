@@ -37,7 +37,8 @@
 			@if (isset($photos))
 				@foreach($photos as $record)
 					<tr>
-						<td><a href="/photos/edit/{{$record->id}}" target="_blank">{{$record->alt_text}}</a></td>
+						<td><a href="/photos/edit/{{$record->id}}" target="_blank">{{$record->alt_text}}</a><div style="font-size:11px;">{{$record->display_date}}</div>
+</td>
 						@if ($record->parent_id > 0)
 							<td>Photo</td>
 						@else
