@@ -40,6 +40,7 @@
 		@if ($user_type >= 100)
 			<a class="navbar-brand" href="{{ url('/admin') }}"><span class="glyphCustom glyphicon glyphicon-user"></span></a>
 			<a class="navbar-brand" href="{{ url('/search') }}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+			<a class="navbar-brand" href="{{ url('/transactions') }}"><span class="glyphCustom glyphicon glyphicon-piggy-bank"></span></a>
 		@endif
 
 

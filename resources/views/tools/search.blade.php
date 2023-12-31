@@ -36,8 +36,11 @@
 
 			@if (isset($photos))
 				@foreach($photos as $record)
+					@php
+						$date = isset($record->display_date) ? $record->display_date : $record->created_at;
+					@endphp
 					<tr>
-						<td><a href="/photos/edit/{{$record->id}}" target="_blank">{{$record->alt_text}}</a><div style="font-size:11px;">{{$record->display_date}}</div>
+						<td><a href="/photos/edit/{{$record->id}}" target="_blank">{{$record->alt_text}}</a><div style="font-size:11px;">{{$date}}</div>
 </td>
 						@if ($record->parent_id > 0)
 							<td>Photo</td>

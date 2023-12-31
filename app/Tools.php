@@ -225,12 +225,13 @@ class Tools
 		return $v;
 	}
 	
-    static public function getHash($text)
+	//NOT USED: copied from ToolController
+    static public function getHash($text, $length = 8)
 	{
 		$s = sha1(trim($text));
 		$s = str_ireplace('-', '', $s);
 		$s = strtolower($s);
-		$s = substr($s, 0, 8);
+		$s = substr($s, 0, $length);
 		$final = '';
 
 		for ($i = 0; $i < 6; $i++)
@@ -266,7 +267,7 @@ class Tools
 		}
 
 		// add last 2 chars
-		$final .= substr($s, 6, 2);
+		$final .= substr($s, 6, $length - 6);
 
 		//echo $final;
 

@@ -198,7 +198,8 @@ class FrontPageController extends Controller
 			->where('parent_id', 0)
 			->where('deleted_flag', 0)
 			->whereIn('type_flag', [PHOTO_TYPE_SLIDER, intval($type_flag)])
-			->orderByRaw('id ASC')
+			->orderByRaw('id')
+			//->orderByRaw('display_date, created_at')
 			->get();
 			
 		$padding = $sliderCount / 2;
@@ -844,7 +845,6 @@ priceTaxes=$59.50
 	{
 		// get the standard country names to display and sort by from settings record
 		$standardCountryNames = Entry::getSetting('settings-standard-country-names');
-
 		$locations = Photo::getLocationsFromPhotos($standardCountryNames);
 		$countriesByYear = $locations['countriesByYear'];
 		$locations = $locations['countries'];
@@ -855,7 +855,7 @@ priceTaxes=$59.50
 			if (!array_key_exists($record->name, $locations))
 			{
 				// NO RECORDS ADDED FRM HERE SO FAR
-				dump($record);
+				//dump($record);
 				$locations[$record->name] = [$record->name, 'entry'];
 			}
 		}

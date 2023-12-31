@@ -20,12 +20,18 @@ class EmailController extends Controller
 	private function getAccountId($account)
 	{
 		$accounts = [
+			// Chase
 			'2602' => 35, // Chase, old card 2117
+			'4678' => 52, // Chase Biz
+			// Cap Gray
 			'1397' => 31, // Cap Gray new
 			'0370' => 31, // Cap Gray old card '0370', still needed because it's used as an account name
 			'0809' => 31, // Cap Gray CSR
+			// Cap Blue
+			'1989' => 10, // Cap Blue CSR
 			'5043' => 10, // Cap Blue, old number
 			'4427' => 10, // Cap Blue, new number
+			// ????
 			'1712' => 14, // what is this card?
 		];
 			

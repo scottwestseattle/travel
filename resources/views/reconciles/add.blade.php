@@ -28,6 +28,7 @@
 		<label for="balance" class="control-label">Reconciled Balance: </label>
 		<div style="margin-top:20px;"><span id="displayBalance" style="font-size: 20pt; margin-right:20px;">${{number_format($balance, 2)}}</span>
 			<a href='#' onclick="event.preventDefault(); updateBalance({{$account->id}});"><span style="font-size:16pt;" class="glyphCustom glyphicon glyphicon-refresh"></span></a>
+			<div id="status" style="font-size:.8em;"></div>
 		</div>
 
 		<div style="font-size: 12px;">
@@ -131,10 +132,16 @@ function updateBalance(accountId)
 					
 		if (this.readyState == 4 && this.status == 200) 
 		{	
-			// alert(this.responseText
-
 			balance = Number(this.responseText);
-			$('#displayBalance').html("$" + balance.toFixed(2)); // the balance displayed (refresh doesn't show the commas)
+			
+			const options = {
+			  style: 'decimal',  // Other options: 'currency', 'percent', etc.
+			  minimumFractionDigits: 2,
+			  maximumFractionDigits: 2,
+			};			
+			balanceDisplay = "" + balance.toLocaleString('en-US', options);
+
+			$('#displayBalance').html("<i>$" + balanceDisplay + "</i>"); // the balance displayed (refresh doesn't show the commas)
 			$('#balance').val(balance); // the hidden balance that is saved
 		}
 	};

@@ -184,6 +184,9 @@ else
 							@endif
 							
 						@endif
+						@if (isset($record->description_short))
+							<div style="font-size:.8em; color:gray">{{$record->description_short}}</div>
+						@endif
 					</td>
 				</tr>
 				@endif

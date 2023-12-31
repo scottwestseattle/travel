@@ -244,7 +244,7 @@ class Photo extends Base
 			AND type_flag in (0,1)
 			AND deleted_flag = 0
 			GROUP BY `parent_id`, YEAR(display_date), YEAR(created_at), location
-			ORDER BY parent_id DESC
+			ORDER BY parent_id
 			;
 		';
 		
@@ -273,30 +273,50 @@ class Photo extends Base
 		}
 
 		$locations = [];
+		$locationsByYear = [];
 		if (isset($records))
 		{
 			foreach($records as $record)
 			{
 				//dump($record->location);
 				$country = Tools::getCountryFromLocation($standardCountryNames, $record->location);
-				if ($country == 'Washington')
+				$year = isset($record->year_display) ? intval($record->year_display) : intval($record->year);
+				$year = ($year >= 2010 ? $year : 1999); // put everything older than 2010 together in 1999
+				if ($country == 'Washington' || $country == 'United States')
 				{
+				
 					// don't show it as a country
-					//	dump($record);
+					//dump($record);
 				}
-				else if (!array_key_exists($country, $locations))
+				else 
 				{
-					$year = isset($record->year_display) ? $record->year_display : $record->year;
-					$year = ($year >= 2010 ? $year : 1999); // put everything older than 2010 together in 1999
-					$locations[$country] = [$country, $year];
-				}
+					// handle locations
+					if (!array_key_exists($country, $locations))
+					{
+						$locations[$country] = [$country, $year];
+					}
+						
+					// handle locationsByYear
+					if (isset($locationsByYear[$year]))
+					{
+					 	if (!in_array($country, $locationsByYear[$year]))
+							$locationsByYear[$year][] = $country;
+					}
+					else
+					{
+						$locationsByYear[$year][] = $country;
+					}
+				}			
 			}
 
-			$locationsByYear = [];
-			foreach($locations as $record)
+			if (false)
 			{
-				//dump($record);
-				$locationsByYear[$record[1]][] = $record[0];
+				$locationsByYear = [];
+				foreach($locations as $record)
+				{
+					//dump($record);
+					$locationsByYear[$record[1]][] = $record[0];
+				}
 			}
 	
 			krsort($locationsByYear);

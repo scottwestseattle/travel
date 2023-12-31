@@ -586,20 +586,28 @@ LEFT JOIN photos
 		$hash = trim($request->get('hash'));
 		$year = trim($request->get('year'));
 		
-		$hashed = ToolController::getHash($hash . $year);
+		$hashed = ToolController::getHash($hash . $year);		// pre-2024, 8 digits
+		$hashed2024 = ToolController::getHash($hash . $year, 12); // 2024, made hashes 12 digits
 
 		if (Tools::startsWith($hash, 'Fir') 
 			|| Tools::startsWith($hash, 'Go') 
 			|| Tools::startsWith($hash, 'Ya')
 			|| Tools::startsWith($hash, 'All')
 		)
+		{
 			$hashed .= '!';
+			$hashed2024 .= '!';
+		}
 		else
+		{
 			$hashed .= '#';
+			$hashed2024 .= '#';
+		}
 
 		return view('tools.hash', $this->getViewData([
 			'hash' => $hash,
 			'hashed' => $hashed,
+			'hashed2024' => $hashed2024,
 			'year' => $year,
 		]));	
 	}
@@ -716,12 +724,12 @@ LEFT JOIN photos
 		return redirect()->back();
 	}
 	
-    static private function getHash($text) 
+    static private function getHash($text, $length = 8) // pre-2024, length was 8
 	{
 		$s = sha1(trim($text));
 		$s = str_ireplace('-', '', $s);
 		$s = strtolower($s);
-		$s = substr($s, 0, 8);
+		$s = substr($s, 0, $length);
 		$final = '';
 
 		for ($i = 0; $i < 6; $i++)
@@ -756,8 +764,8 @@ LEFT JOIN photos
 			}
 		}
 
-		// add last 2 chars
-		$final .= substr($s, 6, 2);
+		// add last 2 or 4 chars
+		$final .= substr($s, 6, $length - 6);
 		
 		//echo $final;
 		

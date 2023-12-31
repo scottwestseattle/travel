@@ -1,7 +1,8 @@
 @extends('layouts.app')
-
 @section('content')
-
+@php
+	dump('here');
+@endphp
 <div class="container page-size">
 
 	@if (isset($entry))
@@ -139,7 +140,12 @@
 						<table>
 						
 							@if (Auth::user()->user_type >= 100)
-								<tr><td>{{ $photo->filename }} <a href="/photos/entries/{{$photo->parent_id}}">(Gallery)</a></td></tr>
+								<tr><td>here {{ $photo->filename }} <a href="/photos/entries/{{$photo->parent_id}}">(Gallery)</a></td></tr>
+							@if (isset($photo->display_date))
+								<tr><td>Display: {{ $photo->display_date }}</td></tr>
+							@else
+								<tr><td>Created: {{ $photo->created_at }}</td></tr>							
+							@endif
 							@endif									
 						
 							<tr><td>{{ $photo->alt_text }}</td></tr>

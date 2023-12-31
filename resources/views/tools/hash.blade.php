@@ -6,7 +6,7 @@
 	else
 	{
 		$hash = '';
-		$hashed = '';
+		$hashed = $hashed2024 = '';
 		$year = date("Y");
 	}
 @endphp
@@ -31,6 +31,13 @@
 		</a>		
 	</div>	
 		
+	<div id="flash" class="form-group">
+		<span id='entry2024'>{{ $hashed2024 }}</span>
+		<a href='#' onclick="javascript:clipboardCopy(event, 'entry2024', 'entry2024')";>
+			<span id="" class="glyphCustom glyphicon glyphicon-copy" style="font-size:1.3em; margin-left:5px; display:{{isset($hashed2024) && strlen($hashed2024) > 0 ? 'default' : 'none'}}"></span>
+		</a>		
+	</div>	
+	
 	<div class="form-group">
 		<button type="submit" name="submit" class="btn btn-primary">Submit</button>
 	</div>

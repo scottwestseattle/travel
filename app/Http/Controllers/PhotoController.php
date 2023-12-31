@@ -370,13 +370,6 @@ class PhotoController extends Controller
 				->where('deleted_flag', 0)
 				->where('parent_id', $parent_id)
 				->get();
-			
-			// get the location from the first photo
-			//$loc = null;	
-			//if (count($photos) > 0)
-			//{
-			//	$loc = $photos[0]->location;
-			//}
 		}
 		
 		if (isset($loc) && $loc != '')

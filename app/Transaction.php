@@ -391,17 +391,13 @@ class Transaction extends Base
 			// not showing ALL DATES
 			$q .= ' AND transaction_date <= STR_TO_DATE("' . $dateTo . '", "%Y-%m-%d") ';
 		}
-		else
-		{
-			// only add starting balance if we're looking at one account and showing all dates
-			$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
-		}
 
-		//$q .= ' ORDER BY transaction_date DESC, id DESC ';
+		// only add starting balance if we're looking at one account
+		$startingBalance = $accountId ? Account::getStartingBalance($accountId) : 0.0;
 
 		$records = DB::select($q, [Auth::id(), intval($accountId)]);
 		//dump($records);
-			
+
 		$count = count($records);
 		if ($count > 0)
 		{
