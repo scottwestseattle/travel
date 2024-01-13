@@ -1,18 +1,22 @@
 @extends('layouts.theme1')
 @section('content')
 @php
+	// get the totals
+	$dca = number_format($totals['dca'], 2);
+	$cost = number_format(abs(round($totals['total'])));
+	$profit = number_format(round($totals['profit'], 2), 2);
 	$single = (isset($filter['singleSymbol']) && $filter['singleSymbol']);
+
+	$profitPercent = 0;
+	if ($totals['profit'] != 0.0 && $totals['total'] != 0.0)
+		$profitPercent = number_format( ($totals['profit'] / abs($totals['total'])) * 100.0, 2);
 
 	// reconciled, untested
 	$profitReconciled = isset($totals['reconciled']) ? $totals['reconciled'] : 0;
 	$profitPercentReconciled = 0;
 	if ($profitReconciled != 0.0 && $totals['total'] != 0.0)
 		$profitPercentReconciled = number_format(($profitReconciled / abs($totals['total']) * 100.0), 2);
-		
-	$profitColor = ($totals['profit'] >= 0.0) ? 'blue' : 'red';
-	$profit = $totals['profit'];
-	$profitPercent = number_format($totals['profitPercent'], 2);
-	$cost = $totals['total'];
+	$profitColor = ($profit >= 0.0) ? 'blue' : 'red';		
 @endphp
 
 <div class="container">
@@ -58,11 +62,11 @@
 			<div class="drop-box text-center number-box number-box-sm pineForest">
 				<div>DCA</div>
 				<p style="">{{round($totals['dca'], 3)}}</p>
-				<p style="font-size:.9em;">({{count($records)}} lots)</p>
+				<p style="font-size:.9em;">{{count($records)}} lots</p>
 			</div>	
 		@endif
-					
-		@if (isset($filter['singleSymbol']) && isset($totals[$filter['symbol']]))
+				
+		@if ($single && isset($totals[$filter['symbol']]))
 			@php
 				$quote = $totals[$filter['symbol']];
 			@endphp
@@ -70,7 +74,7 @@
 			<div class="drop-box text-center number-box number-box-sm {{$profitColor}}">
 				<div>Quote</div>
 				<p style="">{{$quote['price']}}</p>
-				<p style="font-size:.8em;">{{$quote['change']['amount'] . ' ' . $quote['change']['percent']}}</p>
+				<p style="font-size:.8em;">{{$quote['change']}}</p>
 			</div>
 		@endif
 		
@@ -81,17 +85,13 @@
 		</div>
 	
 		<table class="table table-sm">
-			<thead>
-				<tr>
-					<th>Symbol</th><th>Shares</th><th>Curr/DCA</th><th>Curr/Cost</th><th>P/L Today</th><th>P/L Total</th>
-				</tr>
-			</theader>
 			<tbody>
-			@if (isset($totals) && count($totals) > 0)
-				@foreach($totals['holdings'] as $quote)
+			@if (isset($records))
+				@foreach($records as $record)
 					@php
-						$cost = $quote['total'];
-						$current_value = (floatval($quote['price']) * $quote['shares']);
+						$quote = $totals['holdings'][$record->symbol];
+						$cost = abs($record->shares_unsold * $record->buy_price);
+						$current_value = (floatval($quote['price']) * abs($record->shares_unsold));
 						if ($cost > 0.0)
 						{
 							$pl = round($current_value - $cost, 2);
@@ -103,39 +103,33 @@
 							$plPercent = 0;
 						}
 
-						$symbol = $quote['symbol'];
 						$color = ($pl < 0) ? 'red' : 'black';
-						$lots = $quote['lots'];
-						$lotsSuffix = $lots === 1 ? 'lot' : 'lots';
 					@endphp
 					<tr>
+						<td class="glyphCol"><a href='/{{$prefix}}/sell/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
+						
+						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
+						
 						<td>						
-							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank">{{$symbol}}</a>
+							<a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a> <span style="font-size:11px; color:{{$quote['up'] ? 'black' : 'red'}};">({{$quote['price']}}, {{$quote['change']['amount'] . ' ' . $quote['change']['percent']}})</span>
+							<br/>
+							<span style="font-size:10px;">{{$record->account}}, {{$record->transaction_date}}</span>
 						</td>
 						
-						<td>
-							{{$quote['shares']}}
-							<div>{{$lots}} {{$lotsSuffix}}</div>
-						</td>
-						<td>
-							<div>{{$quote['price']}}</div>
-							<div>{{$quote['dca']}}</div>
+						<td>{{abs($record->shares_unsold)}} @ {{$record->buy_price}}
+						@if ( (App\Transaction::isSellStatic($record) && $record->shares_unsold >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares_unsold <= 0) )
+							<span style="color:red;">({{$record->shares_unsold}})</span>
+						@endif
+							<div>${{number_format($cost, 2)}}</div>
 						</td>
 					
-						<td>
-							<div>{{number_format($current_value, 2)}}</div>
-							<div>{{number_format($cost, 2)}}</div>						
+						<td>{{number_format($current_value, 2)}}
+						@if ( (App\Transaction::isSellStatic($record) && $record->amount <= 0) || (App\Transaction::isBuyStatic($record) && $record->amount >= 0) )
+							<span style="color:red;">(wrong)</span>
+						@endif
+							<div style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}, {{$plPercent}}%</div>
 						</td>
-						<td>
-							<span style="color:{{$color}}">
-								<div>{{$quote['change']['amount'] > 0.0 ? '' : ''}}{{$quote['change']['amount']}}</div>
-								<div>{{$quote['change']['percent']}}%</div>
-							</span>
-						</td>
-						<td>
-							<div style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}</div>
-							<div style="color:{{$color}}">{{$plPercent}}%</div>
-						</td>
+				
 					</tr>
 				@endforeach
 			@endif

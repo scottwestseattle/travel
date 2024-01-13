@@ -744,15 +744,17 @@ class TransactionController extends Controller
 			}			
 		}
 				
+		$filter['view'] = 'positions';
 		if (isset($filter['symbol']))
 		{
+			// if one symbol selected
 			if (strlen($filter['symbol']) > 1) // all symbols = "0"
 			{
 				$filter['singleSymbol'] = true;
+				$filter['view'] = 'positions-lots';
 			}
 		}
 		
-		$filter['view'] = 'positions';
 		$filter['quotes'] = true;
 		$filter['unsold_flag'] = true;
 		
@@ -780,18 +782,23 @@ class TransactionController extends Controller
 
 		$records = null;
 		$total = 0.0;
+
+		$records = Transaction::getTrades($filter);
+		$totals = Transaction::getTradesTotal($records, $filter);
+		
 		try
 		{
-			$records = Transaction::getTrades($filter);
-			$totals = Transaction::getTradesTotal($records, $filter);
-			//dd($totals);
+			//dump($records);
+			//dump($totals);
 		}
 		catch (\Exception $e) 
 		{
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Trade List', null, $e->getMessage());
-
+			$msg = $e->getMessage();
+			//dd($msg);
+			
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Trade List', null, $msg);
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());
+			$request->session()->flash('message.content', $msg);
 		}
 
 		$vdata = $this->getViewData([

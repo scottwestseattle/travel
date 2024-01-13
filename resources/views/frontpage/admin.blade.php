@@ -65,7 +65,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				<div><span style="font-size:1.2em; font-weight:bold;">{{($quote['symbol'])}}</span></div>
 				<div style="font-size:10px; margin-top:0px;">{{$quote['nickname']}}</div>
 				<p style="font-size:{{$quote['font-size']}}; margin-top:5px;">{{number_format($quote['price'], 2)}}</p>
-				<p style="font-size:11px; font-weight:normal; color:{{'default'}};">{{$quote['change']}}</p>
+				<p style="font-size:11px; font-weight:normal; color:{{'default'}};">{{$quote['change']['amount'] . ' ' . $quote['change']['percent']}}</p>
 			</div>			
 			@endforeach	
 			<div style="clear:both;"></div>

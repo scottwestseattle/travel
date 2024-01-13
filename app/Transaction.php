@@ -192,13 +192,15 @@ class Transaction extends Base
     {
 		$total = 0.0;
 		$reconciled = 0.0;
-		$shares = 0;
-		$profit = 0.0;
+		$sharesTrx = $shares = 0;
+		$profitTrx = $profit = 0.0;
 		$rc = [];
+		$holdings = [];
 
 		foreach($records as $record)
 		{
-			$shares += intval($record->shares_unsold);
+			$sharesTrx = intval($record->shares_unsold);
+			$shares += $sharesTrx;
 			$amount = round(floatval($record->buy_price) * floatval($record->shares_unsold), 2);
 
 			if ($record->reconciled_flag == 1)
@@ -209,28 +211,57 @@ class Transaction extends Base
 			// only get quotes when requested
 			if (isset($filter['quotes']) && $filter['quotes'])
 			{
+				$symbol = $record->symbol;
+				
 				// only get quotes once per symbol
-				if (!array_key_exists($record->symbol, $rc))
+				if (!array_key_exists($record->symbol, $holdings))
 				{
 					$quote = self::getQuote($record->symbol);
-					$rc[$record->symbol] = $quote;
+					$holdings[$symbol] = $quote;
+					$holdings[$symbol]['profit'] = 0.0;
+					$holdings[$symbol]['total'] = 0.0;					
+					$holdings[$symbol]['shares'] = 0;
+					$holdings[$symbol]['dca'] = 0.0;	
+					$holdings[$symbol]['lots'] = 0;
 				}
 				
-				$quote = floatval($rc[$record->symbol]['price']);
-				$profit += ($quote * abs($record->shares_unsold)) - abs($amount);
-				//dump($quote . ': ' . $profit);
+				$quote = floatval($holdings[$symbol]['price']);
+				$profitTrx = ($quote * abs($record->shares_unsold)) - abs($amount);
+				$profit += $profitTrx;
+				
+				// add totals for current symbol
+				$holdings[$symbol]['profit'] += floatval($profitTrx);
+				$holdings[$symbol]['shares'] += $sharesTrx;
+				$holdings[$symbol]['total'] += $amount;
+				$holdings[$symbol]['lots']++;
 			}
 		}
+		
+		// calc the dca
+		foreach($holdings as $rec)
+		{
+			$symbol = $rec['symbol'];
+			$dca = abs($rec['shares'] > 0.0 ? ($rec['total'] / $rec['shares']) : 0.0);
+			$holdings[$symbol]['dca'] = number_format($dca, 4);
+		}
+
+		//dd($holdings);
+		$rc['holdings'] = $holdings;
 		
 		// this has to be done or else it shows -0 because of a tiny fraction
 		$total = round($total, 2);
 		$reconciled = round($reconciled, 2);
+		$profit = round($profit, 2);
 		
-		$rc['total'] = $total;
+		$rc['dca'] = abs($shares > 0.0 ? ($total / $shares) : 0.0);
+		$rc['total'] = abs($total);
 		$rc['shares'] = $shares;
 		$rc['profit'] = $profit;
-		$rc['dca'] = abs($shares > 0.0 ? ($total / $shares) : 0.0);
-		
+		$rc['profitPercent'] = 
+			($rc['profit'] != 0.0 && $rc['total'] != 0.0)
+				? ($profit / abs($total) * 100.0)
+				: 0.0;
+	
 		if ($total != $reconciled)
 		{
 			$rc['reconciled'] = $reconciled;
@@ -603,6 +634,7 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
 				->where('type_flag', TRANSACTION_TYPE_BUY)
+				->where('shares_unsold', '>', 0)
 				->groupBy('symbol')
 				->orderByRaw('symbol')
 				->get();
@@ -612,16 +644,20 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 			if (isset($records) && count($records) > 0)
 			{
 				foreach($records as $record)
+				{
 					$array[$record->symbol] = $record->symbol;
+				}				
 			}
-			else
-			{
+
+			if (count($array) === 0)
 				$error .= 'No Symbols found';
-			}
+
 		}
 		catch (\Exception $e) 
 		{
-			$error .= $e->getMessage();
+			$msg = $e->getMessage();
+			dd($msg);
+			$error .= $msg;
 		}			
 					
 		return $array;
@@ -716,10 +752,12 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		$percent = isset($quote['regularMarketChangePercent']) ? floatval($quote['regularMarketChangePercent']) : 0.0;
 
 		// fix up the change
-		$change = (($change > 0.0) ? '+' : '') . number_format($change, 2) . ' ' . number_format($percent, 2) . '%';
+		//$change = (($change > 0.0) ? '+' : '') . number_format($change, 2) . ' ' . number_format($percent, 2) . '%';
+		$changeArray['amount'] = number_format($change, 2);
+		$changeArray['percent'] = number_format($percent, 2);
 		
 		// make the quote
-		$rc = self::makeQuote($symbol, $nickname, $price, $change);
+		$rc = self::makeQuote($symbol, $nickname, $price, $changeArray);
 
 		return $rc;
 	}	
@@ -729,9 +767,9 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		$rc['symbol'] = $symbol;
 		$rc['nickname'] = $nickname;
 		$rc['price'] = floatval($price);
-		$rc['change'] = str_replace(',', '', $change);
+		$rc['change'] = $change;
 		$rc['font-size'] = $price < 1000.0 ? '1.3em' : '1.25em';
-		$rc['up'] = Tools::startsWith($change, '-') ? false : true;
+		$rc['up'] = Tools::startsWith($change['amount'], '-') ? false : true;
 		
 		return $rc;
 	}

@@ -918,7 +918,7 @@ priceTaxes=$59.50
 				$status = Tools::getExchangeStatus();
 				$isOpen = $status['open'];
 
-				for ($i = 0; $i < 5; $i++)
+				for ($i = 0; $i < 10; $i++)
 				{
 					$v = Tools::getCsv($parm, $i + 1);
 					if (isset($v))
@@ -959,7 +959,19 @@ priceTaxes=$59.50
 								$cookie = $_COOKIE[$symbol];
 								$price = Tools::getWord($cookie, 1, '|');
 								$change = Tools::getWord($cookie, 2, '|'); 
-								$quote = Transaction::makeQuote($symbol, $nickname, $price, $change);
+								$parts = explode(' ', $change);
+								if (count($parts) > 0)
+								{
+									$changeArray['amount'] = $parts[0];
+									$changeArray['percent'] = $parts[1];
+								}
+								else
+								{
+									$changeArray['amount'] = 0.0;
+									$changeArray['percent'] = 0.0;
+								}
+								
+								$quote = Transaction::makeQuote($symbol, $nickname, $price, $changeArray);
 								$usingCookie = true;
 								$cookieMinutes = intval($status['minutes']);
 							}
@@ -981,7 +993,7 @@ priceTaxes=$59.50
 								// make a cookie for the quote to expire in $cookieMinutes
 								if ($cookieMinutes > 0)
 								{
-									$cookie = $quote['price'] . '|' . $quote['change'];
+									$cookie = $quote['price'] . '|' . $quote['change']['amount'] . ' ' . $quote['change']['percent'];
 									setcookie($symbol, $cookie, time() + /* secs = */ ($cookieMinutes * 60), "/");
 								}
 							}
