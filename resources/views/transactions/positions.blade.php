@@ -50,7 +50,7 @@
 		
 		<div class="drop-box text-center number-box number-box-sm purple">
 			<div>Cost</div>
-			<p style="">{{$cost}}</p>
+			<p style="">{{number_format($cost, 2)}}</p>
 			<p style="font-size:.9em;">{{$totals['shares']}} shrs</p>
 		</div>	
 		
@@ -76,14 +76,14 @@
 		
 		<div class="drop-box text-center number-box number-box-sm {{$profitColor}}">
 			<div>P/L</div>
-			<p style="">{{ $profit }}</p>
+			<p style="">{{number_format($profit, 2)}}</p>
 			<p style="font-size:.8em;">{{$profitPercent}}%</p>
 		</div>
 	
 		<table class="table table-sm">
 			<thead>
 				<tr>
-					<th>Symbol</th><th>Shares</th><th>Curr/DCA</th><th>Curr/Cost</th><th>P/L Today</th><th>P/L Total</th>
+					<th>Symbol</th><th>Curr/DCA</th><th>Curr/Cost</th><th>Today</th><th>Total</th>
 				</tr>
 			</theader>
 			<tbody>
@@ -104,37 +104,44 @@
 						}
 
 						$symbol = $quote['symbol'];
-						$color = ($pl < 0) ? 'red' : 'black';
+						$color = ($pl >= 0.0) ? 'black' : 'red';
+						$colorQuote = $quote['up'] ? 'black' : 'red';
 						$lots = $quote['lots'];
 						$lotsSuffix = $lots === 1 ? 'lot' : 'lots';
 					@endphp
 					<tr>
 						<td>						
 							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank">{{$symbol}}</a>
-						</td>
-						
-						<td>
-							{{$quote['shares']}}
-							<div>{{$lots}} {{$lotsSuffix}}</div>
-						</td>
-						<td>
-							<div>{{$quote['price']}}</div>
-							<div>{{$quote['dca']}}</div>
-						</td>
-					
-						<td>
-							<div>{{number_format($current_value, 2)}}</div>
-							<div>{{number_format($cost, 2)}}</div>						
+							<div style="font-size:10px;">
+								<div>{{$quote['shares']}} shrs</div>
+								<div>{{$lots}} {{$lotsSuffix}}</div>
+							</div>
 						</td>
 						<td>
-							<span style="color:{{$color}}">
-								<div>{{$quote['change']['amount'] > 0.0 ? '' : ''}}{{$quote['change']['amount']}}</div>
+							<div style="font-size:.9em;">
+								<div>{{$quote['price']}}</div>
+								<div>{{number_format($quote['dca'], 2)}}</div>
+							</div>
+						</td>
+						<td>
+							<div style="font-size:.9em;">
+								<div>{{number_format($current_value, 2)}}</div>
+								<div>{{number_format($cost, 2)}}</div>
+							</div>
+						</td>
+						<td>
+							<span style="color:{{$colorQuote}}; font-size:.9em;">
 								<div>{{$quote['change']['percent']}}%</div>
+								<div>{{$quote['change']['amount'] > 0.0 ? '' : ''}}{{$quote['change']['amount']}}</div>
 							</span>
 						</td>
 						<td>
-							<div style="color:{{$color}}">{{$pl > 0 ? '+' : ''}}{{number_format($pl, 2)}}</div>
-							<div style="color:{{$color}}">{{$plPercent}}%</div>
+							<div style="color:{{$color}}">
+								<div>{{$plPercent}}%</div>
+								<div style="font-size:.9em;">
+									<div>{{$pl > 0.0 ? '' : ''}}{{number_format($pl, 2)}}</div>
+								</div>
+							</div>
 						</td>
 					</tr>
 				@endforeach
