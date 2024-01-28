@@ -120,7 +120,7 @@
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares_unsold >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares_unsold <= 0) )
 							<span style="color:red;">({{$record->shares_unsold}})</span>
 						@endif
-							<div>${{number_format($cost, 2)}}</div>
+							<div>{{number_format($cost, 2)}}</div>
 						</td>
 					
 						<td>{{number_format($current_value, 2)}}

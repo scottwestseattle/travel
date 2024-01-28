@@ -757,7 +757,7 @@ class TransactionController extends Controller
 		
 		$filter['quotes'] = true;
 		$filter['unsold_flag'] = true;
-		
+	
 		return $this->showTrades($request, $filter, 'positions');
 	}
 
@@ -785,7 +785,7 @@ class TransactionController extends Controller
 
 		$records = Transaction::getTrades($filter);
 		$totals = Transaction::getTradesTotal($records, $filter);
-		
+		array_multisort( array_column($totals['holdings'], "percent"), SORT_DESC, $totals['holdings'] );
 		try
 		{
 			//dump($records);

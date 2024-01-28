@@ -241,8 +241,14 @@ class Transaction extends Base
 		foreach($holdings as $rec)
 		{
 			$symbol = $rec['symbol'];
+
+			// calc the dca
 			$dca = abs($rec['shares'] > 0.0 ? ($rec['total'] / $rec['shares']) : 0.0);
-			$holdings[$symbol]['dca'] = number_format($dca, 4);
+			$holdings[$symbol]['dca'] = $dca; //don't work for 4 digit nbrs: number_format($dca, 4);
+			
+			// calc the p/l percent
+			$percent = floatval($rec['profit']) !== 0.0 ? floatval($rec['profit']) / floatval($rec['total']) : 0.0;
+			$holdings[$symbol]['percent'] = number_format($percent, 2);
 		}
 
 		//dd($holdings);
@@ -665,6 +671,8 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 
     static public function getQuote($symbol, $nickname = null)
     {
+    	//dump('getQuote');
+    	
 		$quote = null;
 		//olf $url = "https://finance.yahoo.com/quote/$symbol";
 		$url = "https://finance.yahoo.com/quote/$symbol/history";
@@ -715,6 +723,7 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		if ($results)
 		{
 			$quote['regularMarketPrice'] = trim(trim($matches[0][0], '>'), '<');
+			$quote['regularMarketPrice'] = preg_replace("/[^0-9\.\-]/", "", $quote['regularMarketPrice']);
 			$quote['regularMarketChangeAmount'] = trim(trim($matches[0][1], '>'), '<');
 			
 			if (isset($matches[0][3]))
@@ -745,7 +754,7 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 				}
 			}
 		}
-		
+	
 		// get the price from the quote
 		$price = isset($quote['regularMarketPrice']) ? floatval($quote['regularMarketPrice']) : 0.0;
 		$change = isset($quote['regularMarketChangeAmount']) ? floatval($quote['regularMarketChangeAmount']) : 0.0;

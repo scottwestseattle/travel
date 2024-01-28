@@ -108,29 +108,31 @@
 						$colorQuote = $quote['up'] ? 'black' : 'red';
 						$lots = $quote['lots'];
 						$lotsSuffix = $lots === 1 ? 'lot' : 'lots';
+						$fontSize = \App\Tools::isMobile() ? 'font-size:.9em' : '';
+						$fontSize10 = \App\Tools::isMobile() ? 'font-size:10px;' : 'font-size:12px;';
 					@endphp
 					<tr>
 						<td>						
 							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank">{{$symbol}}</a>
-							<div style="font-size:10px;">
+							<div style="{{$fontSize10}}">
 								<div>{{$quote['shares']}} shrs</div>
 								<div>{{$lots}} {{$lotsSuffix}}</div>
 							</div>
 						</td>
 						<td>
-							<div style="font-size:.9em;">
+							<div style="{{$fontSize}}">
 								<div>{{$quote['price']}}</div>
 								<div>{{number_format($quote['dca'], 2)}}</div>
 							</div>
 						</td>
 						<td>
-							<div style="font-size:.9em;">
+							<div style="{{$fontSize}}">
 								<div>{{number_format($current_value, 2)}}</div>
 								<div>{{number_format($cost, 2)}}</div>
 							</div>
 						</td>
 						<td>
-							<span style="color:{{$colorQuote}}; font-size:.9em;">
+							<span style="color:{{$colorQuote}}; {{$fontSize}}">
 								<div>{{$quote['change']['percent']}}%</div>
 								<div>{{$quote['change']['amount'] > 0.0 ? '' : ''}}{{$quote['change']['amount']}}</div>
 							</span>
@@ -138,7 +140,7 @@
 						<td>
 							<div style="color:{{$color}}">
 								<div>{{$plPercent}}%</div>
-								<div style="font-size:.9em;">
+								<div style="{{$fontSize}}">
 									<div>{{$pl > 0.0 ? '' : ''}}{{number_format($pl, 2)}}</div>
 								</div>
 							</div>

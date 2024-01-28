@@ -550,20 +550,29 @@ LEFT JOIN photos
 		$search = null;
 		$records = null;
 		$photos = null;
+		$hash = null;
 		
 		if (isset($request->searchText))
 		{
 			$search = trim($request->searchText);
-			
+
 			if (strlen($search) > 1)
 			{
-				try
+				if (Tools::startsWith($search, '@'))
 				{
-					$records = ToolController::searchEntries($search);
-					$photos = ToolController::searchPhotos($search);
+					$hash = substr($search, 1);
+					$hash = self::doHash($hash, date("Y"));
 				}
-				catch (\Exception $e) 
+				else
 				{
+					try
+					{
+						$records = ToolController::searchEntries($search);
+						$photos = ToolController::searchPhotos($search);
+					}
+					catch (\Exception $e) 
+					{
+					}
 				}
 			}
 		}
@@ -573,6 +582,7 @@ LEFT JOIN photos
 			'records' => $records,
 			'photos' => $photos,
 			'entryTypes' => Controller::getEntryTypes(),
+			'hash' => $hash,
 		]));		
 	}
 	
@@ -586,6 +596,18 @@ LEFT JOIN photos
 		$hash = trim($request->get('hash'));
 		$year = trim($request->get('year'));
 		
+		$rc = self::doHash($hash, $year);
+		
+		return view('tools.hash', $this->getViewData([
+			'hash' => $hash,
+			'hashed' => $rc['hashed'],
+			'hashed2024' => $rc['hashed2024'],
+			'year' => $year,
+		]));	
+	}
+	
+	static private function doHash($hash, $year)
+	{		
 		$hashed = ToolController::getHash($hash . $year);		// pre-2024, 8 digits
 		$hashed2024 = ToolController::getHash($hash . $year, 12); // 2024, made hashes 12 digits
 
@@ -604,12 +626,10 @@ LEFT JOIN photos
 			$hashed2024 .= '#';
 		}
 
-		return view('tools.hash', $this->getViewData([
-			'hash' => $hash,
+		return [
 			'hashed' => $hashed,
 			'hashed2024' => $hashed2024,
-			'year' => $year,
-		]));	
+		];
 	}
 	
 	static protected function searchEntries($text)
