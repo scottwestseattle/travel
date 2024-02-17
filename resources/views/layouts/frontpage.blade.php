@@ -2,13 +2,7 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
 
-@if (isset($site))
-	@if ($site->site_url == 'GrittyTravel.com')
-		<meta name="google-site-verification" content="i7p4o3hPqvPXmI5kIW5RV4FPCWSH_dtRr-O7I8mI2WM" />
-	@elseif ($site->site_url == 'ScottHub.com')
-		<meta name="google-site-verification" content="qYo4zBjsZSY-XJByMrHDUDKO_mTKFZ9tJKO2WdQTmPo" />	
-	@endif
-@endif
+	<meta name="google-adsense-account" content="ca-pub-3301644572924270">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,15 +44,9 @@
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 	
-	@if (false && SITE_ID == 1)
-	<!-- Google AdSense Activator ------------------------------>
-	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	<script>
-	  (adsbygoogle = window.adsbygoogle || []).push({
-		google_ad_client: "ca-pub-3301644572924270",
-		enable_page_level_ads: true
-	  });
-	</script>	
+	@if (!Auth::check())
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3301644572924270"
+			 crossorigin="anonymous"></script>
 	@endif
 	
 </head>

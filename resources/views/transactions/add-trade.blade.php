@@ -1,7 +1,8 @@
 @extends('layouts.theme1')
-
 @section('content')
-
+@php
+	$accountId = isset($trade) ? $trade->parent_id : $accountId;
+@endphp
 <div class="container">
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
@@ -16,20 +17,29 @@
 
 		<div class="form-group">	
 			<div class="radio-group-item">
-				<input type="radio" name="type_flag" value="3" class="form-control-inline" {{$tradeType == 'buy' ? 'checked' : ''}}>
+				<input type="radio" name="type_flag" value="3" class="form-control-inline" {{$tradeType == TRANSACTION_TYPE_BUY ? 'checked' : ''}}>
 				<label for="type_flag" class="radio-label">Buy</label>			
 			</div>
 
 			<div class="radio-group-item">
-				<input type="radio" name="type_flag" value="4" class="form-control-inline" {{$tradeType == 'sell' ? 'checked' : ''}}>
+				<input type="radio" name="type_flag" value="4" class="form-control-inline" {{$tradeType == TRANSACTION_TYPE_SELL ? 'checked' : ''}}>
 				<label for="type_flag" class="radio-label">Sell</label>			
 			</div>
+			
+			<div class="radio-group-item">
+				<input type="radio" name="type_flag" value="{{TRANSACTION_TYPE_BTO_CALL}}" class="form-control-inline" {{$tradeType == TRANSACTION_TYPE_BTO_CALL ? 'checked' : ''}} />
+				<label for="type_flag" class="radio-label">BTO</label>			
+			</div>	
+
+			<div class="radio-group-item">
+				<input type="radio" name="type_flag" value="{{TRANSACTION_TYPE_STC_CALL}}" class="form-control-inline" {{$tradeType == TRANSACTION_TYPE_STC_CALL ? 'checked' : ''}} />
+				<label for="type_flag" class="radio-label">STC</label>			
+			</div>	
+
 		</div>		
 
 		<div class="form-group clear">
-		@php
-			$accountId = isset($trade) ? $trade->parent_id : $accountId;
-		@endphp
+
 		@component('control-dropdown-menu', ['prompt' => 'Account:', 'field_name' => 'parent_id', 'options' => $accounts, 'empty' => 'Select', 'selected_option' => $accountId])@endcomponent	
 		</div>
 		
@@ -38,7 +48,7 @@
 				<label for="symbol" class="control-label">Symbol:</label>
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />
 				
-				@if ($tradeType == 'sell')
+				@if ($tradeType == TRANSACTION_TYPE_SELL || $tradeType == TRANSACTION_TYPE_STC_CALL)
 					<label for="buy_price" class="control-label">Buy Price:</label>
 					<input type="text" name="buy_price" class="form-control" value="{{abs($trade->buy_price)}}" />
 				
@@ -54,6 +64,8 @@
 					<label for="buy_price" class="control-label">Buy Price:</label>
 					<input type="text" name="buy_price" class="form-control" />
 				@endif
+				<label for="sell_price" class="control-label">Sell Price:</label>
+				<input type="text" name="sell_price" class="form-control" {{isset($trade) ? 'autofocus' : ''}} />
 			@else
 				<label for="symbol" class="control-label">Symbol:</label>
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" autofocus />
@@ -65,18 +77,17 @@
 				<input type="text" name="buy_price" class="form-control" />
 			@endif
 			
-			@if ($tradeType == 'buy')
+			@if ($tradeType == TRANSACTION_TYPE_BUY || $tradeType == TRANSACTION_TYPE_BTO_CALL)
 				<input type="hidden" name="lot_id" id="lot_id" value="" /><!-- lot_id will be generated -->
 			@endif
-			
-			<label for="sell_price" class="control-label">Sell Price:</label>
-			<input type="text" name="sell_price" class="form-control" {{isset($trade) ? 'autofocus' : ''}} />
-			
-			<label for="commission" class="control-label">Commission:</label>
+						
+			<label for="commission" class="control-label">Commission / Fees:</label>
 			<input type="text" name="commission" class="form-control" />
 
-			<label for="fees" class="control-label">Fees:</label>
-			<input type="text" name="fees" class="form-control" />
+			@if (false)
+				<label for="fees" class="control-label">Fees:</label>
+				<input type="text" name="fees" class="form-control" />
+			@endif
 			
 			<label for="notes" class="control-label">Notes:</label>
 			<input type="text" name="notes" class="form-control" />

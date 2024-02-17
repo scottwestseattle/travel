@@ -31,6 +31,16 @@
 				<input type="radio" name="type_flag" value="{{TRANSACTION_TYPE_SELL}}" class="form-control-inline" {{$record->type_flag == TRANSACTION_TYPE_SELL ? 'checked' : '' }} />
 				<label for="type_flag" class="radio-label">Sell</label>			
 			</div>	
+
+			<div class="radio-group-item">
+				<input type="radio" name="type_flag" value="{{TRANSACTION_TYPE_BTO_CALL}}" class="form-control-inline" {{$record->type_flag == TRANSACTION_TYPE_BTO_CALL ? 'checked' : '' }} />
+				<label for="type_flag" class="radio-label">BTO</label>			
+			</div>	
+
+			<div class="radio-group-item">
+				<input type="radio" name="type_flag" value="{{TRANSACTION_TYPE_STC_CALL}}" class="form-control-inline" {{$record->type_flag == TRANSACTION_TYPE_STC_CALL ? 'checked' : '' }} />
+				<label for="type_flag" class="radio-label">STC</label>			
+			</div>	
 		</div>
 		
 		<div class="form-group clear">
@@ -56,10 +66,13 @@
 		</div>
 
 		<div class="form-group clear">
-			<label for="commission" class="control-label">Commission:</label>
+			<label for="commission" class="control-label">Commission / Fees:</label>
 			<input type="text" name="commission" class="form-control" value="{{$record->commission}}" />
-			<label for="fees" class="control-label">Fees:</label>
-			<input type="text" name="fees" class="form-control" value="{{$record->fees}}" />
+			
+			@if (false)			
+				<label for="fees" class="control-label">Fees:</label>
+				<input type="text" name="fees" class="form-control" value="{{$record->fees}}" />
+			@endif
 		</div>		
 		
 		<div class="form-group">

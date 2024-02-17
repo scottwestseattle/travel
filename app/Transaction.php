@@ -26,22 +26,22 @@ class Transaction extends Base
 
 	static public function isBuyStatic($record)
 	{
-		return ($record->type_flag == TRANSACTION_TYPE_BUY);
+		return ($record->type_flag == TRANSACTION_TYPE_BUY || $record->type_flag == TRANSACTION_TYPE_BTO_CALL);
 	}
 
 	static public function isSellStatic($record)
 	{
-		return ($record->type_flag == TRANSACTION_TYPE_SELL);
+		return ($record->type_flag == TRANSACTION_TYPE_SELL || $record->type_flag == TRANSACTION_TYPE_STC_CALL);
 	}
 	
 	public function isBuy()
 	{
-		return ($this->type_flag == TRANSACTION_TYPE_BUY);
+		return self::isBuyStatic($this);
 	}
 	
 	public function isSell()
 	{
-		return ($this->type_flag == TRANSACTION_TYPE_SELL);
+		return self::isSellStatic($this);
 	}
 
 	public function isDebit()
@@ -208,7 +208,7 @@ class Transaction extends Base
 			
 			$total += $amount;
 			
-			// only get quotes when requested
+			// only get quotes when requested	
 			if (isset($filter['quotes']) && $filter['quotes'])
 			{
 				$symbol = $record->symbol;
@@ -216,17 +216,32 @@ class Transaction extends Base
 				// only get quotes once per symbol
 				if (!array_key_exists($record->symbol, $holdings))
 				{
-					$quote = self::getQuote($record->symbol);
-					$holdings[$symbol] = $quote;
+					if (   $record->type_flag == TRANSACTION_TYPE_BUY
+						|| $record->type_flag == TRANSACTION_TYPE_SELL)
+					{
+						$quote = self::getQuote($record->symbol);
+						$holdings[$symbol] = $quote;
+					}
+					else
+					{
+						// option quotes not available yet
+						$holdings['symbol'] = $record->symbol;
+						$holdings['nickname'] = $record->symbol;
+						$holdings['price'] = 0.0;
+						$holdings['change'] = 0.0;
+						$holdings['font-size'] = '1.3em';
+						$holdings['up'] = false;
+					}
+					
 					$holdings[$symbol]['profit'] = 0.0;
 					$holdings[$symbol]['total'] = 0.0;					
 					$holdings[$symbol]['shares'] = 0;
 					$holdings[$symbol]['dca'] = 0.0;	
 					$holdings[$symbol]['lots'] = 0;
 				}
-				
+
 				$quote = floatval($holdings[$symbol]['price']);
-				$profitTrx = ($quote * abs($record->shares_unsold)) - abs($amount);
+				$profitTrx = ($quote * abs($record->shares_unsold)) - abs($amount);		
 				$profit += $profitTrx;
 				
 				// add totals for current symbol
@@ -526,8 +541,16 @@ class Transaction extends Base
 			WHERE 1=1 
 			AND trx.user_id = ?
 			AND trx.deleted_flag = 0
-			AND trx.type_flag in (' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . ')
+			AND trx.type_flag in ( 
 			';
+
+		if (isset($filter['typeStocks']) && $filter['typeStocks'] )
+			$q .= '' . TRANSACTION_TYPE_BUY . ',' . TRANSACTION_TYPE_SELL . '';
+			
+		if (isset($filter['typeOptions']) && $filter['typeOptions'] )
+			$q .= ', ' . TRANSACTION_TYPE_BTO_CALL . ',' . TRANSACTION_TYPE_STC_CALL . '';
+
+		$q .= ') ';
 
 		if ( $filter['showalldates_flag'] == 0 && isset($filter['from_date']) && isset($filter['to_date']) ) // use date filter
 			$q .= ' AND (trx.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND trx.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) ';
@@ -592,6 +615,8 @@ AND trx.shares_unsold > 0
 ORDER BY trx.transaction_date DESC, trx.id DESC 		
 	
 		*/
+		//dump($q);
+		//dd($records);
 
 		return $records;
     }
@@ -674,8 +699,12 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
     	//dump('getQuote');
     	
 		$quote = null;
-		//olf $url = "https://finance.yahoo.com/quote/$symbol";
+		// stock prices
 		$url = "https://finance.yahoo.com/quote/$symbol/history";
+
+		//todo: option prices - not implemented yet; no way to specify the expiration date
+		$urlOptions = "https://finance.yahoo.com/quote/$symbol/options?p=$symbol&strike=70";
+
 
 		if (true)
 		{

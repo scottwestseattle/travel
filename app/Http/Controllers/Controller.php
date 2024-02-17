@@ -196,6 +196,12 @@ define('TRANSACTION_TYPE_CREDIT', 2);
 define('TRANSACTION_TYPE_BUY', 3);
 define('TRANSACTION_TYPE_SELL', 4);
 
+// Options Transatctions
+define('TRANSACTION_TYPE_BTO_CALL', 50); // Buy to Open Call
+define('TRANSACTION_TYPE_BTO_PUT', 	51);
+define('TRANSACTION_TYPE_STC_CALL', 52); // Sell to Close
+define('TRANSACTION_TYPE_STC_PUT', 	53);
+
 // Account Types
 define('ACCOUNT_TYPE_SAVINGS', 1);
 define('ACCOUNT_TYPE_CREDIT', 2);

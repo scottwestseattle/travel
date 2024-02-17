@@ -105,10 +105,8 @@ class TransactionController extends Controller
     {
 		// do it like this because it could be a trade with no lot
 		$trade['trade'] = 'buy';
+		$trade['tradeType'] = TRANSACTION_TYPE_BUY;
 		$trade['lot'] = $transaction;
-
-		// get last account id that was used
-        $accountId = Cookie::get('accountId');
 
 		if (isset($transaction) && isset($transaction->symbol))
 		{
@@ -125,20 +123,32 @@ class TransactionController extends Controller
 		}
 		else
 		{
-			// set default account id from cookie
+			// set account from cookie (last used)
+    	    $accountId = Cookie::get('accountId');
 			$trade['accountId'] = $accountId;
-		}
 
+			// set trade type (BUY or BTO) from cookie (last used)
+        	$tradeType = Cookie::get('typeFlag');
+			if (isset($tradeType))
+				$trade['tradeType'] = $tradeType;
+		}
+		
 		// trade transaction
 		return $this->addTransaction($request, $trade);
 	}
 	
     public function sell(Request $request, Transaction $transaction = null)
     {
+    	$type = (isset($transaction) && $transaction->type_flag === TRANSACTION_TYPE_BUY) 
+    		? TRANSACTION_TYPE_SELL
+    		: TRANSACTION_TYPE_STC_CALL;
+    
 		// do it like this because it could be a trade with no lot
 		$trade['trade'] = 'sell';
+		$trade['tradeType'] = $type;
 		$trade['lot'] = $transaction;
-
+		//dump($trade);
+		
 		// trade transaction
 		return $this->addTransaction($request, $trade);
 	}	
@@ -151,7 +161,7 @@ class TransactionController extends Controller
 		$accounts = Controller::getAccounts(LOG_ACTION_ADD, $trade ? ACCOUNT_TYPE_BROKERAGE : null);
 		$categories = Controller::getCategories(LOG_ACTION_ADD);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_ADD);
-				
+
 		$vdata = $this->getViewData([
 			'accounts' => $accounts,
 			'categories' => $categories,
@@ -159,7 +169,7 @@ class TransactionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => Controller::getFilter($request, /* today = */ true),
 			'trade' => $trade['lot'],
-			'tradeType' => $trade['trade'],
+			'tradeType' => $trade['tradeType'],
 			'accountId' => isset($trade['accountId']) ? $trade['accountId'] : null,
 		]);
 		
@@ -181,13 +191,32 @@ class TransactionController extends Controller
 		$record->transaction_date	= $this->trimNull($filter['from_date']);		
 		$record->notes				= $this->trimNull($request->notes);
 		$record->parent_id			= $request->parent_id;
-		
-		$v = isset($request->type_flag) ? $request->type_flag : 0;
-		$record->type_flag = $v;
+
+		$type = isset($request->type_flag) ? $request->type_flag : 0;
+		$record->type_flag = $type;
 		$record->symbol	= $this->trimNull(strtoupper($request->symbol));
-		
+
 		if ($record->isTrade())
 		{
+			switch($type)
+			{
+				case TRANSACTION_TYPE_BUY:
+					$action = "Buy";
+					break;
+				case TRANSACTION_TYPE_SELL:
+					$action = "Sell";
+					break;
+				case TRANSACTION_TYPE_BTO_CALL:
+					$action = "BTO";
+					break;
+				case TRANSACTION_TYPE_STC_CALL:
+					$action = "STC";
+					break;
+				default:
+					$action = "Buy";
+					break;
+			}
+				
 			$record->shares				= $this->trimNull($request->shares);
 			$record->buy_price			= $this->trimNull($request->buy_price);
 			$record->sell_price			= $this->trimNull($request->sell_price);
@@ -201,7 +230,6 @@ class TransactionController extends Controller
 			if ($record->isBuy())
 			{
 				$record->subcategory_id	= SUBCATEGORY_ID_BUY;
-				$action = "Buy";
 				$record->shares_unsold = $record->shares;
 				
 				// compute the trade amount
@@ -214,12 +242,12 @@ class TransactionController extends Controller
 				{
 					// save the latest account
 					Cookie::queue('accountId', intval($record->parent_id), (30 * 60 * 24)); // 30 days
+					Cookie::queue('typeFlag', intval($record->type_flag), (30 * 60 * 24)); // 30 days
 				}
 			}
-			else
+			else if ($record->isSell())
 			{
 				$record->subcategory_id	= SUBCATEGORY_ID_SELL;
-				$action = "Sell";
 				$record->shares = -abs($record->shares);
 				$fees = -$fees; // fees come out of the proceeds
 
@@ -243,7 +271,7 @@ class TransactionController extends Controller
 
 		$v = isset($request->reconciled_flag) ? 1 : 0;
 		$record->reconciled_flag = $v;
-		
+
 		DB::beginTransaction();
 		
 		try
@@ -326,7 +354,7 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 			
-		$view = isset($record->symbol) ? '/positions/' : '/filter/';
+		$view = '/trades/';
 
 		return redirect($this->getReferer($request, '/' . PREFIX . $view));
 	}
@@ -406,8 +434,8 @@ class TransactionController extends Controller
 		$record->subcategory_id = $this->copyDirty($record->subcategory_id, $request->subcategory_id, $isDirty, $changes);
 		
 		// set transaction type
-		$v = isset($request->type_flag) ? $request->type_flag : 0;
-		$record->type_flag = $this->copyDirty($record->type_flag, $v, $isDirty, $changes);
+		$type = isset($request->type_flag) ? $request->type_flag : 0;
+		$record->type_flag = $this->copyDirty($record->type_flag, $type, $isDirty, $changes);
 
 		// trades
 		$record->symbol = $this->copyDirty($record->symbol, $request->symbol, $isDirty, $changes);
@@ -422,11 +450,29 @@ class TransactionController extends Controller
 		if ($record->isTrade())
 		{
 			$fees = floatval($record->commission) + floatval($record->fees);
+
+			switch($type)
+			{
+				case TRANSACTION_TYPE_BUY:
+					$action = "Buy";
+					break;
+				case TRANSACTION_TYPE_SELL:
+					$action = "Sell";
+					break;
+				case TRANSACTION_TYPE_BTO_CALL:
+					$action = "BTO";
+					break;
+				case TRANSACTION_TYPE_STC_CALL:
+					$action = "STC";
+					break;
+				default:
+					$action = "Buy";
+					break;
+			}		
 			
 			if ($record->isBuy())
 			{
 				$record->subcategory_id = SUBCATEGORY_ID_BUY;
-				$action = 'Buy';
 				
 				if (!isset($record->lot_id))
 					$record->lot_id = $record->id;
@@ -439,12 +485,10 @@ class TransactionController extends Controller
 			else
 			{
 				$record->subcategory_id = SUBCATEGORY_ID_SELL;
-				$action = 'Sell';
 				$request->amount = (intval($record->shares) * floatval($record->sell_price)) - $fees;
 				$record->shares = -abs($record->shares);				
 				$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";			
 			}
-
 		}
 
 		$record->amount = $this->copyDirty(abs($record->amount), floatval($request->amount), $isDirty, $changes);
@@ -701,6 +745,8 @@ class TransactionController extends Controller
     {
 		$filter = Controller::getFilter($request);
 		$filter['view'] = 'trades';
+		$filter['typeStocks'] = true;
+		$filter['typeOptions'] = true;
 		
 		return $this->showTrades($request, $filter);
 	}
@@ -757,8 +803,10 @@ class TransactionController extends Controller
 		
 		$filter['quotes'] = true;
 		$filter['unsold_flag'] = true;
-	
-		return $this->showTrades($request, $filter, 'positions');
+		$filter['typeStocks'] = true;
+		$filter['typeOptions'] = false;
+
+		return $this->showTrades($request, $filter);
 	}
 
     public function profit(Request $request)
@@ -766,6 +814,8 @@ class TransactionController extends Controller
 		$filter = Controller::getFilter($request);
 		$filter['sold_flag'] = true;
 		$filter['view'] = 'trades';
+		$filter['typeStocks'] = true;
+		$filter['typeOptions'] = true;
 		
 		return $this->showTrades($request, $filter);
 	}
@@ -811,7 +861,7 @@ class TransactionController extends Controller
 			'dates' => Controller::getDateControlDates(),
 			'filter' => $filter,
 		]);
-		
+
 		return view(PREFIX . '.' . $filter['view'], $vdata);
     }
  

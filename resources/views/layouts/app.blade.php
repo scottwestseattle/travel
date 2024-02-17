@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
+
+	<meta name="google-adsense-account" content="ca-pub-3301644572924270">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,18 +46,11 @@
 	<script type="text/javascript" src="{{ URL::asset('js/jquery.min.js') }}"></script>	
 	<script type="text/javascript" src="{{ URL::asset('js/myscripts.js') }}"></script>	
 
-	@if (defined('SITE_ID') && SITE_ID == 1)
-		@if (!Auth::check())
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-			<script>
-			  (adsbygoogle = window.adsbygoogle || []).push({
-				google_ad_client: "ca-pub-3301644572924270",
-				enable_page_level_ads: true
-			  });
-			</script>
-		@endif
+	@if (!Auth::check())
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3301644572924270"
+			 crossorigin="anonymous"></script>
 	@endif
-	
+
 </head>
 
 <?php 
