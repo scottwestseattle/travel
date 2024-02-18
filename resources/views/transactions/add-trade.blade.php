@@ -47,10 +47,12 @@
 			@if (isset($trade))
 				<label for="symbol" class="control-label">Symbol:</label>
 				<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />
-				
 				@if ($tradeType == TRANSACTION_TYPE_SELL || $tradeType == TRANSACTION_TYPE_STC_CALL)
 					<label for="buy_price" class="control-label">Buy Price:</label>
 					<input type="text" name="buy_price" class="form-control" value="{{abs($trade->buy_price)}}" />
+
+					<label for="buy-commission" class="control-label">Buy Commission / Fees:</label>
+					<input type="text" name="buy_commission" class="form-control" value="{{abs($trade->commission + $trade->fees)}}" />
 				
 					<label for="shares" class="control-label">Number of Shares:</label>
 					<input type="text" name="shares" class="form-control" value="{{abs($trade->shares)}}" />

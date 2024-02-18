@@ -108,6 +108,7 @@ class TransactionController extends Controller
 		$trade['tradeType'] = TRANSACTION_TYPE_BUY;
 		$trade['lot'] = $transaction;
 
+		// transaction is the 'buy' for the lot we're selling
 		if (isset($transaction) && isset($transaction->symbol))
 		{
 			$records = DB::table('transactions')
@@ -115,9 +116,9 @@ class TransactionController extends Controller
 				->where('symbol', $transaction->symbol)
 				->get();
 
-			// if there is already more than one trade, then the lot has been sold
-			if (isset($records))// && count($records) == 1)
+			if (isset($records))
 			{
+				// save the 'buy' record
 				$trade['lot'] = $records->first();
 			}
 		}
@@ -147,8 +148,7 @@ class TransactionController extends Controller
 		$trade['trade'] = 'sell';
 		$trade['tradeType'] = $type;
 		$trade['lot'] = $transaction;
-		//dump($trade);
-		
+
 		// trade transaction
 		return $this->addTransaction($request, $trade);
 	}	
@@ -225,7 +225,7 @@ class TransactionController extends Controller
 			$record->lot_id				= $request->lot_id; // already null for buys
 			$record->category_id		= CATEGORY_ID_TRADE;
 			
-			$fees = floatval($record->commission) + floatval($record->fees);
+			$fees = abs(floatval($record->commission) + floatval($record->fees));
 			
 			if ($record->isBuy())
 			{
@@ -249,10 +249,10 @@ class TransactionController extends Controller
 			{
 				$record->subcategory_id	= SUBCATEGORY_ID_SELL;
 				$record->shares = -abs($record->shares);
-				$fees = -$fees; // fees come out of the proceeds
+				$feesBuy = abs(floatval($record->buy_commission));
 
-				// compute the trade amount
-				$total = (abs(intval($record->shares)) * floatval($record->sell_price)) + $fees;
+				// compute the trade amount, fees come off of the total
+				$total = (abs(intval($record->shares)) * floatval($record->sell_price)) - $fees;
 				
 				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
 			}
@@ -328,7 +328,7 @@ class TransactionController extends Controller
 					// rough calculation (that can be manually updated) based on buy price but doesn't include buy commission or fees
 					$pl = abs($record->amount) - (abs($record->shares) * abs($record->buy_price));
 				}
-				
+			
 				// add the p/l to the sell transaction
 				$record->profit = $pl;
 				$record->save();
@@ -862,6 +862,9 @@ class TransactionController extends Controller
 			'filter' => $filter,
 		]);
 
+		//dump($filter);
+		//dump($records);
+		
 		return view(PREFIX . '.' . $filter['view'], $vdata);
     }
  
