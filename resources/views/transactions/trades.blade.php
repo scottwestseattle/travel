@@ -5,7 +5,7 @@
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
 	
-	<form method="POST" action="/{{$prefix}}/trades">
+	<form method="POST" id="form" action="/{{$prefix}}/trades">
 				
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter])@endcomponent
 				
@@ -24,13 +24,13 @@
 		<input style="font-size:16px; height:24px; width:200px;" type="text" name="search" class="form-control" value="{{$filter['search']}}"></input>		
 		
 		<div>
-			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
 			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unreconciled_flag" class="checkbox-label">Unreconciled</label>
-			<input type="checkbox" name="sold_flag" id="sold_flag" class="form-control-inline" value="1" {{ $filter['sold_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="sold_flag" id="sold_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['sold_flag'] == 1 ? 'checked' : '' }} />
 			<label for="sold_flag" class="checkbox-label">Sold</label>
-			<input type="checkbox" name="unsold_flag" id="unsold_flag" class="form-control-inline" value="1" {{ $filter['unsold_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="unsold_flag" id="unsold_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['unsold_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unsold_flag" class="checkbox-label">Unsold</label>
 		</div>				
 		
@@ -54,6 +54,29 @@
 				<?php $skip_id = 0; ?>
 				
 				@foreach($records as $record)
+					@php
+						$symbolStyle = 'label label-' . (App\Transaction::isTradeOptionStatic($record) ? 'info' : 'primary');
+
+						//dd($record);
+						$shares = abs($record->shares);
+						$fees = floatval($record->buy_commission) + floatval($record->sell_commission);
+						$cost = (abs($record->buy_price) * $shares) + ($fees);
+						$pnl = (abs($record->sell_price) * $shares) - $cost;
+						$pnlPercent = ($pnl / $cost) * 100.0;
+						if ($pnlPercent > 0.0)
+							$pnlPercent = $pnlPercent < 10.0 ? number_format($pnlPercent, 2) : round(number_format($pnlPercent, 2));
+						else
+							$pnlPercent = $pnlPercent > -10.0 ? number_format($pnlPercent, 2) : round(number_format($pnlPercent, 2));
+						
+						$labelStyle = $pnl > 0.0 ? 'success' : 'danger';
+						$textStyle = "font-size: 1em; width:10px;";
+						$textStyleSm = 'font-size:.9em;';
+						$typeStyle = intval($record->type_flag) === TRANSACTION_TYPE_SELL ? 'primary' : 'info';
+						$tradeTypeStyle = App\Transaction::isRealTradeStatic($record) ? 'label label-success' : 'label label-warning';
+						$date = DateTime::createFromFormat('Y-m-d', $record->transaction_date);
+						//$date = App\DateTimeEx::getLocalDateTime($date);
+						$rowStyle = $pnl > 0.0 ? 'table-default' : 'table-danger';
+					@endphp
 					@if ($skip_id == $record->id)
 						<?php $skip_id = 0; ?>
 						@continue
@@ -72,25 +95,45 @@
 						@endif
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td style="color:default;">{{$record->transaction_date}}</td>						
-						<td>{{App\Transaction::isBuyStatic($record) ? 'BUY' : 'SELL'}}</td>
-						<td><a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank">{{$record->symbol}}</a></td>
+						<td><a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank" class="{{$symbolStyle}}" style="font-size:.95em;">{{$record->symbol}}</a></td>
+						<td><a style="font-size:.85em;" href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
 						<td>{{abs($record->shares)}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
 							<span style="color:red;">({{$record->shares}})</span>
 						@endif
 						</td>
 						
-						<td>{{$record->buy_price}}</td>
-						
+						@if (App\Transaction::isBuyStatic($record))
+							<td>{{$record->buy_price}}</td>
+						@else
+							<td>{{$record->buy_price}}<br/>{{$record->sell_price}}</td>
+						@endif
+						@if (true)
+							@if (App\Transaction::isSellStatic($record))
+								<td style=""><span style="{{$textStyle}}" class="label label-{{$labelStyle}}">${{number_format($pnl, 2)}}</span></td>					
+								<td style=""><span style="{{$textStyle}}" class="label label-{{$labelStyle}}">{{$pnlPercent}}%</span></td>
+							@else
+								<td></td>
+								<td></td>
+							@endif
+						@else
 						<td>{{$record->amount}}
 						@if ( (App\Transaction::isSellStatic($record) && $record->amount <= 0) || (App\Transaction::isBuyStatic($record) && $record->amount >= 0) )
 							<span style="color:red;">(wrong)</span>
 						@endif						
 						</td>
+						@endif
+						<td style="width:10px;">	
+							@if (!empty($record->notes))
+								<span href="#" data-toggle="tooltip" title="{{$record->notes}}"><span style="color:Purple;" class="glyphCustom glyphicon glyphicon-info-sign"></span></span>
+							@endif
+						</td>
+						@if ($record->trade_type_flag == TRADE_TYPE_PAPER)
+							<td><span class="label label-warning" style="font-size:.95em;">PAPER</span></td>
+						@else
+							<td><a href="/{{$prefix}}/show/account/{{$record->parent_id}}" class="label label-primary" style="font-size:.95em;">{{$record->account}}</a></td>
+						@endif
 						
-						<td><a href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
-						<td>{{$record->notes}}</td>
-						<td><a href="/{{$prefix}}/show/account/{{$record->parent_id}}">{{$record->account}}</a></td>
 						<td>{{$record->lot_id}}</td>
 						
 						<td class="glyphCol"><a href='/{{$prefix}}/confirmdelete/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-trash"></span></a></td>

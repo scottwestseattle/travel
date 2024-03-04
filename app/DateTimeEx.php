@@ -213,6 +213,20 @@ class DateTimeEx
 		return $parts;
 	}
 
+    static public function reformatDateString($date, $fromFormat, $toFormat)
+    {
+    	$rc = null;
+    	
+    	if (!empty($date))
+    	{
+			$date = DateTime::createFromFormat($fromFormat, $date);
+			if ($date !== FALSE)
+				$rc = $date->format($toFormat);
+    	}
+
+		return $rc;
+	}
+	
     static public function getSelectedDate($request)
     {
 		$filter = self::getDateFilter($request);

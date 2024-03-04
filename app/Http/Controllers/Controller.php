@@ -189,6 +189,8 @@ define('SUBCATEGORY_ID_UNKNOWN', 208);
 define('SUBCATEGORY_ID_BUY', 210);
 define('SUBCATEGORY_ID_SELL', 211);
 define('SUBCATEGORY_ID_STOCKS', 197);
+define('SUBCATEGORY_ID_BTO', 218);
+define('SUBCATEGORY_ID_STC', 219);
 
 // Transaction Types
 define('TRANSACTION_TYPE_DEBIT', 1);
@@ -196,11 +198,16 @@ define('TRANSACTION_TYPE_CREDIT', 2);
 define('TRANSACTION_TYPE_BUY', 3);
 define('TRANSACTION_TYPE_SELL', 4);
 
-// Options Transatctions
+// Options Transactions
 define('TRANSACTION_TYPE_BTO_CALL', 50); // Buy to Open Call
 define('TRANSACTION_TYPE_BTO_PUT', 	51);
 define('TRANSACTION_TYPE_STC_CALL', 52); // Sell to Close
 define('TRANSACTION_TYPE_STC_PUT', 	53);
+
+// Trade Types
+define('TRADE_TYPE_REAL',	0);		// Real Trade (default value is null or 0)
+define('TRADE_TYPE_PAPER',	1);		// Paper Trade (tracked separately for P/L)
+define('TRADE_TYPE_OTHER',	10);	// What other types could there be?
 
 // Account Types
 define('ACCOUNT_TYPE_SAVINGS', 1);

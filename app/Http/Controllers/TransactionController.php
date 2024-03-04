@@ -9,15 +9,16 @@ use Illuminate\Support\Str;
 
 use Auth;
 use Cookie;
+use DateTime;
 use DB;
 
-use App\Event;
-use App\Transaction;
 use App\Account;
 use App\Category;
-use DateTime;
+use App\DateTimeEx;
+use App\Event;
 use App\Photo;
 use App\Reconcile;
+use App\Transaction;
 
 define('PREFIX', 'transactions');
 define('LOG_MODEL', 'transactions');
@@ -198,6 +199,10 @@ class TransactionController extends Controller
 
 		if ($record->isTrade())
 		{
+			$view = '/trades/';
+			$record->shares				= $this->trimNull($request->shares);
+			$optionContracts = abs($record->shares / 100);
+
 			switch($type)
 			{
 				case TRANSACTION_TYPE_BUY:
@@ -208,35 +213,51 @@ class TransactionController extends Controller
 					break;
 				case TRANSACTION_TYPE_BTO_CALL:
 					$action = "BTO";
+					$action .= " (" . $optionContracts . ")";
 					break;
 				case TRANSACTION_TYPE_STC_CALL:
 					$action = "STC";
+					$action .= " (" . $optionContracts . ")";
 					break;
 				default:
 					$action = "Buy";
 					break;
 			}
 				
-			$record->shares				= $this->trimNull($request->shares);
 			$record->buy_price			= $this->trimNull($request->buy_price);
 			$record->sell_price			= $this->trimNull($request->sell_price);
-			$record->commission			= $this->trimNull($request->commission);
-			$record->fees				= $this->trimNull($request->fees);			
 			$record->lot_id				= $request->lot_id; // already null for buys
 			$record->category_id		= CATEGORY_ID_TRADE;
+			$record->buy_commission 	= $this->trimNull($request->buy_commission);
+			$record->option_strike_price 	= $this->trimNull($request->option_strike_price);
+			$record->trade_type_flag = isset($request->trade_type_flag) ? TRADE_TYPE_PAPER : null;
 			
-			$fees = abs(floatval($record->commission) + floatval($record->fees));
-			
+			// the YEAR is never used but must be added for the db DATE field, so doesn't matter if it's this year or next year
+			$record->option_expiration_date = DateTimeEx::reformatDateString($request->option_expiration_date, 'm/d', 'Y-m-d');
+				
 			if ($record->isBuy())
 			{
+				$expDate = $request->option_expiration_date;
 				$record->subcategory_id	= SUBCATEGORY_ID_BUY;
 				$record->shares_unsold = $record->shares;
+				$record->trade_type_flag = isset($request->trade_type_flag) ? TRADE_TYPE_PAPER : null;
 				
 				// compute the trade amount
+				$fees = abs(floatval($record->buy_commission));
 				$total = (abs(intval($record->shares)) * floatval($record->buy_price)) + $fees;
 				$total = -$total; // buys are negative
-				
-				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";
+
+				$desc = !empty($request->option_expiration_date) ? $expDate . ' ' : '';
+				$desc .= !empty($request->option_strike_price) ? '$' . $request->option_strike_price . ' ' : '';
+				if ($record->isTradeOption())
+				{
+					$desc .= "@ \$$record->buy_price";			
+				}
+				else
+				{
+					$desc .= '' . abs($record->shares) . " @ \$$record->buy_price";			
+				}
+				$record->description = "$action " . $desc;
 
 				if (isset($record->parent_id) && $record->parent_id > 0)
 				{
@@ -247,20 +268,33 @@ class TransactionController extends Controller
 			}
 			else if ($record->isSell())
 			{
+				$expDate = DateTimeEx::reformatDateString($request->option_expiration_date, 'Y-m-d', 'm/d');
 				$record->subcategory_id	= SUBCATEGORY_ID_SELL;
 				$record->shares = -abs($record->shares);
-				$feesBuy = abs(floatval($record->buy_commission));
+				$record->sell_commission = $this->trimNull($request->sell_commission);
+				$fees = abs(floatval($record->sell_commission));
 
 				// compute the trade amount, fees come off of the total
 				$total = (abs(intval($record->shares)) * floatval($record->sell_price)) - $fees;
 				
-				$record->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";
+				$desc = !empty($request->option_expiration_date) ? $expDate . ' ' : '';
+				$desc .= !empty($request->option_strike_price) ? '$' . $request->option_strike_price . ' ' : '';
+				if ($record->isTradeOption())
+				{
+					$desc .= "@ \$$record->sell_price";
+				}
+				else
+				{
+					$desc .= abs($record->shares) . " @ \$$record->sell_price";			
+				}
+				$record->description = "$action " . $desc;
 			}
-					
+		
 			$record->amount = $total;
 		}
 		else
 		{
+			$view = '/filter/';
 			$record->description		= $this->trimNull($request->description);
 			$record->category_id		= $request->category_id;
 			$record->subcategory_id		= $request->subcategory_id;
@@ -278,7 +312,7 @@ class TransactionController extends Controller
 		{
 			if (!isset($record->parent_id) || $record->parent_id <= 0)
 				throw new \Exception('Error Adding Trade: Account Not Set');
-			
+
 			$record->save();
 			
 			// use the new 'buy' record id as the lot id
@@ -297,6 +331,9 @@ class TransactionController extends Controller
 				
 				if (isset($record->lot_id))
 				{
+					// 
+					// update the buy record
+					// 
 					$buy = Transaction::select()
 						->where('user_id', Auth::id())
 						->where('deleted_flag', 0)
@@ -316,25 +353,35 @@ class TransactionController extends Controller
 					}
 				}
 
-				//
-				// add the p/l stock transaction
-				//				
-				if (isset($buy))
+				if ($record->isRealTrade())
 				{
-					// already set above
+					//
+					// add the p/l stock transaction
+					//				
+					if (isset($buy))
+					{
+						// already set above
+					}
+					else
+					{
+						// rough calculation (that can be manually updated) based on buy price but doesn't include buy commission or fees
+						$pl = abs($record->amount) - (abs($record->shares) * abs($record->buy_price));
+					}
+			
+					// add the p/l to the sell transaction
+					$record->description = $record->symbol . ' ' . $record->description;
+					$record->profit = $pl;
+					
+					//dd($record);
+					$record->save();
+
+					// create it even if $pl isn't exact so it can be manually updated
+					$this->createTransaction(date('Y-m-d'), $pl, $record->description, $record->parent_id, CATEGORY_ID_INCOME, SUBCATEGORY_ID_STOCKS);
 				}
 				else
 				{
-					// rough calculation (that can be manually updated) based on buy price but doesn't include buy commission or fees
-					$pl = abs($record->amount) - (abs($record->shares) * abs($record->buy_price));
+					// paper trade or other watch trade, so no corresponding p/l transaction
 				}
-			
-				// add the p/l to the sell transaction
-				$record->profit = $pl;
-				$record->save();
-
-				// create it even if $pl isn't exact so it can be manually updated
-				$this->createTransaction(date('Y-m-d'), $pl, $record->description, $record->parent_id, CATEGORY_ID_INCOME, SUBCATEGORY_ID_STOCKS);
 			}			
 			
 			Event::logAdd(LOG_MODEL, $record->description, $record->amount, $record->id);
@@ -354,8 +401,6 @@ class TransactionController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 			
-		$view = '/trades/';
-
 		return redirect($this->getReferer($request, '/' . PREFIX . $view));
 	}
 	
@@ -442,14 +487,15 @@ class TransactionController extends Controller
 		$record->shares = $this->copyDirty($record->shares, $request->shares, $isDirty, $changes);
 		$record->buy_price = $this->copyDirty($record->buy_price, $request->buy_price, $isDirty, $changes);		
 		$record->sell_price = $this->copyDirty($record->sell_price, $request->sell_price, $isDirty, $changes);		
-		$record->commission = $this->copyDirty($record->commission, $request->commission, $isDirty, $changes);		
-		$record->fees = $this->copyDirty($record->fees, $request->fees, $isDirty, $changes);		
 		$record->lot_id = $this->copyDirty($record->lot_id, $request->lot_id, $isDirty, $changes);
 		$record->shares_unsold = $this->copyDirty($record->shares_unsold, $request->shares_unsold, $isDirty, $changes);
 			
 		if ($record->isTrade())
 		{
-			$fees = floatval($record->commission) + floatval($record->fees);
+			$record->trade_type_flag = isset($request->trade_type_flag) ? TRADE_TYPE_PAPER : null;
+
+			$fees = floatval($record->buy_commission) + floatval($record->sell_commission);
+			$optionContracts = abs($record->shares / 100);
 
 			switch($type)
 			{
@@ -461,9 +507,11 @@ class TransactionController extends Controller
 					break;
 				case TRANSACTION_TYPE_BTO_CALL:
 					$action = "BTO";
+					$action .= " (" . $optionContracts . ")";
 					break;
 				case TRANSACTION_TYPE_STC_CALL:
 					$action = "STC";
+					$action .= " (" . $optionContracts . ")";
 					break;
 				default:
 					$action = "Buy";
@@ -473,21 +521,53 @@ class TransactionController extends Controller
 			if ($record->isBuy())
 			{
 				$record->subcategory_id = SUBCATEGORY_ID_BUY;
-				
+				$record->buy_commission = $this->copyDirty($record->buy_commission, $request->buy_commission, $isDirty, $changes);		
+	
 				if (!isset($record->lot_id))
 					$record->lot_id = $record->id;
 					
 				$record->shares = abs($record->shares);
 				$amount = (intval($record->shares) * floatval($record->buy_price)) + $fees;
 				$request->amount = -$amount;
-				$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->buy_price";			
+				
+				// description			
+				$desc = !empty($request->option_expiration_date) ? $request->option_expiration_date . ' ' : '';
+				$desc .= !empty($request->option_strike_price) ? '$' . $request->option_strike_price . ', ' : '';
+				if ($record->isTradeOption())
+				{
+					$desc .= " @ \$$record->buy_price";			
+				}
+				else
+				{
+					$desc .= abs($record->shares) . " shrs @ \$$record->buy_price";			
+				}
+				$request->description = "$action " . $desc;		
+			}
+			else if ($record->isSell())
+			{
+				$record->subcategory_id = SUBCATEGORY_ID_SELL;
+				$record->sell_commission = $this->copyDirty($record->sell_commission, $request->sell_commission, $isDirty, $changes);		
+
+				$request->amount = (intval($record->shares) * floatval($record->sell_price)) - $fees;
+				$record->shares = -abs($record->shares);				
+				
+				// description
+				$desc = !empty($request->option_expiration_date) ? $request->option_expiration_date . ' ' : '';
+				$desc .= !empty($request->option_strike_price) ? '$' . $request->option_strike_price . ', ' : '';
+				if ($record->isTradeOption())
+				{
+					// already shown in contracts
+					$desc .= " @ \$$record->sell_price";			
+				}
+				else
+				{
+					$desc .= abs($record->shares) . " shrs @ \$$record->sell_price";			
+				}
+				$request->description = "$action " . $desc;
 			}
 			else
 			{
-				$record->subcategory_id = SUBCATEGORY_ID_SELL;
-				$request->amount = (intval($record->shares) * floatval($record->sell_price)) - $fees;
-				$record->shares = -abs($record->shares);				
-				$request->description = "$action $record->symbol, " . abs($record->shares) . " shares @ \$$record->sell_price";			
+				throw new \Exception('Error Updating Trade: Bad Trade Type');
 			}
 		}
 
@@ -742,12 +822,18 @@ class TransactionController extends Controller
     }	
 	
     public function trades(Request $request)
-    {
-		$filter = Controller::getFilter($request);
+    {		
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+
+		if ($request->isMethod('get'))
+		{
+			$filter['unsold_flag'] = true;
+		}
+
 		$filter['view'] = 'trades';
 		$filter['typeStocks'] = true;
 		$filter['typeOptions'] = true;
-		
+	
 		return $this->showTrades($request, $filter);
 	}
 
@@ -811,9 +897,9 @@ class TransactionController extends Controller
 
     public function profit(Request $request)
     {
-		$filter = Controller::getFilter($request);
-		$filter['sold_flag'] = true;
-		$filter['view'] = 'trades';
+		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$filter['subcategory_id'] = SUBCATEGORY_ID_SELL;
+		$filter['view'] = 'trades-pl';
 		$filter['typeStocks'] = true;
 		$filter['typeOptions'] = true;
 		
@@ -835,7 +921,13 @@ class TransactionController extends Controller
 
 		$records = Transaction::getTrades($filter);
 		$totals = Transaction::getTradesTotal($records, $filter);
-		array_multisort( array_column($totals['holdings'], "percent"), SORT_DESC, $totals['holdings'] );
+
+		if (isset($filter['quotes']) && $filter['quotes'])
+		{
+			// only sort when getting quotes 
+			array_multisort( array_column($totals['holdings'], "percent"), SORT_DESC, $totals['holdings'] );
+		}
+		
 		try
 		{
 			//dump($records);
@@ -909,7 +1001,7 @@ class TransactionController extends Controller
              return redirect('/');
 
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT);
-//dd($accounts);
+		//dd($accounts);
 		
 		$accountId = intval($accountId);
 		

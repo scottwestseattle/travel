@@ -24,6 +24,16 @@ class Transaction extends Base
 		return ($this->isBuy() || $this->isSell());
 	}
 
+	public function isTradeOption()
+	{
+		return (self::isTradeOptionStatic($this));
+	}
+
+	static public function isTradeOptionStatic($record)
+	{
+		return ($record->type_flag == TRANSACTION_TYPE_BTO_CALL || $record->type_flag == TRANSACTION_TYPE_STC_CALL);
+	}
+
 	static public function isBuyStatic($record)
 	{
 		return ($record->type_flag == TRANSACTION_TYPE_BUY || $record->type_flag == TRANSACTION_TYPE_BTO_CALL);
@@ -42,6 +52,16 @@ class Transaction extends Base
 	public function isSell()
 	{
 		return self::isSellStatic($this);
+	}
+
+	public function isRealTrade()
+	{
+		return self::isRealTradeStatic($this);
+	}
+
+	static public function isRealTradeStatic($record)
+	{
+		return (!isset($record->trade_type_flag) || $record->trade_type_flag == TRADE_TYPE_REAL);
 	}
 
 	public function isDebit()
@@ -196,12 +216,23 @@ class Transaction extends Base
 		$profitTrx = $profit = 0.0;
 		$rc = [];
 		$holdings = [];
-
+		$profitLoss = isset($filter['profit-loss']) && $filter['profit-loss'];
+		$getQuotes = isset($filter['quotes']) && $filter['quotes'];
+		
 		foreach($records as $record)
 		{
-			$sharesTrx = intval($record->shares_unsold);
-			$shares += $sharesTrx;
-			$amount = round(floatval($record->buy_price) * floatval($record->shares_unsold), 2);
+			if (Transaction::isSellStatic($record))
+			{
+				$sharesTrx = abs(intval($record->shares));
+				$shares += $sharesTrx;
+				$amount = round(floatval($record->buy_price) * $sharesTrx, 2);
+			}
+			else
+			{
+				$sharesTrx = intval($record->shares_unsold);
+				$shares += $sharesTrx;
+				$amount = round(floatval($record->buy_price) * floatval($record->shares_unsold), 2);
+			}
 
 			if ($record->reconciled_flag == 1)
 				$reconciled += $amount;
@@ -209,7 +240,7 @@ class Transaction extends Base
 			$total += $amount;
 			
 			// only get quotes when requested	
-			if (isset($filter['quotes']) && $filter['quotes'])
+			if ($getQuotes)
 			{
 				$symbol = $record->symbol;
 				
@@ -250,25 +281,58 @@ class Transaction extends Base
 				$holdings[$symbol]['total'] += $amount;
 				$holdings[$symbol]['lots']++;
 			}
+			else //if ($profitLoss)
+			{
+				$symbol = $record->symbol;
+				$holdings['symbol'] = $symbol;
+				
+				// only get quotes once per symbol
+				if (!array_key_exists($symbol, $holdings))
+				{	
+					$holdings[$symbol]['profit'] = 0.0;
+					$holdings[$symbol]['total'] = 0.0;					
+					$holdings[$symbol]['shares'] = 0;
+					$holdings[$symbol]['dca'] = 0.0;	
+					$holdings[$symbol]['lots'] = 0;
+				}
+
+//dump($record);
+				$profitTrx = ($record->sell_price * abs($record->shares)) - abs($amount);		
+				$profit += $profitTrx;
+				
+				// add totals for current symbol
+				$holdings[$symbol]['profit'] += floatval($profitTrx);
+				$holdings[$symbol]['shares'] += $sharesTrx;
+				$holdings[$symbol]['total'] += $amount;
+				$holdings[$symbol]['profit'] += $profitTrx;
+				$holdings[$symbol]['lots']++;
+				
+//dd($holdings);
+			}			
 		}
 		
-		// calc the dca
-		foreach($holdings as $rec)
-		{
-			$symbol = $rec['symbol'];
+		//dump($holdings);
 
-			// calc the dca
-			$dca = abs($rec['shares'] > 0.0 ? ($rec['total'] / $rec['shares']) : 0.0);
-			$holdings[$symbol]['dca'] = $dca; //don't work for 4 digit nbrs: number_format($dca, 4);
+		// calc the dca
+		if ($getQuotes)
+		{
+			foreach($holdings as $rec)
+			{
+				$symbol = $rec['symbol'];
+
+				// calc the dca
+				$dca = abs($rec['shares'] > 0.0 ? ($rec['total'] / $rec['shares']) : 0.0);
+				$holdings[$symbol]['dca'] = $dca; //don't work for 4 digit nbrs: number_format($dca, 4);
 			
-			// calc the p/l percent
-			$percent = floatval($rec['profit']) !== 0.0 ? floatval($rec['profit']) / floatval($rec['total']) : 0.0;
-			$holdings[$symbol]['percent'] = number_format($percent, 2);
+				// calc the p/l percent
+				$percent = floatval($rec['profit']) !== 0.0 ? floatval($rec['profit']) / floatval($rec['total']) : 0.0;
+				$holdings[$symbol]['percent'] = number_format($percent, 2);
+			}
 		}
 
 		//dd($holdings);
-		$rc['holdings'] = $holdings;
-		
+		$rc['holdings'] = $holdings;		
+
 		// this has to be done or else it shows -0 because of a tiny fraction
 		$total = round($total, 2);
 		$reconciled = round($reconciled, 2);
@@ -530,7 +594,8 @@ class Transaction extends Base
     {
 		$q = '
 			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.notes, trx.reconciled_flag  
-				, trx.symbol, trx.shares, trx.buy_price, trx.lot_id, trx.shares_unsold 
+				, trx.symbol, trx.shares, trx.buy_price, trx.sell_price, trx.lot_id, trx.shares_unsold
+				, trx.buy_commission, trx.sell_commission, trx.trade_type_flag
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
@@ -577,15 +642,22 @@ class Transaction extends Base
 
 		if (isset($filter['search']) && strlen($filter['search']) > 0)
 		{
-			$q .= ' AND ( trx.amount like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.shares like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.buy_price like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.fees like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.commission like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.description like "%' . $filter['search'] . '%"';
-			$q .= '       OR trx.lot_id like "%' . $filter['search'] . '%"';
-			$q .= '     )';
+			if (strtolower($filter['search']) == 'paper')
+			{
+				$q .= ' AND trx.trade_type_flag = ' . intval(TRADE_TYPE_PAPER) . ' ';
+			} 
+			else
+			{
+				$q .= ' AND ( trx.amount like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.shares like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.buy_price like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.buy_commission like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.sell_commission like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.notes like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.description like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.lot_id like "%' . $filter['search'] . '%"';
+				$q .= '     )';			
+			}
 		}		
 			
 		$q .= '
