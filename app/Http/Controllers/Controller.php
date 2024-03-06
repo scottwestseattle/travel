@@ -210,9 +210,10 @@ define('TRADE_TYPE_PAPER',	1);		// Paper Trade (tracked separately for P/L)
 define('TRADE_TYPE_OTHER',	10);	// What other types could there be?
 
 // Account Types
-define('ACCOUNT_TYPE_SAVINGS', 1);
-define('ACCOUNT_TYPE_CREDIT', 2);
-define('ACCOUNT_TYPE_BROKERAGE', 3);
+define('ACCOUNT_TYPE_SAVINGS',		1);
+define('ACCOUNT_TYPE_CREDIT',		2);
+define('ACCOUNT_TYPE_BROKERAGE',	3);
+define('ACCOUNT_TYPE_PAPER_TRADE',	4);
 
 class Controller extends BaseController
 {

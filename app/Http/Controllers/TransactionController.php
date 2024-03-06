@@ -84,7 +84,7 @@ class TransactionController extends Controller
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting ' . $this->title . '  List', null, $e->getMessage());
 
 			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $e->getMessage());		
+			$request->session()->flash('message.content', $e->getMessage());	
 		}	
 					
 		$vdata = $this->getViewData([
@@ -921,26 +921,11 @@ class TransactionController extends Controller
 
 		$records = Transaction::getTrades($filter);
 		$totals = Transaction::getTradesTotal($records, $filter);
-
+	
 		if (isset($filter['quotes']) && $filter['quotes'])
 		{
 			// only sort when getting quotes 
 			array_multisort( array_column($totals['holdings'], "percent"), SORT_DESC, $totals['holdings'] );
-		}
-		
-		try
-		{
-			//dump($records);
-			//dump($totals);
-		}
-		catch (\Exception $e) 
-		{
-			$msg = $e->getMessage();
-			//dd($msg);
-			
-			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Trade List', null, $msg);
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', $msg);
 		}
 
 		$vdata = $this->getViewData([

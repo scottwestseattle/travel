@@ -299,7 +299,7 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/expenses', 'TransactionController@expenses')->middleware('auth');
 	Route::post('/expenses', 'TransactionController@expenses')->middleware('auth');
 	Route::get('/summary/{showAll?}', 'TransactionController@summary')->middleware('auth');
-	Route::get('/index/{subcategory_id?}', 'TransactionController@indexadmin')->middleware('auth');
+	Route::get('/index/{subcategory_id?}', 'TransactionController@index')->middleware('auth');
 	Route::get('/view/{id}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
 
 	// filter

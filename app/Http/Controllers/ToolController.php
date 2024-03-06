@@ -232,7 +232,7 @@ class ToolController extends Controller
 		
 		try
 		{
-			$text = $this->file_get_contents_curl($url);
+			$text = Tools::file_get_contents_curl($url);
 			if (!isset($text))
 			{
 				$results['error'] = true;
@@ -262,33 +262,6 @@ class ToolController extends Controller
 				
 		return $results;
 	}
-	
-	private function file_get_contents_curl($url) 
-	{
-		$ch = curl_init();
-		
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_COOKIE, 'testing=testing'); // so visitor won't be saved
-
-		$data = null;
-		try
-		{
-			// catch doesn't work for 'Maximum execution time of 120 seconds exceeded'
-			$data = curl_exec($ch);
-		}
-		catch (\Exception $e) 
-		{
-			$request->session()->flash('message.level', 'danger');
-			$request->session()->flash('message.content', 'Test Timed-out');
-		}
-		
-		curl_close($ch);
-		
-		return $data;
-	}
-
 
     protected function getSiteMapEntries($type_flag)
     {

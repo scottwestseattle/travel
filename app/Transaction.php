@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Auth;
 use App\Account;
+use App\Tools;
 
 class Transaction extends Base
 {
@@ -119,7 +120,8 @@ class Transaction extends Base
     static public function getIndex($limit = null)
     {
 		$q = '
-			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id, trx.vendor_memo, trx.notes
+			SELECT trx.id, trx.type_flag, trx.description, trx.amount, trx.transaction_date, trx.parent_id
+				, trx.vendor_memo, trx.notes
 				, accounts.name as account
 				, categories.name as category
 				, subcategories.name as subcategory, subcategories.id as subcategory_id 
@@ -759,7 +761,6 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		catch (\Exception $e) 
 		{
 			$msg = $e->getMessage();
-			dd($msg);
 			$error .= $msg;
 		}			
 					
@@ -776,33 +777,35 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 
 		//todo: option prices - not implemented yet; no way to specify the expiration date
 		$urlOptions = "https://finance.yahoo.com/quote/$symbol/options?p=$symbol&strike=70";
-
-
-		if (true)
-		{
-			$page = file_get_contents($url);		
-			$pos = strpos($page, 'qsp-price');
-			$text = substr($page, $pos, 750);
-			//dd($text);
-			
-			/*
-			"qsp-price" data-field="regularMarketPrice" data-trend="none" data-pricehint="2" 
-			value="352.371" active="">352.37</fin-streamer><fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" 
-			data-symbol="VOO" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" 
-			data-pricehint="2" value="-1.4889832" active=""><span class="C($negativeColor)">-1.49</span>
-			</fin-streamer> <fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="VOO" 
-			data-field="regularMarketChangePercent" data-trend="txt" data-pricehint="2" data-template="({fmt})" 
-			value="-0.0042078313" active=""><span class="C($negativeColor)">(-0.42%)</span>			
-			*/
+		$page = "";
+		try {
+			//$page = file_get_contents($url);	
+			$page = Tools::file_get_contents_curl($url);
 		}
-		else
+		catch (\Exception $e)
 		{
-			//test
-			$text = "start>1,900.25<end";
-			$text = "start>265.0125<end";
-			//dump($text);
+			$msg = $e->getMessage();
+dd($msg);				
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Stream Error Getting Quotes', null, $msg);		
+			request()->session()->flash('message.level', 'danger');
+			request()->session()->flash('message.content', 'Unable to get quotes');
+			//dd($msg);
 		}
 		
+		$pos = strpos($page, 'qsp-price');
+		$text = substr($page, $pos, 750);
+		//dd($text);
+	
+		/*
+		"qsp-price" data-field="regularMarketPrice" data-trend="none" data-pricehint="2" 
+		value="352.371" active="">352.37</fin-streamer><fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" 
+		data-symbol="VOO" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" 
+		data-pricehint="2" value="-1.4889832" active=""><span class="C($negativeColor)">-1.49</span>
+		</fin-streamer> <fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="VOO" 
+		data-field="regularMarketChangePercent" data-trend="txt" data-pricehint="2" data-template="({fmt})" 
+		value="-0.0042078313" active=""><span class="C($negativeColor)">(-0.42%)</span>			
+		*/
+	
 		//$pos = strpos($page, '"symbol":"' . $symbol . '"');
 		//dump($pos);
 		

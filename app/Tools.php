@@ -979,4 +979,30 @@ class Tools
 
         return $time;
     }
+    
+	static public function file_get_contents_curl($url) 
+	{
+		$ch = curl_init();
+		
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //Set curl to return the data instead of printing it to the browser.
+		curl_setopt($ch, CURLOPT_URL, $url);
+		//curl_setopt($ch, CURLOPT_COOKIE, 'testing=testing'); // so visitor won't be saved
+		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:41.0) Gecko/20100101 Firefox/43.0");
+
+		$data = null;
+		try
+		{
+			// catch doesn't work for 'Maximum execution time of 120 seconds exceeded'
+			$data = curl_exec($ch);
+		}
+		catch (\Exception $e) 
+		{
+			request()->session()->flash('message.content', 'file_get_contents_curl error');
+		}
+		
+		curl_close($ch);
+		
+		return $data;
+	}
 }
