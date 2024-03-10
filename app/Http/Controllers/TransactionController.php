@@ -541,7 +541,8 @@ class TransactionController extends Controller
 				{
 					$desc .= abs($record->shares) . " shrs @ \$$record->buy_price";			
 				}
-				$request->description = "$action " . $desc;		
+				$request->description = "$action " . $desc;	
+//dd($request->description);	
 			}
 			else if ($record->isSell())
 			{
@@ -759,8 +760,7 @@ class TransactionController extends Controller
 		{
 			// 1. use form request filter and save it to session
 			//dump('form request filter');			
-			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-			
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
 			session(['transactionFilter' => $filter]); // save to session for next time
 		}
 		else
@@ -825,11 +825,32 @@ class TransactionController extends Controller
     {		
 		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
 
-		if ($request->isMethod('get'))
+		// decide which filter to use.  all form filters are saved to a session and only cleared HOW???
+		if ($request->method() == 'POST')
 		{
-			$filter['unsold_flag'] = true;
+			// 1. use form request filter and save it to session
+			//dump('form request filter');			
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+			session(['transactionTradesFilter' => $filter]); // save to session for next time
 		}
-
+		else
+		{
+			$sessionFilter = session('transactionTradesFilter');
+			if (!isset($sessionFilter))
+			{
+				// 2. use default filter	
+				//dump('default filter');
+				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+				$filter['unsold_flag'] = true;
+			}
+			else 
+			{
+				// 3. use session filter
+				//dump('session filter');
+				$filter = $sessionFilter;
+			}
+		}		
+		
 		$filter['view'] = 'trades';
 		$filter['typeStocks'] = true;
 		$filter['typeOptions'] = true;
@@ -853,8 +874,7 @@ class TransactionController extends Controller
 		if ($request->isMethod('post'))
 		{
 			// 1. use form request filter and save it to session
-			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-			
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);		
 			session([$filterSessionKey => $filter]); // save to session for next time
 		}
 		else

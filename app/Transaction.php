@@ -651,6 +651,7 @@ class Transaction extends Base
 			else
 			{
 				$q .= ' AND ( trx.amount like "%' . $filter['search'] . '%"';
+				$q .= '       OR trx.symbol like "%' . $filter['search'] . '%"';
 				$q .= '       OR trx.shares like "%' . $filter['search'] . '%"';
 				$q .= '       OR trx.buy_price like "%' . $filter['search'] . '%"';
 				$q .= '       OR trx.buy_commission like "%' . $filter['search'] . '%"';
@@ -665,7 +666,8 @@ class Transaction extends Base
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
-	
+		//dump($q);
+		
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
 		
 		/*
@@ -784,8 +786,7 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		}
 		catch (\Exception $e)
 		{
-			$msg = $e->getMessage();
-dd($msg);				
+			$msg = $e->getMessage();				
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Stream Error Getting Quotes', null, $msg);		
 			request()->session()->flash('message.level', 'danger');
 			request()->session()->flash('message.content', 'Unable to get quotes');
