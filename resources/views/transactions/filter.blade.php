@@ -98,7 +98,7 @@ function inlineEditSubmit(id)
 		@component('control-dropdown-date', ['div' => true, 'monthCheckbox' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter, 'formId' => 'form'])@endcomponent
 				
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'account_id', 'options' => $accounts, 'selected_option' => $filter['account_id'], 'empty' => 'account'])@endcomponent	
+			@component('control-dropdown-menu', ['field_name' => 'account_id', 'options' => $accounts, 'selected_option' => $filter['account_id'], 'empty' => 'account', 'onchange' => "$('#form').submit()"])@endcomponent	
 		</div>
 			
 		<div style="float:left;">
@@ -106,12 +106,17 @@ function inlineEditSubmit(id)
 		</div>
 
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => $filter['subcategory_id'], 'empty' => 'all subcategories'])@endcomponent									
+			@component('control-dropdown-menu', ['field_name' => 'subcategory_id', 'options' => $subcategories, 'selected_option' => $filter['subcategory_id'], 'empty' => 'all subcategories', 'onchange' => "$('#form').submit()"])@endcomponent									
+		</div>
+
+		<div>
+			<input style="font-size:16px; height:24px; width:100px; margin-left:1px;" type="text" id="search" name="search" class="" value="{{$filter['search']}}"></input>		
+			<a href='#' onclick="event.preventDefault(); $('#search').val(''); $('#form').submit();";>
+				<span class="glyphCustom glyphicon glyphicon-remove" style="font-size:1.3em; margin-left:1px;"></span>
+			</a>
 		</div>
 		
-		<input style="font-size:16px; height:24px; width:200px;" type="text" name="search" class="form-control" value="{{$filter['search']}}"></input>		
-		
-		<div>
+		<div>		
 			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" onclick="$('#form').submit();" value="1" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
 			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />

@@ -223,23 +223,24 @@ class Transaction extends Base
 		
 		foreach($records as $record)
 		{
+			$commission = floatval($record->buy_commission) + floatval($record->sell_commission);
 			if (Transaction::isSellStatic($record))
 			{
 				$sharesTrx = abs(intval($record->shares));
 				$shares += $sharesTrx;
-				$amount = round(floatval($record->buy_price) * $sharesTrx, 2);
+				$cost = round((floatval($record->buy_price) * $sharesTrx) + $commission, 2);
 			}
 			else
 			{
 				$sharesTrx = intval($record->shares_unsold);
 				$shares += $sharesTrx;
-				$amount = round(floatval($record->buy_price) * floatval($record->shares_unsold), 2);
+				$cost = round((floatval($record->buy_price) * floatval($record->shares_unsold)) + $commission, 2);
 			}
 
 			if ($record->reconciled_flag == 1)
-				$reconciled += $amount;
+				$reconciled += $cost;
 			
-			$total += $amount;
+			$total += $cost;
 			
 			// only get quotes when requested	
 			if ($getQuotes)
@@ -274,13 +275,13 @@ class Transaction extends Base
 				}
 
 				$quote = floatval($holdings[$symbol]['price']);
-				$profitTrx = ($quote * abs($record->shares_unsold)) - abs($amount);		
+				$profitTrx = ($quote * abs($record->shares_unsold)) - abs($cost);		
 				$profit += $profitTrx;
 				
 				// add totals for current symbol
 				$holdings[$symbol]['profit'] += floatval($profitTrx);
 				$holdings[$symbol]['shares'] += $sharesTrx;
-				$holdings[$symbol]['total'] += $amount;
+				$holdings[$symbol]['total'] += $cost;
 				$holdings[$symbol]['lots']++;
 			}
 			else //if ($profitLoss)
@@ -299,14 +300,13 @@ class Transaction extends Base
 				}
 
 //dump($record);
-				$profitTrx = ($record->sell_price * abs($record->shares)) - abs($amount);		
+				$profitTrx = ($record->sell_price * abs($record->shares)) - abs($cost);		
 				$profit += $profitTrx;
 				
 				// add totals for current symbol
-				$holdings[$symbol]['profit'] += floatval($profitTrx);
 				$holdings[$symbol]['shares'] += $sharesTrx;
-				$holdings[$symbol]['total'] += $amount;
-				$holdings[$symbol]['profit'] += $profitTrx;
+				$holdings[$symbol]['total'] += $cost;
+				$holdings[$symbol]['profit'] += floatval($profitTrx);
 				$holdings[$symbol]['lots']++;
 				
 //dd($holdings);
@@ -740,8 +740,8 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 			$records = Transaction::select('symbol')
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
-				->where('type_flag', TRANSACTION_TYPE_BUY)
-				->where('shares_unsold', '>', 0)
+				->whereIn('type_flag', [TRANSACTION_TYPE_BUY, TRANSACTION_TYPE_BTO_CALL])
+				//->where('shares_unsold', '>', 0)
 				->groupBy('symbol')
 				->orderByRaw('symbol')
 				->get();

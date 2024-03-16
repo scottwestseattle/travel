@@ -1,6 +1,8 @@
 @extends('layouts.theme1')
 @section('content')
-
+@php
+	$isMobile = App\Tools::isMobile();
+@endphp
 <div class="container">
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
@@ -10,17 +12,22 @@
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'days' => $dates['days'], 'filter' => $filter, 'formId' => 'form'])@endcomponent
 				
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'account_id', 'options' => $accounts, 'selected_option' => $filter['account_id'], 'empty' => 'All Accounts'])@endcomponent	
+			@component('control-dropdown-menu', ['field_name' => 'account_id', 'options' => $accounts, 'selected_option' => $filter['account_id'], 'empty' => 'All Accounts', 'onchange' => "$('#form').submit()"])@endcomponent	
 		</div>
 		
 		<div style="float:left;">
-			@component('control-dropdown-menu', ['field_name' => 'symbol', 'options' => $symbols, 'selected_option' => $filter['symbol'], 'empty' => 'All Symbols'])@endcomponent				
+			@component('control-dropdown-menu', ['field_name' => 'symbol', 'options' => $symbols, 'selected_option' => $filter['symbol'], 'empty' => 'All Symbols', 'onchange' => "$('#form').submit()"])@endcomponent				
 		</div>
 		
-		<input style="font-size:16px; height:24px; width:200px;" type="text" name="search" class="form-control" value="{{$filter['search']}}"></input>		
-		
 		<div>
-			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
+			<input style="font-size:16px; height:24px; width:100px; margin-left:1px;" type="text" id="search" name="search" class="" value="{{$filter['search']}}"></input>		
+			<a href='#' onclick="event.preventDefault(); $('#search').val(''); $('#form').submit();";>
+				<span class="glyphCustom glyphicon glyphicon-remove" style="font-size:1.3em; margin-left:1px;"></span>
+			</a>
+		</div>
+		
+		<div>	
+			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
 			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
 		</div>				
 		
@@ -42,7 +49,7 @@
 				<tr>
 					<td>Date</td>
 					<td>Symbol</td>
-					@if (!App\Tools::isMobile())
+					@if (!$isMobile)
 						<td>Shares</td>
 					@endif
 					<td>P/L $</td>
@@ -63,12 +70,13 @@
 							$pnlPercent = $pnlPercent < 10.0 ? number_format($pnlPercent, 2) : round(number_format($pnlPercent, 2));
 						else
 							$pnlPercent = $pnlPercent > -10.0 ? number_format($pnlPercent, 2) : round(number_format($pnlPercent, 2));
-						
+						$isRealTrade = App\Transaction::isRealTradeStatic($record);
 						$labelStyle = $pnl > 0.0 ? 'success' : 'danger';
-						$textStyle = "font-size: 1em; width:10px;";
+						$textStylePaperTrade = $textStyle = "font-size: 1em; width:10px;";
+						$textStylePaperTrade .= $isRealTrade ? '' : ' color:#996515;';
 						$textStyleSm = 'font-size:.9em;';
 						$typeStyle = intval($record->type_flag) === TRANSACTION_TYPE_SELL ? 'primary' : 'info';
-						$tradeTypeStyle = App\Transaction::isRealTradeStatic($record) ? 'label label-success' : 'label label-warning';
+						$tradeTypeStyle = $isRealTrade ? 'label label-success' : 'label label-warning';
 						$date = DateTime::createFromFormat('Y-m-d', $record->transaction_date);
 						//$date = App\DateTimeEx::getLocalDateTime($date);
 						$rowStyle = $pnl > 0.0 ? 'table-default' : 'table-danger';
@@ -76,11 +84,11 @@
 					<tr class="table-danger">
 						<td style="{{$textStyleSm}}">{{$date->format('m-d-y, l')}}</td>
 						<td style=""><span style="{{$textStyle}}" class="label label-{{$typeStyle}}">{{$record->symbol}}</span>
-							@if (App\Tools::isMobile())
-								<div style="font-size:.8em; margin-top: 2px;"><span style="{{$textStyle}}" class="{{$tradeTypeStyle}}">{{$shares}}</span></div>
-							@endif
+							@if ($isMobile)
+								<div style="font-size:.8em; margin-top: 2px;"><div style="{{$textStylePaperTrade}}">{{$shares}}</div></div>
+							@endif						
 						</td>						
-						@if (!App\Tools::isMobile())
+						@if (!$isMobile)
 							<td style="font-size:.9em;"><span style="{{$textStyle}}" class="{{$tradeTypeStyle}}">{{$shares}}</span></td>
 						@endif
 
