@@ -4,6 +4,7 @@
 	$accountId = isset($trade) ? $trade->parent_id : $accountId;
 	$isSellOption = isset($trade) && $typeFlag == TRANSACTION_TYPE_STC_CALL;
 	$isSell = $typeFlag == TRANSACTION_TYPE_SELL || $typeFlag == TRANSACTION_TYPE_STC_CALL;
+	$expDate = isset($trade->option_expiration_date) ? App\DateTimeEx::reformatDateString($trade->option_expiration_date, 'Y-m-d', 'm/d') : '';
 @endphp
 <div class="container">
 
@@ -52,7 +53,7 @@
 				@if ($isSell)
 					<h3>
 					@if ($isSellOption)
-						<div>{{$trade->symbol}} BTO ({{$trade->shares / 100}}) {{App\DateTimeEx::reformatDateString($trade->option_expiration_date, 'Y-m-d', 'm/d')}} ${{abs($trade->option_strike_price)}}</div>
+						<div>{{$trade->symbol}} BTO ({{$trade->shares / 100}}) {{$expDate}} ${{abs($trade->option_strike_price)}}</div>
 					@else
 						<div>{{$trade->symbol}}</div>
 					@endif
@@ -75,11 +76,11 @@
 					
 					@if ($isSellOption)
 						<input type="hidden" name="option_strike_price" class="form-control" value="{{abs($trade->option_strike_price)}}" />
-						<input type="hidden" name="option_expiration_date" class="form-control" value="{{$trade->option_expiration_date}}" />
+						<input type="hidden" name="option_expiration_date" class="form-control" value="{{$expDate}}" />
 					@else
 						<div id="hideOptionFields" class="{{$typeFlag !== TRANSACTION_TYPE_STC_CALL ? 'hidden' : ''}}">
 							<label for="option_expiration_date" class="control-label">Option Expiration Date (MM/DD):</label>
-							<input type="text" name="option_expiration_date" class="form-control" value="{{abs($trade->option_expiration_date)}}" />
+							<input type="text" name="option_expiration_date" class="form-control" value="{{($trade->option_expiration_date)}}" />
 							<label for="option_strike_price" class="control-label">Option Strike Price:</label>
 							<input type="text" name="option_strike_price" class="form-control" value="{{abs($trade->option_strike_price)}}" />
 						</div>
@@ -92,9 +93,9 @@
 					
 					<div id="hideOptionFields" class="{{$typeFlag !== TRANSACTION_TYPE_BTO_CALL ? 'hidden' : ''}}">
 						<label for="option_expiration_date" class="control-label">Option Expiration Date (MM/DD):</label>
-						<input type="text" name="option_expiration_date" class="form-control" />
+						<input type="text" name="option_expiration_date" class="form-control" value="{{$expDate}}"/>
 						<label for="option_strike_price" class="control-label">Option Strike Price:</label>
-						<input type="text" name="option_strike_price" class="form-control" />
+						<input type="text" name="option_strike_price" class="form-control" value="{{$trade->option_strike_price}}"/>
 					</div>
 			
 					<label for="buy_price" class="control-label">Buy Price:</label>

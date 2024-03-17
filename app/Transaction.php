@@ -298,8 +298,7 @@ class Transaction extends Base
 					$holdings[$symbol]['dca'] = 0.0;	
 					$holdings[$symbol]['lots'] = 0;
 				}
-
-//dump($record);
+				
 				$profitTrx = ($record->sell_price * abs($record->shares)) - abs($cost);		
 				$profit += $profitTrx;
 				
@@ -308,12 +307,14 @@ class Transaction extends Base
 				$holdings[$symbol]['total'] += $cost;
 				$holdings[$symbol]['profit'] += floatval($profitTrx);
 				$holdings[$symbol]['lots']++;
-				
-//dd($holdings);
-			}			
+			}	
+			
+			$cost = $holdings[$symbol]['total'];
+			$pl = $holdings[$symbol]['profit'];
+			$plPercent = $cost > 0.0 ? $pl / $cost : 0.0;
+			$holdings[$symbol]['plPercent'] = number_format(($plPercent * 100.0), 2);
+			$holdings[$symbol]['isProfit'] = $pl >= 0.9;
 		}
-		
-		//dump($holdings);
 
 		// calc the dca
 		if ($getQuotes)
@@ -663,10 +664,15 @@ class Transaction extends Base
 			}
 		}		
 			
+		// group by
+		//$q .= '
+		//	GROUP BY trx.lot_id 
+		//';
+		
 		$q .= '
 			ORDER BY trx.transaction_date DESC, trx.id DESC 
 		';
-		//dump($q);
+		//dd($q);
 		
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date']]);
 		
@@ -729,7 +735,7 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		return $positions;
     }	
 	
-    static public function getSymbolArray(&$error)
+    static public function getSymbolArray(&$error, $unsold = false, $stocksOnly = false)
     {
 		// get account list
 		$array = [];
@@ -737,11 +743,13 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		
 		try
 		{
+			$tradeTypes = $stocksOnly ? [TRANSACTION_TYPE_BUY] : [TRANSACTION_TYPE_BUY, TRANSACTION_TYPE_BTO_CALL];
+			
 			$records = Transaction::select('symbol')
 				->where('user_id', Auth::id())
 				->where('deleted_flag', 0)
-				->whereIn('type_flag', [TRANSACTION_TYPE_BUY, TRANSACTION_TYPE_BTO_CALL])
-				//->where('shares_unsold', '>', 0)
+				->whereIn('type_flag', $tradeTypes)
+				->where('shares_unsold', $unsold ? '>' : '>=', 0)
 				->groupBy('symbol')
 				->orderByRaw('symbol')
 				->get();

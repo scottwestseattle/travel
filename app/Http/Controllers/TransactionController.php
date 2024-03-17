@@ -109,7 +109,7 @@ class TransactionController extends Controller
 		$trade['typeFlag'] = TRANSACTION_TYPE_BUY;
 		$trade['lot'] = $transaction;
 
-		// transaction is the 'buy' for the lot we're selling
+		// transaction is the 'buy' for the lot we're SELLING or BUYING again
 		if (isset($transaction) && isset($transaction->symbol))
 		{
 			$records = DB::table('transactions')
@@ -121,6 +121,7 @@ class TransactionController extends Controller
 			{
 				// save the 'buy' record
 				$trade['lot'] = $records->first();
+				$trade['typeFlag'] = $trade['lot']->type_flag;
 			}
 		}
 		else
@@ -317,8 +318,14 @@ class TransactionController extends Controller
 		
 		try
 		{
+			if (!isset($record->symbol))
+				throw new \Exception('Error Adding Trade: Symbol Not Set');
 			if (!isset($record->parent_id) || $record->parent_id <= 0)
 				throw new \Exception('Error Adding Trade: Account Not Set');
+			if (!isset($record->buy_price) || floatval($record->buy_price <= 0.0))
+				throw new \Exception('Error Adding Trade: Buy Price Not Set');
+			if (!isset($record->shares) || $record->shares <= 0)
+				throw new \Exception('Error Adding Trade: Shares Not Set');
 
 			$record->save();
 			
@@ -829,11 +836,11 @@ class TransactionController extends Controller
 		return view(PREFIX . '.filter', $vdata);
     }	
 	
-    public function trades(Request $request)
-    {		
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-
+    public function trades(Request $request, $clearFilter = null)
+    {		    	
+		//
 		// decide which filter to use.  all form filters are saved to a session and only cleared HOW???
+		//
 		if ($request->method() == 'POST')
 		{
 			// 1. use form request filter and save it to session
@@ -843,6 +850,15 @@ class TransactionController extends Controller
 		}
 		else
 		{
+			if (isset($clearFilter))
+			{
+				// reset the filter to the default
+				session(['transactionTradesFilter' => null]); // clear the stored filter			
+			}
+
+			//
+			// use the stored filter
+			//
 			$sessionFilter = session('transactionTradesFilter');
 			if (!isset($sessionFilter))
 			{
@@ -870,12 +886,6 @@ class TransactionController extends Controller
     {
     	$filterSessionKey = 'positionsFilter';
 		
-		if (!$request->isMethod('post'))
-		{
-			// default to ON
-			$filter['showalldates_flag'] = true;			
-		}
-		
 		//
 		// decide which filter to use.  all form filters are saved to a session
 		//
@@ -887,14 +897,14 @@ class TransactionController extends Controller
 		}
 		else
 		{
+			// default to ON
+			$filter['showalldates_flag'] = true;
+			
 			$sessionFilter = session($filterSessionKey);
 			if (!isset($sessionFilter))
 			{
 				// 2. use default filter	
-				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
-
-				// default to ON
-				$filter['showalldates_flag'] = true;			
+				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);			
 			}
 			else 
 			{
@@ -923,9 +933,43 @@ class TransactionController extends Controller
 		return $this->showTrades($request, $filter);
 	}
 
-    public function profit(Request $request)
+    public function profit(Request $request, $clearFilter = null)
     {
-		$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+		$filter = [];
+
+		//
+		// decide which filter to use.  all form filters are saved to a session and only cleared HOW???
+		//
+		if ($request->method() == 'POST')
+		{
+			// 1. use form request filter and save it to session
+			//dump('form request filter');			
+			$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);	
+			session(['transactionTradesFilter' => $filter]); // save to session for next time
+		}
+		else
+		{
+			if (isset($clearFilter))
+			{
+				// reset the filter to the default
+				session(['transactionTradesFilter' => null]); // clear the stored filter			
+			}
+
+			$sessionFilter = session('transactionTradesFilter');
+			if (!isset($sessionFilter))
+			{
+				// 2. use default filter	
+				//dump('default filter');
+				$filter = Controller::getFilter($request, /* today = */ true, /* month = */ true);
+			}
+			else 
+			{
+				// 3. use session filter
+				//dump('session filter');
+				$filter = $sessionFilter;
+			}
+		}
+
 		$filter['subcategory_id'] = SUBCATEGORY_ID_SELL;
 		$filter['view'] = 'trades-pl';
 		$filter['typeStocks'] = true;
@@ -942,7 +986,6 @@ class TransactionController extends Controller
 		$accounts = Controller::getAccounts(LOG_ACTION_SELECT, ACCOUNT_TYPE_BROKERAGE);		
 		$categories = Controller::getCategories(LOG_ACTION_SELECT);
 		$subcategories = Controller::getSubcategories(LOG_ACTION_SELECT, CATEGORY_ID_TRADE);
-		$symbols = Controller::getSymbols(LOG_ACTION_SELECT);
 
 		$records = null;
 		$total = 0.0;
@@ -951,11 +994,18 @@ class TransactionController extends Controller
 		$totals = Transaction::getTradesTotal($records, $filter);
 		//dump($totals);
 		
+		$stocksOnly = $symbolsUnsoldOnly = false;
 		if (isset($filter['quotes']) && $filter['quotes'])
 		{
+			// only get quotes for unsold symbols
+			$stocksOnly = $symbolsUnsoldOnly = true;
+			
+			
 			// only sort when getting quotes 
 			array_multisort( array_column($totals['holdings'], "percent"), SORT_DESC, $totals['holdings'] );
 		}
+
+		$symbols = Controller::getSymbols(LOG_ACTION_SELECT, $symbolsUnsoldOnly, $stocksOnly);		
 
 		$vdata = $this->getViewData([
 			'records' => $records,

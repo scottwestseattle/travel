@@ -90,30 +90,21 @@
 			@if (isset($totals) && count($totals) > 0)
 				@foreach($totals['holdings'] as $quote)
 					@php
+						$isMobile = App\Tools::isMobile();
 						$cost = $quote['total'];
 						$current_value = (floatval($quote['price']) * $quote['shares']);
-						if ($cost > 0.0)
-						{
-							$pl = round($current_value - $cost, 2);
-							$plPercent = number_format(($pl / $cost) * 100.0, 2);
-						}
-						else
-						{
-							$pl = 0;
-							$plPercent = 0;
-						}
-
 						$symbol = $quote['symbol'];
-						$color = ($pl >= 0.0) ? 'black' : 'red';
+						$color = $quote['isProfit'] ? 'black' : 'red';
 						$colorQuote = $quote['up'] ? 'black' : 'red';
 						$lots = $quote['lots'];
 						$lotsSuffix = $lots === 1 ? 'lot' : 'lots';
-						$fontSize = \App\Tools::isMobile() ? 'font-size:.9em' : '';
-						$fontSize10 = \App\Tools::isMobile() ? 'font-size:10px;' : 'font-size:12px;';
+						$fontSize = $isMobile ? 'font-size:11px' : '';
+						$fontSize10 = $isMobile ? 'font-size:10px;' : 'font-size:12px;';
+						$btnSize = $isMobile ? 'xs' : 'md';
 					@endphp
 					<tr>
 						<td>						
-							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank">{{$symbol}}</a>
+							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank" class="btn btn-{{$btnSize}} btn-primary" style="font-weight:bold;">{{$symbol}}</a>
 							<div style="{{$fontSize10}}">
 								<div>{{$quote['shares']}} shrs</div>
 								<div>{{$lots}} {{$lotsSuffix}}</div>
@@ -121,27 +112,27 @@
 						</td>
 						<td>
 							<div style="{{$fontSize}}">
-								<div>{{$quote['price']}}</div>
-								<div>{{number_format($quote['dca'], 2)}}</div>
+								<div>${{$quote['price']}}</div>
+								<div>${{number_format($quote['dca'], 2)}}</div>
 							</div>
 						</td>
 						<td>
 							<div style="{{$fontSize}}">
-								<div>{{number_format($current_value, 2)}}</div>
-								<div>{{number_format($cost, 2)}}</div>
+								<div>${{number_format($current_value, 2)}}</div>
+								<div>${{number_format($cost, 2)}}</div>
 							</div>
 						</td>
 						<td>
 							<span style="color:{{$colorQuote}}; {{$fontSize}}">
 								<div>{{$quote['change']['percent']}}%</div>
-								<div>{{$quote['change']['amount'] > 0.0 ? '' : ''}}{{$quote['change']['amount']}}</div>
+								<div>${{$quote['change']['amount']}}</div>
 							</span>
 						</td>
 						<td>
 							<div style="color:{{$color}}">
-								<div>{{$plPercent}}%</div>
+								<div>{{$quote['plPercent']}}%</div>
 								<div style="{{$fontSize}}">
-									<div>{{$pl > 0.0 ? '' : ''}}{{number_format($pl, 2)}}</div>
+									<div>${{number_format($quote['profit'], 2)}}</div>
 								</div>
 							</div>
 						</td>

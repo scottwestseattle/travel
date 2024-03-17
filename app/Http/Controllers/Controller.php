@@ -1464,10 +1464,10 @@ class Controller extends BaseController
 		return $records;
 	}
 	
-    public function getSymbols($action)
+    public function getSymbols($action, $unsold = false, $stocksOnly = false)
     {
 		$error = '';
-		$records = Transaction::getSymbolArray($error);
+		$records = Transaction::getSymbolArray($error, $unsold, $stocksOnly);
 		
 		if (count($records) == 0)
 			Event::logError(LOG_MODEL, $action, 'Error Getting Symbol List', null, null, $error);

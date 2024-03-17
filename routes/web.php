@@ -307,12 +307,13 @@ Route::group(['prefix' => 'transactions'], function () {
 	
 	Route::get('/filter/{all?}','TransactionController@filter')->middleware('auth');
 	Route::post('/filter','TransactionController@filter')->middleware('auth');
-	Route::get('/trades', 'TransactionController@trades')->middleware('auth');
+	Route::get('/trades/index', 'TransactionController@tradesIndex')->middleware('auth');
+	Route::get('/trades/{clearFilter?}', 'TransactionController@trades')->middleware('auth');
 	Route::post('/trades','TransactionController@trades')->middleware('auth');
+	Route::get('/profit-loss/{clearFilter?}', 'TransactionController@profit')->middleware('auth');
+	Route::post('/profit-loss','TransactionController@profit')->middleware('auth');
 	Route::get('/positions', 'TransactionController@positions')->middleware('auth');
 	Route::post('/positions','TransactionController@positions')->middleware('auth');
-	Route::get('/profit-loss', 'TransactionController@profit')->middleware('auth');
-	Route::post('/profit-loss','TransactionController@profit')->middleware('auth');
 	
 	// balances
 	Route::get('/balances','TransactionController@balances')->middleware('auth');

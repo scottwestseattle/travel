@@ -33,14 +33,14 @@
 			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unreconciled_flag" class="checkbox-label">Unreconciled</label>
-			<input type="checkbox" name="sold_flag" id="sold_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['sold_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="sold_flag" id="sold_flag" class="form-control-inline" value="1" onclick="$('#unsold_flag').removeAttr('checked'); $('#form').submit();" {{ $filter['sold_flag'] == 1 ? 'checked' : '' }} />
 			<label for="sold_flag" class="checkbox-label">Sold</label>
-			<input type="checkbox" name="unsold_flag" id="unsold_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['unsold_flag'] == 1 ? 'checked' : '' }} />
+			<input type="checkbox" name="unsold_flag" id="unsold_flag" class="form-control-inline" value="1" onclick="$('#sold_flag').removeAttr('checked'); $('#form').submit();" {{ $filter['unsold_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unsold_flag" class="checkbox-label">Unsold</label>
 		</div>				
 		
-		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Filter</button>
-		
+		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px 0 5px 0;">Apply Filter</button>
+		<a style="font-size:12px; padding:1px 4px; margin:5px 5px 5px 0px;" class="btn btn-primary" href="/transactions/trades/clear-filter">Clear Filter</a>		
 		<a style="font-size:12px; padding:1px 4px; margin:5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
 		
 		{{ csrf_field() }}		
@@ -67,7 +67,7 @@
 						$fees = floatval($record->buy_commission) + floatval($record->sell_commission);
 						$cost = (abs($record->buy_price) * $shares) + ($fees);
 						$pnl = (abs($record->sell_price) * $shares) - $cost;
-						$pnlPercent = ($pnl / $cost) * 100.0;
+						$pnlPercent = $cost > 0.0 ? ($pnl / $cost) * 100.0 : 0.0;
 						if ($pnlPercent > 0.0)
 							$pnlPercent = $pnlPercent < 10.0 ? number_format($pnlPercent, 2) : round(number_format($pnlPercent, 2));
 						else
@@ -94,9 +94,12 @@
 					<?php $color = $record->reconciled_flag == 0 ? 'red' : 'default'; ?>
 					<tr>
 						@if (App\Transaction::isBuyStatic($record) && $record->shares_unsold > 0)
-							<td class="glyphCol"><a href='/{{$prefix}}/sell/{{$record->id}}'>Sell</a></td>
+							<td class="">
+								<a href='/{{$prefix}}/sell/{{$record->id}}' class="btn btn-xs btn-success" style="margin-bottom:2px;">Sell</a>
+								<a href='/{{$prefix}}/add-trade/{{$record->id}}' class="btn btn-xs btn-primary">Buy</a>
+							</td>
 						@else
-							<td class="glyphCol"><a href='/{{$prefix}}/add-trade/{{$record->id}}'>Trade</a></td>
+							<td class=""><a href='/{{$prefix}}/add-trade/{{$record->id}}' class="btn btn-xs btn-primary">Buy</a></td>
 						@endif
 						<td class="glyphCol"><a href='/{{$prefix}}/edit-trade/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-edit"></span></a></td>
 						<td style="color:default;">{{$record->transaction_date}}</td>						

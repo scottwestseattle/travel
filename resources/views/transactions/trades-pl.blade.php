@@ -32,7 +32,7 @@
 		</div>				
 		
 		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Apply Filter</button>
-		
+		<a style="font-size:12px; padding:1px 4px; margin:5px 5px 5px 0px;" class="btn btn-primary" href="/transactions/profit-loss/clear-filter">Clear Filter</a>		
 		<a style="font-size:12px; padding:1px 4px; margin:5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
 		
 		{{ csrf_field() }}		
