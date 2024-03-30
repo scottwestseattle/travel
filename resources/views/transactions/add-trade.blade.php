@@ -72,7 +72,7 @@
 					<input type="hidden" name="trade_type_flag" id="trade_type_flag" value="{{$trade->trade_type_flag}}" />
 														
 					<label for="shares" class="control-label">Number of Shares:</label>
-					<input type="text" name="shares" class="form-control" value="{{abs($trade->shares)}}" />
+					<input type="text" name="shares" class="form-control" value="{{abs($trade->shares_unsold)}}" />
 					
 					@if ($isSellOption)
 						<input type="hidden" name="option_strike_price" class="form-control" value="{{abs($trade->option_strike_price)}}" />
@@ -88,6 +88,12 @@
 				@else
 					<label for="symbol" class="control-label">Symbol:</label>
 					<input style="text-transform: uppercase;" type="text" name="symbol" class="form-control" value="{{$trade->symbol}}" />			
+
+					<div class="">
+						<input type="checkbox" name="trade_type_flag" id="trade_type_flag" {{$tradeTypeFlag == TRADE_TYPE_PAPER ? 'checked' : ''}} />
+						<label for="trade_type_flag" class="checkbox-big-label">Paper Trade</label>
+					</div>							
+
 					<label for="shares" class="control-label">Number of Shares:</label>
 					<input type="text" name="shares" class="form-control" autofocus />
 					

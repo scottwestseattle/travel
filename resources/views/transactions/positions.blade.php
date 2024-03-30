@@ -106,13 +106,12 @@
 						<td>						
 							<a href="https://finance.yahoo.com/quote/{{$symbol}}" target="_blank" class="btn btn-{{$btnSize}} btn-primary" style="font-weight:bold;">{{$symbol}}</a>
 							<div style="{{$fontSize10}}">
-								<div>{{$quote['shares']}} shrs</div>
-								<div>{{$lots}} {{$lotsSuffix}}</div>
+								<div>{{$lots}} {{$lotsSuffix}}, {{$quote['shares']}} shrs</div>
 							</div>
 						</td>
 						<td>
 							<div style="{{$fontSize}}">
-								<div>${{$quote['price']}}</div>
+								<div>${{number_format($quote['price'], 2)}}</div>
 								<div>${{number_format($quote['dca'], 2)}}</div>
 							</div>
 						</td>

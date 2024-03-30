@@ -81,6 +81,10 @@
 						$date = DateTime::createFromFormat('Y-m-d', $record->transaction_date);
 						//$date = App\DateTimeEx::getLocalDateTime($date);
 						$rowStyle = $pnl > 0.0 ? 'table-default' : 'table-danger';
+						$shares = abs($record->shares) != abs($record->shares_unsold) 
+							? '' . abs($record->shares_unsold) . ' / ' . abs($record->shares) . ''
+							: abs($record->shares_unsold)
+							;
 					@endphp
 					@if ($skip_id == $record->id)
 						<?php $skip_id = 0; ?>
@@ -105,11 +109,7 @@
 						<td style="color:default;">{{$record->transaction_date}}</td>						
 						<td><a href="https://finance.yahoo.com/quote/{{$record->symbol}}" target="_blank" class="{{$symbolStyle}}" style="font-size:.95em;">{{$record->symbol}}</a></td>
 						<td><a style="font-size:.85em;" href="/{{$prefix}}/view/{{$record->id}}">{{$record->description}}</a></td>
-						<td>{{abs($record->shares)}}
-						@if ( (App\Transaction::isSellStatic($record) && $record->shares >= 0) || (App\Transaction::isBuyStatic($record) && $record->shares <= 0) )
-							<span style="color:red;">({{$record->shares}})</span>
-						@endif
-						</td>
+						<td>{{$shares}}</td>
 						
 						@if (App\Transaction::isBuyStatic($record))
 							<td>{{$record->buy_price}}</td>
@@ -131,13 +131,15 @@
 						@endif						
 						</td>
 						@endif
+						@if (!empty($record->notes))
 						<td style="width:10px;">	
-							@if (!empty($record->notes))
 								<span href="#" data-toggle="tooltip" title="{{$record->notes}}"><span style="color:Purple;" class="glyphCustom glyphicon glyphicon-info-sign"></span></span>
-							@endif
 						</td>
+						@else
+						<td></td>
+						@endif
 						@if ($record->trade_type_flag == TRADE_TYPE_PAPER)
-							<td><span class="label label-warning" style="font-size:.95em;">PAPER</span></td>
+							<td><span class="label label-warning" style="font-size:.95em;">{{$record->account}}</span></td>
 						@else
 							<td><a href="/{{$prefix}}/show/account/{{$record->parent_id}}" class="label label-primary" style="font-size:.95em;">{{$record->account}}</a></td>
 						@endif

@@ -122,6 +122,7 @@ class TransactionController extends Controller
 				// save the 'buy' record
 				$trade['lot'] = $records->first();
 				$trade['typeFlag'] = $trade['lot']->type_flag;
+				$trade['tradeTypeFlag'] = $trade['lot']->trade_type_flag;
 			}
 		}
 		else
@@ -318,15 +319,19 @@ class TransactionController extends Controller
 		
 		try
 		{
-			if (!isset($record->symbol))
-				throw new \Exception('Error Adding Trade: Symbol Not Set');
 			if (!isset($record->parent_id) || $record->parent_id <= 0)
 				throw new \Exception('Error Adding Trade: Account Not Set');
-			if (!isset($record->buy_price) || floatval($record->buy_price <= 0.0))
-				throw new \Exception('Error Adding Trade: Buy Price Not Set');
-			if (!isset($record->shares) || $record->shares <= 0)
-				throw new \Exception('Error Adding Trade: Shares Not Set');
 
+			if ($record->isTrade())
+			{
+				if (!isset($record->symbol))
+					throw new \Exception('Error Adding Trade: Symbol Not Set');
+				if (!isset($record->buy_price) || floatval($record->buy_price <= 0.0))
+					throw new \Exception('Error Adding Trade: Buy Price Not Set');
+				if (!isset($record->shares) || intval($record->shares) === 0)
+					throw new \Exception('Error Adding Trade: Shares Not Set');
+			}
+	
 			$record->save();
 			
 			// use the new 'buy' record id as the lot id
@@ -359,7 +364,8 @@ class TransactionController extends Controller
 						// good calculation based on the buy record info
 						$pl = abs($record->amount) - abs($buy->amount);
 						
-						$buy->shares_unsold += $record->shares;
+						$shrs = intval($buy->shares_unsold) - abs(intval($record->shares));
+						$buy->shares_unsold = $shrs;
 						$buy->sell_price = $record->sell_price;
 						$buy->profit = $pl;
 						
