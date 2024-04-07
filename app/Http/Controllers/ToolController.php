@@ -520,43 +520,78 @@ LEFT JOIN photos
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$search = null;
-		$records = null;
-		$photos = null;
-		$hash = null;
-		
-		if (isset($request->searchText))
+		$rc['search'] = null;
+		$rc['hash'] = null;
+		$rc['records'] = null;
+		$rc['photos'] = null;
+			
+		$isPost = $request->isMethod('post');
+
+		if ($isPost && isset($request->searchText))
 		{
 			$search = trim($request->searchText);
-
-			if (strlen($search) > 1)
+			if (!empty($search))
 			{
-				if (Tools::startsWith($search, '@'))
-				{
-					$hash = substr($search, 1);
-					$hash = self::doHash($hash, date("Y"));
-				}
-				else
-				{
-					try
-					{
-						$records = ToolController::searchEntries($search);
-						$photos = ToolController::searchPhotos($search);
-					}
-					catch (\Exception $e) 
-					{
-					}
-				}
+				$rc = self::doSearch($search);		
 			}
 		}
 
 		return view('tools.search', $this->getViewData([
-			'search' => $search,
-			'records' => $records,
-			'photos' => $photos,
+			'search' => $rc['search'],
+			'hash' => $rc['hash'],
+			'records' => $rc['records'],
+			'photos' => $rc['photos'],
 			'entryTypes' => Controller::getEntryTypes(),
-			'hash' => $hash,
-		]));		
+		]));
+	}
+
+	static private function doSearch($search)
+	{
+		$records = null;
+		$photos = null;
+		$hash = null;
+		
+		if (Tools::startsWith($search, '@'))
+		{
+			$hash = substr($search, 1);
+			$hash = self::doHash($hash, date("Y"));
+		}
+		else
+		{
+			try
+			{
+				$records = ToolController::searchEntries($search);
+				$photos = ToolController::searchPhotos($search);
+			}
+			catch (\Exception $e) 
+			{
+			}
+		}
+		
+		$rc['search'] = $search;
+		$rc['hash'] = $hash;
+		$rc['photos'] = $photos;
+		$rc['records'] = $records;
+		
+		return $rc;
+	}
+	
+    //
+    // this handles the global search from the menu bar
+    //
+    public function searchAjax(Request $request, $searchText)
+    {
+		$isPost = $request->isMethod('post');
+        $searchText = Tools::trimNonText($searchText);
+        $options['startsWith'] = (strlen($searchText) <= SEARCH_MIN_LENGTH);
+
+        $rc = self::doSearch($searchText);
+
+		return view('tools.search-results-light', [
+			'isPost' => $isPost,
+		    'options' => $options,
+		    'results' => $rc,
+		]);
 	}
 	
     public function hash()

@@ -553,17 +553,21 @@ class Transaction extends Base
 			';
 			
 		if ($income)
+		{
 			$q .= ' AND t.category_id = ' . CATEGORY_ID_INCOME;
+		}
 		else
+		{
 			$q .= ' AND t.category_id != ' . CATEGORY_ID_INCOME;
+		}
 					
 		$q .= ' 
-			AND t.category_id NOT IN (?, ?) 
+			AND t.category_id NOT IN (?, ?, ?) 
 			GROUP BY subcategory, category 
 			ORDER BY c.name ASC 
 		;';
 			
-		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date'], CATEGORY_ID_TRANSFER, CATEGORY_ID_TRADE]);
+		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date'], CATEGORY_ID_TRANSFER, CATEGORY_ID_TRADE, CATEGORY_ID_DEPOSIT]);
 
 		$totals = [];
 		$totals['total'] = 0.0;

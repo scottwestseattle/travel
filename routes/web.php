@@ -43,6 +43,12 @@ Route::get('/register', 'FrontPageController@booking');
 
 // public pages
 Route::get('/', 'FrontPageController@index');
+
+// search
+Route::get('/search-ajax/{text?}', 'ToolController@searchAjax');
+Route::get('/search', 'ToolController@search');
+Route::post('/search', 'ToolController@search');
+
 Route::get('/about', 'FrontPageController@about');
 Route::get('/view/{entry}', 'HomeController@view');
 Route::get('/visits', 'FrontPageController@visits')->middleware('auth');;
@@ -59,8 +65,6 @@ Route::get('/spy', 'FrontPageController@spy');
 Route::get('/spyoff', 'FrontPageController@spyoff');
 Route::get('/gallery', 'EntryController@gallery');
 Route::get('/first', 'FrontPageController@first');
-Route::get('/search', 'ToolController@search');
-Route::post('/search', 'ToolController@search');
 Route::get('/sitemap', 'ToolController@sitemap')->middleware('auth');
 Route::get('/test', 'ToolController@test')->middleware('auth');
 Route::post('/test', 'ToolController@test')->middleware('auth');

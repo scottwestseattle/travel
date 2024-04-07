@@ -394,6 +394,23 @@ class Tools
 		return $text;
 	}
 
+	// if string has non-whitespace chars, then it gets trimmed, otherwise gets set to null
+	static public function trimNonText($text)
+	{
+		$text = trim($text);
+		
+		if (isset($text))
+		{
+			// remove all but alphanums and punct
+			$text = preg_replace("/[^a-zA-Z0-9!@.,()-+=?' ]+/", "", $text);
+
+			if (strlen($text) === 0)
+				$text = null;
+		}
+
+		return $text;
+	}
+
     static public function createPermalink($title, $date = null)
     {
 		$v = null;

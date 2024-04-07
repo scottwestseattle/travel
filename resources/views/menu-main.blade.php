@@ -39,7 +39,42 @@
 		<!-- ------------------- -->
 		@if ($user_type >= 100)
 			<a class="navbar-brand" href="{{ url('/admin') }}"><span class="glyphCustom glyphicon glyphicon-user"></span></a>
-			<a class="navbar-brand" href="{{ url('/search') }}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+		@if (false)
+			<a class="navbar-brand" href="{{ url('/search') }}"><span class="glyphCustom glyphicon glyphicon-search"></span></a>	
+		@endif
+			<a id="menu-item-search" class="navbar-brand" href="" onclick="event.preventDefault(); $('#popup-search').toggle(); $('#popup-search-text').focus();"><span class="glyphCustom glyphicon glyphicon-search"></span></a>
+<!--------------------------------------------------------------------------------------->
+<!-- The Search form -->
+<!--------------------------------------------------------------------------------------->
+@php
+    $search = isset($search) ? $search : null;
+    $records = isset($records) ? $records : [];
+@endphp
+
+	<div id="popup-search" class="popup-search" style="display: none;">
+        <form method="POST" action="/search" autocomplete="off">
+
+            <input value="" name="title" id="popup-search-text" type="text"
+                class="form-control form-control-sm form-control-inline py-2 xborder-right-0 border"
+                placeholder="{{__('Search')}}"
+                oninput="showSearchResult(this.value, 'popup-search-text', 'popup-search-results'); $('#popup-search-options').show()"
+            />
+
+            <div class="" style="height: 10px;"></div>
+
+            <button onclick="event.preventDefault(); $('#popup-search').hide();" class="btn btn-success btn-xs">Close</button>
+            <button onclick="event.preventDefault(); $('#popup-search-text').val(''); $('#popup-search-text').focus();" class="btn btn-success btn-xs">Clear</button>
+            <button class="btn btn-success btn-xs" type="submit">Advanced</button>
+
+            <div id="popup-search-results" class=""></div>
+            {{ csrf_field() }}
+        </form>
+	</div>
+
+<!--------------------------------------------------------------------------------------->
+<!-- End of Search form -->
+<!--------------------------------------------------------------------------------------->
+
 			<a class="navbar-brand" href="{{ url('/transactions') }}"><span class="glyphCustom glyphicon glyphicon-piggy-bank"></span></a>
 		@endif
 

@@ -653,3 +653,54 @@ function ajaxexec(url)
 	xhttp.open("GET", url, true);
 	xhttp.send();
 }
+
+function showSearchResult(str, inputId, outputId)
+{
+    if (str.length == 0)
+    {
+        document.getElementById(outputId).innerHTML="";
+        document.getElementById(outputId).style.border="0px";
+        
+        return;
+    }
+    else
+    {
+		var min = (str.startsWith('@')) ? 4 : 3;
+
+	    if (str.length < min)
+			return;
+    }
+
+    inputId = '#' + inputId;
+
+    let wordInput = $(inputId).val();
+
+    wordInput = '"' + wordInput + '":';
+    let xmlhttp=new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange=function() {
+        if (this.readyState==4 && this.status==200) {
+
+            document.getElementById(outputId).innerHTML="";
+
+            // search text in return string looks like: "tener":
+            if (this.responseText.search(wordInput) === -1)
+            {
+                //console.log('input NOT found in output SO NOT SHOWN: ' + wordInput);
+            }
+            else
+            {
+                //console.log('input found in output, SHOW IT: ' + wordInput);
+                document.getElementById(outputId).innerHTML=this.responseText;
+            }
+
+            //console.log(this.responseText);
+            // document.getElementById(outputId).style.border="0px solid #A5ACB2";
+        }
+    }
+	
+    var url = "/search-ajax/" + str;
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+    //console.log("sent url: " + url + ", searchArticles: " + searchType);
+}

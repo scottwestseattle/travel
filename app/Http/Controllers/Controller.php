@@ -181,9 +181,10 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 define('BANNERS_FP_COUNT', 11);
 
 // hard-coded category/subcategory id's
+define('CATEGORY_ID_INCOME', 11);
+define('CATEGORY_ID_DEPOSIT', 229);
 define('CATEGORY_ID_TRANSFER', 9);
 define('CATEGORY_ID_TRADE', 209);
-define('CATEGORY_ID_INCOME', 11);
 define('CATEGORY_ID_FOOD', 2);
 define('SUBCATEGORY_ID_UNKNOWN', 208);
 define('SUBCATEGORY_ID_BUY', 210);
@@ -214,6 +215,9 @@ define('ACCOUNT_TYPE_SAVINGS',		1);
 define('ACCOUNT_TYPE_CREDIT',		2);
 define('ACCOUNT_TYPE_BROKERAGE',	3);
 define('ACCOUNT_TYPE_PAPER_TRADE',	4);
+
+// Search targets
+define('SEARCH_MIN_LENGTH', 2); // search min length to use as 'starts with'
 
 class Controller extends BaseController
 {
