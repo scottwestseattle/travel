@@ -219,15 +219,25 @@ function inlineEditSubmit(id)
 							<div class="dropdown" >
 								<a  style="font-size:12px;"href="#" class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">{{$record->category}}::{{$record->subcategory}}</a>
 								<ul class="dropdown-menu">
+								@if (false)
+									<li><a href="/transactions/update-category/{{$record->id}}/10/223">Biz Furnishings</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/225">Biz Mail/Printing</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/108">Biz Advertising</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/226">Biz Office Supplies</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/224">Biz Fees</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/221">Biz Utilities</a></li>
+								@endif
 									<li><a href="/transactions/update-category/{{$record->id}}/2/200">Coffee</a></li>
-									<li><a href="/transactions/update-category/{{$record->id}}/2/102">Groceries</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/2/104">Restaurant</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/2/102">Groceries</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/15/125">Gasoline</a></li>
-									<li><a href="/transactions/update-category/{{$record->id}}/4/124">Personal Misc</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/1/103">Hotel</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/1/109">Bus/Subway/Tram</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/1/110">Train</a></li>
 									<li><a href="/transactions/update-category/{{$record->id}}/1/121">Tour/Entry Fee</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/10/220">Biz Repairs</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/4/141">Personal Gear</a></li>
+									<li><a href="/transactions/update-category/{{$record->id}}/4/124">Personal Misc</a></li>
 								</ul>
 							</div>						
 						</td>

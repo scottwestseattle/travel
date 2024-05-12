@@ -305,6 +305,8 @@ Route::group(['prefix' => 'transactions'], function () {
 	Route::get('/summary/{showAll?}', 'TransactionController@summary')->middleware('auth');
 	Route::get('/index/{subcategory_id?}', 'TransactionController@index')->middleware('auth');
 	Route::get('/view/{id}', ['as' => 'account.view', 'uses' => 'TransactionController@view']);
+	Route::get('/taxes', 'TransactionController@taxes')->middleware('auth');
+	Route::post('/taxes', 'TransactionController@taxes')->middleware('auth');
 
 	// filter
 	Route::get('/','TransactionController@default')->middleware('auth');

@@ -1,6 +1,10 @@
 @extends('layouts.theme1')
 @section('content')
-
+@php
+	$timeServer = new DateTime();
+	$timeEst = new DateTime(null, new DateTimeZone('US/Eastern'));
+	$tzOffset = intval($timeServer->format('H')) - intval($timeEst->format('H'));
+@endphp
 <div class="container">
 
 	@component('transactions.menu-submenu-trades', ['prefix' => $prefix])@endcomponent
@@ -30,9 +34,11 @@
 		
 		<div>
 			<input type="checkbox" name="showalldates_flag" id="showalldates_flag" class="form-control-inline" value="1" onclick="$('#form').submit();" {{ $filter['showalldates_flag'] == 1 ? 'checked' : '' }} />
-			<label for="showalldates_flag" class="checkbox-label">Show All Dates</label>
+			<label for="showalldates_flag" class="checkbox-label">All Dates</label>
+@if (false)
 			<input type="checkbox" name="unreconciled_flag" id="unreconciled_flag" class="form-control-inline" value="1" {{ $filter['unreconciled_flag'] == 1 ? 'checked' : '' }} />
 			<label for="unreconciled_flag" class="checkbox-label">Unreconciled</label>
+@endif
 			<input type="checkbox" name="sold_flag" id="sold_flag" class="form-control-inline" value="1" onclick="$('#unsold_flag').removeAttr('checked'); $('#form').submit();" {{ $filter['sold_flag'] == 1 ? 'checked' : '' }} />
 			<label for="sold_flag" class="checkbox-label">Sold</label>
 			<input type="checkbox" name="unsold_flag" id="unsold_flag" class="form-control-inline" value="1" onclick="$('#sold_flag').removeAttr('checked'); $('#form').submit();" {{ $filter['unsold_flag'] == 1 ? 'checked' : '' }} />
@@ -42,14 +48,15 @@
 		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px 0 5px 0;">Apply Filter</button>
 		<a style="font-size:12px; padding:1px 4px; margin:5px 5px 5px 0px;" class="btn btn-primary" href="/transactions/trades/clear-filter">Clear Filter</a>		
 		<a style="font-size:12px; padding:1px 4px; margin:5px;" class="btn btn-success" href="/transactions/add-trade">Add Trade</a>
-		
+		<span style="font-size:.8em;">NYSE: <span id="clock" ></span>
+		<input id="tzoffset" value="{{$tzOffset}}" type="hidden"/>
 		{{ csrf_field() }}		
 	</form>	   
 
 		<div class="clear"></div>
 		
 		<h3>
-			Trades ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}}{{ isset($totals['reconciled']) ? ', P/L: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}{{$totals['shares'] > 0 ? ', Shares Remaining: ' . $totals['shares'] : ''}}
+			Trades ({{count($records)}}), Total: ${{number_format(round($totals['total'], 2), 2)}}{{ isset($totals['reconciled']) ? ', P/L: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}{{$totals['shares'] > 0 ? ', Shrs: ' . $totals['shares'] : ''}}
 		</h3>
 		
 		<table class="table">
@@ -156,3 +163,32 @@
 </div>
 
 @endsection
+
+<script>
+
+function time()
+{
+	let	tzoffset = document.getElementById('tzoffset').value;
+    var d = new Date();
+	
+    var s = d.getSeconds();
+    s = s < 10 ? '0' + s : s;
+    
+    var m = d.getMinutes();
+    m = m < 10 ? '0' + m : m;
+
+    var h = d.getHours();
+    var hUtc = d.getUTCHours();
+    hUtc = h - hUtc;
+
+    offset = Number(hUtc) + Number(tzoffset);
+    //console.log('offset: ' + offset);
+
+	    h -= offset;
+    
+    $("#clock").html(h + ':' + m + ':' + s + ' (-' + offset + ')');
+}
+
+setInterval(time, 1000);
+
+</script>

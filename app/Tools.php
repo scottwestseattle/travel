@@ -1022,4 +1022,47 @@ class Tools
 		
 		return $data;
 	}
+	
+	static public function fixLinePunct($text) 
+	{
+		$rc = null;
+	    $sentences = null;
+	    $string = trim($text);
+
+        if (isset($string) && strlen($string) > 0)
+        {
+			$pattern = '/\r\n/';
+			$paragraphs = preg_split($pattern, $string);
+			
+			foreach($paragraphs as $p)
+			{
+				$text = '';
+				$p = trim($p);
+				if (strlen($p) > 0)
+				{
+					$pattern = '/\. /';
+					$sentences = preg_split($pattern, $p);
+					$text = '';
+//dump($sentences);
+					foreach($sentences as $s)
+					{
+						$s = trim($s);
+						if (strlen($s) > 0)
+						{
+							$s = trim($s);
+							
+							$text .= ucfirst(trim($s));
+							$text .= (self::endsWith($s, '.')) ? '' : '.';
+							$text .= '  ';
+						}
+					}
+				}
+				
+				$text = trim($text) . "\r\n";
+				$rc .= $text;
+			}
+        }
+				
+		return trim($rc);
+	}
 }

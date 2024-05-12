@@ -1,5 +1,4 @@
 @extends('layouts.theme1')
-
 @section('content')
 
 <div class="container">
@@ -12,6 +11,7 @@
 		
 		@component('control-dropdown-date', ['div' => true, 'months' => $dates['months'], 'years' => $dates['years'], 'filter' => $filter])@endcomponent							
 		<button type="submit" name="update" class="btn btn-primary" style="font-size:12px; padding:1px 4px; margin:5px;">Filter</button>
+		<a type="button" name="taxes" href="/transactions/taxes" class="btn btn-success" style="font-size:12px; padding:1px 4px; margin:5px;">Taxes</a>
 
 		<div class="clear"></div>
 		
@@ -21,21 +21,16 @@
 			$net = $in + $out;
 		?>
 		
-		<h3 style="margin-bottom:30px;"><strong>Income:</strong> {{number_format($in, 2)}}, <strong>Expenses:</strong> {{number_format($out, 2)}}, <strong>Net:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{number_format($net, 2)}}</span></h3>
+		<h3 style="margin-bottom:30px;">Net Income/Loss:</strong> <span style="color: {{$net < 0.0 ? 'red' : 'default'}}">{{number_format($net, 2)}}</span></h3>
 
-		<h3>Income</h3>
+		<h3>Income: <b>{{number_format($in, 2)}}</b></h3>
 		
 		<table class="table">
 			<tbody>
 			@if (isset($income) && count($income) > 0)
 				@foreach($income as $record)
 					@if ($record->first == 1)
-					<tr><!-- put in the category record -->
-						<td>{{$record->category}}</td>
-						<td></td>
-						<td></td>
-						<td>{{number_format($record->total, 2)}}</td>
-					</tr>				
+						<!-- no category record because it's all the same category: income -->
 					@endif
 					<tr><!-- put in the subcategory record -->
 						<td></td>
@@ -50,11 +45,11 @@
 			</tbody>
 		</table>		
 		
-		<h3>Expenses</h3>
+		<h3>Expenses: <b>{{number_format($out, 2)}}</b></h3>
 
 		<table class="table">
 			<tbody>
-			@if (isset($expenses) && count($expenses) > 0)
+				@if (isset($expenses) && count($expenses) > 0)				
 				@foreach($expenses as $record)
 					@if ($record->first == 1)
 					<tr><!-- put in the category record -->

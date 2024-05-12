@@ -10,6 +10,7 @@ use App\Entry;
 use App\Event;
 use App\Photo;
 use App\Location;
+use App\Tools;
 use App\Translation;
 use App\Comment;
 use Cookie;
@@ -200,8 +201,11 @@ class EntryController extends Controller
 			{
 				Cookie::queue('blogEntryLocation', $entry->description_short);
 			}
+			
+			// fix text
+			$entry->description = Tools::fixLinePunct($entry->description);
 		}
-		
+
 		try
 		{
 			$entry->save();
@@ -543,6 +547,9 @@ class EntryController extends Controller
 			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 			{
 				Cookie::queue('blogEntryLocation', $record->description_short);
+				
+				// fix text
+				$record->description = Tools::fixLinePunct($record->description);
 			}
 			
 			//todo: finish the colors

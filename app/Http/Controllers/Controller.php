@@ -181,23 +181,32 @@ define('TRANSLATIONS_FOLDER', '../resources/lang/');
 define('BANNERS_FP_COUNT', 11);
 
 // hard-coded category/subcategory id's
-define('CATEGORY_ID_INCOME', 11);
-define('CATEGORY_ID_DEPOSIT', 229);
-define('CATEGORY_ID_TRANSFER', 9);
-define('CATEGORY_ID_TRADE', 209);
-define('CATEGORY_ID_FOOD', 2);
-define('SUBCATEGORY_ID_UNKNOWN', 208);
-define('SUBCATEGORY_ID_BUY', 210);
-define('SUBCATEGORY_ID_SELL', 211);
-define('SUBCATEGORY_ID_STOCKS', 197);
-define('SUBCATEGORY_ID_BTO', 218);
-define('SUBCATEGORY_ID_STC', 219);
+define('CATEGORY_ID_BUSINESS_EXPENSES', 10);
+define('CATEGORY_ID_INCOME',			11);
+define('CATEGORY_ID_DEPOSIT',			229);
+define('CATEGORY_ID_TRANSFER',			9);
+define('CATEGORY_ID_TRADE',				209);
+define('CATEGORY_ID_FOOD',				2);
+
+define('SUBCATEGORY_ID_UNKNOWN',		208);
+define('SUBCATEGORY_ID_BUY',			210);
+define('SUBCATEGORY_ID_SELL',			211);
+define('SUBCATEGORY_ID_STOCKS',			197);
+define('SUBCATEGORY_ID_BTO',			218);
+define('SUBCATEGORY_ID_STC',			219);
+define('SUBCATEGORY_ID_TAXES_ESTIMATED_PAYMENT', 234);
+define('SUBCATEGORY_ID_TAXES_ESTIMATED_PAYMENT_PREVIOUS_YEAR', 238);
 
 // Transaction Types
 define('TRANSACTION_TYPE_DEBIT', 1);
 define('TRANSACTION_TYPE_CREDIT', 2);
 define('TRANSACTION_TYPE_BUY', 3);
 define('TRANSACTION_TYPE_SELL', 4);
+
+// Transaction accounting categories
+define('TRANSACTIONS_INCOME',		1);
+define('TRANSACTIONS_EXPENSES',		2);
+define('TRANSACTIONS_DEDUCTIONS',	3);
 
 // Options Transactions
 define('TRANSACTION_TYPE_BTO_CALL', 50); // Buy to Open Call
@@ -218,6 +227,8 @@ define('ACCOUNT_TYPE_PAPER_TRADE',	4);
 
 // Search targets
 define('SEARCH_MIN_LENGTH', 2); // search min length to use as 'starts with'
+
+
 
 class Controller extends BaseController
 {

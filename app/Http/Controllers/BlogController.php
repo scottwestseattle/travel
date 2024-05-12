@@ -317,10 +317,9 @@ class BlogController extends Controller
 			
 			$record->title 				= $this->trimNull($request->title);
 			$record->permalink			= $this->trimNull($request->permalink);
-			$record->description		= $this->trimNull($request->description);
+			$record->description		= $this->trimNull($request->description);			
 			$record->display_date		= $this->trimNull($request->display_date);
 			$record->display_date 		= Controller::getSelectedDate($request);
-			
 			$record->approved_flag = 0;
 			
 			try

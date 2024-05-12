@@ -1302,6 +1302,47 @@ class TransactionController extends Controller
 		return view(PREFIX . '.expenses', $vdata);
     }	
 	
+    public function taxes(Request $request)
+    {
+		if (!$this->isAdmin())
+             return redirect('/');
+			
+		$filter = Controller::getFilter($request, /* today = */ true);		
+		$expenses = $income = null;
+		
+		try
+		{
+			$expenses = Transaction::getDeductions($filter);
+			$income = Transaction::getIncome($filter);
+			$payments = Transaction::getExpenses($filter, SUBCATEGORY_ID_TAXES_ESTIMATED_PAYMENT);
+			
+			//todo: add one year to $filter
+			$payments2 = Transaction::getExpenses($filter, SUBCATEGORY_ID_TAXES_ESTIMATED_PAYMENT_PREVIOUS_YEAR);
+			
+			$taxYear = strtotime($filter['from_date']); 
+			$taxes = Transaction::calculateTaxes($income, $expenses, $payments, intval(date('Y', $taxYear)));
+		}
+		catch (\Exception $e) 
+		{
+			$msg = $e->getMessage();
+			dump($msg);
+			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'Error Getting Expense List', null, $msg);
+
+			$request->session()->flash('message.level', 'danger');
+			$request->session()->flash('message.content', $e->getMessage());		
+		}	
+			
+		$vdata = $this->getViewData([
+			'dates' => Controller::getDateControlDates(),
+			'income' => $income,
+			'expenses' => $expenses,
+			'taxes' => $taxes,
+			'filter' => $filter,
+		]);
+			
+		return view(PREFIX . '.taxes', $vdata);
+    }	
+
 	// this is called by ajax to get the balance for an account during reconcile
     public function getbalance(Request $request, $account_id, $date)
     {

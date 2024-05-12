@@ -397,8 +397,22 @@ class FrontPageController extends Controller
 		if (!$this->isAdmin())
              return redirect('/');
 
-		$this->saveVisitor(LOG_MODEL, LOG_PAGE_ADMIN);
-			 
+		$trx = [];
+		$posts = [];
+		$events = [];
+		$entries = [];
+		$users = [];
+		$visitors = [];
+		$visitorsTotal = 0;
+		$comments = null;
+		$todo = [];
+		$linksToFix = [];
+		$linksToTest = [];
+		$shortEntries = [];
+		$visitorCountryInfo = ['countries' => [], 'newestCountryCode' => null, 'newestCountry' => null, 'totalCountriesToday' => 0, 'countriesToday' => []];
+		$accounts = [];
+		$stockQuotes = [];
+
 		//
 		// get todo list
 		//
@@ -431,7 +445,7 @@ class FrontPageController extends Controller
 		//
 		// get tours which need more info
 		//
-		$entries = []; //$this->getTourIndexAdmin(/* $pending = */ true);
+		//$this->getTourIndexAdmin(/* $pending = */ true);
 			
 		//
 		// get latest users
@@ -440,7 +454,10 @@ class FrontPageController extends Controller
 			->where('user_type', '<=', USER_UNCONFIRMED)
 			->orderByRaw('id DESC')
 			->get();
-					
+		
+if (false) {
+} // test for speed
+
 		//
 		// get today's visitors
 		//
@@ -449,16 +466,15 @@ class FrontPageController extends Controller
 		foreach($visitors as $record)
 		{
 			$visitorsTotal += $record['count'];
-		}
-		//dump($visitors);
-		
+		}	
+					
 		//
 		// get accounts that need to be reconciled
 		//
 		$accounts = Account::getReconcilesOverdue();
-	        
-		$visitorCountryInfo = Visitor::getCountryInfo();
 
+		$visitorCountryInfo = Visitor::getCountryInfo();
+	        
 		//
 		// get unfinished transactions
 		//
@@ -952,10 +968,12 @@ priceTaxes=$59.50
 									// dd($_COOKIE[$symbol]);
 								}
 							}
-							
+						
 							if ($cookieMinutesParm > 0 && isset($_COOKIE[$symbol]))
 							{
-								// get the quote from the cookie
+								//
+								// get the saved quote from the cookie
+								//
 								$cookie = $_COOKIE[$symbol];
 								$price = Tools::getWord($cookie, 1, '|');
 								$change = Tools::getWord($cookie, 2, '|'); 
@@ -977,7 +995,9 @@ priceTaxes=$59.50
 							}
 							else
 							{
-								// update the quote
+								//
+								// get the quote
+								//
 								$quote = Transaction::getQuote($symbol, $nickname);
 								
 								if ($isOpen)

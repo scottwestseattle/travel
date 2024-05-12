@@ -527,17 +527,94 @@ class Transaction extends Base
 		return $balance;
     }
 
-    static public function getIncome($filter)
+    static public function calculateTaxes($income, $expenses, $payments, $taxYear)
     {
-		return self::getIncomeExpenses($filter, true);
-	}
+    	$taxes = [];
+    		
+		$income = isset($income) && count($income) > 0 ? $income[0]->grand_total : 0.0;
+		$deductions = isset($expenses) && count($expenses) > 0 ? $expenses[0]->grand_total : 0.0;
+		$payments = isset($payments) && count($payments) > 0 ? $payments[0]->grand_total : 0.0;
 
-    static public function getExpenses($filter)
-    {			
-		return self::getIncomeExpenses($filter);
+		$standardDeductions = [
+			2022 => 12950.0, 2023 => 13850.0, 2024 => 14600.0
+		];
+		$standardDeduction = (array_key_exists($taxYear, $standardDeductions)) ? $standardDeductions[$taxYear] : 0.0;
+		
+		$brackets = [
+			2022 => [10275.0, 41775.0, 89075.0, 170050.0, 215950.0, 539900.0],
+			2023 => [11000.0, 44725.0, 95375.0, 182100.0, 231250.0, 578125.0],
+			2024 => [11600.0, 47150.0, 100525.0, 191950.0, 243725.0, 609350.0],
+		];		
+		$bracket = (array_key_exists($taxYear, $brackets)) ? $brackets[$taxYear] : 0.0;
+
+		$rates = [0.10, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+		
+		$taxDue = 0.0;
+		$taxRate = 0.0;
+		
+		$agi = $income - abs($deductions);
+		$taxableIncome = $agi - $standardDeduction;
+		
+		// income tax brackets for regular income and short-term capital gains
+		// long term capital gains have their own bracket
+		if ($taxableIncome < $bracket[0])
+		{
+			// bracket 1
+			$taxDue = $taxableIncome * $rates[0];
+		}
+		else if ($taxableIncome < $bracket[1])
+		{
+			// bracket 2
+			$taxDue = $bracket[0] * $rates[0];
+			$taxDue += ($taxableIncome - $bracket[0]) * $rates[1];
+		}
+		else if ($taxableIncome < $bracket[2])
+		{
+			// bracket 3
+			$taxDue = $bracket[0] * $rates[0];
+			$taxDue += $bracket[1] * $rates[1];
+			$taxDue += ($taxableIncome - $bracket[1]) * $rates[2];
+		}
+		else if ($taxableIncome < $brackets[3])
+		{
+			// bracket 4
+			$taxDue = $bracket[0] * $rates[0];
+			$taxDue += $bracket[1] * $rates[1];
+			$taxDue += $bracket[2] * $rates[2];
+			$taxDue += ($taxableIncome - $bracket[2]) * $rates[3];
+		}
+		else
+		{
+			// bracket 5, 6, 7
+		}
+		
+		$taxes['totalTaxDue'] = number_format($taxDue);
+		$taxes['standardDeduction'] = number_format($standardDeduction);
+		$taxes['taxableIncome'] = $taxableIncome;
+		$taxes['agi'] = $agi;
+		$taxes['estimatedTaxPayments'] = $payments;
+		$taxes['taxDue'] = $taxDue - abs($payments);
+		$taxes['taxRate'] = $agi > 0.0 ? ($taxDue / $agi) * 100.0 : 0.0;
+		
+		return $taxes;
 	}	
 	
-    static public function getIncomeExpenses($filter, $income = false)
+    static public function getIncome($filter)
+    {
+		return self::getIncomeExpenses($filter, TRANSACTIONS_INCOME);
+	}
+
+    static public function getExpenses($filter, $subcategoryId = null)
+    {			
+		return self::getIncomeExpenses($filter, TRANSACTIONS_EXPENSES, $subcategoryId);
+	}	
+	
+    static public function getDeductions($filter)
+    {			
+		return self::getIncomeExpenses($filter, TRANSACTIONS_DEDUCTIONS);
+	}	
+	
+    static public function getIncomeExpenses($filter, $accountingType = TRANSACTIONS_EXPENSES, $subcategoryId = null)
     {			
 		$q = '
 			SELECT sum(t.amount) as subtotal, 0 as total, 0 as first
@@ -552,13 +629,25 @@ class Transaction extends Base
  			AND (t.transaction_date >= STR_TO_DATE(?, "%Y-%m-%d") AND t.transaction_date <= STR_TO_DATE(?, "%Y-%m-%d")) 
 			';
 			
-		if ($income)
+		switch($accountingType)
 		{
-			$q .= ' AND t.category_id = ' . CATEGORY_ID_INCOME;
+			case TRANSACTIONS_INCOME:
+				$q .= ' AND t.category_id = ' . CATEGORY_ID_INCOME;		
+				break;
+			case TRANSACTIONS_EXPENSES:
+				$q .= ' AND t.category_id != ' . CATEGORY_ID_INCOME;		
+				break;
+			case TRANSACTIONS_DEDUCTIONS:
+				$q .= ' AND t.category_id = ' . CATEGORY_ID_BUSINESS_EXPENSES;		
+				break;
+			default:
+				$q .= ' AND t.category_id != ' . CATEGORY_ID_INCOME;		
+				break;				
 		}
-		else
+	
+		if (isset($subcategoryId))
 		{
-			$q .= ' AND t.category_id != ' . CATEGORY_ID_INCOME;
+			$q .= ' AND t.subcategory_id = ' . $subcategoryId;						
 		}
 					
 		$q .= ' 
@@ -566,7 +655,7 @@ class Transaction extends Base
 			GROUP BY subcategory, category 
 			ORDER BY c.name ASC 
 		;';
-			
+
 		$records = DB::select($q, [Auth::id(), $filter['from_date'], $filter['to_date'], CATEGORY_ID_TRANSFER, CATEGORY_ID_TRADE, CATEGORY_ID_DEPOSIT]);
 
 		$totals = [];

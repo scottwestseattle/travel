@@ -1,9 +1,12 @@
 @extends('layouts.app')
-
 @section('content')
-
 @php
-$debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
+	$debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
+	
+	$timeServer = new DateTime();
+	$timeUtc = new DateTime(null, new DateTimeZone('UTC'));
+	$hourServer = intval($timeServer->format('H'));
+	$hourUtc = intval($timeUtc->format('H'));
 @endphp
 
 <div class="page-size container">
@@ -11,8 +14,10 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 
 	<div style="text-align: center; margin: 10px 0 20px 0; max-width:500px;">
 		<div class="drop-box green" style="line-height:100%; vertical-align:middle; border-radius: 10px; padding:5px; color: white;" >
-			<h3>Server</h3>
-			<div style="margin-bottom:10px;">{{date("F d, Y")}}&nbsp;&nbsp;{{date("H:i:s")}}</div>
+			<h3>{{date("F d, Y")}}</h3>
+			<div style="">Server: {{date("H:i:s")}} (UTC)</div>
+			<input id="serverTimeHour" type="hidden" value={{date("H")}} />
+			<div style="margin:5px 0 10px 0;">Client: <span id="timeClient"></span></div>
 			
 			@if ($debug)
 				<div style="margin-bottom:10px; font-size:.8em;">{{$site->site_name}} (SITE_ID={{$site->id}} {{DATABASE}})</div>
@@ -20,7 +25,7 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 				<div style="margin-bottom:10px; font-size:.8em;">Geo Load Time: {{$geoLoadTime}}</div>
 			@endif
 			
-			<h4>Client</h4>
+			<h4>Locale</h4>
 			@if ($geo->isValid())
 				<div style="font-size:12px; margin-bottom:10px;">{{$geo->ip() . ' (' . $geo->location() . ' ' . $geo->locale() . ' ' . $geo->language() . ')'}}</div>
 			@else
@@ -250,23 +255,21 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		@endforeach		
 		</p>
 		<div style="clear: both; height:0px;"></div>
-		<div style="font-size:.7em;">			
+		<div>			
 			<table class="table table-striped mt-10">
 				<tr><th>Date</th><th>Country</th><th>IP</th></tr>
 				<tbody>
 				@foreach($visitors as $record)
-					<tr>
+					<tr style="font-size: .7em;">
 						<td>{{$record['date']}}</td>
-						<td style="font-size:1.3em;">{!!$record['location']!!} ({{$record['count']}})</td>
+						<td style="">{!!$record['location']!!} ({{$record['count']}})</td>
 						<td>{{$record['ip']}}</td>
 					</tr>
 				@endforeach
 				</tbody>
 			</table>
 		</div>
-		
 		<p><a href="/visitors">Show All Visitors</a></p>
-		
 	</div>
 	@endif
 	
@@ -402,37 +405,36 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 		<h3 style="">Latest Events ({{count($events)}})</h3>
 		@component('menu-submenu-events-filter')@endcomponent
 		
-		<divd style="font-size:.7em;">	
+		<div>	
 		<table class="table table-striped">
 			<tbody>
 				<tr>
-					<th>Timestamp</th>
+					<th>Time</th>
 					<th>Page</th>
 					<th>Msg</th>
 				</tr>
 			@foreach($events as $record)
-				<?php
+				@php
 					$type = '';
 					if ($record->type_flag == 1) $type = 'Info';
 					if ($record->type_flag == 2) $type = 'Warning';
 					if ($record->type_flag == 3) $type = 'Error';
 					if ($record->type_flag == 4) $type = 'Exception';
 					if ($record->type_flag == 5) $type = 'Other';
-				?>
-				
-				<tr>
+				@endphp	
+				<tr style="font-size:.7em;">
 					<td>{{$record->created_at}}</td>
 					<td>{{$record->model_flag}}/{{$record->action_flag}}</td>
 					@if (isset($record->error) && strtolower(substr($record->error, 0, 4)) == 'http')
 						<td><a href="{{$record->error}}">{{$record->title}}</a>
-						@if (isset($record->record_id))
-						&nbsp;<a href="/photos/edit/{{$record->record_id}}"><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
-						@endif						
+							@if (isset($record->record_id))
+								&nbsp;<a href="/photos/edit/{{$record->record_id}}"><span class="glyphCustom glyphicon glyphicon-edit"></span></a>
+							@endif						
 						</td>
 					@elseif (isset($record->description) && strtolower(substr($record->description, 0, 4)) == 'http')
-						<t>{{$record->title}} ({{$record->description}})</td>
+						<td style="font-size:.9em;">{{$record->title}} ({{$record->description}})</td>
 					@else
-						<td>{{$record->title}}</td>
+						<td style="font-size:.9em;">{{$record->title}}</td>
 					@endif
 				</tr>
 			@endforeach
@@ -446,3 +448,28 @@ $debug = (isset($_COOKIE['debug']) && $_COOKIE['debug']);
 	
 </div>
 @endsection
+
+<script>
+
+function showClientTime()
+{
+	var d = new Date();
+	var h = d.getHours();
+	var m = d.getMinutes();
+	var s = d.getSeconds();
+	
+	h = (h < 10) ? '0' + h : h;
+	m = (m < 10) ? '0' + m : m;
+	s = (s < 10) ? '0' + s : s;
+
+	hServer = Number($("#serverTimeHour").val());
+	var offset = Number(h) - hServer;
+	//correct way: var offset = Math.abs(date1 - date2) / 36e5;
+	offset = (offset > 0) ? '+' + offset : offset;
+	
+	$("#timeClient").html(h + ':' + m + ':' + s + ' (UTC' + offset + ')');
+}
+
+setTimeout(showClientTime, 50);
+
+</script>
