@@ -137,7 +137,7 @@ function inlineEditSubmit(id)
 		@if ($filter['showphotos_flag'])
 			<h3>{{$titlePlural}} ({{$totals['no_photos']}})</h3>
 		@else
-			<h3>{{$titlePlural}}: {{count($records)}}, Total: ${{number_format(round($totals['total'], 2), 2)}} {{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}
+			<h3>{{$titlePlural}}: {{count($records)}}, Total: ${{number_format(round($totals['total'], 2), 2)}}{{ isset($totals['totalDebits']) && $totals['total'] !== $totals['totalDebits'] ? ', Debits: ' . number_format(round($totals['totalDebits'], 2),2) . '' : '' }}{{ isset($totals['reconciled']) ? ', Reconciled: ' . number_format(round($totals['reconciled'], 2),2) . '' : '' }}
 				@if (isset($totals['balance']))
 					<div style="margin-top: 5px; font-size:.75em; font-weight:300;">Total Transactions: <span style="font-weight:300;">{{$totals['balance_count']}}</span>, Account Balance: <span style="font-weight:300;">${{$balance}}</span></div>
 				@endif

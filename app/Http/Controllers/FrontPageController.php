@@ -969,7 +969,7 @@ priceTaxes=$59.50
 								}
 							}
 						
-							if ($cookieMinutesParm > 0 && isset($_COOKIE[$symbol]))
+							if (false && $cookieMinutesParm > 0 && isset($_COOKIE[$symbol]))
 							{
 								//
 								// get the saved quote from the cookie

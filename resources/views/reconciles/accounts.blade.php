@@ -27,7 +27,7 @@
 				<td class="glyphCol"><a href='/accounts/view/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-eye-close"></span></a></td>
 				@endif
 								
-				<td><a href="/reconciles/account/{{$record->id}}">{{$record->name}}</a></td>
+				<td><a href="/reconciles/account/{{$record->id}}/{{$record->reconcile_date}}">{{$record->name}}</a></td>
 				@if (App\Account::isReconcileOverdue($record->reconcile_date))
 					<td style="color:red">{{$record->reconcile_date}}</td>
 				@else

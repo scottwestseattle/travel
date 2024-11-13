@@ -529,9 +529,9 @@ class Tools
 		return ($ip == '::1');
 	}	
 
-	static public function trunc($string, $length)
+	static public function trunc($string, $length, $useEllipsis = false)
 	{
-		$ellipsis = '...';
+		$ellipsis = $useEllipsis ? '...' : '';
 		$newLength = $length - strlen($ellipsis);
 		$string = (strlen($string) > $length) ? substr($string, 0, $newLength) . $ellipsis : $string;
 
@@ -1051,6 +1051,13 @@ class Tools
 						{
 							$s = trim($s);
 							
+							// convert the word 'period' to a period
+							$s = str_replace(' period', '.', $s);
+							
+							// convert "new paragraph" to two crlfs
+							$s = str_replace(' new paragraph ', ".\r\n\r\n", $s);							
+							
+							// Cap each sentence and add a period if missing
 							$text .= ucfirst(trim($s));
 							$text .= (self::endsWith($s, '.')) ? '' : '.';
 							$text .= '  ';

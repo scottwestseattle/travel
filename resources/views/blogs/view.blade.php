@@ -165,8 +165,12 @@ else
 				@if ((Auth::user() && Auth::user()->user_type >= 1000) || ($record->published_flag == 1 && $record->approved_flag == 1))
 				<tr style="display:{{($count++ < 10 || isset($all)) ? 'default' : 'none'}};">
 					<td>
-						<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
-						
+						@if (isset($record->description_short))
+							<a href="{{ route('entry.permalink', [$record->permalink]) }}" style="font-size:1.2em; color:Black">{{$record->description_short}} <span style="font-size:.7em;">({{$record->display_date}})</span></a>
+						@else
+							<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
+						@endif
+							
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
@@ -182,10 +186,6 @@ else
 							@if (!isset($record->permalink) || strlen($record->permalink) === 0)
 								<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
 							@endif
-							
-						@endif
-						@if (isset($record->description_short))
-							<div style="font-size:.8em; color:gray">{{$record->description_short}}</div>
 						@endif
 					</td>
 				</tr>

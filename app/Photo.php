@@ -222,20 +222,7 @@ class Photo extends Base
 	}
 
 	static protected function getLocationsFromPhotos($standardCountryNames)
-	{		
-		$q0 = '
-			SELECT location FROM `photos` 
-			WHERE 1=1
-			AND location IS NOT NULL
-			AND location != ""
-			AND type_flag in (0,1)
-			AND gallery_flag = 1
-			AND deleted_flag = 0
-			GROUP BY `parent_id`, location
-			ORDER BY parent_id DESC
-			;
-		';
-
+	{
 		$q = '
 			SELECT location, YEAR(display_date) as year_display, YEAR(created_at) as year FROM `photos` 
 			WHERE 1=1
@@ -247,19 +234,7 @@ class Photo extends Base
 			ORDER BY parent_id
 			;
 		';
-		
-		$qTEST = '
-			SELECT location, YEAR(created_at) as year FROM `photos` 
-			WHERE 1=1
-			AND location IS NOT NULL
-			AND location != ""
-			AND type_flag in (0,1) 
-			AND deleted_flag = 0
-			GROUP BY `parent_id`, YEAR(created_at), location
-			ORDER BY YEAR(created_at) DESC
-			;
-		';
-		
+			
 		$records = null;
 		try 
 		{		

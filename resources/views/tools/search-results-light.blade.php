@@ -42,7 +42,7 @@
                 @foreach($photos as $record)
                     <tr>
                         <td>
-                            Photo: <a class="m-0" href="/photos/{{$record->permalink}}">{{$record->alt_text}}</a>
+                            Photo: <a class="m-0" href="/photos/{{$record->permalink}}/{{$record->id}}">{{$record->alt_text}}</a>
                         </td>
                     </tr>
                 @endforeach

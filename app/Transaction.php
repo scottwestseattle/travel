@@ -75,13 +75,14 @@ class Transaction extends Base
 		return ($this->type_flag == TRANSACTION_TYPE_CREDIT);
 	}
 	
-    static public function getByVendor($memo)
+    static public function getByVendor($memo, $accountId)
     {
     	//dump($memo);
     	
 		$record = Transaction::select()
 			->where('user_id', Auth::id())
 			->where('deleted_flag', 0)
+			->where('parent_id', $accountId)
 			->where('vendor_memo', 'like', $memo . '%')
 			->orderByRaw('id DESC')
 			->first();
@@ -148,6 +149,7 @@ class Transaction extends Base
     static public function getTotal($records, $filter = null, $accountId = false)
     {
 		$total = 0.0;
+		$totalDebits = 0.0; // total without credits for Chase's wonky way of showing balances
 		$reconciled = 0.0;
 		$startingBalance = 0.0;
 		$noPhotos = 0;
@@ -173,12 +175,17 @@ class Transaction extends Base
 					$reconciled += $amount;
 
 				$total += $amount;
+				
+				// alternate balance for Chase
+				if ($amount < 0.0)
+					$totalDebits += $amount;
 			}
 		}
 		
 		// this has to be done or else it shows -0 because of a tiny fraction
 		$total = round($total, 2);
 		$reconciled = round($reconciled, 2);
+		$totalDebits = round($totalDebits, 2);
 		
 		//dump($filter);
 		if ($search)
@@ -200,6 +207,7 @@ class Transaction extends Base
 		$rc['balance_count'] = $balance['balance_count'];
 
 		$rc['total'] = $total + $startingBalance;
+		$rc['totalDebits'] = $accountId ? $totalDebits + $startingBalance : null;
 		$rc['no_photos'] = $noPhotos;
 		
 		if ($total != $reconciled)
@@ -871,12 +879,11 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 	}
 
     static public function getQuote($symbol, $nickname = null)
-    {
-    	//dump('getQuote');
-    	
+    {  	
 		$quote = null;
 		// stock prices
 		$url = "https://finance.yahoo.com/quote/$symbol/history";
+		$url = "https://www.google.com/finance/quote/$symbol";
 
 		//todo: option prices - not implemented yet; no way to specify the expiration date
 		$urlOptions = "https://finance.yahoo.com/quote/$symbol/options?p=$symbol&strike=70";
@@ -894,19 +901,13 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 			//dd($msg);
 		}
 		
-		$pos = strpos($page, 'qsp-price');
-		$text = substr($page, $pos, 750);
-		//dd($text);
-	
-		/*
-		"qsp-price" data-field="regularMarketPrice" data-trend="none" data-pricehint="2" 
-		value="352.371" active="">352.37</fin-streamer><fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" 
-		data-symbol="VOO" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" 
-		data-pricehint="2" value="-1.4889832" active=""><span class="C($negativeColor)">-1.49</span>
-		</fin-streamer> <fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="VOO" 
-		data-field="regularMarketChangePercent" data-trend="txt" data-pricehint="2" data-template="({fmt})" 
-		value="-0.0042078313" active=""><span class="C($negativeColor)">(-0.42%)</span>			
-		*/
+//$symbol = ">PYPL<";
+		$pos = strpos($page, ">" . $symbol . "<");
+		$text = substr($page, $pos, 250);
+//dump($text);
+		$pos = strpos($text, ">$");
+		$text = substr($text, $pos, 20);
+//dump($text);
 	
 		//$pos = strpos($page, '"symbol":"' . $symbol . '"');
 		//dump($pos);
@@ -914,24 +915,22 @@ ORDER BY trx.transaction_date DESC, trx.id DESC
 		//$text = substr($page, $pos);
 
 		// match one or more numbers (with optional ',.+-%() ') between '>' and '<', for example: ">1,920.50<" or ">-1.38 (-0.57%)<"
-		preg_match_all('/\>[0-9,.\+\-\%\(\) ]+</', $text, $matches); 
-		//dd($matches);
+		$delim = '\"';
+		$trimLeft = '>';
+		$trimRight = '<';
+		preg_match_all('/' . '>' . '[0-9,.\$\+\-\%\(\) ]+' . '<' . '/', $text, $matches); 
 
-		// "symbol":"^TNX"
-		//preg_match_all('/\"symbol\"\:\"' . $symbol . '\"/', $text, $matches); 
-		
-		// "regularMarketPrice":{"raw":170.14,"fmt":"170.14"},
-		//"XLK":{"sourceInterval":15
-		//preg_match_all('/\"' . $symbol . '\"\:\{.*\}/', $text, $matches); 
-		$results = isset($matches[0][0]) && isset($matches[0][1]);
+		$results = isset($matches[0][0]);
 		$quote = [];
-		//dump($matches);
+
 		if ($results)
 		{
-			$quote['regularMarketPrice'] = trim(trim($matches[0][0], '>'), '<');
+			$quote['regularMarketPrice'] = trim(trim($matches[0][0], $trimLeft), $trimRight);
 			$quote['regularMarketPrice'] = preg_replace("/[^0-9\.\-]/", "", $quote['regularMarketPrice']);
-			$quote['regularMarketChangeAmount'] = trim(trim($matches[0][1], '>'), '<');
 			
+			if (isset($matches[0][1]))
+				$quote['regularMarketChangeAmount'] = trim(trim($matches[0][1], $trimLeft), $trimRight);
+//dd($quote);			
 			if (isset($matches[0][3]))
 			{
 				// fix up the percentage

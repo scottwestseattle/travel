@@ -475,9 +475,9 @@ class Controller extends BaseController
 		
 		if ($geo->isValid())
 		{			
-            $visitor->country = $geo->country();
+            $visitor->country = Tools::trunc($geo->country(), 30, false);
             $visitor->countryCode = $geo->countryCode();
-            $visitor->city = $geo->city();
+            $visitor->city = Tools::trunc($geo->city(), 30, false);
         }
         
 		//dump($geo);
@@ -1352,6 +1352,7 @@ class Controller extends BaseController
     {
 		$text = str_replace('[[site-name]]', $site->site_name, $text);
 		$text = str_replace('[[site-email]]', $site->email, $text);
+		$text = str_replace('[[site-year]]', date("Y"), $text);
 			
 		return $text;
 	}

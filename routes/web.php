@@ -98,7 +98,7 @@ Route::group(['prefix' => 'reconciles'], function () {
 	Route::post('/index', 'ReconcileController@index');
 	
 	// add/create
-	Route::get('/account/{account}','ReconcileController@add');
+	Route::get('/account/{account}/{date}','ReconcileController@add');
 	Route::post('/create','ReconcileController@create');
 
 	// edit/update

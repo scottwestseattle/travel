@@ -458,16 +458,20 @@ function showClientTime()
 	var m = d.getMinutes();
 	var s = d.getSeconds();
 	
+	// get the time to display
 	h = (h < 10) ? '0' + h : h;
 	m = (m < 10) ? '0' + m : m;
 	s = (s < 10) ? '0' + s : s;
 
-	hServer = Number($("#serverTimeHour").val());
-	var offset = Number(h) - hServer;
-	//correct way: var offset = Math.abs(date1 - date2) / 36e5;
-	offset = (offset > 0) ? '+' + offset : offset;
+	// OLD WAY: calculate the diff between server time and client time in hours
+	var hour = Number($("#serverTimeHour").val());
+		
+	//correct way: just use the function and assume server time is UTC
+	// not that if offset is negative UTC is positive 
+	hours = d.getTimezoneOffset() / 60;
+	hours = (hours < 0) ? '+' + Math.abs(hours) : '-' + hours;
 	
-	$("#timeClient").html(h + ':' + m + ':' + s + ' (UTC' + offset + ')');
+	$("#timeClient").html(h + ':' + m + ':' + s + ' (UTC' + hours + ')');
 }
 
 setTimeout(showClientTime, 50);

@@ -184,7 +184,7 @@ function time()
     offset = Number(hUtc) + Number(tzoffset);
     //console.log('offset: ' + offset);
 
-	    h -= offset;
+	h -= offset;
     
     $("#clock").html(h + ':' + m + ':' + s + ' (-' + offset + ')');
 }

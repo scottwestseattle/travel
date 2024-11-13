@@ -105,7 +105,7 @@ class ReconcileController extends Controller
     }
 
 	// this is add
-    public function add(Request $request, Account $account)
+    public function add(Request $request, Account $account, $date)
     {		
 		if (!$this->isAdmin())
              return redirect('/');
@@ -127,11 +127,19 @@ class ReconcileController extends Controller
 		}
 		else
 		{
-			$month = intval(date("m"));
-			$day = intval(date("d"));
+			// 2024-10-31 - 2024-11-30
+			if (($ts = strtotime($date)) === false) {
+				dd("The date ($date) is bogus");
+			} else {
+				$ts = date('Y-m-01', $ts);		  // start from 1st of the month otherwise "+1 month" goes from the 31st to the 1st instead of the 30th
+				$ts = strtotime("+1 month", strtotime($ts)); // add one month
+			}	
+
+			$month = intval(date("m", $ts));
+			$day = intval(date("t", $ts));		// "t" is last day of the month
 			$year = intval(date("Y"));
-			$dateFilter = '' . $year . '-' . $month . '-' . $day; // init reconcile date with today
-			$dateBalance = null; 								  // use null so all records will be counted in balance
+			$dateFilter = date('Y-m-t', $ts); 	// init reconcile date with last day of the month ("t")
+			$dateBalance = null;				// use null so all records will be counted in balance
 		}
 		
 		$filter['to_date'] = $dateFilter;
@@ -200,7 +208,7 @@ class ReconcileController extends Controller
 			$request->session()->flash('message.content', $e->getMessage());		
 		}
 			
-		return redirect('/reconciles/account/' . $request->account_id);
+		return redirect('/reconciles/account/' . $record->account_id . '/' . $record->reconcile_date);
 	}
 	
     private function createReconcile($date, $balance, $notes, $accountId) 

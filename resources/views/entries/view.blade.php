@@ -17,13 +17,13 @@
 		@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
 			<div>
 			@if ($record->published_flag == 0)
-				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Private')</button></a>
+				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Set to Public')</button></a>
 			@elseif ($record->approved_flag == 0)
 				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Pending Approval')</button></a>
 			@endif
 			
 			@if ($record->finished_flag == 0)
-				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Not Finished')</button></a>
+				<a href="/entries/publish/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">@LANG('ui.Set to Finished')</button></a>
 			@endif
 			</div>
 		@endif

@@ -187,14 +187,17 @@ function createPhotoName(fromId, fromLocationId, toId)
 		//
 		// replace accent / special characters one by one
 		//
-		toElem.value = toElem.value.replace(/ñ/g, "n");
-		toElem.value = toElem.value.replace(/ç/g, "c");
-		toElem.value = toElem.value.replace(/[ÀÁÄÂàáâäã]+/g, "a");
-		toElem.value = toElem.value.replace(/[ÉÈËÊèéêë]+/g, "e");
-		toElem.value = toElem.value.replace(/[ÍÌÏÎìíîï]+/g, "i");
-		toElem.value = toElem.value.replace(/[ÓÒÖÔòóôöõ]+/g, "o");
-		toElem.value = toElem.value.replace(/[ÙÚÜÛùúûü]+/g, "u");
-		toElem.value = toElem.value.replace(/Ÿÿ/g, "y");
+		if (true)
+		{
+			toElem.value = toElem.value.replace(/ñ/g, "n");
+			toElem.value = toElem.value.replace(/ç/g, "c");
+			toElem.value = toElem.value.replace(/[ÀÁÄÂàáâäã]+/g, "a");
+			toElem.value = toElem.value.replace(/[ÉÈËÊèéêë]+/g, "e");
+			toElem.value = toElem.value.replace(/[ÍÌÏÎìíîï]+/g, "i");
+			toElem.value = toElem.value.replace(/[ÓÒÖÔØŒòóôöõœø]+/g, "o");
+			toElem.value = toElem.value.replace(/[ÙÚÜÛùúûü]+/g, "u");
+			toElem.value = toElem.value.replace(/Ÿÿ/g, "y");
+		}
 
 		// replace whitespace with '-' and make all lower
 		toElem.value = encodeURI(toElem.value.replace(/[\W_]+/g, "-").toLowerCase());

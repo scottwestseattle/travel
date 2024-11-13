@@ -83,7 +83,7 @@ class EmailController extends Controller
 		$email_port = env('EMAIL_PORT');
 		$email_driver = env('EMAIL_DRIVER');
 		$email_encryption = env('EMAIL_ENCRYPTION');
-	
+
 		$flash = '';
 		$errors = '';
 		$count_trx = 0;
@@ -95,14 +95,17 @@ class EmailController extends Controller
 		$mbox = null;
 		try 
 		{
+			//$address = "{chi209.greengeeks.net:993/imap/ssl}INBOX";
 			$mbox = imap_open($address, $email_account, $email_password);
 		}
 		catch (\Exception $e) 
 		{
-			//$msg = $e->getMessage();
-			//dd($msg);
+			$msg = $e->getMessage();
 			
-			$msg = 'Could not open imap stream';
+			$host_addr = gethostname(); 
+			$ip_addr = gethostbyname($host_addr);
+			$msg .= ' / ' . $ip_addr;
+			
 			Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'imap', null, $msg);
 			
 			$request->session()->flash('message.level', 'danger');
@@ -120,7 +123,7 @@ class EmailController extends Controller
 			catch (\Exception $e) 
 			{
 				Event::logException(LOG_MODEL, LOG_ACTION_SELECT, 'imap', null, $e->getMessage());
-				
+
 				$request->session()->flash('message.level', 'danger');
 				$request->session()->flash('message.content', $e->getMessage());
 				
@@ -767,26 +770,34 @@ class EmailController extends Controller
 		$record->amount				= floatval($amount);
 		$record->reconciled_flag 	= 1;
 			
-		// remove all non-alphas from desc
-		$desc = preg_replace("/(\W)+/", " ", $desc);
+		$desc = preg_replace('/[0-9]+/', '', $desc); // remove numbers
+		$desc = preg_replace("/(\W)+/", ' ', $desc); // remove extra whitespace
 		$desc = trim($desc);
-		$words = explode(" ", $desc);
-	
+		$words = explode(' ', $desc);
+		$vendor = null;
+		$trx = null;
+		
 		// check for first transaction from this vendor
 		if (count($words) > 2)
 		{
 			$vendor = $words[0] . ' ' . $words[1]; // use the first 2 words of the vendor_memo
+			$trx = Transaction::getByVendor($vendor, $accountId);
 		}
-		else if (count($words) > 0)
+		
+		// try again with only first word of vendor
+		if ($trx == null)
 		{
-			$vendor = $words[0]; // only use the first word of the desc as the vendor_memo
-		}
-		else
-		{
-			$vendor = $desc; // no words
+			if (count($words) > 0)
+			{
+				$vendor = $words[0]; // only use the first word of the desc as the vendor_memo
+				$trx = Transaction::getByVendor($vendor, $accountId);
+			}
 		}
 
-		$trx = Transaction::getByVendor($vendor);
+		if ($trx == null)
+		{
+			$vendor = $desc; // no matches, use it as is
+		}
 
 		if ($debug)
 		{
@@ -808,7 +819,6 @@ class EmailController extends Controller
 			$record->category_id		= intval($trx->category_id);
 			$record->description		= $this->trimNull($trx->description);
 			$record->type_flag 			= $trx->type_flag;
-			//$record->vendor_memo - don't copy vendor memo because we only need one record to copy for a vendor
 		}
 		else // create first record from this vendor, using defaults
 		{			
@@ -816,7 +826,6 @@ class EmailController extends Controller
 			$record->subcategory_id		= 208;  // unknown
 			$record->category_id		= 2;	// food
 			$record->description		= ucwords(strtolower($desc)); // uppercase the first word only
-//old way:	$record->description		= ucfirst(strtolower(strtok($desc, " "))); // uppercase the first word and use it as the description
 			$record->vendor_memo		= $vendor;
 			$record->type_flag 			= 1;			
 		}
