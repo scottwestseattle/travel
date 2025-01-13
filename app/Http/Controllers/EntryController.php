@@ -187,6 +187,7 @@ class EntryController extends Controller
 		$entry->parent_id 			= $request->parent_id;		
 		$entry->title 				= $this->trimNull($request->title);
 		$entry->description_short	= $this->trimNull($request->description_short);
+		$entry->location			= $this->trimNull($request->location);
 		$entry->description			= $this->trimNull($request->description);
 		$entry->display_date 		= Controller::getSelectedDate($request);
 
@@ -507,7 +508,7 @@ class EntryController extends Controller
 		$languages[] = 'es';
 		$languages[] = 'zh';
 
-		$location = isset($entry->description_short) ? $entry->description_short : Cookie::get('blogEntryLocation');
+		$location = isset($entry->location) ? $entry->location : Cookie::get('blogEntryLocation');
 
 		$vdata = $this->getViewData([
 			'record' => $entry,
@@ -541,12 +542,13 @@ class EntryController extends Controller
 			$record->permalink			= $this->trimNull($request->permalink);
 			$record->description_short	= $this->trimNull($request->description_short);
 			$record->description		= $this->trimNull($request->description);
+			$record->location			= $this->trimNull($request->location);
 			$record->display_date 		= Controller::getSelectedDate($request);
-			
+	
 			// for blog entries, save the location
 			if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
 			{
-				Cookie::queue('blogEntryLocation', $record->description_short);
+				Cookie::queue('blogEntryLocation', $record->location);
 				
 				// fix text
 				$record->description = Tools::fixLinePunct($record->description);

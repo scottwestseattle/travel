@@ -61,7 +61,8 @@
 			</div>	
 			
 			@if ($blog_entry)
-				<input type="text" id="description_short" name="description_short" class="form-control" value="{{$location}}"  placeholder="Location" />
+				<input type="text" id="location" name="location" class="form-control" value="{{$location}}"  placeholder="Location" />
+				<input type="text" id="description_short" name="description_short" class="form-control" placeholder="Highlights" />
 			@else
 			@endif
 	

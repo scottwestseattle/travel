@@ -140,6 +140,26 @@ class BlogController extends Controller
 				->orderByRaw('display_date DESC')
 				->get();
 				
+			$places = array(); 
+			foreach($records as $entry)
+			{		
+				if (isset($entry->location))
+				{
+					$p = $entry->location;
+					if (array_key_exists($p, $places))
+					{
+						// already exists bump up the count
+						$places[$p]++;
+					}
+					else
+					{
+						// add the place
+						$places[$p] = 1;
+					}
+				}
+			}
+			//dump($places);
+				
 			// get the blog photos
 			$photos = Photo::select()
 				->where('site_id', SITE_ID)
@@ -154,6 +174,7 @@ class BlogController extends Controller
 				'photos' => $photos,
 				'all' => $all,
 				'page_title' => 'Blog - ' . $record->title,
+				'places' => $places,
 			]));				
 		}
 		catch (\Exception $e) 

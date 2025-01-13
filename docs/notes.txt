@@ -1,5 +1,10 @@
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+update `entries` 
+set location = 'Agrigento, Sicily, Italy'
+WHERE location = 'Agrigento, Italy'
+AND type_flag = 4;
 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 To free up inodes, use cPanel file manager to: 
 
 1. rename the folder to 'sessionsDEL'
@@ -9,17 +14,17 @@ To free up inodes, use cPanel file manager to:
 
 /home/codespace/public_html/storage/framework/sessions
 /home/codespace/public_html/_subdomains/travel/storage/framework/sessions
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Latest DB Changes
 
 NEW:
+ALTER TABLE `entries` ADD `location` VARCHAR(50) NULL AFTER `description`;
+
+OLD:
 ALTER TABLE `transactions` ADD `option_expiration_date` DATE NULL AFTER `fees`, ADD `option_strike_price` FLOAT NULL AFTER `option_expiration_date`, ADD `trade_type_flag` SMALLINT NULL COMMENT 'real trade, paper trade, watch only?' AFTER `option_strike_price`;
 ALTER TABLE `transactions` CHANGE `commission` `buy_commission` DECIMAL(10,2) NULL DEFAULT NULL COMMENT 'trade commission + fees';
 ALTER TABLE `transactions` CHANGE `fees` `sell_commission` DECIMAL(10,2) NULL DEFAULT NULL COMMENT 'trade commission + fees ';
-
-OLD:
 ALTER TABLE `sites` CHANGE `sections-show-blogs` `parameters` VARCHAR(256) NULL DEFAULT NULL;
 ALTER TABLE `sites` DROP `sections-show-tours`, DROP `sections-show-articles`;
 UPDATE `sites` SET parameters = null WHERE 1 
@@ -44,7 +49,7 @@ sudo vi httpd.conf
 # look for DocumentRoot and <Directory ...>
 
 # restart apache service
-sudo  apachectl restart
+sudo apachectl restart
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

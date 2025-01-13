@@ -176,7 +176,8 @@ class Entry extends Base
 		
 		$q = '
 			SELECT entries.id, entries.type_flag, entries.view_count, entries.permalink, entries.title, entries.description
-				, entries.description_short, entries.published_flag, entries.approved_flag, entries.finished_flag
+				, entries.description_short, entries.location
+				, entries.published_flag, entries.approved_flag, entries.finished_flag
 				, entries.updated_at, entries.display_date
 				, entries.photo_id, entries.parent_id, entries.site_id 
 				, photo_main.filename as photo
@@ -187,7 +188,7 @@ class Entry extends Base
 				, CONCAT("' . PHOTO_ENTRY_PATH . '", photo_main_gallery.parent_id, "/") as photo_gallery_path
 				, count(photos.id) as photo_count
 				, count(photo_main_gallery.id) as photo_gallery_count
-				, locations.name as location, locations.location_type as location_type
+				, locations.name as location_name, locations.location_type as location_type
 				, locations_parent.name as location_parent
 				, translations.language, translations.medium_col1, translations.medium_col2, translations.large_col1, translations.large_col2				
 			FROM entries
@@ -213,12 +214,13 @@ class Entry extends Base
 		
 		$q .= '
 			GROUP BY entries.id, entries.type_flag, entries.view_count, entries.permalink, 	entries.title, entries.description
-				, entries.description_short, entries.published_flag, entries.approved_flag, entries.finished_flag
+				, entries.description_short, entries.location 
+				, entries.published_flag, entries.approved_flag, entries.finished_flag
 				, entries.updated_at, entries.display_date
 				, entries.photo_id, entries.parent_id, entries.site_id
 				, photo, photo_title, photo_path
 				, photo_gallery, photo_gallery_title, photo_gallery_path
-				, location, location_parent, location_type 
+				, location_name, location_parent, location_type 
 				, translations.language, translations.medium_col1, translations.medium_col2, translations.large_col1, translations.large_col2 		
 				LIMIT 1
 		';

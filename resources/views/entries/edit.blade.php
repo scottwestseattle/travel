@@ -61,7 +61,8 @@ function xshow(event, id)
 				</div>
 
 				@if ($record->type_flag == ENTRY_TYPE_BLOG_ENTRY)
-					<input type="text" id="description_short" name="description_short" class="form-control" value="{{$location}}"  placeholder="Location" />
+					<input type="text" id="location" name="location" class="form-control" value="{{$location}}"  placeholder="Location" />
+					<input type="text" id="description_short" name="description_short" class="form-control" value="{{$record->description_short}}"  placeholder="Tag Line" />
 				@else
 				@endif
 								

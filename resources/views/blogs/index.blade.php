@@ -48,7 +48,7 @@
 					<td style="width:20px;"><a href='/photos/entries/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-picture"></span></a></td>
 					<td style="width:20px;"><a href='/entries/publish/{{$record->id}}'><span class="glyphCustom glyphicon glyphicon-flash"></span></a></td>
 					<td>
-						<a href="/blogs/view/{{$record->id}}">{{$record->title}}</a>
+						<a href="/blogs/show/{{$record->id}}">{{$record->title}}</a>
 							
 						<div>
 						@if (isset($record->published_flag) && $record->published_flag == 0)

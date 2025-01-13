@@ -144,6 +144,31 @@ else
 
 	@endif
 	
+	
+	@if (isset($places))
+	<div style="margin:20px 0">
+		
+		<h3>
+			<span class="middle" style="margin: 0 10px 0 0;">{{ucfirst(trans_choice('ui.place', 2))}} ({{ count($places) }})</span>
+			<span class="ml-2" style="font-size:.6em;"><a id="show" href="" onclick="event.preventDefault(); $('.places').toggle();">@LANG('ui.ShowHideAll')</a></span>
+			@if (false)
+			<span class="ml-2" style="font-size:.6em;"><a id="hide" href="" onclick="event.preventDefault(); $('.places').hide();">@LANG('ui.Hide')</a></span>
+			@endif
+		</h3>
+		
+		<div style="">
+			@foreach($places as $place => $days)
+				@php
+					$display = $loop->index <= 5 ? 'default' : 'none';
+					$class = $loop->index <= 5 ? 'always-shown' : 'places';
+				@endphp
+				<p class="{{$class}}" style="display:{{$display}}">{{$place}} ({{$days}} {{trans_choice('dt.day', $days)}})</p>
+			@endforeach
+		</div>
+		
+	</div>	
+	@endif
+	
 	<div style="margin:20px 0">
 		
 		<h3>
@@ -165,7 +190,25 @@ else
 				@if ((Auth::user() && Auth::user()->user_type >= 1000) || ($record->published_flag == 1 && $record->approved_flag == 1))
 				<tr style="display:{{($count++ < 10 || isset($all)) ? 'default' : 'none'}};">
 					<td>
-						@if (isset($record->description_short))
+						@if (isset($record->location))
+							<a href="{{ route('entry.permalink', [$record->permalink]) }}" style="font-size:1.2em; color:Black">{{$record->title}}</a>
+							@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))			
+								@if ($record->published_flag == 0 || $record->approved_flag == 0)
+									<a style="font-size:1.2em; color: red; margin-left:5px;" href="/entries/publish/{{$record->id}}">
+										<span class="glyphCustom glyphicon glyphicon-flash"></span>
+									</a>
+								@endif
+	
+								<a style="font-size:1em; margin-left:5px;" href="/entries/edit/{{$record->id}}">
+									<span class="glyphCustom glyphicon glyphicon-edit"></span>
+								</a>
+															
+								@if (!isset($record->permalink) || strlen($record->permalink) === 0)
+									<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
+								@endif
+							@endif
+							<div><a href="{{ route('entry.permalink', [$record->permalink]) }}" style="font-size:1em; color:Black">{{$record->location}}</a></div>
+						@elseif (isset($record->description_short))
 							<a href="{{ route('entry.permalink', [$record->permalink]) }}" style="font-size:1.2em; color:Black">{{$record->description_short}} <span style="font-size:.7em;">({{$record->display_date}})</span></a>
 						@else
 							<a href="{{ route('entry.permalink', [$record->permalink]) }}">{{$record->title}} ({{$record->display_date}})</a>
@@ -174,19 +217,6 @@ else
 						<?php if (intval($record->view_count) > 0) : ?>
 							<span style="color:#8CB7DD; margin-left: 5px; font-size:.9em;" class="glyphCustom glyphicon glyphicon-copy"><span style="font-family:verdana; margin-left: 2px;" >{{ $record->view_count }}</span></span>
 						<?php endif; ?>
-						
-						@if (Auth::user() && (Auth::user()->user_type >= 1000 || Auth::user()->id === $record->user_id))
-						
-							@if ($record->published_flag == 0 || $record->approved_flag == 0)
-								<a style="font-size:1.2em; color: red; margin-left:5px;" href="/entries/publish/{{$record->id}}">
-									<span class="glyphCustom glyphicon glyphicon-flash"></span>
-								</a>
-							@endif
-														
-							@if (!isset($record->permalink) || strlen($record->permalink) === 0)
-								<div><a href="/entries/edit/{{$record->id}}"><button type="button" class="btn btn-danger btn-alert">No Permalink</button></a></div>
-							@endif
-						@endif
 					</td>
 				</tr>
 				@endif
@@ -219,8 +249,8 @@ else
 						@if (isset($record->display_date))
 						<tr><td>{{$record->display_date}}</td></tr>
 						@endif
-						@if (isset($record->location))
-						<tr><td>{{$record->location}}, {{$record->location_parent}}</td></tr>
+						@if (isset($record->location_name))
+							<tr><td>{{$record->location_name}}, {{$record->location_parent}}</td></tr>
 						@endif
 					</tbody>
 					</table>

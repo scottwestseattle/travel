@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="form-group">
-			<input type="checkbox" name="finished_flag" id="finished_flag" class="" value="{{$record->finished_flag }}" {{ ($record->finished_flag) ? 'checked' : '' }} />
+			<input type="checkbox" name="finished_flag" id="finished_flag" class="" value="{{$record->finished_flag }}" {{ ($record->finished_flag) ? 'checked' : 'checked' }} />
 			<label for="finished_flag" class="checkbox-big-label">@LANG('ui.Finished')</label>
 		</div>
 				

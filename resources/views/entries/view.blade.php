@@ -70,11 +70,11 @@
 		<h1 name="title" class="">{{$record->title}}</h1>
 		<strong>
 
-		@if (isset($record->location) && is_string($record->location))
+		@if (isset($record->location_name) && is_string($record->location_name))
 			@if ($record->location_type != LOCATION_TYPE_COUNTRY)
-				{{$record->location}}, {{$record->location_parent}}
+				{{$record->location_name}}, {{$record->location_parent}}
 			@else
-				{{$record->location}}
+				{{$record->location_name}}
 			@endif
 		@endif
 		
@@ -122,6 +122,10 @@
 	<div style="display:default; margin-top:20px;">
 		<img src="{{$record->photo_path}}/{{$record->photo}}" title="{{$record->photo_title}}" class="popupPhotos" style="max-width:100%; width:{{ $width }}" />
 	</div>	
+	@endif
+
+	@if (isset($record->location))
+		<div class="entry" style="margin-bottom:10px;">{{$record->location}}</div>
 	@endif
 	
 	@if (strlen(trim($record->description_short)) > 0)
